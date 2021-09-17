@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, RouteProps } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
+import Backdrop from "@mui/material/Backdrop";
 
 import * as Kitsu from "utils/kitsu";
 import { useAuth } from "context/AuthContext";
-import Backdrop from "@material-ui/core/Backdrop";
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 type Props = RouteProps & { isLoginPage?: boolean };
 
