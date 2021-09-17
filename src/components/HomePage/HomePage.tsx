@@ -1,4 +1,4 @@
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "context/AuthContext";
 
 const HomePage: React.FC = () => {
   const auth = useAuth();

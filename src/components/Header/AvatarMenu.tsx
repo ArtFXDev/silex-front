@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Avatar from "@material-ui/core/Avatar";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 import { AuthContext } from "context/AuthContext";
 import * as Kitsu from "utils/kitsu";
@@ -38,6 +38,9 @@ const AvatarMenu: React.FC<{ auth: AuthContext }> = ({ auth }) => {
             : ""
         }
         onClick={handleMenu}
+        sx={{
+          backgroundColor: colorHash.hex(auth.user.fullName()),
+        }}
       >
         {!auth.user.has_avatar && auth.user.firstTwoLetters()}
       </Avatar>
