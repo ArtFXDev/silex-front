@@ -32,14 +32,14 @@ export const themeOptions: ThemeOptions = {
 
 export const theme = createTheme({
   ...themeOptions,
-  typography: {
-    fontFamily: ['"Open Sans"', "CooperHewitt", "Roboto"].join(","),
-  },
-  overrides: {
-    MuiCssBaseline: {
-      "@global": {
-        "@font-face": [cooperHewitt],
-      },
-    },
-  },
+  // typography: {
+  //   fontFamily: ['"Open Sans"', "CooperHewitt", "Roboto"].join(","),
+  // },
+  // overrides: {
+  //   MuiCssBaseline: {
+  //     "@global": {
+  //       "@font-face": [cooperHewitt],
+  //     },
+  //   },
+  // },
 });

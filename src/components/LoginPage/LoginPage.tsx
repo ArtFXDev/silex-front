@@ -1,4 +1,5 @@
-import axios from "axios";
+import { useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
@@ -6,9 +7,8 @@ import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Alert from "@material-ui/lab/Alert";
 
-import { useState } from "react";
-import { useAuth, User } from "../../context/AuthContext";
-import { useHistory, useLocation } from "react-router-dom";
+import * as Kitsu from "utils/kitsu";
+import { useAuth } from "context/AuthContext";
 
 const LoginPage: React.FC = (props) => {
   const [email, setEmail] = useState<string>("");
@@ -22,11 +22,7 @@ const LoginPage: React.FC = (props) => {
   const onLogIn = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
 
-    axios
-      .post<{ user: User }>("http://localhost/api/auth/login", {
-        email,
-        password,
-      })
+    Kitsu.login({ email, password })
       .then((response) => {
         const { from } = location.state || { from: { pathname: "/" } };
         auth.signin(response.data.user);
@@ -34,7 +30,6 @@ const LoginPage: React.FC = (props) => {
       })
       .catch((error) => {
         if (error.response) {
-          console.log(error.response);
           setError(
             `User or password invalid\nError code: ${error.response.status} - ${error.response.statusText}`
           );

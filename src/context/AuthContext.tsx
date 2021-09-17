@@ -1,11 +1,5 @@
 import React, { useContext, useState } from "react";
-
-export interface User {
-  first_name: string;
-  last_name: string;
-  email: string;
-  id: string;
-}
+import { User } from "./User";
 
 export interface AuthContext {
   user: User | null;
@@ -23,7 +17,7 @@ export const ProvideAuth: React.FC = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
 
   const signin = (user: User) => {
-    setUser(user);
+    setUser(new User(user));
   };
 
   const signout = () => {
