@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Redirect, Route, RouteProps } from "react-router-dom";
+import { Route, RouteProps, useHistory } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "@mui/material/Backdrop";
 
@@ -12,7 +12,9 @@ const PrivateRoute: React.FC<Props> = ({ children, isLoginPage, ...rest }) => {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState<boolean | undefined>(
     undefined
   );
+
   const auth = useAuth();
+  const history = useHistory();
 
   useEffect(() => {
     const isServerLoggedIn = async () => {
@@ -22,7 +24,7 @@ const PrivateRoute: React.FC<Props> = ({ children, isLoginPage, ...rest }) => {
         setIsUserLoggedIn(true);
         auth.signin(response.data.user);
       } catch (err) {
-        setIsUserLoggedIn(false);
+        history.push("/login");
       }
     };
 
@@ -31,25 +33,18 @@ const PrivateRoute: React.FC<Props> = ({ children, isLoginPage, ...rest }) => {
     } else {
       isServerLoggedIn();
     }
-  }, [isUserLoggedIn, auth, auth.user]);
+  }, [isUserLoggedIn, auth, auth.user, history]);
 
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        isUserLoggedIn === undefined ? (
+        isUserLoggedIn === undefined && !isLoginPage ? (
           <Backdrop open={true}>
             <CircularProgress color="inherit" />
           </Backdrop>
-        ) : isUserLoggedIn || isLoginPage ? (
-          children
         ) : (
-          <Redirect
-            to={{
-              pathname: "/login",
-              state: { from: location },
-            }}
-          />
+          children
         )
       }
     />

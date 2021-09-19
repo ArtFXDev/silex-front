@@ -1,26 +1,35 @@
 import React from "react";
 import { BrowserRouter as Router, Switch } from "react-router-dom";
 
-import HomePage from "./components/HomePage/HomePage";
-import Header from "./components/Header/Header";
-import LoginPage from "./components/LoginPage/LoginPage";
-import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
-import { ProvideAuth } from "./context/AuthContext";
+import Header from "components/Header/Header";
+import PrivateRoute from "components/PrivateRoute/PrivateRoute";
+import { ProvideAuth } from "context/AuthContext";
 
-const App: React.FC = () => {
+// Pages
+import HomePage from "components/pages/HomePage/HomePage";
+import LoginPage from "components/pages/LoginPage/LoginPage";
+import ProfilePage from "components/pages/ProfilePage/ProfilePage";
+
+const App: React.FC = (props) => {
   return (
     <ProvideAuth>
       <Router>
-        <Header />
-
         <Switch>
-          <PrivateRoute exact path="/">
-            <HomePage />
-          </PrivateRoute>
-
-          <PrivateRoute path="/login" isLoginPage>
+          <PrivateRoute exact path="/login" isLoginPage>
             <LoginPage />
           </PrivateRoute>
+
+          <>
+            <Header />
+
+            <PrivateRoute exact path="/">
+              <HomePage />
+            </PrivateRoute>
+
+            <PrivateRoute exact path="/profile">
+              <ProfilePage />
+            </PrivateRoute>
+          </>
         </Switch>
       </Router>
     </ProvideAuth>
