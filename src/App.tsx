@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import Header from "components/Header/Header";
 import PrivateRoute from "components/PrivateRoute/PrivateRoute";
@@ -15,9 +15,9 @@ const App: React.FC = (props) => {
     <ProvideAuth>
       <Router>
         <Switch>
-          <PrivateRoute exact path="/login" isLoginPage>
+          <Route exact path="/login">
             <LoginPage />
-          </PrivateRoute>
+          </Route>
 
           <>
             <Header />

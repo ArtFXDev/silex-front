@@ -1,48 +1,54 @@
 import React, { useEffect, useState } from "react";
-import { Route, RouteProps, useHistory } from "react-router-dom";
+import { Redirect, Route, RouteProps, useLocation } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "@mui/material/Backdrop";
 
 import * as Kitsu from "utils/kitsu";
 import { useAuth } from "context/AuthContext";
 
-type Props = RouteProps & { isLoginPage?: boolean };
-
-const PrivateRoute: React.FC<Props> = ({ children, isLoginPage, ...rest }) => {
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState<boolean | undefined>(
-    undefined
-  );
+const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState<boolean>(false);
 
   const auth = useAuth();
-  const history = useHistory();
+  const location = useLocation();
+
+  const isTheRightRoute = rest.path === location.pathname;
 
   useEffect(() => {
-    const isServerLoggedIn = async () => {
+    const checkIfUserLoggedIn = async () => {
       try {
         const response = await Kitsu.isAuthenticated();
-
-        setIsUserLoggedIn(true);
         auth.signin(response.data.user);
+        setIsUserLoggedIn(true);
       } catch (err) {
-        history.push("/login");
+        setIsUserLoggedIn(false);
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (auth.user) {
-      setIsUserLoggedIn(true);
-    } else {
-      isServerLoggedIn();
-    }
-  }, [isUserLoggedIn, auth, auth.user, history]);
+    if (isTheRightRoute && loading && !isUserLoggedIn && !auth.user)
+      checkIfUserLoggedIn();
+  }, [auth, isTheRightRoute, isUserLoggedIn, loading]);
 
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        isUserLoggedIn === undefined && !isLoginPage ? (
+        auth.user !== null ? (
+          children
+        ) : loading ? (
           <Backdrop open={true}>
             <CircularProgress color="inherit" />
           </Backdrop>
+        ) : !isUserLoggedIn ? (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: location },
+            }}
+          />
         ) : (
           children
         )
