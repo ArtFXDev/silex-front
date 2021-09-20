@@ -1,16 +1,18 @@
 import { useState } from "react";
-import Avatar from "@mui/material/Avatar";
+import { Link } from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import { Logout, AccountCircle } from "@mui/icons-material";
+import Tooltip from "@mui/material/Tooltip";
 
-import { AuthContext } from "context/AuthContext";
+import { useAuth } from "context/AuthContext";
 import * as Kitsu from "utils/kitsu";
-import ColorHash from "color-hash";
+import UserAvatar from "components/UserAvatar/UserAvatar";
 
-const AvatarMenu: React.FC<{ auth: AuthContext }> = ({ auth }) => {
+const AvatarMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
-  const colorHash = new ColorHash({ lightness: 0.7, saturation: 0.8 });
+  const auth = useAuth();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -29,32 +31,32 @@ const AvatarMenu: React.FC<{ auth: AuthContext }> = ({ auth }) => {
   if (!auth.user) return <div>NO USER</div>;
 
   return (
-    <div>
-      <Avatar
-        alt={auth.user.fullName()}
-        src={
-          auth.user.has_avatar
-            ? Kitsu.pictureThumbnailURL("persons", auth.user.id)
-            : ""
-        }
-        onClick={handleMenu}
-        sx={{
-          backgroundColor: colorHash.hex(auth.user.fullName()),
-        }}
-      >
-        {!auth.user.has_avatar && auth.user.firstTwoLetters()}
-      </Avatar>
+    <Tooltip title="User settings" placement="left">
+      <div>
+        <UserAvatar onClick={handleMenu} size={45} clickable />
 
-      <Menu
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={onLogout}>Logout</MenuItem>
-      </Menu>
-    </div>
+        <Menu
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={handleClose} component={Link} to="/profile">
+            <ListItemIcon>
+              <AccountCircle fontSize="small" />
+            </ListItemIcon>
+            Profile
+          </MenuItem>
+
+          <MenuItem onClick={onLogout}>
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            Logout
+          </MenuItem>
+        </Menu>
+      </div>
+    </Tooltip>
   );
 };
 

@@ -1,10 +1,10 @@
-import { createTheme, DeprecatedThemeOptions } from "@mui/material/styles";
+import { createTheme, ThemeOptions } from "@mui/material/styles";
 
-export const themeOptions: DeprecatedThemeOptions = {
+export const themeOptions: ThemeOptions = {
   palette: {
     mode: "dark",
     primary: {
-      main: "#3f51b5",
+      main: "rgb(255,176,105)",
     },
     secondary: {
       main: "#DC4C49",
