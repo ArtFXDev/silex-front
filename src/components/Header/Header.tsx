@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import Box from "@mui/material/Box";
 
 import AvatarMenu from "./AvatarMenu";
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
-import Box from "@mui/material/Box";
+import Menu from "components/Menu/Menu";
 
 const SilexLogoAndText: React.FC = () => {
   const history = useHistory();
@@ -47,18 +48,29 @@ const SilexLogoAndText: React.FC = () => {
   );
 };
 
-const Header: React.FC = () => (
-  <AppBar position="static" color="primary">
-    <Toolbar>
-      <IconButton edge="start" color="inherit" aria-label="menu">
-        <MenuIcon />
-      </IconButton>
+const Header: React.FC = () => {
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
-      <SilexLogoAndText />
+  return (
+    <AppBar position="static" color="primary">
+      <Toolbar>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          onClick={() => setMenuOpen(true)}
+        >
+          <MenuIcon />
+        </IconButton>
 
-      <AvatarMenu />
-    </Toolbar>
-  </AppBar>
-);
+        <Menu open={menuOpen} closeMenu={() => setMenuOpen(false)} />
+
+        <SilexLogoAndText />
+
+        <AvatarMenu />
+      </Toolbar>
+    </AppBar>
+  );
+};
 
 export default Header;
