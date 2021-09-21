@@ -11,6 +11,7 @@ import AvatarMenu from "./AvatarMenu";
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
 import Menu from "components/Menu/Menu";
+import ProjectSelector from "./ProjectSelector";
 
 const SilexLogoAndText: React.FC = () => {
   const history = useHistory();
@@ -66,6 +67,8 @@ const Header: React.FC = () => {
         <Menu open={menuOpen} closeMenu={() => setMenuOpen(false)} />
 
         <SilexLogoAndText />
+
+        <ProjectSelector />
 
         <AvatarMenu />
       </Toolbar>
