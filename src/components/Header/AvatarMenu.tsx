@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -13,6 +13,7 @@ import UserAvatar from "components/UserAvatar/UserAvatar";
 const AvatarMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const auth = useAuth();
+  const history = useHistory();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -25,6 +26,7 @@ const AvatarMenu: React.FC = () => {
   const onLogout = () => {
     Kitsu.logout().then((_response) => {
       auth.signout();
+      history.push("/");
     });
   };
 
