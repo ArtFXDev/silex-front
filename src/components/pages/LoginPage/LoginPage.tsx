@@ -121,11 +121,7 @@ const LoginPage: React.FC = (props) => {
                 : null
             }
             color={
-              email === undefined
-                ? "primary"
-                : isEmailError
-                ? "error"
-                : "success"
+              email === undefined ? "info" : isEmailError ? "error" : "success"
             }
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -142,7 +138,7 @@ const LoginPage: React.FC = (props) => {
             helperText={isPasswordError ? "Password cannot be empty" : null}
             color={
               password === undefined
-                ? "primary"
+                ? "info"
                 : isPasswordError
                 ? "error"
                 : "success"
