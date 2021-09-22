@@ -53,7 +53,7 @@ const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   return (
-    <AppBar position="static" elevation={0.5}>
+    <AppBar position="static" elevation={1}>
       <Toolbar>
         <IconButton
           edge="start"

@@ -1,17 +1,24 @@
+import { BaseEntity } from "./BaseEntity";
+
 export type ProjectId = string;
 
-export interface Project {
-  created_at: string;
-  data: unknown;
-  end_date: string;
-  episode_span: number;
-  fps: number;
-  has_avatar: boolean;
+export interface Project extends BaseEntity {
   id: ProjectId;
-  name: string;
-  nb_episodes: number;
-  production_type: string;
+  code: null;
+  description: string;
+  shotgun_id: string | null;
+  file_tree: null;
+  data: unknown;
+  has_avatar: boolean;
+  fps: string;
   ratio: string;
   resolution: string;
-  start_date: string;
+  production_type: "short";
+  start_date: "2021-09-01";
+  end_date: "2021-10-22";
+  man_days: null;
+  nb_episodes: number;
+  episode_span: number;
+  project_status_id: "9739b5a5-f3c1-402b-bdd1-78fa698165fd";
+  type: "Project";
 }

@@ -9,6 +9,7 @@ import { ProvideAuth } from "context/AuthContext";
 import HomePage from "components/pages/HomePage/HomePage";
 import LoginPage from "components/pages/LoginPage/LoginPage";
 import ProfilePage from "components/pages/ProfilePage/ProfilePage";
+import ExplorerPage from "components/pages/ExplorerPage/ExplorerPage";
 
 const App: React.FC = (props) => {
   return (
@@ -28,6 +29,10 @@ const App: React.FC = (props) => {
 
             <PrivateRoute exact path="/profile">
               <ProfilePage />
+            </PrivateRoute>
+
+            <PrivateRoute path="/explorer">
+              <ExplorerPage />
             </PrivateRoute>
           </>
         </Switch>

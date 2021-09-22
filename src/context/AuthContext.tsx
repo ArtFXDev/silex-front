@@ -5,7 +5,7 @@ import * as Kitsu from "utils/kitsu";
 export interface AuthContext {
   user: User | null;
   projects: Project[] | null;
-  signin: (user: User) => void;
+  signin: (user: User) => Promise<void>;
   signout: () => void;
   currentProject: ProjectId | null;
   setCurrentProject: (id: ProjectId) => void;
@@ -22,9 +22,15 @@ export const ProvideAuth: React.FC = ({ children }) => {
   );
   const [projects, setProjects] = useState<Project[] | null>(null);
 
-  const signin = (user: User) => {
+  const signin = async (user: User) => {
     setUser(new User(user));
-    Kitsu.getUserProjects().then((response) => setProjects(response.data));
+
+    // Store the list of projects for that user
+    const projectsData = await Kitsu.getUserProjects();
+    setProjects(projectsData.data);
+
+    // And the current project id
+    setCurrentProjectState(projectsData.data[0].id);
   };
 
   const signout = () => {

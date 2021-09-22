@@ -1,6 +1,5 @@
 import axios from "axios";
-import { Project } from "types";
-import { User } from "types";
+import { Project, ProjectId, User, Sequence, Shot, SequenceId } from "types";
 
 export function kitsuURL(path: string) {
   return `${process.env.REACT_APP_KITSU_URL}/${path}`;
@@ -16,8 +15,12 @@ export function get<T>(url: string) {
   });
 }
 
-export function pictureThumbnailURL(category: "persons", id: string) {
+export function pictureThumbnailURL(category: string, id: string) {
   return kitsuAPIURL(`pictures/thumbnails/${category}/${id}.png`);
+}
+
+export function originalPreviewFileURL(id: string) {
+  return kitsuAPIURL(`pictures/originals/preview-files/${id}.png`);
 }
 
 export function isAuthenticated() {
@@ -36,4 +39,12 @@ export function logout() {
 
 export function getUserProjects() {
   return get<Project[]>("data/user/projects/open");
+}
+
+export function getProjectSequences(id: ProjectId) {
+  return get<Sequence[]>(`data/projects/${id}/sequences`);
+}
+
+export function getSequenceShots(id: SequenceId) {
+  return get<Shot[]>(`data/sequences/${id}/shots`);
 }
