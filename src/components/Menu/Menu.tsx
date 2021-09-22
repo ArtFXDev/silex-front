@@ -5,8 +5,8 @@ import { Link as RouterLink, useLocation } from "react-router-dom";
 import SilexLogo from "assets/images/silex_logo.png";
 
 const links = [
-  { text: "Home", to: "/" },
-  { text: "File explorer", to: "/explorer" },
+  { text: "Home", to: "/", exact: true },
+  { text: "File explorer", to: "/explorer", exact: false },
 ];
 
 type MenuProps = {
@@ -54,7 +54,13 @@ const Menu: React.FC<MenuProps> = ({ closeMenu, open }) => {
                 to={link.to}
                 underline="hover"
                 color={
-                  link.to === location.pathname ? "primary" : "text.disabled"
+                  (
+                    link.exact
+                      ? location.pathname === link.to
+                      : location.pathname.startsWith(link.to)
+                  )
+                    ? "primary"
+                    : "text.disabled"
                 }
                 onClick={closeMenu}
               >
