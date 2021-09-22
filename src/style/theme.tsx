@@ -10,7 +10,8 @@ export const themeOptions: ThemeOptions = {
       main: "#DC4C49",
     },
     background: {
-      default: "#383737",
+      default: "#2c2b2b",
+      paper: "#333232",
     },
   },
 };

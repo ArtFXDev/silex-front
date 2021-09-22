@@ -18,7 +18,7 @@ const Menu: React.FC<MenuProps> = ({ closeMenu, open }) => {
   const location = useLocation();
 
   return (
-    <Drawer anchor="left" elevation={12} open={open} onClose={closeMenu}>
+    <Drawer anchor="left" elevation={2} open={open} onClose={closeMenu}>
       <IconButton
         sx={{ position: "absolute", top: 0, right: 0, m: 1 }}
         onClick={closeMenu}
