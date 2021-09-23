@@ -28,17 +28,19 @@ const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
       }
     };
 
-    if (isTheRightRoute && loading && !isUserLoggedIn && !auth.user)
-      checkIfUserLoggedIn();
+    if (auth.user && auth.currentProjectId) {
+      setIsUserLoggedIn(true);
+      setLoading(false);
+    } else {
+      if (isTheRightRoute && loading) checkIfUserLoggedIn();
+    }
   }, [auth, isTheRightRoute, isUserLoggedIn, loading]);
 
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        auth.user !== null ? (
-          children
-        ) : loading ? (
+        loading ? (
           <Backdrop open={true}>
             <CircularProgress color="inherit" />
           </Backdrop>
