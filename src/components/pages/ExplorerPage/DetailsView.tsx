@@ -1,4 +1,4 @@
-import { Box, Alert } from "@mui/material";
+import { Grid, Alert, Typography } from "@mui/material";
 import LazyImage from "components/LazyImage/LazyImage";
 import useSWR from "swr";
 
@@ -10,10 +10,10 @@ const urls = ["data/sequences/{id}", "data/shots/{id}", "data/tasks/{id}"];
 interface DetailsViewProps {
   depth: number;
   /** The id of the selected item */
-  selectedId: string | undefined;
+  selectedId: string;
 }
 
-const Details: React.FC<DetailsViewProps> = ({ depth, selectedId }) => {
+const DetailsView: React.FC<DetailsViewProps> = ({ depth, selectedId }) => {
   // Force selectedId to be a string
   selectedId = selectedId as string;
 
@@ -21,22 +21,26 @@ const Details: React.FC<DetailsViewProps> = ({ depth, selectedId }) => {
   const { data, error } = useSWR(urlKey, fetchSingle);
 
   return data ? (
-    <Box>
-      <h1>
-        {data.name} <small>({data.type})</small>
-      </h1>
+    <Grid container spacing={2}>
+      <Grid item xs={6}>
+        <Typography variant="h5">
+          {data.name} <Typography>({data.type})</Typography>
+        </Typography>
+      </Grid>
 
-      <LazyImage
-        src={
-          data.type === "Shot" && data.preview_file_id
-            ? pictureThumbnailURL("preview-files", data.preview_file_id)
-            : undefined
-        }
-        alt="preview"
-        width={180}
-        height={100}
-      />
-    </Box>
+      <Grid item xs={6}>
+        <LazyImage
+          src={
+            data.type === "Shot" && data.preview_file_id
+              ? pictureThumbnailURL("preview-files", data.preview_file_id)
+              : undefined
+          }
+          alt="preview"
+          width={180}
+          height={100}
+        />
+      </Grid>
+    </Grid>
   ) : error ? (
     <Alert severity="error" variant="outlined">
       {JSON.stringify(error)}
@@ -44,10 +48,6 @@ const Details: React.FC<DetailsViewProps> = ({ depth, selectedId }) => {
   ) : (
     <div></div>
   );
-};
-
-const DetailsView: React.FC<DetailsViewProps> = (props) => {
-  return props.selectedId ? <Details {...props} /> : null;
 };
 
 export default DetailsView;

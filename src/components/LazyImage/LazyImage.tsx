@@ -9,6 +9,7 @@ interface LazyImageProps {
   width: number;
   height: number;
   disableBorder?: boolean;
+  onClick?: () => void;
 }
 
 /**
@@ -22,14 +23,20 @@ const LazyImage: React.FC<LazyImageProps> = (props) => {
   const height = `${props.height}px`;
 
   return (
-    <>
+    <div
+      style={{ cursor: props.onClick ? "pointer" : "default" }}
+      onClick={props.onClick}
+    >
       {props.src && (
         <Fade in={!isImageLoading} timeout={400}>
           <img
             src={props.src}
             alt={props.alt}
             loading="lazy"
-            style={{ width: width, height: height }}
+            style={{
+              width: width,
+              height: height,
+            }}
             onLoad={() => setIsImageLoading(false)}
           />
         </Fade>
@@ -53,7 +60,7 @@ const LazyImage: React.FC<LazyImageProps> = (props) => {
           {props.src ? <CircularProgress /> : <HideImageOutlinedIcon />}
         </Box>
       )}
-    </>
+    </div>
   );
 };
 

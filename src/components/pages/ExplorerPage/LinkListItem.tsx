@@ -82,6 +82,7 @@ const LinkListItem: React.FC<LinkListItemProps> = ({
               height={100}
               alt="test"
               disableBorder
+              onClick={entity.type !== "Task" ? pushToNextView : selectCurrent}
             />
           </CardMedia>
 

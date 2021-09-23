@@ -53,7 +53,7 @@ const ExplorerPage: React.FC = () => {
     <Box p={8} height="100%">
       <Typography variant="h4">{currentProject.name}</Typography>
 
-      <Grid container sx={{ columnGap: 2 }}>
+      <Grid container sx={{ columnGap: 1 }}>
         <Grid item xs={selectedId ? 5 : 12}>
           <Box
             sx={{
