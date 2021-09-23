@@ -3,12 +3,13 @@ import { User, Project, ProjectId } from "types";
 import * as Kitsu from "utils/kitsu";
 
 export interface AuthContext {
-  user: User | null;
-  projects: Project[] | null;
+  user: User | undefined;
+  projects: Project[] | undefined;
   signin: (user: User) => Promise<void>;
   signout: () => void;
-  currentProject: ProjectId | null;
-  setCurrentProject: (id: ProjectId) => void;
+  currentProjectId: ProjectId | undefined;
+  setCurrentProjectId: (id: ProjectId) => void;
+  getCurrentProject: () => Project | undefined;
 }
 
 // Hack to set the default context (not available until we query the server)
@@ -16,11 +17,9 @@ export interface AuthContext {
 export const authContext = React.createContext<AuthContext>({} as AuthContext);
 
 export const ProvideAuth: React.FC = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [currentProject, setCurrentProjectState] = useState<ProjectId | null>(
-    null
-  );
-  const [projects, setProjects] = useState<Project[] | null>(null);
+  const [user, setUser] = useState<User>();
+  const [currentProjectId, setCurrentProjectId] = useState<ProjectId>();
+  const [projects, setProjects] = useState<Project[]>();
 
   const signin = async (user: User) => {
     setUser(new User(user));
@@ -30,15 +29,15 @@ export const ProvideAuth: React.FC = ({ children }) => {
     setProjects(projectsData.data);
 
     // And the current project id
-    setCurrentProjectState(projectsData.data[0].id);
+    setCurrentProjectId(projectsData.data[0].id);
   };
 
   const signout = () => {
-    setUser(null);
+    setUser(undefined);
   };
 
-  const setCurrentProject = (id: ProjectId) => {
-    setCurrentProjectState(id);
+  const getCurrentProject = () => {
+    return projects?.find((p) => p.id === currentProjectId);
   };
 
   return (
@@ -46,8 +45,9 @@ export const ProvideAuth: React.FC = ({ children }) => {
       value={{
         user,
         projects,
-        currentProject,
-        setCurrentProject,
+        currentProjectId,
+        setCurrentProjectId,
+        getCurrentProject,
         signin,
         signout,
       }}
