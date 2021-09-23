@@ -11,7 +11,7 @@ const ProjectSelector: React.FC = () => {
   const auth = useAuth();
 
   const handleChange = (event: SelectChangeEvent<string>) => {
-    auth.setCurrentProject(event.target.value);
+    auth.setCurrentProjectId(event.target.value);
     setSelectedProject(event.target.value);
   };
 

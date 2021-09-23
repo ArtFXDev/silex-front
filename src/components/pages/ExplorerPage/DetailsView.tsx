@@ -1,4 +1,5 @@
 import { Box, Alert } from "@mui/material";
+import LazyImage from "components/LazyImage/LazyImage";
 import useSWR from "swr";
 
 import { pictureThumbnailURL } from "utils/kitsu";
@@ -24,17 +25,21 @@ const Details: React.FC<DetailsViewProps> = ({ depth, selectedId }) => {
       <h1>
         {data.name} <small>({data.type})</small>
       </h1>
-      {data.type === "Shot" && data.preview_file_id && (
-        <img
-          src={pictureThumbnailURL("preview-files", data.preview_file_id)}
-          alt="preview"
-          loading="lazy"
-        />
-      )}
+
+      <LazyImage
+        src={
+          data.type === "Shot" && data.preview_file_id
+            ? pictureThumbnailURL("preview-files", data.preview_file_id)
+            : undefined
+        }
+        alt="preview"
+        width={180}
+        height={100}
+      />
     </Box>
   ) : error ? (
     <Alert severity="error" variant="outlined">
-      {error}
+      {JSON.stringify(error)}
     </Alert>
   ) : (
     <div></div>

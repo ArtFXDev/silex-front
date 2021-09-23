@@ -9,21 +9,19 @@ import {
   CardMedia,
   Typography,
   CardActions,
-  Box,
-  ButtonBase,
 } from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import HideImageOutlinedIcon from "@mui/icons-material/HideImageOutlined";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useLocation, useHistory } from "react-router-dom";
 
 import { Sequence, Shot, Task } from "types";
-import { originalPreviewFileURL } from "utils/kitsu";
+import { pictureThumbnailURL } from "utils/kitsu";
+import LazyImage from "components/LazyImage/LazyImage";
 
 interface LinkListItemProps {
   index: number;
   entity: Sequence | Shot | Task;
   selected: boolean;
-  onClick: () => void;
+  selectCurrent: () => void;
   listView: boolean;
 }
 
@@ -31,7 +29,7 @@ const LinkListItem: React.FC<LinkListItemProps> = ({
   index,
   entity,
   selected,
-  onClick,
+  selectCurrent,
   listView,
 }) => {
   const location = useLocation();
@@ -46,22 +44,20 @@ const LinkListItem: React.FC<LinkListItemProps> = ({
   };
 
   return (
-    <Fade in={true} timeout={index * 100}>
+    <Fade in={true} timeout={index * 200}>
       {listView ? (
         <Paper elevation={1} sx={{ m: 1, borderRadius: 2 }}>
           <ListItem
             disablePadding
             secondaryAction={
-              entity.type !== "Task" ? (
-                <IconButton onClick={pushToNextView}>
-                  <ArrowForwardIcon />
-                </IconButton>
-              ) : null
+              <IconButton onClick={selectCurrent}>
+                <InfoOutlinedIcon />
+              </IconButton>
             }
           >
             <ListItemButton
               selected={selected}
-              onClick={onClick}
+              onClick={entity.type !== "Task" ? pushToNextView : selectCurrent}
               sx={{ borderRadius: 2 }}
               disableRipple
             >
@@ -74,46 +70,35 @@ const LinkListItem: React.FC<LinkListItemProps> = ({
           </ListItem>
         </Paper>
       ) : (
-        <ButtonBase onClick={onClick}>
-          <Card sx={{ m: 2 }}>
-            {entity.type === "Shot" && entity.preview_file_id ? (
-              <CardMedia
-                component="img"
-                sx={{ width: "180px", height: "100px" }}
-                image={
-                  entity.type === "Shot" && entity.preview_file_id
-                    ? originalPreviewFileURL(entity.preview_file_id)
-                    : undefined
-                }
-              />
-            ) : (
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "180px",
-                  height: "100px",
-                }}
-              >
-                <HideImageOutlinedIcon />
-              </Box>
-            )}
+        <Card sx={{ m: 2 }} raised elevation={2}>
+          <CardMedia sx={{ width: 180, height: 100 }}>
+            <LazyImage
+              src={
+                entity.type === "Shot" && entity.preview_file_id
+                  ? pictureThumbnailURL("preview-files", entity.preview_file_id)
+                  : undefined
+              }
+              width={180}
+              height={100}
+              alt="test"
+              disableBorder
+            />
+          </CardMedia>
 
-            <CardActions>
-              <Typography
-                variant="subtitle1"
-                component="div"
-                sx={{ marginRight: "auto" }}
-              >
-                {entity.type === "Task" ? entity.task_type_name : entity.name}
-              </Typography>
-              {/* <IconButton onClick={pushToNextView}>
-                <ArrowForwardIcon />
-              </IconButton> */}
-            </CardActions>
-          </Card>
-        </ButtonBase>
+          <CardActions sx={{ py: 0 }}>
+            <Typography
+              variant="subtitle1"
+              component="div"
+              sx={{ marginRight: "auto" }}
+            >
+              {entity.type === "Task" ? entity.task_type_name : entity.name}
+            </Typography>
+
+            <IconButton onClick={selectCurrent}>
+              <InfoOutlinedIcon />
+            </IconButton>
+          </CardActions>
+        </Card>
       )}
     </Fade>
   );

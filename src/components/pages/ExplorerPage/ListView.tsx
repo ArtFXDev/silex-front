@@ -36,13 +36,13 @@ const ListView: React.FC<ListViewProps> = ({
   listView,
 }) => {
   const auth = useAuth();
-  const currentProject = auth.currentProject as string;
+  const currentProjectId = auth.currentProjectId as string;
   const location = useLocation();
 
   // The current entity id
   const currentId =
     depth === 0
-      ? currentProject
+      ? currentProjectId
       : lastElementOf(
           location.pathname.split("/").filter((e) => e.length !== 0)
         );
@@ -62,7 +62,7 @@ const ListView: React.FC<ListViewProps> = ({
                 entity={e}
                 key={e.id}
                 selected={e.id === selectedId}
-                onClick={() => setSelectedId(e.id)}
+                selectCurrent={() => setSelectedId(e.id)}
                 listView={listView}
               />
             ))}
@@ -75,7 +75,7 @@ const ListView: React.FC<ListViewProps> = ({
                 entity={e}
                 key={e.id}
                 selected={e.id === selectedId}
-                onClick={() => setSelectedId(e.id)}
+                selectCurrent={() => setSelectedId(e.id)}
                 listView={listView}
               />
             ))}

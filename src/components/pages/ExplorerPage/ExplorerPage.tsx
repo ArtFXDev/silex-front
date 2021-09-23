@@ -1,4 +1,11 @@
-import { Box, Grid, Link, Breadcrumbs, IconButton } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Link,
+  Breadcrumbs,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import {
   useLocation,
   useRouteMatch,
@@ -11,16 +18,21 @@ import { useState, useEffect } from "react";
 
 import ListView from "./ListView";
 import DetailsView from "./DetailsView";
+import { useAuth } from "context/AuthContext";
+import { Project } from "types";
 
 const ExplorerPage: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string>();
   const [listView, setListView] = useState<boolean>(true);
 
+  const auth = useAuth();
+  const currentProject = auth.getCurrentProject() as Project;
+
   const location = useLocation();
   const history = useHistory();
   const routeMatch = useRouteMatch();
 
-  // Listen tou route change at component mount in order to reset the selected list item
+  // Listen to route change at component mount in order to reset the selected list item
   useEffect(() => {
     history.listen((_location, _action) => setSelectedId(undefined));
   }, [history]);
@@ -38,27 +50,37 @@ const ExplorerPage: React.FC = () => {
   const breadCrumbItems = getItemsFromLocation(location.pathname);
 
   return (
-    <Box p={10} height="100%">
-      <Grid container sx={{ columnGap: 2 }}>
-        <Grid item xs={5}>
-          <Breadcrumbs aria-label="breadcrumb">
-            <p></p>
-            <p>Sequences</p>
-            {breadCrumbItems.map((e, i) => (
-              <Link
-                component={RouterLink}
-                to={"."}
-                key={i}
-                color="text.disabled"
-              >
-                {e.toUpperCase()}
-              </Link>
-            ))}
-          </Breadcrumbs>
+    <Box p={8} height="100%">
+      <Typography variant="h4">{currentProject.name}</Typography>
 
-          <IconButton onClick={() => setListView(!listView)}>
-            {listView ? <GridViewIcon /> : <ListIcon />}
-          </IconButton>
+      <Grid container sx={{ columnGap: 2 }}>
+        <Grid item xs={selectedId ? 5 : 12}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Breadcrumbs aria-label="breadcrumb">
+              <p></p>
+              <p>Sequences</p>
+              {breadCrumbItems.map((e, i) => (
+                <Link
+                  component={RouterLink}
+                  to={"."}
+                  key={i}
+                  color="text.disabled"
+                >
+                  {e.toUpperCase()}
+                </Link>
+              ))}
+            </Breadcrumbs>
+
+            <IconButton onClick={() => setListView(!listView)}>
+              {listView ? <GridViewIcon /> : <ListIcon />}
+            </IconButton>
+          </Box>
 
           <ListView
             depth={breadCrumbItems.length}
@@ -68,22 +90,29 @@ const ExplorerPage: React.FC = () => {
           />
         </Grid>
 
-        <Grid item xs={1}>
-          <Box
-            component="hr"
-            sx={{
-              backgroundColor: "text.disabled",
-              width: "5px",
-              height: "100%",
-              borderRadius: "2px",
-              opacity: "30%",
-            }}
-          />
-        </Grid>
+        {selectedId && (
+          <>
+            <Grid item xs={1}>
+              <Box
+                component="hr"
+                sx={{
+                  backgroundColor: "text.disabled",
+                  width: "5px",
+                  height: "100%",
+                  borderRadius: "2px",
+                  opacity: "30%",
+                }}
+              />
+            </Grid>
 
-        <Grid item xs={5}>
-          <DetailsView depth={breadCrumbItems.length} selectedId={selectedId} />
-        </Grid>
+            <Grid item xs={5}>
+              <DetailsView
+                depth={breadCrumbItems.length}
+                selectedId={selectedId}
+              />
+            </Grid>
+          </>
+        )}
       </Grid>
     </Box>
   );
