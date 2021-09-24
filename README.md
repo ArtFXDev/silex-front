@@ -22,6 +22,8 @@ $ cd silex-front
 $ yarn install # Install the dependencies
 ```
 
+Note that if you don't want to install the dev dependencies (including the linter, formatter, types...) you can use the `--production` argument to Yarn.
+
 ## Usage
 
 ### Available scripts
@@ -32,10 +34,24 @@ $ yarn install # Install the dependencies
 
 - 👷 `yarn build` -> builds and bundle the whole app in a `build` folder. It is used to host the static files on a web server like Nginx or Apache.
 
+## Libraries
+
+Here are the main libraries and packages used: 
+
+| Library                                       | Version  |
+| --------------------------------------------- | -------- |
+| [Material UI](https://mui.com/)               | `5.0.0`  |
+| [React](https://reactjs.org/)                 | `17.0.2` |
+| [TypeScript](https://www.typescriptlang.org/) | `4.1.2`  |
+| [socket.io-client](https://socket.io/)        | `4.2.0`  |
+| [React router](reactrouter.com/)              | `5.3.0`  |
+
+
+
 ## Contributing
 
 Pull requests and issues are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 
-[MIT](./LICENSE.md) @ArtFX
+[MIT](./LICENSE.md) [@ArtFX](artfx.school/)
