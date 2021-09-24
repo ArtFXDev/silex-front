@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import Header from "components/Header/Header";
 import PrivateRoute from "components/PrivateRoute/PrivateRoute";
-import { ProvideAuth } from "context/AuthContext";
+import { ProvideAuth } from "context";
 
 // Pages
 import HomePage from "components/pages/HomePage/HomePage";

@@ -2,7 +2,7 @@ import { Box, List, LinearProgress } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import useSWRImmutable from "swr";
 
-import { useAuth } from "context/AuthContext";
+import { useAuth } from "context";
 import { lastElementOf } from "utils/array";
 import LinkListItem from "./LinkListItem";
 import { fetchMultiple } from "./utils";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 
-import { useAuth } from "context/AuthContext";
+import { useAuth } from "context";
 import { ProjectId } from "types";
 
 const ProjectSelector: React.FC = () => {

@@ -4,7 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "@mui/material/Backdrop";
 
 import * as Kitsu from "utils/kitsu";
-import { useAuth } from "context/AuthContext";
+import { useAuth } from "context";
 
 const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   const [loading, setLoading] = useState<boolean>(true);

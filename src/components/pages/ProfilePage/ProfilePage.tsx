@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import UserAvatar from "components/UserAvatar/UserAvatar";
-import { useAuth } from "context/AuthContext";
+import { useAuth } from "context";
 
 const ProfilePage: React.FC = () => {
   const auth = useAuth();

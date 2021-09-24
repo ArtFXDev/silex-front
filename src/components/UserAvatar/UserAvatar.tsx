@@ -1,6 +1,6 @@
 import { Avatar, AvatarProps } from "@mui/material";
 
-import { useAuth } from "context/AuthContext";
+import { useAuth } from "context";
 import * as Kitsu from "utils/kitsu";
 
 type UserAvatarProps = AvatarProps & { size: number; clickable?: boolean };

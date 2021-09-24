@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 
-import { useAuth } from "context/AuthContext";
+import { useAuth } from "context";
 
 const HomePage: React.FC = () => {
   const auth = useAuth();
