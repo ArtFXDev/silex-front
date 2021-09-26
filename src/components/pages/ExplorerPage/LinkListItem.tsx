@@ -44,7 +44,7 @@ const LinkListItem: React.FC<LinkListItemProps> = ({
   };
 
   return (
-    <Fade in={true} timeout={index * 200}>
+    <Fade in timeout={index * 200}>
       {listView ? (
         <Paper elevation={1} sx={{ m: 1, borderRadius: 2 }}>
           <ListItem

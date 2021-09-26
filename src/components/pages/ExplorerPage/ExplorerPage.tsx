@@ -20,6 +20,7 @@ import ListView from "./ListView";
 import DetailsView from "./DetailsView";
 import { useAuth } from "context";
 import { Project } from "types";
+import PageWrapper from "../PageWrapper/PageWrapper";
 
 const ExplorerPage: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string>();
@@ -50,9 +51,7 @@ const ExplorerPage: React.FC = () => {
   const breadCrumbItems = getItemsFromLocation(location.pathname);
 
   return (
-    <Box p={8} height="100%">
-      <Typography variant="h4">{currentProject.name}</Typography>
-
+    <PageWrapper title={currentProject.name}>
       <Grid container sx={{ columnGap: 1 }}>
         <Grid item xs={selectedId ? 5 : 12}>
           <Box
@@ -114,7 +113,7 @@ const ExplorerPage: React.FC = () => {
           </>
         )}
       </Grid>
-    </Box>
+    </PageWrapper>
   );
 };
 
