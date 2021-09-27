@@ -26,7 +26,7 @@ const ProjectSelector: React.FC = () => {
     <Select
       sx={{
         height: 30,
-        mr: 4,
+        mr: 1,
         backgroundColor: "primary.main",
         borderRadius: 10,
         paddingTop: 0,

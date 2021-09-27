@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 
 import { useAuth } from "context";
 import PageWrapper from "../PageWrapper/PageWrapper";
