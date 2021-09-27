@@ -65,8 +65,8 @@ const DCCClientsPage: React.FC = () => {
         {!socket.isConnected && (
           <Alert severity="error">
             <AlertTitle>Connection error</AlertTitle>
-            Can't connect to the Silex WS server at
-            {process.env.REACT_APP_WSS_SERVER} —
+            Can't connect to the Silex WS server at{" "}
+            {process.env.REACT_APP_WS_SERVER} —{" "}
             <strong>make sure it's running or restart it</strong>
           </Alert>
         )}
