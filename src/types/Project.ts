@@ -1,4 +1,5 @@
 import { BaseEntity } from "./BaseEntity";
+import { Sequence } from "./Sequence";
 
 export type ProjectId = string;
 
@@ -21,4 +22,6 @@ export interface Project extends BaseEntity {
   episode_span: number;
   project_status_id: "9739b5a5-f3c1-402b-bdd1-78fa698165fd";
   type: "Project";
+
+  sequences: Sequence[];
 }

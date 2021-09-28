@@ -1,4 +1,4 @@
-import { ProjectId, SequenceId } from "types";
+import { ProjectId, SequenceId, Task } from "types";
 import { BaseEntity } from "./BaseEntity";
 
 export type ShotId = string;
@@ -18,4 +18,6 @@ export interface Shot extends BaseEntity {
   type: "Shot";
   project_name: string;
   sequence_name: string;
+
+  tasks: Task[];
 }
