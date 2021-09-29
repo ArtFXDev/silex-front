@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Project, ProjectId, User, Sequence, Shot, SequenceId } from "types";
+import { Project, ProjectId, Person, Sequence, Shot, SequenceId } from "types";
 
 export function kitsuURL(path: string) {
   return `${process.env.REACT_APP_KITSU_URL}/${path}`;
@@ -24,11 +24,11 @@ export function originalPreviewFileURL(id: string) {
 }
 
 export function isAuthenticated() {
-  return get<{ user: User }>("auth/authenticated");
+  return get<{ user: Person }>("auth/authenticated");
 }
 
 export function login(data: { email: string; password: string }) {
-  return axios.post<{ user: User }>(kitsuAPIURL("auth/login"), data, {
+  return axios.post<{ user: Person }>(kitsuAPIURL("auth/login"), data, {
     withCredentials: true,
   });
 }

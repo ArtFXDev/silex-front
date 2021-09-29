@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
-import { User, Project, ProjectId } from "types";
+import { Person, Project, ProjectId } from "types";
 import * as Kitsu from "utils/kitsu";
 
 export interface AuthContext {
-  user: User | undefined;
+  user: Person | undefined;
   projects: Project[] | undefined;
-  signin: (user: User) => Promise<void>;
+  signin: (user: Person) => Promise<void>;
   signout: () => void;
   currentProjectId: ProjectId | undefined;
   setCurrentProjectId: (id: ProjectId) => void;
@@ -17,12 +17,12 @@ export interface AuthContext {
 export const authContext = React.createContext<AuthContext>({} as AuthContext);
 
 export const ProvideAuth: React.FC = ({ children }) => {
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<Person>();
   const [currentProjectId, setCurrentProjectId] = useState<ProjectId>();
   const [projects, setProjects] = useState<Project[]>();
 
-  const signin = async (user: User) => {
-    setUser(new User(user));
+  const signin = async (user: Person) => {
+    setUser(user);
 
     // Store the list of projects for that user
     const projectsData = await Kitsu.getUserProjects();

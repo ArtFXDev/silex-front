@@ -8,7 +8,7 @@ import Tooltip from "@mui/material/Tooltip";
 
 import { useAuth } from "context/AuthContext";
 import * as Kitsu from "utils/kitsu";
-import UserAvatar from "components/UserAvatar/UserAvatar";
+import PersonAvatar from "components/PersonAvatar/PersonAvatar";
 
 const AvatarMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -35,7 +35,12 @@ const AvatarMenu: React.FC = () => {
   return (
     <Tooltip title="User settings" placement="left">
       <div>
-        <UserAvatar onClick={handleMenu} size={45} clickable />
+        <PersonAvatar
+          person={auth.user}
+          onClick={handleMenu}
+          size={45}
+          clickable
+        />
 
         <Menu
           anchorEl={anchorEl}

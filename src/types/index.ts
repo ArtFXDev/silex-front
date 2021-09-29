@@ -1,5 +1,5 @@
 export * from "./Project";
-export * from "./User";
+export * from "./Person";
 export * from "./Sequence";
 export * from "./Shot";
 export * from "./BaseEntity";
