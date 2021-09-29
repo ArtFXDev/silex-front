@@ -1,4 +1,4 @@
-import { Avatar, AvatarProps } from "@mui/material";
+import { Avatar, AvatarProps, Tooltip } from "@mui/material";
 
 import * as Kitsu from "utils/kitsu";
 import { Person } from "types";
@@ -13,6 +13,8 @@ interface PersonAvatarProps {
   fontSize?: number;
   /** Wether or not put a pointer cursor */
   clickable?: boolean;
+  /** Display a tooltip on mouse hover */
+  tooltip?: boolean;
 }
 
 const PersonAvatar: React.FC<AvatarProps & PersonAvatarProps> = ({
@@ -20,11 +22,12 @@ const PersonAvatar: React.FC<AvatarProps & PersonAvatarProps> = ({
   person,
   fontSize,
   size,
+  tooltip,
   ...props
 }) => {
   const personColor = getPersonColor(person);
 
-  return (
+  const avatar = (
     <Avatar
       alt={person.full_name}
       src={
@@ -46,6 +49,14 @@ const PersonAvatar: React.FC<AvatarProps & PersonAvatarProps> = ({
     >
       {!person.has_avatar && firstTwoLetters(person)}
     </Avatar>
+  );
+
+  return tooltip ? (
+    <Tooltip title={person.full_name} arrow>
+      {avatar}
+    </Tooltip>
+  ) : (
+    avatar
   );
 };
 

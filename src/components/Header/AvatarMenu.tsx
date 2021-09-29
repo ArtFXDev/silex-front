@@ -8,7 +8,7 @@ import Tooltip from "@mui/material/Tooltip";
 
 import { useAuth } from "context/AuthContext";
 import * as Kitsu from "utils/kitsu";
-import PersonAvatar from "components/PersonAvatar/PersonAvatar";
+import { PersonAvatar } from "components/avatar";
 
 const AvatarMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
