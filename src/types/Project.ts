@@ -1,5 +1,6 @@
 import { BaseEntity } from "./BaseEntity";
 import { Sequence } from "./Sequence";
+import { Asset } from "./Asset";
 
 export type ProjectId = string;
 
@@ -24,4 +25,5 @@ export interface Project extends BaseEntity {
   type: "Project";
 
   sequences: Sequence[];
+  assets: Asset[];
 }

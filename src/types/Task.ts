@@ -1,4 +1,5 @@
 import { BaseEntity, ProjectId } from "types";
+import { TaskStatus } from "./TaskStatus";
 import { TaskType } from "./TaskType";
 
 export type TaskId = string;
@@ -28,4 +29,5 @@ export interface Task extends BaseEntity {
   entity_name: string;
 
   taskType: TaskType;
+  taskStatus: TaskStatus;
 }
