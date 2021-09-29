@@ -6,11 +6,18 @@ import { Shot, Asset } from "types";
 import QueryWrapper from "components/QueryWrapper/QueryWrapper";
 import EntitiesView from "./EntitiesView";
 import TaskModal from "./TaskModal";
+import { lastElementOf } from "utils/array";
 
 const TASK_FIELDS = gql`
   fragment TaskFields on Task {
     id
     type
+
+    assignees {
+      id
+      full_name
+      has_avatar
+    }
 
     taskType {
       name
@@ -59,7 +66,7 @@ const TasksView: React.FC<{ listView: boolean }> = ({ listView }) => {
   const location = useLocation();
 
   const tokens = location.pathname.split("/").filter((e) => e.length !== 0);
-  const lastId = tokens[tokens.length - 1];
+  const lastId = lastElementOf(tokens);
 
   const isShot = location.pathname.includes("shot");
 

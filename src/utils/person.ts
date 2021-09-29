@@ -2,7 +2,10 @@ import { Person } from "types";
 import { getColorFromString } from "./color";
 
 export function firstTwoLetters(person: Person): string {
-  return person.first_name[0].toUpperCase() + person.last_name[0].toUpperCase();
+  return person.full_name
+    .split(" ")
+    .map((n) => n[0].toUpperCase())
+    .join("");
 }
 
 export const getPersonColor = (person: Person): string =>

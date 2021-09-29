@@ -10,13 +10,15 @@ import {
   CardActions,
   Button,
   LinearProgress,
+  AvatarGroup,
 } from "@mui/material";
 import { useHistory, useRouteMatch } from "react-router-dom";
 
-import { Shot, Task, Asset } from "types";
+import { Shot, Task, Asset, Person } from "types";
 import { pictureThumbnailURL } from "utils/kitsu";
 import LazyImage from "components/LazyImage/LazyImage";
 import TaskStatusBadge from "components/TaskStatusBadge/TaskStatusBadge";
+import PersonAvatar from "components/PersonAvatar/PersonAvatar";
 
 interface EntityItemProps {
   index: number;
@@ -41,6 +43,14 @@ const ProgressBar: React.FC<{ shot: Shot }> = ({ shot }) => {
     />
   );
 };
+
+const AssigneesAvatars: React.FC<{ persons: Person[] }> = ({ persons }) => (
+  <AvatarGroup max={4} sx={{ mr: 2 }}>
+    {persons.map((person) => (
+      <PersonAvatar person={person} key={person.id} size={25} fontSize={15} />
+    ))}
+  </AvatarGroup>
+);
 
 const EntityItem: React.FC<EntityItemProps> = ({
   index,
@@ -72,6 +82,10 @@ const EntityItem: React.FC<EntityItemProps> = ({
               disableRipple
             >
               <ListItemText primary={name} />
+
+              {entity.type === "Task" && (
+                <AssigneesAvatars persons={entity.assignees} />
+              )}
 
               {entity.type === "Shot" && <ProgressBar shot={entity} />}
 
