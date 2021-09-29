@@ -26,11 +26,20 @@ interface EntityItemProps {
   openTaskModal?: (taskId: string) => void;
 }
 
-const countProgressOfShot = (shot: Shot) => {
+const ProgressBar: React.FC<{ shot: Shot }> = ({ shot }) => {
   const nDone = shot.tasks
     .map((task) => task.taskStatus.is_done)
     .filter((d) => d).length;
-  return (nDone / shot.tasks.length) * 100;
+  const progressPercent = (nDone / shot.tasks.length) * 100;
+
+  return (
+    <LinearProgress
+      variant="determinate"
+      color="success"
+      sx={{ width: 100, height: 8, borderRadius: 5 }}
+      value={progressPercent}
+    />
+  );
 };
 
 const EntityItem: React.FC<EntityItemProps> = ({
@@ -64,14 +73,7 @@ const EntityItem: React.FC<EntityItemProps> = ({
             >
               <ListItemText primary={name} />
 
-              {entity.type === "Shot" && (
-                <LinearProgress
-                  variant="determinate"
-                  color="success"
-                  sx={{ width: 100, height: 8, borderRadius: 5 }}
-                  value={countProgressOfShot(entity)}
-                />
-              )}
+              {entity.type === "Shot" && <ProgressBar shot={entity} />}
 
               {entity.type === "Task" && (
                 <TaskStatusBadge taskStatus={entity.taskStatus} />
@@ -114,6 +116,8 @@ const EntityItem: React.FC<EntityItemProps> = ({
               <Typography component="div" sx={{ marginRight: "auto" }}>
                 {name}
               </Typography>
+
+              {entity.type === "Shot" && <ProgressBar shot={entity} />}
 
               {entity.type === "Task" && (
                 <TaskStatusBadge taskStatus={entity.taskStatus} />
