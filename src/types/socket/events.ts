@@ -25,8 +25,8 @@ export interface ClientEmitEvents {
 }
 
 export interface OnServerEvents {
-  dccConnect: (payload: DCCClient) => void;
-  dccDisconnect: (uuid: string) => void;
+  dccConnect: (data: { uuid: string; context: DCCClient }) => void;
+  dccDisconnect: (data: { uuid: string }) => void;
 }
 
 export type TypedSocket = Socket<OnServerEvents, ClientEmitEvents>;

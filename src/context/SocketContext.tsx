@@ -1,8 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import io from "socket.io-client";
 import { useSnackbar } from "notistack";
+import { v4 as uuidv4 } from "uuid";
 
-import { TypedSocket, DCCClient } from "types/socket";
+import { TypedSocket, DCCClient, OnServerEvents } from "types/socket";
 
 export interface SocketContext {
   /** socket.io socket object (with types) */
@@ -26,49 +27,86 @@ export const ProvideSocket: React.FC = ({ children }) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  useEffect(() => {
-    socket.on("connect", () => {
-      // TODO: random uuid
-      socket.emit("initialization", { uuid: "fhksjfhkj" }, (response) => {});
+  const onConnect = useCallback(() => {
+    socket.emit("initialization", { uuid: uuidv4() }, (response) => {});
 
-      socket.emit("getClients", (response) => {
-        setDCCClients(Object.values(response.data));
-      });
-
-      // Set the status to connected and display a notification
-      setIsConnected(true);
-      enqueueSnackbar(`Connected to ${process.env.REACT_APP_WS_SERVER}`, {
-        variant: "success",
-      });
+    socket.emit("getClients", (response) => {
+      setDCCClients(Object.values(response.data));
     });
 
-    socket.on("disconnect", () => setIsConnected(false));
-
-    socket.on("dccConnect", (data) => {
-      setDCCClients([...dccClients, data]);
-      enqueueSnackbar(`New dcc connected: ${data.dcc} - ${data.pid}`, {
-        variant: "info",
-      });
+    // Set the status to connected and display a notification
+    setIsConnected(true);
+    enqueueSnackbar(`Connected to ${process.env.REACT_APP_WS_SERVER}`, {
+      variant: "success",
     });
+  }, [enqueueSnackbar, socket]);
 
-    socket.on("dccDisconnect", (uuid) => {
-      setDCCClients(dccClients.filter((e) => e.uuid !== uuid));
+  const onDisconnect = useCallback(() => {
+    setIsConnected(false);
+    setDCCClients([]);
 
-      const disconnected = dccClients.find((e) => e.uuid === uuid) as DCCClient;
+    enqueueSnackbar(
+      `WS server ${process.env.REACT_APP_WS_SERVER} disconnected`,
+      {
+        variant: "error",
+      }
+    );
+  }, [enqueueSnackbar]);
+
+  const onDCCConnect = useCallback<OnServerEvents["dccConnect"]>(
+    (data) => {
+      setDCCClients([...dccClients, data.context]);
+
+      enqueueSnackbar(
+        `New dcc connected: ${data.context.dcc} - ${data.context.pid}`,
+        {
+          variant: "info",
+        }
+      );
+    },
+    [dccClients, enqueueSnackbar]
+  );
+
+  const onDCCDisconnect = useCallback<OnServerEvents["dccDisconnect"]>(
+    (data) => {
+      const disconnected = dccClients.find(
+        (e) => e.uuid === data.uuid
+      ) as DCCClient;
+      setDCCClients(dccClients.filter((e) => e.uuid !== data.uuid));
+
       enqueueSnackbar(
         `dcc disconnected: ${disconnected.dcc} - ${disconnected.pid}`,
         {
           variant: "warning",
         }
       );
-    });
+    },
+    [dccClients, enqueueSnackbar]
+  );
+
+  useEffect(() => {
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+
+    socket.on("dccConnect", onDCCConnect);
+    socket.on("dccDisconnect", onDCCDisconnect);
 
     return () => {
       // Cleanup function remove the ws listeners
-      socket.off("dccConnect");
-      socket.off("dccDisconnect");
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("dccConnect", onDCCConnect);
+      socket.off("dccDisconnect", onDCCDisconnect);
     };
-  }, [dccClients, socket, enqueueSnackbar]);
+  }, [
+    dccClients,
+    socket,
+    enqueueSnackbar,
+    onConnect,
+    onDisconnect,
+    onDCCConnect,
+    onDCCDisconnect,
+  ]);
 
   return (
     <socketContext.Provider
