@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -8,11 +8,12 @@ import Tooltip from "@mui/material/Tooltip";
 
 import { useAuth } from "context/AuthContext";
 import * as Kitsu from "utils/kitsu";
-import UserAvatar from "components/UserAvatar/UserAvatar";
+import { PersonAvatar } from "components/avatar";
 
 const AvatarMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const auth = useAuth();
+  const history = useHistory();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -25,6 +26,7 @@ const AvatarMenu: React.FC = () => {
   const onLogout = () => {
     Kitsu.logout().then((_response) => {
       auth.signout();
+      history.push("/");
     });
   };
 
@@ -33,7 +35,12 @@ const AvatarMenu: React.FC = () => {
   return (
     <Tooltip title="User settings" placement="left">
       <div>
-        <UserAvatar onClick={handleMenu} size={45} clickable />
+        <PersonAvatar
+          person={auth.user}
+          onClick={handleMenu}
+          size={45}
+          clickable
+        />
 
         <Menu
           anchorEl={anchorEl}

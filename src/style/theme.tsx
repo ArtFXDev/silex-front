@@ -4,13 +4,14 @@ export const themeOptions: ThemeOptions = {
   palette: {
     mode: "dark",
     primary: {
-      main: "rgb(255,176,105)",
+      main: "#EE4E45",
     },
     secondary: {
-      main: "#DC4C49",
+      main: "#b0b0b0",
     },
     background: {
-      default: "#383737",
+      default: "#2c2b2b",
+      paper: "#333232",
     },
   },
 };

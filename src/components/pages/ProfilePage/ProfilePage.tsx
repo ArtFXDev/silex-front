@@ -7,7 +7,7 @@ import {
   TableBody,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import UserAvatar from "components/UserAvatar/UserAvatar";
+import { PersonAvatar } from "components/avatar";
 import { useAuth } from "context/AuthContext";
 
 const ProfilePage: React.FC = () => {
@@ -32,7 +32,7 @@ const ProfilePage: React.FC = () => {
     >
       <Paper elevation={5} sx={{ width: "50%", m: 5, p: 5, borderRadius: 3 }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
-          <UserAvatar size={100} />
+          <PersonAvatar person={auth.user} size={100} fontSize={40} />
         </Box>
 
         <Table component="table">
