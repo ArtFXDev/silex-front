@@ -22,17 +22,24 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
     "lint": "eslint . --ext .ts,.tsx",
-    "format:write": "prettier --write .",
-    "format:check": "prettier --check .",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "prettify": "prettier --check .",
+    "prettify:write": "prettier --write .",
     "eject": "react-scripts eject",
     "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
       "react-app"
+    ]
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx}": [
+      "npm run lint:fix",
+      "npm run prettify:write"
     ]
   },
   "browserslist": {
@@ -58,9 +65,14 @@
     "@types/uuid": "^8.3.1",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
     "@typescript-eslint/parser": "^4.32.0",
+    "customize-cra": "^1.0.0",
     "eslint": "^7.32.0",
+    "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^7.0.2",
-    "prettier": "2.4.1"
+    "lint-staged": "^11.1.2",
+    "prettier": "2.4.1",
+    "react-app-rewired": "^2.1.8"
   }
 }
