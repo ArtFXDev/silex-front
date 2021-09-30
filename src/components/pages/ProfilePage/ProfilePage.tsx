@@ -33,7 +33,7 @@ const ProfilePage: React.FC = () => {
           width: "100%",
         }}
       >
-        <Paper elevation={5} sx={{ width: "50%", m: 5, p: 5, borderRadius: 3 }}>
+        <Paper elevation={5} sx={{ width: "50%", p: 5, borderRadius: 3 }}>
           <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
             <PersonAvatar person={auth.user} size={100} fontSize={40} />
           </Box>

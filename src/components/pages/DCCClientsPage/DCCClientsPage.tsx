@@ -9,6 +9,7 @@ import {
   TableRow,
   Alert,
   AlertTitle,
+  Typography,
 } from "@mui/material";
 
 import { useSocket } from "context";
@@ -71,8 +72,10 @@ const DCCClientsPage: React.FC = () => {
           </Alert>
         )}
 
-        {socket.dccClients.length !== 0 && (
+        {socket.dccClients.length !== 0 ? (
           <DCCClientsTable dccClients={socket.dccClients} />
+        ) : (
+          <Typography color="text.disabled">No dccs connected...</Typography>
         )}
       </>
     </PageWrapper>
