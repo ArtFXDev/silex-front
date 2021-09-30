@@ -1,5 +1,6 @@
 import { ProjectId } from "types";
 import { BaseEntity } from "./BaseEntity";
+import { Shot } from "./Shot";
 
 export type SequenceId = string;
 
@@ -11,4 +12,6 @@ export interface Sequence extends BaseEntity {
   nb_frames: number | null;
   project_id: ProjectId;
   type: "Sequence";
+
+  shots: Shot[];
 }

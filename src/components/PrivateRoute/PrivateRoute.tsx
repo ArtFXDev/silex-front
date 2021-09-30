@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Redirect, Route, RouteProps, useLocation } from "react-router-dom";
+import { Redirect, Route, RouteProps, useRouteMatch } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "@mui/material/Backdrop";
 
@@ -9,17 +9,22 @@ import { useAuth } from "context";
 const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState<boolean>(false);
+  const [fetching, setFetching] = useState<boolean>(false);
 
   const auth = useAuth();
-  const location = useLocation();
+  const routeMatch = useRouteMatch();
 
-  const isTheRightRoute = rest.path === location.pathname;
+  const isTheRightRoute = routeMatch.isExact
+    ? rest.path === routeMatch.url
+    : routeMatch.url.includes(rest.path as string);
 
   useEffect(() => {
     const checkIfUserLoggedIn = async () => {
       try {
+        setFetching(true);
         const response = await Kitsu.isAuthenticated();
-        auth.signin(response.data.user);
+        await auth.signin(response.data.user);
+        setFetching(false);
         setIsUserLoggedIn(true);
       } catch (err) {
         setIsUserLoggedIn(false);
@@ -32,9 +37,10 @@ const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
       setIsUserLoggedIn(true);
       setLoading(false);
     } else {
-      if (isTheRightRoute && loading) checkIfUserLoggedIn();
+      if (isTheRightRoute && !isUserLoggedIn && !fetching)
+        checkIfUserLoggedIn();
     }
-  }, [auth, isTheRightRoute, isUserLoggedIn, loading]);
+  }, [auth, isTheRightRoute, isUserLoggedIn, loading, fetching]);
 
   return (
     <Route

@@ -1,112 +1,96 @@
-import { Box, Grid, Link, Breadcrumbs, IconButton } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import {
+  Switch,
+  Route,
   useLocation,
-  useRouteMatch,
   useHistory,
-  Link as RouterLink,
+  Redirect,
 } from "react-router-dom";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ListIcon from "@mui/icons-material/List";
-import { useState, useEffect } from "react";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { useState } from "react";
 
-import ListView from "./ListView";
-import DetailsView from "./DetailsView";
 import { useAuth } from "context";
-import { Project } from "types";
-import PageWrapper from "../PageWrapper/PageWrapper";
+import { ShotsView, TasksView, AssetsView } from "./views";
+import { ProjectSelector, CategorySelector } from "./selectors";
 
 const ExplorerPage: React.FC = () => {
-  const [selectedId, setSelectedId] = useState<string>();
   const [listView, setListView] = useState<boolean>(true);
 
   const auth = useAuth();
-  const currentProject = auth.getCurrentProject() as Project;
-
   const location = useLocation();
+  const locationDepth = location.pathname
+    .split("/")
+    .filter((e) => e.length !== 0).length;
   const history = useHistory();
-  const routeMatch = useRouteMatch();
 
-  // Listen to route change at component mount in order to reset the selected list item
-  useEffect(() => {
-    history.listen((_location, _action) => setSelectedId(undefined));
-  }, [history]);
+  if (auth.projects && auth.projects.length === 0) {
+    return <p>You don't have any projects yet...</p>;
+  }
 
-  /**
-   * Returns the route items for the breadcrumb
-   */
-  const getItemsFromLocation = (location: string) => {
-    return location
-      .split(routeMatch.url)[1]
-      .split("/")
-      .filter((e) => e.length !== 0);
-  };
-
-  const breadCrumbItems = getItemsFromLocation(location.pathname);
+  if (location.pathname === "/explorer") {
+    return <Redirect to={`/explorer/${auth.currentProjectId}/shots`} />;
+  }
 
   return (
-    <PageWrapper title={currentProject.name}>
-      <Grid container sx={{ columnGap: 1 }}>
-        <Grid item xs={selectedId ? 5 : 12}>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
+    <Box p={8} height="100%">
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <ProjectSelector />
+        <ChevronRightIcon fontSize="large" sx={{ mx: 1 }} />
+        <CategorySelector />
+      </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          float: "right",
+        }}
+      >
+        <Box sx={{ marginLeft: "auto" }}>
+          <IconButton
+            onClick={() => history.goBack()}
+            disabled={locationDepth <= 3}
           >
-            <Breadcrumbs aria-label="breadcrumb">
-              <p></p>
-              <p>Sequences</p>
-              {breadCrumbItems.map((e, i) => (
-                <Link
-                  component={RouterLink}
-                  to={"."}
-                  key={i}
-                  color="text.disabled"
-                >
-                  {e.toUpperCase()}
-                </Link>
-              ))}
-            </Breadcrumbs>
+            <ChevronLeftIcon />
+          </IconButton>
 
-            <IconButton onClick={() => setListView(!listView)}>
-              {listView ? <GridViewIcon /> : <ListIcon />}
-            </IconButton>
-          </Box>
+          <IconButton
+            onClick={() => history.goForward()}
+            disabled={locationDepth >= 4}
+          >
+            <ChevronRightIcon />
+          </IconButton>
 
-          <ListView
-            depth={breadCrumbItems.length}
-            selectedId={selectedId}
-            setSelectedId={setSelectedId}
-            listView={listView}
-          />
-        </Grid>
+          <IconButton onClick={() => setListView(!listView)}>
+            {listView ? <GridViewIcon /> : <ListIcon />}
+          </IconButton>
+        </Box>
+      </Box>
 
-        {selectedId && (
-          <>
-            <Grid item xs={1}>
-              <Box
-                component="hr"
-                sx={{
-                  backgroundColor: "text.disabled",
-                  width: "5px",
-                  height: "100%",
-                  borderRadius: "2px",
-                  opacity: "30%",
-                }}
-              />
-            </Grid>
+      <Box sx={{ mt: 4 }}>
+        <Switch>
+          <Route path={`/explorer/:projectId/shots/:shotId`}>
+            <TasksView listView={listView} />
+          </Route>
 
-            <Grid item xs={5}>
-              <DetailsView
-                depth={breadCrumbItems.length}
-                selectedId={selectedId}
-              />
-            </Grid>
-          </>
-        )}
-      </Grid>
-    </PageWrapper>
+          <Route path={`/explorer/:projectId/shots`}>
+            <ShotsView listView={listView} />
+          </Route>
+
+          <Route path={`/explorer/:projectId/assets/:assetId`}>
+            <TasksView listView={listView} />
+          </Route>
+
+          <Route path={`/explorer/:projectId/assets`}>
+            <AssetsView listView={listView} />
+          </Route>
+        </Switch>
+      </Box>
+    </Box>
   );
 };
 

@@ -4,12 +4,13 @@ import { useState } from "react";
 
 interface LazyImageProps {
   /** Source url if the image, if undefined a default icon is shown */
-  src: string | undefined;
+  src?: string;
   alt: string;
   width: number;
   height: number;
   disableBorder?: boolean;
   onClick?: () => void;
+  disableFade?: boolean;
 }
 
 /**
@@ -22,25 +23,32 @@ const LazyImage: React.FC<LazyImageProps> = (props) => {
   const width = `${props.width}px`;
   const height = `${props.height}px`;
 
+  const img = (
+    <img
+      src={props.src}
+      alt={props.alt}
+      loading="lazy"
+      style={{
+        width: width,
+        height: height,
+      }}
+      onLoad={() => setIsImageLoading(false)}
+    />
+  );
+
   return (
     <div
       style={{ cursor: props.onClick ? "pointer" : "default" }}
       onClick={props.onClick}
     >
-      {props.src && (
-        <Fade in={!isImageLoading} timeout={400}>
-          <img
-            src={props.src}
-            alt={props.alt}
-            loading="lazy"
-            style={{
-              width: width,
-              height: height,
-            }}
-            onLoad={() => setIsImageLoading(false)}
-          />
-        </Fade>
-      )}
+      {props.src &&
+        (props.disableFade ? (
+          { img }
+        ) : (
+          <Fade in={!isImageLoading} timeout={400}>
+            {img}
+          </Fade>
+        ))}
 
       {(isImageLoading || !props.src) && (
         <Box

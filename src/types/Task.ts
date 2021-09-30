@@ -1,9 +1,11 @@
 import { BaseEntity, ProjectId } from "types";
+import { TaskStatus } from "./TaskStatus";
+import { TaskType } from "./TaskType";
+import { Person } from "./Person";
 
 export type TaskId = string;
 
 export interface Task extends BaseEntity {
-  assignees: [];
   id: TaskId;
   description: string | null;
   priority: number;
@@ -25,4 +27,8 @@ export interface Task extends BaseEntity {
   task_status_name: string;
   entity_type_name: string;
   entity_name: string;
+
+  taskType: TaskType;
+  taskStatus: TaskStatus;
+  assignees: Person[];
 }
