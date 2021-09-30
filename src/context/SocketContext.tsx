@@ -28,16 +28,18 @@ export const ProvideSocket: React.FC = ({ children }) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const onConnect = useCallback(() => {
-    socket.emit("initialization", { uuid: uuidv4() }, (response) => {});
+    socket.emit("initialization", { uuid: uuidv4() }, (response) => {
+      setIsConnected(true);
+      enqueueSnackbar(
+        `Connected to ${process.env.REACT_APP_WS_SERVER} (${response.msg})`,
+        {
+          variant: "success",
+        }
+      );
+    });
 
     socket.emit("getClients", (response) => {
       setDCCClients(Object.values(response.data));
-    });
-
-    // Set the status to connected and display a notification
-    setIsConnected(true);
-    enqueueSnackbar(`Connected to ${process.env.REACT_APP_WS_SERVER}`, {
-      variant: "success",
     });
   }, [enqueueSnackbar, socket]);
 
@@ -85,6 +87,7 @@ export const ProvideSocket: React.FC = ({ children }) => {
   );
 
   useEffect(() => {
+    // Register on events
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
 
@@ -121,4 +124,4 @@ export const ProvideSocket: React.FC = ({ children }) => {
   );
 };
 
-export const useSocket = () => useContext(socketContext);
+export const useSocket = (): SocketContext => useContext(socketContext);

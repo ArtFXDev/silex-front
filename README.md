@@ -36,7 +36,7 @@ Note that if you don't want to install the dev dependencies (including the linte
 
 ## Libraries
 
-Here are the main libraries and packages used: 
+Here are the main libraries and packages used:
 
 | Library                                       | Version  |
 | --------------------------------------------- | -------- |
@@ -45,8 +45,6 @@ Here are the main libraries and packages used:
 | [TypeScript](https://www.typescriptlang.org/) | `4.1.2`  |
 | [socket.io-client](https://socket.io/)        | `4.2.0`  |
 | [React router](reactrouter.com/)              | `5.3.0`  |
-
-
 
 ## Contributing
 

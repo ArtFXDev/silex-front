@@ -57,4 +57,4 @@ export const ProvideAuth: React.FC = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(authContext);
+export const useAuth = (): AuthContext => useContext(authContext);

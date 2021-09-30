@@ -38,7 +38,7 @@ const SilexLogoAndText: React.FC = () => (
   </Grid>
 );
 
-const LoginPage: React.FC = (props) => {
+const LoginPage: React.FC = () => {
   const [email, setEmail] = useState<string | undefined>();
   const [password, setPassword] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();
