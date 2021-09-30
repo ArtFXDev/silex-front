@@ -1,11 +1,10 @@
 import { Socket } from "socket.io-client";
 import { DCCClient } from "./DCCClient";
 
-type ServerPayload<T> = { status: number; data: T };
 type ServerResponse = { status: number; msg: string };
 
 /** Callback function */
-type Acknowledgement<Response> = (payload: ServerPayload<Response>) => void;
+type Acknowledgement<Response> = (response: Response) => void;
 
 /** Emit without a payload where you only need a response */
 type WithCallback<Response> = (ack: Acknowledgement<Response>) => void;

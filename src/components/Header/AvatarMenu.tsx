@@ -24,6 +24,7 @@ const AvatarMenu: React.FC = () => {
   };
 
   const onLogout = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     Kitsu.logout().then((_response) => {
       auth.signout();
       history.push("/");

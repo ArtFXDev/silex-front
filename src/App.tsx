@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
@@ -19,7 +18,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const App: React.FC = (props) => {
+const App: React.FC = () => {
   return (
     <ApolloProvider client={client}>
       <SnackbarProvider maxSnack={3}>

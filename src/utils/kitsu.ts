@@ -1,50 +1,48 @@
-import axios from "axios";
-import { Project, ProjectId, Person, Sequence, Shot, SequenceId } from "types";
+import axios, { AxiosResponse } from "axios";
+import { Project, Person } from "types";
 
-export function kitsuURL(path: string) {
+type PromiseResponse<T> = Promise<AxiosResponse<T>>;
+
+export function kitsuURL(path: string): string {
   return `${process.env.REACT_APP_KITSU_URL}/${path}`;
 }
 
-export function kitsuAPIURL(path: string) {
+export function kitsuAPIURL(path: string): string {
   return kitsuURL(`api/${path}`);
 }
 
-export function get<T>(url: string) {
-  return axios.get<T>(kitsuAPIURL(url), {
+export function get<T>(url: string): PromiseResponse<T> {
+  return axios.get(kitsuAPIURL(url), {
     withCredentials: true,
   });
 }
 
-export function pictureThumbnailURL(category: string, id: string) {
+export function pictureThumbnailURL(category: string, id: string): string {
   return kitsuAPIURL(`pictures/thumbnails/${category}/${id}.png`);
 }
 
-export function originalPreviewFileURL(id: string) {
+export function originalPreviewFileURL(id: string): string {
   return kitsuAPIURL(`pictures/originals/preview-files/${id}.png`);
 }
 
-export function isAuthenticated() {
-  return get<{ user: Person }>("auth/authenticated");
+type UserResponse = PromiseResponse<{ user: Person }>;
+
+export function isAuthenticated(): UserResponse {
+  return get("auth/authenticated");
 }
 
-export function login(data: { email: string; password: string }) {
-  return axios.post<{ user: Person }>(kitsuAPIURL("auth/login"), data, {
+type LoginInput = { email: string; password: string };
+
+export function login(data: LoginInput): UserResponse {
+  return axios.post(kitsuAPIURL("auth/login"), data, {
     withCredentials: true,
   });
 }
 
-export function logout() {
+export function logout(): PromiseResponse<{ logout: boolean }> {
   return get("auth/logout");
 }
 
-export function getUserProjects() {
-  return get<Project[]>("data/user/projects/open");
-}
-
-export function getProjectSequences(id: ProjectId) {
-  return get<Sequence[]>(`data/projects/${id}/sequences`);
-}
-
-export function getSequenceShots(id: SequenceId) {
-  return get<Shot[]>(`data/sequences/${id}/shots`);
+export function getUserProjects(): PromiseResponse<Project[]> {
+  return get("data/user/projects/open");
 }

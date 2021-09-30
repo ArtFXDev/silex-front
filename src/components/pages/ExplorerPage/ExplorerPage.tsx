@@ -27,7 +27,7 @@ const ExplorerPage: React.FC = () => {
   const history = useHistory();
 
   if (auth.projects && auth.projects.length === 0) {
-    return <p>You don't have any projects yet...</p>;
+    return <p>You don{"'"}t have any projects yet...</p>;
   }
 
   if (location.pathname === "/explorer") {
