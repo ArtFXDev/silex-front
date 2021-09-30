@@ -6,7 +6,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import { Logout, AccountCircle } from "@mui/icons-material";
 import Tooltip from "@mui/material/Tooltip";
 
-import { useAuth } from "context/AuthContext";
+import { useAuth } from "context";
 import * as Kitsu from "utils/kitsu";
 import { PersonAvatar } from "components/avatar";
 

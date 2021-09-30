@@ -12,7 +12,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useState } from "react";
 
-import { useAuth } from "context/AuthContext";
+import { useAuth } from "context";
 import { ShotsView, TasksView, AssetsView } from "./views";
 import { ProjectSelector, CategorySelector } from "./selectors";
 

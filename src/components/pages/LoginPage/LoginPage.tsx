@@ -11,7 +11,7 @@ import Box from "@mui/material/Box";
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
 import * as Kitsu from "utils/kitsu";
-import { useAuth } from "context/AuthContext";
+import { useAuth } from "context";
 
 const SilexLogoAndText: React.FC = () => (
   <Grid
