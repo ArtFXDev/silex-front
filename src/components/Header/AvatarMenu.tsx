@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
+import { Menu, MenuItem, ListItemIcon, Tooltip } from "@mui/material";
 import { Logout, AccountCircle } from "@mui/icons-material";
-import Tooltip from "@mui/material/Tooltip";
 
 import { useAuth } from "context";
 import * as Kitsu from "utils/kitsu";

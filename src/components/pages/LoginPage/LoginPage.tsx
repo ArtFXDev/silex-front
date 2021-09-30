@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import Alert from "@mui/material/Alert";
-import Collapse from "@mui/material/Collapse";
-import Box from "@mui/material/Box";
+import { TextField, Grid, Button, Alert, Collapse, Box } from "@mui/material";
 
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";

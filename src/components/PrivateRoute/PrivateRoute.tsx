@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, RouteProps, useRouteMatch } from "react-router-dom";
-import CircularProgress from "@mui/material/CircularProgress";
-import Backdrop from "@mui/material/Backdrop";
+import { CircularProgress, Backdrop } from "@mui/material";
 
 import * as Kitsu from "utils/kitsu";
 import { useAuth } from "context";

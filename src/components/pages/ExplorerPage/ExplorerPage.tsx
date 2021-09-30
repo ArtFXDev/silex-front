@@ -6,10 +6,12 @@ import {
   useHistory,
   Redirect,
 } from "react-router-dom";
-import GridViewIcon from "@mui/icons-material/GridView";
-import ListIcon from "@mui/icons-material/List";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import {
+  GridView as GridViewIcon,
+  List as ListIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+} from "@mui/icons-material";
 import { useState } from "react";
 
 import { useAuth } from "context";
