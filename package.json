@@ -28,6 +28,8 @@
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "prettify": "prettier --check .",
     "prettify:write": "prettier --write .",
+    "tsc": "tsc",
+    "tsc:watch": "tsc --watch",
     "eject": "react-scripts eject",
     "prepare": "husky install"
   },
