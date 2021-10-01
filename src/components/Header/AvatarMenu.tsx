@@ -4,7 +4,7 @@ import { Menu, MenuItem, ListItemIcon, Tooltip } from "@mui/material";
 import { Logout, AccountCircle } from "@mui/icons-material";
 
 import { useAuth } from "context";
-import * as Kitsu from "utils/kitsu";
+import * as Zou from "utils/zou";
 import { PersonAvatar } from "components/avatar";
 
 const AvatarMenu: React.FC = () => {
@@ -22,7 +22,7 @@ const AvatarMenu: React.FC = () => {
 
   const onLogout = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    Kitsu.logout().then((_response) => {
+    Zou.logout().then((_response) => {
       auth.signout();
       history.push("/");
     });

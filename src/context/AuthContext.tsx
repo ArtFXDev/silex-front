@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Person, Project, ProjectId } from "types";
-import * as Kitsu from "utils/kitsu";
+import * as Zou from "utils/zou";
 
 export interface AuthContext {
   user: Person | undefined;
@@ -25,7 +25,7 @@ export const ProvideAuth: React.FC = ({ children }) => {
     setUser(user);
 
     // Store the list of projects for that user
-    const projectsData = await Kitsu.getUserProjects();
+    const projectsData = await Zou.getUserProjects();
     setProjects(projectsData.data);
 
     // And the current project id

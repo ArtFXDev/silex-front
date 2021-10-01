@@ -1,10 +1,9 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 import Header from "components/Header/Header";
 import PrivateRoute from "components/PrivateRoute/PrivateRoute";
-import { ProvideAuth, ProvideSocket } from "context";
+import { ProvideAuth, ProvideGraphQLClient, ProvideSocket } from "context";
 
 // Pages
 import HomePage from "components/pages/HomePage/HomePage";
@@ -13,15 +12,10 @@ import ProfilePage from "components/pages/ProfilePage/ProfilePage";
 import ExplorerPage from "components/pages/ExplorerPage/ExplorerPage";
 import DCCClientsPage from "components/pages/DCCClientsPage/DCCClientsPage";
 
-const client = new ApolloClient({
-  uri: "http://localhost:4000",
-  cache: new InMemoryCache(),
-});
-
 const App: React.FC = () => {
   return (
-    <ApolloProvider client={client}>
-      <SnackbarProvider maxSnack={3}>
+    <SnackbarProvider maxSnack={3}>
+      <ProvideGraphQLClient>
         <ProvideSocket>
           <ProvideAuth>
             <Router>
@@ -53,8 +47,8 @@ const App: React.FC = () => {
             </Router>
           </ProvideAuth>
         </ProvideSocket>
-      </SnackbarProvider>
-    </ApolloProvider>
+      </ProvideGraphQLClient>
+    </SnackbarProvider>
   );
 };
 

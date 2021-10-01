@@ -14,7 +14,7 @@ import {
 import { useHistory, useRouteMatch } from "react-router-dom";
 
 import { Shot, Task, Asset } from "types";
-import { pictureThumbnailURL } from "utils/kitsu";
+import { pictureThumbnailURL } from "utils/zou";
 import LazyImage from "components/LazyImage/LazyImage";
 import TaskStatusBadge from "components/TaskStatusBadge/TaskStatusBadge";
 import { PersonsAvatarGroup } from "components/avatar";

@@ -1,6 +1,6 @@
 import { Avatar, AvatarProps, Tooltip } from "@mui/material";
 
-import * as Kitsu from "utils/kitsu";
+import * as Zou from "utils/zou";
 import { Person } from "types";
 import { firstTwoLetters, getPersonColor } from "utils/person";
 
@@ -31,7 +31,7 @@ const PersonAvatar: React.FC<AvatarProps & PersonAvatarProps> = ({
     <Avatar
       alt={person.full_name}
       src={
-        person.has_avatar ? Kitsu.pictureThumbnailURL("persons", person.id) : ""
+        person.has_avatar ? Zou.pictureThumbnailURL("persons", person.id) : ""
       }
       sx={{
         cursor: clickable ? "pointer" : "inherit",
