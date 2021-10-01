@@ -4,7 +4,7 @@ import { Project, Person } from "types";
 type PromiseResponse<T> = Promise<AxiosResponse<T>>;
 
 export function kitsuURL(path: string): string {
-  return `${process.env.REACT_APP_KITSU_URL}/${path}`;
+  return `${process.env.REACT_APP_ZOU_API}/${path}`;
 }
 
 export function kitsuAPIURL(path: string): string {

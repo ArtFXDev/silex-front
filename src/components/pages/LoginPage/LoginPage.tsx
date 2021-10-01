@@ -69,7 +69,7 @@ const LoginPage: React.FC = () => {
           );
         } else {
           setError(
-            `Kitsu server at ${process.env.REACT_APP_KITSU_URL} is not reachable, check your internet connection or retry later`
+            `Zou server at ${process.env.REACT_APP_ZOU_API} is not reachable, check your internet connection or retry later`
           );
         }
       });
