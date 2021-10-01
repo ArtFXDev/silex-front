@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Redirect, Route, RouteProps, useRouteMatch } from "react-router-dom";
 import { CircularProgress, Backdrop } from "@mui/material";
 
-import * as Kitsu from "utils/kitsu";
+import * as Zou from "utils/zou";
 import { useAuth } from "context";
 
 const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
@@ -21,7 +21,7 @@ const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
     const checkIfUserLoggedIn = async () => {
       try {
         setFetching(true);
-        const response = await Kitsu.isAuthenticated();
+        const response = await Zou.isAuthenticated();
         await auth.signin(response.data.user);
         setFetching(false);
         setIsUserLoggedIn(true);

@@ -3,26 +3,26 @@ import { Project, Person } from "types";
 
 type PromiseResponse<T> = Promise<AxiosResponse<T>>;
 
-export function kitsuURL(path: string): string {
+export function zouURL(path: string): string {
   return `${process.env.REACT_APP_ZOU_API}/${path}`;
 }
 
-export function kitsuAPIURL(path: string): string {
-  return kitsuURL(`api/${path}`);
+export function zouAPIURL(path: string): string {
+  return zouURL(`api/${path}`);
 }
 
 export function get<T>(url: string): PromiseResponse<T> {
-  return axios.get(kitsuAPIURL(url), {
+  return axios.get(zouAPIURL(url), {
     withCredentials: true,
   });
 }
 
 export function pictureThumbnailURL(category: string, id: string): string {
-  return kitsuAPIURL(`pictures/thumbnails/${category}/${id}.png`);
+  return zouAPIURL(`pictures/thumbnails/${category}/${id}.png`);
 }
 
 export function originalPreviewFileURL(id: string): string {
-  return kitsuAPIURL(`pictures/originals/preview-files/${id}.png`);
+  return zouAPIURL(`pictures/originals/preview-files/${id}.png`);
 }
 
 type UserResponse = PromiseResponse<{ user: Person }>;
@@ -34,7 +34,7 @@ export function isAuthenticated(): UserResponse {
 type LoginInput = { email: string; password: string };
 
 export function login(data: LoginInput): UserResponse {
-  return axios.post(kitsuAPIURL("auth/login"), data, {
+  return axios.post(zouAPIURL("auth/login"), data, {
     withCredentials: true,
   });
 }

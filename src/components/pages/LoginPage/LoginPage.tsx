@@ -4,7 +4,7 @@ import { TextField, Grid, Button, Alert, Collapse, Box } from "@mui/material";
 
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
-import * as Kitsu from "utils/kitsu";
+import * as Zou from "utils/zou";
 import { useAuth } from "context";
 
 const SilexLogoAndText: React.FC = () => (
@@ -54,7 +54,7 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    Kitsu.login({ email, password })
+    Zou.login({ email, password })
       .then((response) => {
         const { from } = location.state || { from: { pathname: "/" } };
         auth.signin(response.data.user);
