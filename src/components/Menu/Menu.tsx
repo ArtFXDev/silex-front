@@ -1,12 +1,13 @@
 import { Box, Drawer, Grid, IconButton, Link } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Link as RouterLink, useLocation } from "react-router-dom";
+import { useAuth } from "context";
 
 import SilexLogo from "assets/images/silex_logo.png";
 
 const links = [
-  { text: "Home", to: "/", exact: true },
-  { text: "File explorer", to: "/explorer", exact: false },
+  { text: "Home", to: "/", exact: true, needProjectId: false },
+  { text: "File explorer", to: "/explorer", exact: false, needProjectId: true },
 ];
 
 type MenuProps = {
@@ -16,6 +17,7 @@ type MenuProps = {
 
 const Menu: React.FC<MenuProps> = ({ closeMenu, open }) => {
   const location = useLocation();
+  const auth = useAuth();
 
   return (
     <Drawer anchor="left" elevation={2} open={open} onClose={closeMenu}>
@@ -47,27 +49,36 @@ const Menu: React.FC<MenuProps> = ({ closeMenu, open }) => {
             <img src={SilexLogo} alt="Silex Logo" width={100} height={100} />
           </Grid>
 
-          {links.map((link, i) => (
-            <Grid item key={i}>
-              <Link
-                component={RouterLink}
-                to={link.to}
-                underline="hover"
-                color={
-                  (
-                    link.exact
-                      ? location.pathname === link.to
-                      : location.pathname.startsWith(link.to)
-                  )
-                    ? "primary"
-                    : "text.disabled"
-                }
-                onClick={closeMenu}
-              >
-                {link.text}
-              </Link>
-            </Grid>
-          ))}
+          {links.map((link, i) => {
+            if (
+              auth.currentProjectId === undefined &&
+              link.needProjectId === true
+            ) {
+              return;
+            } else {
+              return (
+                <Grid item key={i}>
+                  <Link
+                    component={RouterLink}
+                    to={link.to}
+                    underline="hover"
+                    color={
+                      (
+                        link.exact
+                          ? location.pathname === link.to
+                          : location.pathname.startsWith(link.to)
+                      )
+                        ? "primary"
+                        : "text.disabled"
+                    }
+                    onClick={closeMenu}
+                  >
+                    {link.text}
+                  </Link>
+                </Grid>
+              );
+            }
+          })}
         </Grid>
       </Box>
     </Drawer>
