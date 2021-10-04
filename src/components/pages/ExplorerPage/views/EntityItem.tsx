@@ -58,7 +58,11 @@ const EntityItem: React.FC<EntityItemProps> = ({
   const onClickAction = () => {
     openTaskModal
       ? openTaskModal(entity.id)
-      : history.push(`${routeMatch.url}/${entity.id}`);
+      : history.push(
+          `${routeMatch.url}/${entity.id}${
+            entity.type === "Shot" ? "/tasks" : ""
+          }`
+        );
   };
 
   return (
