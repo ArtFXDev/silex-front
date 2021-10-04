@@ -32,10 +32,6 @@ const ExplorerPage: React.FC = () => {
     return <p>You don{"'"}t have any projects yet...</p>;
   }
 
-  if (location.pathname === "/explorer") {
-    return <Redirect to={`/explorer/${auth.currentProjectId}/shots`} />;
-  }
-
   return (
     <Box p={8} height="100%">
       <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -75,21 +71,24 @@ const ExplorerPage: React.FC = () => {
 
       <Box sx={{ mt: 4 }}>
         <Switch>
-          <Route path={`/explorer/:projectId/shots/:shotId`}>
-            <TasksView listView={listView} />
+          {/* Redirect to the shots by default when we go to the explorer */}
+          <Route exact path={`/explorer`}>
+            <Redirect to={`/explorer/${auth.currentProjectId}/shots`} />
           </Route>
 
-          <Route path={`/explorer/:projectId/shots`}>
-            <ShotsView listView={listView} />
-          </Route>
+          <Switch>
+            <Route path={`/explorer/:projectId/:category/:entityId/tasks`}>
+              <TasksView listView={listView} />
+            </Route>
 
-          <Route path={`/explorer/:projectId/assets/:assetId`}>
-            <TasksView listView={listView} />
-          </Route>
+            <Route path={`/explorer/:projectId/shots`}>
+              <ShotsView listView={listView} />
+            </Route>
 
-          <Route path={`/explorer/:projectId/assets`}>
-            <AssetsView listView={listView} />
-          </Route>
+            <Route path={`/explorer/:projectId/assets`}>
+              <AssetsView listView={listView} />
+            </Route>
+          </Switch>
         </Switch>
       </Box>
     </Box>

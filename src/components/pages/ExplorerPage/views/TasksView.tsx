@@ -1,12 +1,10 @@
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useRouteMatch, Route, Switch } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 
 import { Shot, Asset } from "types";
 import QueryWrapper from "components/QueryWrapper/QueryWrapper";
 import EntitiesView from "./EntitiesView";
 import TaskModal from "./TaskModal";
-import { lastElementOf } from "utils/array";
 
 const TASK_FIELDS = gql`
   fragment TaskFields on Task {
@@ -55,25 +53,12 @@ const ASSET_TASKS = gql`
 `;
 
 const TasksView: React.FC<{ listView: boolean }> = ({ listView }) => {
-  const [openModal, setOpenModal] = useState<boolean>(false);
-  const [modalTaskId, setModalTaskId] = useState<string>();
-
-  const openTaskModal = (taskId: string): void => {
-    setOpenModal(true);
-    setModalTaskId(taskId);
-  };
-
-  const location = useLocation();
-
-  const tokens = location.pathname.split("/").filter((e) => e.length !== 0);
-  const lastId = lastElementOf(tokens);
-
-  const isShot = location.pathname.includes("shot");
+  const routeMatch = useRouteMatch<{ category: string; entityId: string }>();
 
   const query = useQuery<{ shot?: Shot; asset?: Asset }>(
-    isShot ? SHOT_TASKS : ASSET_TASKS,
+    routeMatch.params.category === "shots" ? SHOT_TASKS : ASSET_TASKS,
     {
-      variables: { id: lastId },
+      variables: { id: routeMatch.params.entityId },
     }
   );
   const { data } = query;
@@ -83,23 +68,18 @@ const TasksView: React.FC<{ listView: boolean }> = ({ listView }) => {
 
   return (
     <QueryWrapper query={query}>
-      {openModal && (
-        <TaskModal
-          taskId={modalTaskId as string}
-          onClose={() => setOpenModal(false)}
-        />
-      )}
-
       {data && (
         <div>
           <h2 style={{ marginBottom: 0, marginTop: 0 }}>{entity.name}</h2>
-          <EntitiesView
-            entities={entity.tasks}
-            listView={listView}
-            openTaskModal={openTaskModal}
-          />
+          <EntitiesView entities={entity.tasks} listView={listView} />
         </div>
       )}
+
+      <Switch>
+        <Route path={`/explorer/:projectId/:category/:entityId/tasks/:taskId`}>
+          <TaskModal />
+        </Route>
+      </Switch>
     </QueryWrapper>
   );
 };

@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { gql, useQuery } from "@apollo/client";
+import { useHistory, useRouteMatch } from "react-router-dom";
 
 import { Task } from "types";
 import QueryWrapper from "components/QueryWrapper/QueryWrapper";
@@ -44,14 +45,17 @@ const TASK = gql`
   }
 `;
 
-interface TaskModalProps {
-  taskId: string;
-  onClose: () => void;
-}
+const TaskModal: React.FC = () => {
+  const routeMatch = useRouteMatch<{ taskId: string }>();
 
-const TaskModal: React.FC<TaskModalProps> = ({ taskId, onClose }) => {
+  const history = useHistory();
+
+  const onClose = () => {
+    history.goBack();
+  };
+
   const query = useQuery<{ task: Task }>(TASK, {
-    variables: { id: taskId },
+    variables: { id: routeMatch.params.taskId },
   });
   const { data } = query;
 
