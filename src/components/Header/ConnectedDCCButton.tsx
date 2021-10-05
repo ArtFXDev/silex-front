@@ -5,7 +5,7 @@ import { green, red } from "@mui/material/colors";
 
 import { useSocket } from "context";
 
-const ConnectedDCCButton: React.FC<IconButtonProps> = (props) => {
+const ConnectedDCCButton = (props: IconButtonProps): JSX.Element => {
   const socket = useSocket();
 
   return (

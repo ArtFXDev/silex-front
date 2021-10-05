@@ -27,7 +27,7 @@ interface EntityItemProps {
   openTaskModal?: (taskId: string) => void;
 }
 
-const ProgressBar: React.FC<{ shot: Shot }> = ({ shot }) => {
+const ProgressBar = ({ shot }: { shot: Shot }): JSX.Element => {
   const nDone = shot.tasks
     .map((task) => task.taskStatus.is_done)
     .filter((d) => d).length;
@@ -43,13 +43,13 @@ const ProgressBar: React.FC<{ shot: Shot }> = ({ shot }) => {
   );
 };
 
-const EntityItem: React.FC<EntityItemProps> = ({
+const EntityItem = ({
   index,
   entity,
   selected,
   listView,
   openTaskModal,
-}) => {
+}: EntityItemProps): JSX.Element => {
   const history = useHistory();
   const routeMatch = useRouteMatch();
 

@@ -18,7 +18,7 @@ import { useAuth } from "context";
 import { AssetsView, ShotsView, TasksView } from "./views";
 import { CategorySelector, ProjectSelector } from "./selectors";
 
-const ExplorerPage: React.FC = () => {
+const ExplorerPage = (): JSX.Element => {
   const [listView, setListView] = useState<boolean>(true);
 
   const auth = useAuth();

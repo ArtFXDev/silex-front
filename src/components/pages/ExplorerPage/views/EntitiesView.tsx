@@ -9,11 +9,11 @@ interface EntitiesViewProps {
   openTaskModal?: (taskId: string) => void;
 }
 
-const EntitiesView: React.FC<EntitiesViewProps> = ({
+const EntitiesView = ({
   entities,
   listView,
   openTaskModal,
-}) => {
+}: EntitiesViewProps): JSX.Element => {
   const entitiesItems = (
     <>
       {entities.map((e, i) => (

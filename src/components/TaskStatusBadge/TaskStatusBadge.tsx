@@ -10,11 +10,11 @@ interface TaskStatusBadgeProps {
   sx?: SxProps<Theme>;
 }
 
-const TaskStatusBadge: React.FC<TaskStatusBadgeProps> = ({
+const TaskStatusBadge = ({
   fontSize,
   taskStatus,
   sx,
-}) => {
+}: TaskStatusBadgeProps): JSX.Element => {
   return (
     <Typography
       fontSize={fontSize || 10}

@@ -12,7 +12,7 @@ import ProfilePage from "components/pages/ProfilePage/ProfilePage";
 import ExplorerPage from "components/pages/ExplorerPage/ExplorerPage";
 import DCCClientsPage from "components/pages/DCCClientsPage/DCCClientsPage";
 
-const App: React.FC = () => {
+const App = (): JSX.Element => {
   return (
     <SnackbarProvider maxSnack={3}>
       <ProvideGraphQLClient>

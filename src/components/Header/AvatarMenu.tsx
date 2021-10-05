@@ -7,7 +7,7 @@ import { useAuth } from "context";
 import * as Zou from "utils/zou";
 import { PersonAvatar } from "components/avatar";
 
-const AvatarMenu: React.FC = () => {
+const AvatarMenu = (): JSX.Element => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const auth = useAuth();
   const history = useHistory();

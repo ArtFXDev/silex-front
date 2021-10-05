@@ -15,7 +15,7 @@ type MenuProps = {
   open: boolean;
 };
 
-const Menu: React.FC<MenuProps> = ({ closeMenu, open }) => {
+const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
   const location = useLocation();
   const auth = useAuth();
 

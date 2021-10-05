@@ -45,7 +45,7 @@ const TASK = gql`
   }
 `;
 
-const TaskModal: React.FC = () => {
+const TaskModal = (): JSX.Element => {
   const routeMatch = useRouteMatch<{ taskId: string }>();
 
   const history = useHistory();

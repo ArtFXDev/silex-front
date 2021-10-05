@@ -17,14 +17,14 @@ interface PersonAvatarProps {
   tooltip?: boolean;
 }
 
-const PersonAvatar: React.FC<AvatarProps & PersonAvatarProps> = ({
+const PersonAvatar = ({
   clickable,
   person,
   fontSize,
   size,
   tooltip,
   ...props
-}) => {
+}: AvatarProps & PersonAvatarProps): JSX.Element => {
   const personColor = getPersonColor(person);
 
   const avatar = (

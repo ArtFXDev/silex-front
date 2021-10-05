@@ -3,7 +3,7 @@ import { Typography } from "@mui/material";
 import { useAuth } from "context";
 import PageWrapper from "../PageWrapper/PageWrapper";
 
-const HomePage: React.FC = () => {
+const HomePage = (): JSX.Element => {
   const auth = useAuth();
   let message = "This app is under construction...";
 

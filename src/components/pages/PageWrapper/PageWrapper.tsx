@@ -3,9 +3,11 @@ import { Box, Fade, Typography } from "@mui/material";
 interface PageWrapperProps {
   /** Optional title of the page */
   title?: string;
+
+  children: JSX.Element;
 }
 
-const PageWrapper: React.FC<PageWrapperProps> = ({ title, children }) => (
+const PageWrapper = ({ title, children }: PageWrapperProps): JSX.Element => (
   <Fade in timeout={200}>
     <Box p={6} height="100%">
       {title && <Typography variant="h4">{title}</Typography>}

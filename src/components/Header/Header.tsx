@@ -9,7 +9,7 @@ import SilexText from "assets/images/silex_text.png";
 import Menu from "components/Menu/Menu";
 import ConnectedDCCButton from "./ConnectedDCCButton";
 
-const SilexLogoAndText: React.FC = () => {
+const SilexLogoAndText = (): JSX.Element => {
   const history = useHistory();
   return (
     <Box
@@ -45,7 +45,7 @@ const SilexLogoAndText: React.FC = () => {
   );
 };
 
-const Header: React.FC = () => {
+const Header = (): JSX.Element => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   return (

@@ -7,7 +7,7 @@ import SilexText from "assets/images/silex_text.png";
 import * as Zou from "utils/zou";
 import { useAuth } from "context";
 
-const SilexLogoAndText: React.FC = () => (
+const SilexLogoAndText = (): JSX.Element => (
   <Grid
     item
     sx={{
@@ -32,7 +32,7 @@ const SilexLogoAndText: React.FC = () => (
   </Grid>
 );
 
-const LoginPage: React.FC = () => {
+const LoginPage = (): JSX.Element => {
   const [email, setEmail] = useState<string | undefined>();
   const [password, setPassword] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();

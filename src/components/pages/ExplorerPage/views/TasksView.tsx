@@ -52,7 +52,7 @@ const ASSET_TASKS = gql`
   }
 `;
 
-const TasksView: React.FC<{ listView: boolean }> = ({ listView }) => {
+const TasksView = ({ listView }: { listView: boolean }): JSX.Element => {
   const routeMatch = useRouteMatch<{ category: string; entityId: string }>();
 
   const query = useQuery<{ shot?: Shot; asset?: Asset }>(

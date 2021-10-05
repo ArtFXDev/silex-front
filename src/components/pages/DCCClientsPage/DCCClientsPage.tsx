@@ -17,7 +17,7 @@ import DCCLogo from "components/DCCLogo/DCCLogo";
 import PageWrapper from "../PageWrapper/PageWrapper";
 import { DCCClient } from "types/socket";
 
-const DCCRow: React.FC<{ dcc: DCCClient }> = ({ dcc }) => (
+const DCCRow = ({ dcc }: { dcc: DCCClient }): JSX.Element => (
   <Fade in timeout={400}>
     <TableRow>
       <TableCell>
@@ -32,9 +32,11 @@ const DCCRow: React.FC<{ dcc: DCCClient }> = ({ dcc }) => (
   </Fade>
 );
 
-const DCCClientsTable: React.FC<{ dccClients: DCCClient[] }> = ({
+const DCCClientsTable = ({
   dccClients,
-}) => {
+}: {
+  dccClients: DCCClient[];
+}): JSX.Element => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -57,7 +59,7 @@ const DCCClientsTable: React.FC<{ dccClients: DCCClient[] }> = ({
   );
 };
 
-const DCCClientsPage: React.FC = () => {
+const DCCClientsPage = (): JSX.Element => {
   const socket = useSocket();
 
   return (

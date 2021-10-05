@@ -18,7 +18,13 @@ export const socketContext = React.createContext<SocketContext>(
   {} as SocketContext
 );
 
-export const ProvideSocket: React.FC = ({ children }) => {
+interface ProvideSocketProps {
+  children: JSX.Element;
+}
+
+export const ProvideSocket = ({
+  children,
+}: ProvideSocketProps): JSX.Element => {
   const [socket] = useState<TypedSocket>(
     io(`${process.env.REACT_APP_WS_SERVER}/ui`, { reconnectionDelay: 2000 })
   );
