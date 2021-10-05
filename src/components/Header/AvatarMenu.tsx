@@ -24,7 +24,7 @@ const AvatarMenu: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     Zou.logout().then((_response) => {
       auth.signout();
-      history.push("/");
+      history.push("/login");
     });
   };
 
