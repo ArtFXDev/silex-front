@@ -29,7 +29,9 @@ export const ProvideAuth: React.FC = ({ children }) => {
     setProjects(projectsData.data);
 
     // And the current project id
-    setCurrentProjectId(projectsData.data[0].id);
+    if (projectsData.data.length !== 0) {
+      setCurrentProjectId(projectsData.data[0].id);
+    }
   };
 
   const signout = () => {
