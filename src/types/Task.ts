@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { BaseEntity, ProjectId } from "types";
 import { TaskStatus } from "./TaskStatus";
 import { TaskType } from "./TaskType";

@@ -28,7 +28,5 @@ export const ProvideGraphQLClient = ({
     })
   );
 
-  console.log("rerender here");
-
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };

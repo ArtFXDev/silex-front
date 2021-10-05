@@ -50,6 +50,10 @@
       {
         "ignoreDeclarationSort": true
       }
-    ]
+    ],
+    "no-console": "error",
+    "eqeqeq": ["error", "smart"],
+    "no-var": "error",
+    "camelcase": "warn"
   }
 }
