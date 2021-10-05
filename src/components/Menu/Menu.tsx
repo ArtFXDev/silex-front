@@ -48,37 +48,29 @@ const Menu: React.FC<MenuProps> = ({ closeMenu, open }) => {
           <Grid item sx={{ mb: 2 }}>
             <img src={SilexLogo} alt="Silex Logo" width={100} height={100} />
           </Grid>
-
-          {links.map((link, i) => {
-            if (
-              auth.currentProjectId === undefined &&
-              link.needProjectId === true
-            ) {
-              return;
-            } else {
-              return (
-                <Grid item key={i}>
-                  <Link
-                    component={RouterLink}
-                    to={link.to}
-                    underline="hover"
-                    color={
-                      (
-                        link.exact
-                          ? location.pathname === link.to
-                          : location.pathname.startsWith(link.to)
-                      )
-                        ? "primary"
-                        : "text.disabled"
-                    }
-                    onClick={closeMenu}
-                  >
-                    {link.text}
-                  </Link>
-                </Grid>
-              );
-            }
-          })}
+          {links
+            .filter((link) => !(!auth.currentProjectId && link.needProjectId))
+            .map((link, i) => (
+              <Grid item key={i}>
+                <Link
+                  component={RouterLink}
+                  to={link.to}
+                  underline="hover"
+                  color={
+                    (
+                      link.exact
+                        ? location.pathname === link.to
+                        : location.pathname.startsWith(link.to)
+                    )
+                      ? "primary"
+                      : "text.disabled"
+                  }
+                  onClick={closeMenu}
+                >
+                  {link.text}
+                </Link>
+              </Grid>
+            ))}
         </Grid>
       </Box>
     </Drawer>
