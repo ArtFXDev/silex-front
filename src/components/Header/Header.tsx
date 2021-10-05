@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { AppBar, Toolbar, IconButton, Box } from "@mui/material";
+import { AppBar, Box, IconButton, Toolbar } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
 
 import AvatarMenu from "./AvatarMenu";

@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import { useSnackbar } from "notistack";
 import { v4 as uuidv4 } from "uuid";
 
-import { TypedSocket, DCCClient, OnServerEvents } from "types/socket";
+import { DCCClient, OnServerEvents, TypedSocket } from "types/socket";
 
 export interface SocketContext {
   /** socket.io socket object (with types) */

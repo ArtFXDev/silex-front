@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { Project, Person } from "types";
+import { Person, Project } from "types";
 
 type PromiseResponse<T> = Promise<AxiosResponse<T>>;
 

@@ -1,7 +1,7 @@
 import { Box, List } from "@mui/material";
 
 import EntityItem from "./EntityItem";
-import { Shot, Task, Asset } from "types";
+import { Asset, Shot, Task } from "types";
 
 interface EntitiesViewProps {
   entities: (Shot | Task | Asset)[];

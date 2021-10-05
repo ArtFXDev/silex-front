@@ -35,6 +35,12 @@
       {
         "patterns": ["@mui/*/*/*", "!@mui/material/test-utils/*"]
       }
+    ],
+    "sort-imports": [
+      "error",
+      {
+        "ignoreDeclarationSort": true
+      }
     ]
   }
 }

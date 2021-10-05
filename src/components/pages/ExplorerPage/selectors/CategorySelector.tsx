@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
 
 const CategorySelector: React.FC = () => {

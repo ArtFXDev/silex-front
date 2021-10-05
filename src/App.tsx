@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
 
 import Header from "components/Header/Header";

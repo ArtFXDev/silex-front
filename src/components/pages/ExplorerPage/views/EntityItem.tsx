@@ -1,19 +1,19 @@
 import {
+  Button,
+  Card,
+  CardActions,
+  CardMedia,
+  Fade,
+  LinearProgress,
   ListItem,
-  Paper,
   ListItemButton,
   ListItemText,
-  Fade,
-  Card,
-  CardMedia,
+  Paper,
   Typography,
-  CardActions,
-  Button,
-  LinearProgress,
 } from "@mui/material";
 import { useHistory, useRouteMatch } from "react-router-dom";
 
-import { Shot, Task, Asset } from "types";
+import { Asset, Shot, Task } from "types";
 import { pictureThumbnailURL } from "utils/zou";
 import LazyImage from "components/LazyImage/LazyImage";
 import TaskStatusBadge from "components/TaskStatusBadge/TaskStatusBadge";

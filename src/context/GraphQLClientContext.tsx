@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import {
   ApolloClient,
-  InMemoryCache,
   ApolloProvider,
+  InMemoryCache,
   NormalizedCacheObject,
 } from "@apollo/client";
 

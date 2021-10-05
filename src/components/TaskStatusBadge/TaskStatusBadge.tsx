@@ -1,4 +1,4 @@
-import { Typography, Theme } from "@mui/material";
+import { Theme, Typography } from "@mui/material";
 import { SxProps } from "@mui/system";
 
 import { TaskStatus } from "types";
