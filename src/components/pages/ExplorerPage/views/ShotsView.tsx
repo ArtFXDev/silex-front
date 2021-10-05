@@ -9,8 +9,10 @@ const SEQUENCES_AND_SHOTS = gql`
   query GetSequencesAndShots($id: ID!) {
     project(id: $id) {
       id
+
       sequences {
         name
+        id
 
         shots {
           id
