@@ -17,6 +17,7 @@ import LazyImage from "components/LazyImage/LazyImage";
 import { PersonsAvatarGroup } from "components/avatar";
 import { formatDateTime } from "utils/date";
 import TaskStatusBadge from "components/TaskStatusBadge/TaskStatusBadge";
+import SceneList from "./SceneList";
 
 const TASK = gql`
   query getTask($id: ID!) {
@@ -132,6 +133,12 @@ const TaskModal = (): JSX.Element => {
                     alt="task image"
                     disableFade
                   />
+                </Grid>
+
+                <Grid item xs={6} />
+
+                <Grid item xs={6}>
+                  <SceneList />
                 </Grid>
               </Grid>
             </DialogContent>

@@ -3,7 +3,7 @@ import { QueryResult } from "@apollo/client";
 
 interface QueryWrapperProps {
   query: QueryResult;
-  children: JSX.Element;
+  children?: React.ReactNode;
 }
 
 const QueryWrapper = ({ query, children }: QueryWrapperProps): JSX.Element => {
