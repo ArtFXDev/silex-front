@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { DCCContext } from "./context";
 import { Status } from "./status";
 
