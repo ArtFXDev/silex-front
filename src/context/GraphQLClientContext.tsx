@@ -22,7 +22,5 @@ export const ProvideGraphQLClient: React.FC = ({ children }) => {
     })
   );
 
-  console.log("rerender here");
-
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };

@@ -1,4 +1,4 @@
-export interface DCCClient {
+export interface DCCContext {
   asset: string | null;
   dcc: string | null;
   name: string | null;

@@ -4,7 +4,7 @@ import { gql, useQuery } from "@apollo/client";
 import { Shot, Asset } from "types";
 import QueryWrapper from "components/QueryWrapper/QueryWrapper";
 import EntitiesView from "./EntitiesView";
-import TaskModal from "./TaskModal";
+import TaskModal from "./TaskModal/TaskModal";
 
 const TASK_FIELDS = gql`
   fragment TaskFields on Task {

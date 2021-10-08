@@ -3,13 +3,14 @@ import io from "socket.io-client";
 import { useSnackbar } from "notistack";
 import { v4 as uuidv4 } from "uuid";
 
-import { TypedSocket, DCCClient, OnServerEvents } from "types/socket";
+import { DCCContext } from "types/action/context";
+import { TypedSocket, OnServerEvents } from "types/socket";
 
 export interface SocketContext {
   /** socket.io socket object (with types) */
   socket: TypedSocket;
   /** Array of dcc clients */
-  dccClients: DCCClient[];
+  dccClients: DCCContext[];
   /** Wether the ui is connected to the ws server */
   isConnected: boolean;
 }
@@ -23,7 +24,7 @@ export const ProvideSocket: React.FC = ({ children }) => {
     io(`${process.env.REACT_APP_WS_SERVER}/ui`, { reconnectionDelay: 2000 })
   );
   const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [dccClients, setDCCClients] = useState<DCCClient[]>([]);
+  const [dccClients, setDCCClients] = useState<DCCContext[]>([]);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -73,7 +74,7 @@ export const ProvideSocket: React.FC = ({ children }) => {
     (data) => {
       const disconnected = dccClients.find(
         (e) => e.uuid === data.uuid
-      ) as DCCClient;
+      ) as DCCContext;
       setDCCClients(dccClients.filter((e) => e.uuid !== data.uuid));
 
       enqueueSnackbar(

@@ -18,6 +18,7 @@ import { pictureThumbnailURL } from "utils/zou";
 import LazyImage from "components/LazyImage/LazyImage";
 import TaskStatusBadge from "components/TaskStatusBadge/TaskStatusBadge";
 import { PersonsAvatarGroup } from "components/avatar";
+import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 
 interface EntityItemProps {
   index: number;
@@ -68,12 +69,15 @@ const EntityItem: React.FC<EntityItemProps> = ({
   return (
     <Fade in={true} timeout={index * 200}>
       {listView ? (
-        <Paper elevation={1} sx={{ my: 1, borderRadius: 2 }}>
+        <Paper
+          elevation={1}
+          sx={{ my: 1, borderRadius: LIST_ITEM_BORDER_RADIUS }}
+        >
           <ListItem disablePadding>
             <ListItemButton
               selected={selected}
               onClick={onClickAction}
-              sx={{ borderRadius: 2 }}
+              sx={{ borderRadius: LIST_ITEM_BORDER_RADIUS }}
               disableRipple
             >
               <ListItemText primary={name} />
