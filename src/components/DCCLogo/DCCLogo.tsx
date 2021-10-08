@@ -24,7 +24,7 @@ interface DCCLogoProps {
   size?: number;
 }
 
-const DCCLogo: React.FC<DCCLogoProps & BoxProps> = ({ name, sx, size }) => {
+const DCCLogo = ({ name, size, sx }: DCCLogoProps & BoxProps): JSX.Element => {
   return (
     <>
       {name && logos[name] ? (

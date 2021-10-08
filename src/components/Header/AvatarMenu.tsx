@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { Menu, MenuItem, ListItemIcon, Tooltip } from "@mui/material";
-import { Logout, AccountCircle } from "@mui/icons-material";
+import { ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
+import { AccountCircle, Logout } from "@mui/icons-material";
 
 import { useAuth } from "context";
 import * as Zou from "utils/zou";
 import { PersonAvatar } from "components/avatar";
 
-const AvatarMenu: React.FC = () => {
+const AvatarMenu = (): JSX.Element => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const auth = useAuth();
   const history = useHistory();

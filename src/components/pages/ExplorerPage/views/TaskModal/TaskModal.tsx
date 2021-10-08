@@ -1,11 +1,11 @@
 import {
+  Box,
   Dialog,
   DialogContent,
   DialogTitle,
+  Grid,
   IconButton,
   Typography,
-  Grid,
-  Box,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { gql, useQuery } from "@apollo/client";
@@ -46,7 +46,7 @@ const TASK = gql`
   }
 `;
 
-const TaskModal: React.FC = () => {
+const TaskModal = (): JSX.Element => {
   const routeMatch = useRouteMatch<{ taskId: string }>();
 
   const history = useHistory();

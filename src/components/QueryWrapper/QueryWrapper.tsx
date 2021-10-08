@@ -3,9 +3,10 @@ import { QueryResult } from "@apollo/client";
 
 interface QueryWrapperProps {
   query: QueryResult;
+  children?: React.ReactNode;
 }
 
-const QueryWrapper: React.FC<QueryWrapperProps> = ({ query, children }) => {
+const QueryWrapper = ({ query, children }: QueryWrapperProps): JSX.Element => {
   if (query.loading) {
     return <CircularProgress />;
   }

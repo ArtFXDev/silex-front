@@ -31,7 +31,7 @@ const SEQUENCES_AND_SHOTS = gql`
   }
 `;
 
-const ShotsView: React.FC<{ listView: boolean }> = ({ listView }) => {
+const ShotsView = ({ listView }: { listView: boolean }): JSX.Element => {
   const routeMatch = useRouteMatch<{ projectId: string }>();
 
   const query = useQuery<{ project: Project }>(SEQUENCES_AND_SHOTS, {

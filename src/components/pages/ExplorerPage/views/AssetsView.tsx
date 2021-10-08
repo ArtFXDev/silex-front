@@ -18,7 +18,7 @@ const ASSETS = gql`
   }
 `;
 
-const AssetsView: React.FC<{ listView: boolean }> = ({ listView }) => {
+const AssetsView = ({ listView }: { listView: boolean }): JSX.Element => {
   const routeMatch = useRouteMatch<{ projectId: string }>();
 
   const query = useQuery<{ project: Project }>(ASSETS, {

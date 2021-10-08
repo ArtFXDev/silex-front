@@ -13,7 +13,7 @@ import AirIcon from "@mui/icons-material/Air";
 import { useAuth } from "context/AuthContext";
 import { ProjectId } from "types";
 
-const ProjectSelector: React.FC = () => {
+const ProjectSelector = (): JSX.Element => {
   const [selectedProject, setSelectedProject] = useState<ProjectId>();
 
   const auth = useAuth();

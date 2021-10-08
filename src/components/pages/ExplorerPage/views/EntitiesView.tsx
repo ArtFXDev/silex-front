@@ -1,7 +1,7 @@
 import { Box, List } from "@mui/material";
 
 import EntityItem from "./EntityItem";
-import { Shot, Task, Asset } from "types";
+import { Asset, Shot, Task } from "types";
 
 interface EntitiesViewProps {
   entities: (Shot | Task | Asset)[];
@@ -9,11 +9,11 @@ interface EntitiesViewProps {
   openTaskModal?: (taskId: string) => void;
 }
 
-const EntitiesView: React.FC<EntitiesViewProps> = ({
+const EntitiesView = ({
   entities,
   listView,
   openTaskModal,
-}) => {
+}: EntitiesViewProps): JSX.Element => {
   const entitiesItems = (
     <>
       {entities.map((e, i) => (

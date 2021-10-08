@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { BaseEntity } from "./BaseEntity";
 import { Sequence } from "./Sequence";
 import { Asset } from "./Asset";

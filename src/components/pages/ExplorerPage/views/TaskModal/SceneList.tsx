@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-
 import { useSocket } from "context";
 import {
   IconButton,
@@ -11,6 +10,7 @@ import {
   Paper,
 } from "@mui/material";
 import DCCLogo from "components/DCCLogo/DCCLogo";
+import { useSnackbar } from "notistack";
 
 const extensionToDCCName = (ext: string): string => {
   switch (ext) {
@@ -31,7 +31,9 @@ const extensionToDCCName = (ext: string): string => {
 const SceneList = (): JSX.Element => {
   const [scenes, setScenes] = useState<string[]>();
   const { socket } = useSocket();
+  const { enqueueSnackbar } = useSnackbar();
 
+  // TODO: path needs to be computed on the server side
   const path = "/home/josephhenry/Desktop/pipeline";
 
   useEffect(() => {
@@ -43,7 +45,9 @@ const SceneList = (): JSX.Element => {
   const openDCC = (dcc: string, scene: string) => {
     const cmd = `rez env silex_client ${dcc} -- ${dcc} ${path}/${scene}`;
     socket.emit("exec", cmd, (response) => {
-      console.log(response);
+      enqueueSnackbar(`Sent command "${cmd} (${response.status})"`, {
+        variant: "success",
+      });
     });
   };
 
