@@ -11,13 +11,13 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { useHistory, useRouteMatch } from "react-router-dom";
-
-import { Asset, Shot, Task } from "types";
-import { pictureThumbnailURL } from "utils/zou";
+import { PersonsAvatarGroup } from "components/avatar";
 import LazyImage from "components/LazyImage/LazyImage";
 import TaskStatusBadge from "components/TaskStatusBadge/TaskStatusBadge";
-import { PersonsAvatarGroup } from "components/avatar";
+import { useHistory, useRouteMatch } from "react-router-dom";
+import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
+import { Asset, Shot, Task } from "types";
+import { pictureThumbnailURL } from "utils/zou";
 
 interface EntityItemProps {
   index: number;
@@ -68,12 +68,15 @@ const EntityItem = ({
   return (
     <Fade in={true} timeout={index * 200}>
       {listView ? (
-        <Paper elevation={1} sx={{ my: 1, borderRadius: 2 }}>
+        <Paper
+          elevation={1}
+          sx={{ my: 1, borderRadius: LIST_ITEM_BORDER_RADIUS }}
+        >
           <ListItem disablePadding>
             <ListItemButton
               selected={selected}
               onClick={onClickAction}
-              sx={{ borderRadius: 2 }}
+              sx={{ borderRadius: LIST_ITEM_BORDER_RADIUS }}
               disableRipple
             >
               <ListItemText primary={name} />

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
 import {
   ApolloClient,
   ApolloProvider,
   InMemoryCache,
   NormalizedCacheObject,
 } from "@apollo/client";
+import React, { useState } from "react";
 
 export interface GraphQLClientContext {
   client: ApolloClient<NormalizedCacheObject>;

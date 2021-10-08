@@ -7,10 +7,10 @@ import {
   Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-
-import { useAuth } from "context";
-import PageWrapper from "../PageWrapper/PageWrapper";
 import { PersonAvatar } from "components/avatar";
+import { useAuth } from "context";
+
+import PageWrapper from "../PageWrapper/PageWrapper";
 
 const ProfilePage = (): JSX.Element => {
   const auth = useAuth();

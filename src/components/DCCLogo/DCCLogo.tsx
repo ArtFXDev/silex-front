@@ -1,6 +1,5 @@
 import HelpIcon from "@mui/icons-material/Help";
 import { Box, BoxProps } from "@mui/system";
-
 import BlenderLogo from "assets/images/logos/blender.svg";
 import HoudiniLogo from "assets/images/logos/houdini.svg";
 import MayaLogo from "assets/images/logos/maya.svg";

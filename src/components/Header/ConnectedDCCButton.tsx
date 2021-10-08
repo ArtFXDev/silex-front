@@ -1,9 +1,8 @@
-import { Link as RouterLink } from "react-router-dom";
-import { Badge, IconButton, IconButtonProps } from "@mui/material";
 import { CastConnected as CastConnectedIcon } from "@mui/icons-material";
+import { Badge, IconButton, IconButtonProps } from "@mui/material";
 import { green, red } from "@mui/material/colors";
-
 import { useSocket } from "context";
+import { Link as RouterLink } from "react-router-dom";
 
 const ConnectedDCCButton = (props: IconButtonProps): JSX.Element => {
   const socket = useSocket();

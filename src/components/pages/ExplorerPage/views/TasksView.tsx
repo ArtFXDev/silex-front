@@ -1,8 +1,8 @@
-import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
-
-import { Asset, Shot } from "types";
 import QueryWrapper from "components/QueryWrapper/QueryWrapper";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Asset, Shot } from "types";
+
 import EntitiesView from "./EntitiesView";
 import TaskModal from "./TaskModal/TaskModal";
 

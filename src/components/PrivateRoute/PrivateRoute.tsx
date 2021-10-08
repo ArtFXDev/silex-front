@@ -1,9 +1,8 @@
+import { Backdrop, CircularProgress } from "@mui/material";
+import { useAuth } from "context";
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, RouteProps, useRouteMatch } from "react-router-dom";
-import { Backdrop, CircularProgress } from "@mui/material";
-
 import * as Zou from "utils/zou";
-import { useAuth } from "context";
 
 const PrivateRoute = ({ children, ...rest }: RouteProps): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(true);

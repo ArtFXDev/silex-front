@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
-import { AppBar, Box, IconButton, Toolbar } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
-
-import AvatarMenu from "./AvatarMenu";
+import { AppBar, Box, IconButton, Toolbar } from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
 import Menu from "components/Menu/Menu";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+
+import AvatarMenu from "./AvatarMenu";
 import ConnectedDCCButton from "./ConnectedDCCButton";
 
 const SilexLogoAndText = (): JSX.Element => {

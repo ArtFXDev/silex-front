@@ -1,4 +1,12 @@
+import {
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+  GridView as GridViewIcon,
+  List as ListIcon,
+} from "@mui/icons-material";
 import { Box, IconButton } from "@mui/material";
+import { useAuth } from "context";
+import { useState } from "react";
 import {
   Redirect,
   Route,
@@ -6,17 +14,9 @@ import {
   useHistory,
   useLocation,
 } from "react-router-dom";
-import {
-  ChevronLeft as ChevronLeftIcon,
-  ChevronRight as ChevronRightIcon,
-  GridView as GridViewIcon,
-  List as ListIcon,
-} from "@mui/icons-material";
-import { useState } from "react";
 
-import { useAuth } from "context";
-import { AssetsView, ShotsView, TasksView } from "./views";
 import { CategorySelector, ProjectSelector } from "./selectors";
+import { AssetsView, ShotsView, TasksView } from "./views";
 
 const ExplorerPage = (): JSX.Element => {
   const [listView, setListView] = useState<boolean>(true);

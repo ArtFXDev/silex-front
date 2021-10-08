@@ -1,5 +1,5 @@
-import { Box, CircularProgress, Fade } from "@mui/material";
 import HideImageOutlinedIcon from "@mui/icons-material/HideImageOutlined";
+import { Box, CircularProgress, Fade } from "@mui/material";
 import { useState } from "react";
 
 interface LazyImageProps {

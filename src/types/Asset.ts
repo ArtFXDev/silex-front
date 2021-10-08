@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
-import { Task } from "./Task";
 import { BaseEntity } from "./BaseEntity";
 import { ProjectId } from "./Project";
+import { Task } from "./Task";
 
 export interface Asset extends BaseEntity {
   description: string;

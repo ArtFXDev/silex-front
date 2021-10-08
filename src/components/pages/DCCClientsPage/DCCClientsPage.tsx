@@ -11,13 +11,13 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-
-import { useSocket } from "context";
 import DCCLogo from "components/DCCLogo/DCCLogo";
-import PageWrapper from "../PageWrapper/PageWrapper";
-import { DCCClient } from "types/socket";
+import { useSocket } from "context";
+import { DCCContext } from "types/action/context";
 
-const DCCRow = ({ dcc }: { dcc: DCCClient }): JSX.Element => (
+import PageWrapper from "../PageWrapper/PageWrapper";
+
+const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => (
   <Fade in timeout={400}>
     <TableRow>
       <TableCell>
@@ -35,7 +35,7 @@ const DCCRow = ({ dcc }: { dcc: DCCClient }): JSX.Element => (
 const DCCClientsTable = ({
   dccClients,
 }: {
-  dccClients: DCCClient[];
+  dccClients: DCCContext[];
 }): JSX.Element => {
   return (
     <TableContainer component={Paper}>

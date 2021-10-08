@@ -1,8 +1,7 @@
 import { Avatar, AvatarProps, Tooltip } from "@mui/material";
-
-import * as Zou from "utils/zou";
 import { Person } from "types";
 import { firstTwoLetters, getPersonColor } from "utils/person";
+import * as Zou from "utils/zou";
 
 interface PersonAvatarProps {
   /** The person to display */

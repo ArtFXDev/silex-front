@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import AirIcon from "@mui/icons-material/Air";
 import {
   Box,
   MenuItem,
@@ -8,9 +7,9 @@ import {
   Typography,
 } from "@mui/material";
 import ColorHash from "color-hash";
-import AirIcon from "@mui/icons-material/Air";
-
 import { useAuth } from "context/AuthContext";
+import { useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import { ProjectId } from "types";
 
 const ProjectSelector = (): JSX.Element => {

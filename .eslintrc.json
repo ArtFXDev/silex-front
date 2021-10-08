@@ -23,7 +23,13 @@
     "project": ["./tsconfig.json"],
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint", "react-hooks", "unused-imports"],
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "react-hooks",
+    "unused-imports",
+    "simple-import-sort"
+  ],
   "rules": {
     "react/prop-types": "off",
     "react/jsx-uses-react": "off",
@@ -45,12 +51,8 @@
         "patterns": ["@mui/*/*/*", "!@mui/material/test-utils/*"]
       }
     ],
-    "sort-imports": [
-      "error",
-      {
-        "ignoreDeclarationSort": true
-      }
-    ],
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
     "no-console": "error",
     "eqeqeq": ["error", "smart"],
     "no-var": "error",

@@ -1,9 +1,8 @@
-import { Box, Drawer, Grid, IconButton, Link } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { Link as RouterLink, useLocation } from "react-router-dom";
-import { useAuth } from "context";
-
+import { Box, Drawer, Grid, IconButton, Link } from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
+import { useAuth } from "context";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 
 const links = [
   { text: "Home", to: "/", exact: true, needProjectId: false },

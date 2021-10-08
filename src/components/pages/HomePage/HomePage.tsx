@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
-
 import { useAuth } from "context";
+
 import PageWrapper from "../PageWrapper/PageWrapper";
 
 const HomePage = (): JSX.Element => {
