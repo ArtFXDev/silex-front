@@ -1,6 +1,5 @@
-import { Typography, Theme } from "@mui/material";
+import { Theme, Typography } from "@mui/material";
 import { SxProps } from "@mui/system";
-
 import { TaskStatus } from "types";
 
 interface TaskStatusBadgeProps {
@@ -10,11 +9,11 @@ interface TaskStatusBadgeProps {
   sx?: SxProps<Theme>;
 }
 
-const TaskStatusBadge: React.FC<TaskStatusBadgeProps> = ({
+const TaskStatusBadge = ({
   fontSize,
   taskStatus,
   sx,
-}) => {
+}: TaskStatusBadgeProps): JSX.Element => {
   return (
     <Typography
       fontSize={fontSize || 10}

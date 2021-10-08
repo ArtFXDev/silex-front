@@ -1,13 +1,12 @@
-import { useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
-import { TextField, Grid, Button, Alert, Collapse, Box } from "@mui/material";
-
+import { Alert, Box, Button, Collapse, Grid, TextField } from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
-import * as Zou from "utils/zou";
 import { useAuth } from "context";
+import { useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
+import * as Zou from "utils/zou";
 
-const SilexLogoAndText: React.FC = () => (
+const SilexLogoAndText = (): JSX.Element => (
   <Grid
     item
     sx={{
@@ -32,7 +31,7 @@ const SilexLogoAndText: React.FC = () => (
   </Grid>
 );
 
-const LoginPage: React.FC = () => {
+const LoginPage = (): JSX.Element => {
   const [email, setEmail] = useState<string | undefined>();
   const [password, setPassword] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();

@@ -1,14 +1,16 @@
 import { Box, Button, List, Typography } from "@mui/material";
 import { useAction, useSocket } from "context";
+import { useSnackbar } from "notistack";
+import { Status } from "types/action/status";
+import { capitalize } from "utils/string";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 import StepItem from "./StepItem";
-import { capitalize } from "utils/string";
-import { Status } from "types/action/status";
 
-const ActionPage: React.FC = () => {
+const ActionPage = (): JSX.Element => {
   const { action } = useAction();
   const { socket } = useSocket();
+  const { enqueueSnackbar } = useSnackbar();
 
   if (!action) return <PageWrapper title={`No action...`} />;
 
@@ -17,13 +19,16 @@ const ActionPage: React.FC = () => {
     for (const step of Object.values(action.steps)) {
       for (const cmd of Object.values(step.commands)) {
         if (cmd.status === Status.WAITING_FOR_RESPONSE) {
+          // eslint-disable-next-line camelcase
           cmd.ask_user = false;
         }
       }
     }
 
     socket.emit("actionUpdate", action, (data) => {
-      console.log(data);
+      enqueueSnackbar(`Action ${action.name} sent (${data.status})`, {
+        variant: "success",
+      });
     });
   };
 

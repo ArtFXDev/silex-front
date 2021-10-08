@@ -1,6 +1,5 @@
 import HelpIcon from "@mui/icons-material/Help";
 import { Box, BoxProps } from "@mui/system";
-
 import BlenderLogo from "assets/images/logos/blender.svg";
 import HoudiniLogo from "assets/images/logos/houdini.svg";
 import MayaLogo from "assets/images/logos/maya.svg";
@@ -21,7 +20,7 @@ interface DCCLogoProps {
   name: string | null;
 }
 
-const DCCLogo: React.FC<DCCLogoProps & BoxProps> = ({ name, sx }) => {
+const DCCLogo = ({ name, sx }: DCCLogoProps & BoxProps): JSX.Element => {
   return (
     <>
       {name && logos[name] ? (

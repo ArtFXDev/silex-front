@@ -1,8 +1,8 @@
-import { useRouteMatch, Route, Switch } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
-
-import { Shot, Asset } from "types";
 import QueryWrapper from "components/QueryWrapper/QueryWrapper";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Asset, Shot } from "types";
+
 import EntitiesView from "./EntitiesView";
 import TaskModal from "./TaskModal/TaskModal";
 
@@ -52,7 +52,7 @@ const ASSET_TASKS = gql`
   }
 `;
 
-const TasksView: React.FC<{ listView: boolean }> = ({ listView }) => {
+const TasksView = ({ listView }: { listView: boolean }): JSX.Element => {
   const routeMatch = useRouteMatch<{ category: string; entityId: string }>();
 
   const query = useQuery<{ shot?: Shot; asset?: Asset }>(

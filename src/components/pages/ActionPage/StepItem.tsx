@@ -1,21 +1,21 @@
 import {
   Box,
-  Paper,
+  Collapse,
+  LinearProgress,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Collapse,
-  LinearProgress,
+  Paper,
   Typography,
 } from "@mui/material";
 import { linearProgressClasses } from "@mui/material/LinearProgress";
 import { useState } from "react";
-
 import { Step } from "types/action/action";
 import { Status } from "types/action/status";
-import CommandItem from "./CommandItem";
 import { getStatusColor, getStatusIcon } from "utils/status";
+
+import CommandItem from "./CommandItem";
 
 interface StepItemProps {
   step: Step;

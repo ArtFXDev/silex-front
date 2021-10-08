@@ -1,7 +1,7 @@
 import { AvatarGroup, Theme, Typography } from "@mui/material";
 import { SxProps } from "@mui/system";
-
 import { Person } from "types";
+
 import PersonAvatar from "./PersonAvatar";
 
 interface PersonsAvatarGroupProps {
@@ -17,13 +17,13 @@ interface PersonsAvatarGroupProps {
   sx?: SxProps<Theme>;
 }
 
-const PersonsAvatarGroup: React.FC<PersonsAvatarGroupProps> = ({
+const PersonsAvatarGroup = ({
   persons,
   fontSize,
   size,
   fallbackMessage,
   sx,
-}) => (
+}: PersonsAvatarGroupProps): JSX.Element => (
   <>
     {persons.length !== 0 ? (
       <AvatarGroup max={4} sx={sx}>

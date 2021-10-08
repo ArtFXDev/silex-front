@@ -1,7 +1,9 @@
+/* eslint-disable camelcase */
 import { BaseEntity, ProjectId } from "types";
+
+import { Person } from "./Person";
 import { TaskStatus } from "./TaskStatus";
 import { TaskType } from "./TaskType";
-import { Person } from "./Person";
 
 export type TaskId = string;
 

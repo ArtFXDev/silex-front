@@ -1,5 +1,5 @@
-import { Box, CircularProgress, Fade } from "@mui/material";
 import HideImageOutlinedIcon from "@mui/icons-material/HideImageOutlined";
+import { Box, CircularProgress, Fade } from "@mui/material";
 import { useState } from "react";
 
 interface LazyImageProps {
@@ -17,7 +17,7 @@ interface LazyImageProps {
  * A lazy loaded image with circular progress on load
  * Also provides a default thumbnail in case of error or empty src
  */
-const LazyImage: React.FC<LazyImageProps> = (props) => {
+const LazyImage = (props: LazyImageProps): JSX.Element => {
   const [isImageLoading, setIsImageLoading] = useState<boolean>(true);
 
   const width = `${props.width}px`;

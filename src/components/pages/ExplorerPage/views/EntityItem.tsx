@@ -1,24 +1,23 @@
 import {
+  Button,
+  Card,
+  CardActions,
+  CardMedia,
+  Fade,
+  LinearProgress,
   ListItem,
-  Paper,
   ListItemButton,
   ListItemText,
-  Fade,
-  Card,
-  CardMedia,
+  Paper,
   Typography,
-  CardActions,
-  Button,
-  LinearProgress,
 } from "@mui/material";
-import { useHistory, useRouteMatch } from "react-router-dom";
-
-import { Shot, Task, Asset } from "types";
-import { pictureThumbnailURL } from "utils/zou";
+import { PersonsAvatarGroup } from "components/avatar";
 import LazyImage from "components/LazyImage/LazyImage";
 import TaskStatusBadge from "components/TaskStatusBadge/TaskStatusBadge";
-import { PersonsAvatarGroup } from "components/avatar";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
+import { Asset, Shot, Task } from "types";
+import { pictureThumbnailURL } from "utils/zou";
 
 interface EntityItemProps {
   index: number;
@@ -28,7 +27,7 @@ interface EntityItemProps {
   openTaskModal?: (taskId: string) => void;
 }
 
-const ProgressBar: React.FC<{ shot: Shot }> = ({ shot }) => {
+const ProgressBar = ({ shot }: { shot: Shot }): JSX.Element => {
   const nDone = shot.tasks
     .map((task) => task.taskStatus.is_done)
     .filter((d) => d).length;
@@ -44,13 +43,13 @@ const ProgressBar: React.FC<{ shot: Shot }> = ({ shot }) => {
   );
 };
 
-const EntityItem: React.FC<EntityItemProps> = ({
+const EntityItem = ({
   index,
   entity,
   selected,
   listView,
   openTaskModal,
-}) => {
+}: EntityItemProps): JSX.Element => {
   const history = useHistory();
   const routeMatch = useRouteMatch();
 

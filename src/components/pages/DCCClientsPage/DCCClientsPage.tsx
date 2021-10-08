@@ -1,23 +1,23 @@
 import {
-  Fade,
-  TableContainer,
-  Table,
-  TableCell,
-  Paper,
-  TableHead,
-  TableBody,
-  TableRow,
   Alert,
   AlertTitle,
+  Fade,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 } from "@mui/material";
-
-import { useSocket } from "context";
 import DCCLogo from "components/DCCLogo/DCCLogo";
-import PageWrapper from "../PageWrapper/PageWrapper";
+import { useSocket } from "context";
 import { DCCContext } from "types/action/context";
 
-const DCCRow: React.FC<{ dcc: DCCContext }> = ({ dcc }) => (
+import PageWrapper from "../PageWrapper/PageWrapper";
+
+const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => (
   <Fade in timeout={400}>
     <TableRow>
       <TableCell>
@@ -32,9 +32,11 @@ const DCCRow: React.FC<{ dcc: DCCContext }> = ({ dcc }) => (
   </Fade>
 );
 
-const DCCClientsTable: React.FC<{ dccClients: DCCContext[] }> = ({
+const DCCClientsTable = ({
   dccClients,
-}) => {
+}: {
+  dccClients: DCCContext[];
+}): JSX.Element => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -57,7 +59,7 @@ const DCCClientsTable: React.FC<{ dccClients: DCCContext[] }> = ({
   );
 };
 
-const DCCClientsPage: React.FC = () => {
+const DCCClientsPage = (): JSX.Element => {
   const socket = useSocket();
 
   return (

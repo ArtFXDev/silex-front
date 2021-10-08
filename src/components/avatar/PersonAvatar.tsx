@@ -1,8 +1,7 @@
 import { Avatar, AvatarProps, Tooltip } from "@mui/material";
-
-import * as Zou from "utils/zou";
 import { Person } from "types";
 import { firstTwoLetters, getPersonColor } from "utils/person";
+import * as Zou from "utils/zou";
 
 interface PersonAvatarProps {
   /** The person to display */
@@ -17,14 +16,14 @@ interface PersonAvatarProps {
   tooltip?: boolean;
 }
 
-const PersonAvatar: React.FC<AvatarProps & PersonAvatarProps> = ({
+const PersonAvatar = ({
   clickable,
   person,
   fontSize,
   size,
   tooltip,
   ...props
-}) => {
+}: AvatarProps & PersonAvatarProps): JSX.Element => {
   const personColor = getPersonColor(person);
 
   const avatar = (

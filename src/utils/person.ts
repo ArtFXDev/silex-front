@@ -1,4 +1,5 @@
 import { Person } from "types";
+
 import { getColorFromString } from "./color";
 
 export function firstTwoLetters(person: Person): string {

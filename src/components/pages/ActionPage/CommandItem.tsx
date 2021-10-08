@@ -1,22 +1,22 @@
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import {
   Box,
-  Paper,
+  Collapse,
+  Divider,
+  List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  List,
-  Collapse,
-  Divider,
+  Paper,
   Tooltip,
 } from "@mui/material";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { useState } from "react";
-
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Command } from "types/action/action";
 import { Status } from "types/action/status";
-import ParameterItem from "./ParameterItem";
 import { getStatusColor, getStatusIcon } from "utils/status";
+
+import ParameterItem from "./ParameterItem";
 
 interface CommandItemProps {
   command: Command;

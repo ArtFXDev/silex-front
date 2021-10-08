@@ -1,16 +1,18 @@
 import { gql, useQuery } from "@apollo/client";
-
-import { Project } from "types";
 import QueryWrapper from "components/QueryWrapper/QueryWrapper";
-import EntitiesView from "./EntitiesView";
 import { useRouteMatch } from "react-router";
+import { Project } from "types";
+
+import EntitiesView from "./EntitiesView";
 
 const SEQUENCES_AND_SHOTS = gql`
   query GetSequencesAndShots($id: ID!) {
     project(id: $id) {
       id
+
       sequences {
         name
+        id
 
         shots {
           id
@@ -29,7 +31,7 @@ const SEQUENCES_AND_SHOTS = gql`
   }
 `;
 
-const ShotsView: React.FC<{ listView: boolean }> = ({ listView }) => {
+const ShotsView = ({ listView }: { listView: boolean }): JSX.Element => {
   const routeMatch = useRouteMatch<{ projectId: string }>();
 
   const query = useQuery<{ project: Project }>(SEQUENCES_AND_SHOTS, {

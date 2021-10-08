@@ -1,7 +1,11 @@
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { SnackbarProvider } from "notistack";
-
 import Header from "components/Header/Header";
+import ActionPage from "components/pages/ActionPage/ActionPage";
+import DCCClientsPage from "components/pages/DCCClientsPage/DCCClientsPage";
+import ExplorerPage from "components/pages/ExplorerPage/ExplorerPage";
+// Pages
+import HomePage from "components/pages/HomePage/HomePage";
+import LoginPage from "components/pages/LoginPage/LoginPage";
+import ProfilePage from "components/pages/ProfilePage/ProfilePage";
 import PrivateRoute from "components/PrivateRoute/PrivateRoute";
 import {
   ProvideAction,
@@ -9,16 +13,10 @@ import {
   ProvideGraphQLClient,
   ProvideSocket,
 } from "context";
+import { SnackbarProvider } from "notistack";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-// Pages
-import HomePage from "components/pages/HomePage/HomePage";
-import LoginPage from "components/pages/LoginPage/LoginPage";
-import ProfilePage from "components/pages/ProfilePage/ProfilePage";
-import ExplorerPage from "components/pages/ExplorerPage/ExplorerPage";
-import DCCClientsPage from "components/pages/DCCClientsPage/DCCClientsPage";
-import ActionPage from "components/pages/ActionPage/ActionPage";
-
-const App: React.FC = () => {
+const App = (): JSX.Element => {
   return (
     <Router>
       <SnackbarProvider maxSnack={3}>

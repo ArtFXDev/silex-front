@@ -1,7 +1,6 @@
+import { useSocket } from "context";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
-
-import { useSocket } from "context";
 import { Action } from "types/action/action";
 import { OnServerEvents } from "types/socket";
 
@@ -13,7 +12,13 @@ export const ActionContext = React.createContext<ActionContext>(
   {} as ActionContext
 );
 
-export const ProvideAction: React.FC = ({ children }) => {
+interface ProvideActionProps {
+  children: JSX.Element;
+}
+
+export const ProvideAction = ({
+  children,
+}: ProvideActionProps): JSX.Element => {
   const [action, setAction] = useState<Action>();
 
   const history = useHistory();

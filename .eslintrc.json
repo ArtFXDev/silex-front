@@ -23,18 +23,39 @@
     "project": ["./tsconfig.json"],
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint", "react-hooks"],
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "react-hooks",
+    "unused-imports",
+    "simple-import-sort"
+  ],
   "rules": {
     "react/prop-types": "off",
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
     "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
     "react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
+    "unused-imports/no-unused-imports": "warn",
+    "@typescript-eslint/ban-types": [
+      "error",
+      {
+        "types": {
+          "React.FC": "Using React.FC is not recommended, see https://github.com/facebook/create-react-app/pull/8177"
+        }
+      }
+    ],
     "no-restricted-imports": [
       "error",
       {
         "patterns": ["@mui/*/*/*", "!@mui/material/test-utils/*"]
       }
-    ]
+    ],
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
+    "no-console": "error",
+    "eqeqeq": ["error", "smart"],
+    "no-var": "error",
+    "camelcase": "warn"
   }
 }

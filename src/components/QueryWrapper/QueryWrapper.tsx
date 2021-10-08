@@ -1,11 +1,12 @@
-import { Alert, AlertTitle, CircularProgress, Fade } from "@mui/material";
 import { QueryResult } from "@apollo/client";
+import { Alert, AlertTitle, CircularProgress, Fade } from "@mui/material";
 
 interface QueryWrapperProps {
   query: QueryResult;
+  children?: React.ReactNode;
 }
 
-const QueryWrapper: React.FC<QueryWrapperProps> = ({ query, children }) => {
+const QueryWrapper = ({ query, children }: QueryWrapperProps): JSX.Element => {
   if (query.loading) {
     return <CircularProgress />;
   }
