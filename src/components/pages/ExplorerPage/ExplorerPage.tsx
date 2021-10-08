@@ -1,24 +1,24 @@
 import { Box, IconButton } from "@mui/material";
 import {
-  Switch,
-  Route,
-  useLocation,
-  useHistory,
   Redirect,
+  Route,
+  Switch,
+  useHistory,
+  useLocation,
 } from "react-router-dom";
 import {
-  GridView as GridViewIcon,
-  List as ListIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
+  GridView as GridViewIcon,
+  List as ListIcon,
 } from "@mui/icons-material";
 import { useState } from "react";
 
 import { useAuth } from "context";
-import { ShotsView, TasksView, AssetsView } from "./views";
-import { ProjectSelector, CategorySelector } from "./selectors";
+import { AssetsView, ShotsView, TasksView } from "./views";
+import { CategorySelector, ProjectSelector } from "./selectors";
 
-const ExplorerPage: React.FC = () => {
+const ExplorerPage = (): JSX.Element => {
   const [listView, setListView] = useState<boolean>(true);
 
   const auth = useAuth();

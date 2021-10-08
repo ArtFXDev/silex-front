@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import { useSnackbar } from "notistack";
 import { v4 as uuidv4 } from "uuid";
 
-import { TypedSocket, DCCClient, OnServerEvents } from "types/socket";
+import { DCCClient, OnServerEvents, TypedSocket } from "types/socket";
 
 export interface SocketContext {
   /** socket.io socket object (with types) */
@@ -18,7 +18,13 @@ export const socketContext = React.createContext<SocketContext>(
   {} as SocketContext
 );
 
-export const ProvideSocket: React.FC = ({ children }) => {
+interface ProvideSocketProps {
+  children: JSX.Element;
+}
+
+export const ProvideSocket = ({
+  children,
+}: ProvideSocketProps): JSX.Element => {
   const [socket] = useState<TypedSocket>(
     io(`${process.env.REACT_APP_WS_SERVER}/ui`, { reconnectionDelay: 2000 })
   );

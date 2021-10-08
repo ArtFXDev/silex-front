@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import {
   ApolloClient,
-  InMemoryCache,
   ApolloProvider,
+  InMemoryCache,
   NormalizedCacheObject,
 } from "@apollo/client";
 
@@ -14,15 +14,19 @@ export const graphqlClientContext = React.createContext<GraphQLClientContext>(
   {} as GraphQLClientContext
 );
 
-export const ProvideGraphQLClient: React.FC = ({ children }) => {
+interface ProvideGraphQLClientProps {
+  children: JSX.Element;
+}
+
+export const ProvideGraphQLClient = ({
+  children,
+}: ProvideGraphQLClientProps): JSX.Element => {
   const [client] = useState(
     new ApolloClient({
       uri: process.env.REACT_APP_ZOU_GRAPHQL_API,
       cache: new InMemoryCache(),
     })
   );
-
-  console.log("rerender here");
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };

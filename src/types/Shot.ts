@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { ProjectId, SequenceId, Task } from "types";
 import { BaseEntity } from "./BaseEntity";
 

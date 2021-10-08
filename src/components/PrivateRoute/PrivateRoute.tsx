@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, RouteProps, useRouteMatch } from "react-router-dom";
-import { CircularProgress, Backdrop } from "@mui/material";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 import * as Zou from "utils/zou";
 import { useAuth } from "context";
 
-const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
+const PrivateRoute = ({ children, ...rest }: RouteProps): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(true);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState<boolean>(false);
   const [fetching, setFetching] = useState<boolean>(false);

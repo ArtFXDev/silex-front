@@ -16,7 +16,11 @@ export interface AuthContext {
 // See: https://stackoverflow.com/questions/61333188/react-typescript-avoid-context-default-value
 export const authContext = React.createContext<AuthContext>({} as AuthContext);
 
-export const ProvideAuth: React.FC = ({ children }) => {
+interface ProvideAuthProps {
+  children: JSX.Element;
+}
+
+export const ProvideAuth = ({ children }: ProvideAuthProps): JSX.Element => {
   const [user, setUser] = useState<Person>();
   const [currentProjectId, setCurrentProjectId] = useState<ProjectId>();
   const [projects, setProjects] = useState<Project[]>();

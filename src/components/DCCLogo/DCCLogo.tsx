@@ -21,7 +21,7 @@ interface DCCLogoProps {
   name: string | null;
 }
 
-const DCCLogo: React.FC<DCCLogoProps & BoxProps> = ({ name, sx }) => {
+const DCCLogo = ({ name, sx }: DCCLogoProps & BoxProps): JSX.Element => {
   return (
     <>
       {name && logos[name] ? (

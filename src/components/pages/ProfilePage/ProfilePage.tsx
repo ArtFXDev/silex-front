@@ -1,10 +1,10 @@
 import {
   Paper,
   Table,
-  TableRow,
-  TableCell,
-  Typography,
   TableBody,
+  TableCell,
+  TableRow,
+  Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 
@@ -12,9 +12,9 @@ import { useAuth } from "context";
 import PageWrapper from "../PageWrapper/PageWrapper";
 import { PersonAvatar } from "components/avatar";
 
-const ProfilePage: React.FC = () => {
+const ProfilePage = (): JSX.Element => {
   const auth = useAuth();
-  if (!auth.user) return null;
+  if (!auth.user) return <div>NO USER</div>;
   const user = auth.user;
 
   const userData = [
