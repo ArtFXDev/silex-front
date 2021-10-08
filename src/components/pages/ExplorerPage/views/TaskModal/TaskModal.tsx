@@ -1,3 +1,5 @@
+import { gql, useQuery } from "@apollo/client";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Dialog,
@@ -7,16 +9,14 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import { gql, useQuery } from "@apollo/client";
-import { useHistory, useRouteMatch } from "react-router-dom";
-
-import { Task } from "types";
-import QueryWrapper from "components/QueryWrapper/QueryWrapper";
-import LazyImage from "components/LazyImage/LazyImage";
 import { PersonsAvatarGroup } from "components/avatar";
-import { formatDateTime } from "utils/date";
+import LazyImage from "components/LazyImage/LazyImage";
+import QueryWrapper from "components/QueryWrapper/QueryWrapper";
 import TaskStatusBadge from "components/TaskStatusBadge/TaskStatusBadge";
+import { useHistory, useRouteMatch } from "react-router-dom";
+import { Task } from "types";
+import { formatDateTime } from "utils/date";
+
 import SceneList from "./SceneList";
 
 const TASK = gql`

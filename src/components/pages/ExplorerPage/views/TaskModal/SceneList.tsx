@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-import { useSocket } from "context";
 import {
   IconButton,
   List,
@@ -10,7 +8,9 @@ import {
   Paper,
 } from "@mui/material";
 import DCCLogo from "components/DCCLogo/DCCLogo";
+import { useSocket } from "context";
 import { useSnackbar } from "notistack";
+import { useEffect, useState } from "react";
 
 const extensionToDCCName = (ext: string): string => {
   switch (ext) {
