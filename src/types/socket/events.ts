@@ -30,6 +30,10 @@ export interface ClientEmitEvents {
   // Action related events
   getCurrentAction: WithCallback<ServerResponse<Action>>;
   actionUpdate: EmitWithCallback<Action, ServerResponse>;
+
+  // TODO: refactor types
+  ls: (path: string, ack: (paths: { data: string[] }) => void) => void;
+  exec: (command: string, ack: (response: ServerResponse) => void) => void;
 }
 
 export interface OnServerEvents {
