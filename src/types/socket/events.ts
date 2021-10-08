@@ -21,6 +21,10 @@ export interface ClientEmitEvents {
 
   /** Used to get the list of the connected dcc clients */
   getClients: WithCallback<{ [uuid: string]: DCCClient }>;
+
+  // TODO: refactor types
+  ls: (path: string, ack: (paths: { data: string[] }) => void) => void;
+  exec: (command: string, ack: (response: ServerResponse) => void) => void;
 }
 
 export interface OnServerEvents {

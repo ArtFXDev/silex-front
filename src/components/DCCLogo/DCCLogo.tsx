@@ -19,18 +19,28 @@ const logos: Record<string, string> = {
 interface DCCLogoProps {
   /** The name of the icon file eg blender, houdini or maya */
   name: string | null;
+
+  /** The size of the logo */
+  size?: number;
 }
 
-const DCCLogo: React.FC<DCCLogoProps & BoxProps> = ({ name, sx }) => {
+const DCCLogo: React.FC<DCCLogoProps & BoxProps> = ({ name, sx, size }) => {
   return (
     <>
       {name && logos[name] ? (
-        <Box sx={sx}>
+        <Box
+          sx={{
+            ...sx,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <img
             src={name ? logos[name] : undefined}
             alt={`${name} logo`}
-            width={40}
-            height={40}
+            width={size || 40}
+            height={size || 40}
           />
         </Box>
       ) : (
