@@ -13,6 +13,14 @@ export const themeOptions: ThemeOptions = {
       default: "#2c2b2b",
       paper: "#333232",
     },
+    success: {
+      main: "#66BB6A",
+      dark: "#3B825D",
+      light: "#4CA778",
+    },
+    info: {
+      main: "#4D7D98",
+    },
   },
 };
 
