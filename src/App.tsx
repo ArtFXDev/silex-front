@@ -15,6 +15,11 @@ import {
 import { SnackbarProvider } from "notistack";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
+/**
+ * This is the main App component.
+ * The context providers wraps all the components to get access to data globally.
+ * This is where we also put all the pages and their routes
+ */
 const App = (): JSX.Element => {
   return (
     <Router>

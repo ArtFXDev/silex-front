@@ -1,6 +1,9 @@
 import { createTheme, ThemeOptions } from "@mui/material/styles";
 import KarrikRegularWoff2 from "assets/fonts/Karrik-Regular.woff2";
 
+/**
+ * This is where we modify the MUI theme colors
+ */
 export const themeOptions: ThemeOptions = {
   palette: {
     mode: "dark",
@@ -31,6 +34,7 @@ export const theme = createTheme({
     fontFamily: "Karrik",
   },
   components: {
+    // Use a self hosted font
     MuiCssBaseline: {
       styleOverrides: `
         @font-face {
@@ -42,6 +46,7 @@ export const theme = createTheme({
         }
       `,
     },
+    // Modify autofill color for form fields
     MuiOutlinedInput: {
       styleOverrides: {
         input: {

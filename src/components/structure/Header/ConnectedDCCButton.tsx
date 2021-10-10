@@ -4,6 +4,9 @@ import { green, red } from "@mui/material/colors";
 import { useSocket } from "context";
 import { Link as RouterLink } from "react-router-dom";
 
+/**
+ * Icon showing the number of connected dccs
+ */
 const ConnectedDCCButton = (props: IconButtonProps): JSX.Element => {
   const socket = useSocket();
 

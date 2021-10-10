@@ -1,3 +1,6 @@
+/**
+ * Context data structure representing the current scene in the DCC
+ */
 export interface DCCContext {
   asset: string | null;
   dcc: string | null;

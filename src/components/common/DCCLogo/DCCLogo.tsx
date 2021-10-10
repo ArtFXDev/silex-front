@@ -6,7 +6,7 @@ import MayaLogo from "assets/images/logos/maya.svg";
 import NukeLogo from "assets/images/logos/nuke.svg";
 
 /**
- * Dictionnary of dcc name and icon path
+ * Dictionnary of dcc names and icon paths
  */
 const logos: Record<string, string> = {
   blender: BlenderLogo,
@@ -23,6 +23,9 @@ interface DCCLogoProps {
   size?: number;
 }
 
+/**
+ * DCC software logo component
+ */
 const DCCLogo = ({ name, size, sx }: DCCLogoProps & BoxProps): JSX.Element => {
   return (
     <>

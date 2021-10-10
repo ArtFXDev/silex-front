@@ -2,7 +2,7 @@ import { useSnackbar } from "notistack";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import io from "socket.io-client";
 import { DCCContext } from "types/action/context";
-import { OnServerEvents, TypedSocket } from "types/socket";
+import { OnServerEvents, TypedSocket } from "types/socket/events";
 import { v4 as uuidv4 } from "uuid";
 
 export interface SocketContext {

@@ -9,6 +9,9 @@ interface TaskStatusBadgeProps {
   sx?: SxProps<Theme>;
 }
 
+/**
+ * Status badge for tasks
+ */
 const TaskStatusBadge = ({
   fontSize,
   taskStatus,

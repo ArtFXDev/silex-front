@@ -21,6 +21,10 @@ interface ProvideAuthProps {
   children: JSX.Element;
 }
 
+/**
+ * The Auth context is responsible for storing the logged in user data.
+ * It also stores the list of projects and the choosen project id
+ */
 export const ProvideAuth = ({ children }: ProvideAuthProps): JSX.Element => {
   const [user, setUser] = useState<Person>();
   const [currentProjectId, setCurrentProjectId] = useState<ProjectId>();
@@ -28,6 +32,9 @@ export const ProvideAuth = ({ children }: ProvideAuthProps): JSX.Element => {
 
   const client = useApolloClient();
 
+  /**
+   * Signin with the given user
+   */
   const signin = async (user: Person) => {
     setUser(user);
 
@@ -41,6 +48,9 @@ export const ProvideAuth = ({ children }: ProvideAuthProps): JSX.Element => {
     }
   };
 
+  /**
+   * Signout and clear the state
+   */
   const signout = () => {
     setUser(undefined);
 
@@ -49,7 +59,10 @@ export const ProvideAuth = ({ children }: ProvideAuthProps): JSX.Element => {
     client.clearStore();
   };
 
-  const getCurrentProject = () => {
+  /**
+   * Gets the current user project
+   */
+  const getCurrentProject = (): Project | undefined => {
     return projects?.find((p) => p.id === currentProjectId);
   };
 

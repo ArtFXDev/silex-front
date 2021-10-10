@@ -6,16 +6,23 @@ import * as Zou from "utils/zou";
 interface PersonAvatarProps {
   /** The person to display */
   person: Person;
+
   /** The size (width and height) of the avatar */
   size: number;
+
   /** The font size in case there is no thumbnail */
   fontSize?: number;
+
   /** Wether or not put a pointer cursor */
   clickable?: boolean;
+
   /** Display a tooltip on mouse hover */
   tooltip?: boolean;
 }
 
+/**
+ * Avatar wrapper component with optional tooltip
+ */
 const PersonAvatar = ({
   clickable,
   person,
