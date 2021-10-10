@@ -63,6 +63,10 @@ Here are the main libraries and packages used:
 | [React router](reactrouter.com/)                                   | `5.3.0`  |
 | [Apollo Client (React)](https://www.apollographql.com/docs/react/) | `3.4.15` |
 
+## Special thanks
+
+- [Karrik](http://karrik.phantom-foundry.com/) is a libre font created by Jean-Baptiste Morizot et Lucas Le Bihan. It is licensed under the [SIL Open Font License](http://scripts.sil.org/OFL), Version 1.1.
+
 ## Contributing
 
 Pull requests and issues are welcome. For major changes, please open an issue first to discuss what you would like to change.
