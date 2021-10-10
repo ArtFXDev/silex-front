@@ -1,5 +1,6 @@
 import { Backdrop, CircularProgress } from "@mui/material";
 import { useAuth } from "context";
+import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, RouteProps, useRouteMatch } from "react-router-dom";
 import * as Zou from "utils/zou";
@@ -11,6 +12,7 @@ const PrivateRoute = ({ children, ...rest }: RouteProps): JSX.Element => {
 
   const auth = useAuth();
   const routeMatch = useRouteMatch();
+  const { enqueueSnackbar } = useSnackbar();
 
   const isTheRightRoute = routeMatch.isExact
     ? rest.path === routeMatch.url
@@ -26,6 +28,9 @@ const PrivateRoute = ({ children, ...rest }: RouteProps): JSX.Element => {
         setIsUserLoggedIn(true);
       } catch (err) {
         setIsUserLoggedIn(false);
+        enqueueSnackbar(`You are not authenticated. Error: ${err}`, {
+          variant: "error",
+        });
       } finally {
         setLoading(false);
       }
@@ -38,7 +43,14 @@ const PrivateRoute = ({ children, ...rest }: RouteProps): JSX.Element => {
       if (isTheRightRoute && !isUserLoggedIn && !fetching)
         checkIfUserLoggedIn();
     }
-  }, [auth, isTheRightRoute, isUserLoggedIn, loading, fetching]);
+  }, [
+    auth,
+    isTheRightRoute,
+    isUserLoggedIn,
+    loading,
+    fetching,
+    enqueueSnackbar,
+  ]);
 
   return (
     <Route

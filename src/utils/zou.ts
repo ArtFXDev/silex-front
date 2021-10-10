@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { Person, Project } from "types";
 
 type PromiseResponse<T> = Promise<AxiosResponse<T>>;
@@ -11,9 +11,13 @@ export function zouAPIURL(path: string): string {
   return zouURL(`api/${path}`);
 }
 
-export function get<T>(url: string): PromiseResponse<T> {
+export function get<T>(
+  url: string,
+  config?: AxiosRequestConfig
+): PromiseResponse<T> {
   return axios.get(zouAPIURL(url), {
     withCredentials: true,
+    ...config,
   });
 }
 
@@ -28,7 +32,7 @@ export function originalPreviewFileURL(id: string): string {
 type UserResponse = PromiseResponse<{ user: Person }>;
 
 export function isAuthenticated(): UserResponse {
-  return get("auth/authenticated");
+  return get("auth/authenticated", { timeout: 1500 });
 }
 
 type LoginInput = { email: string; password: string };
