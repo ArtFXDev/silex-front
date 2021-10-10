@@ -1,4 +1,12 @@
-import { Alert, Box, Button, Collapse, Grid, TextField } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Collapse,
+  Grid,
+  TextField,
+} from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
 import { useAuth } from "context";
@@ -32,9 +40,10 @@ const SilexLogoAndText = (): JSX.Element => (
 );
 
 const LoginPage = (): JSX.Element => {
-  const [email, setEmail] = useState<string | undefined>();
-  const [password, setPassword] = useState<string | undefined>();
-  const [error, setError] = useState<string | undefined>();
+  const [email, setEmail] = useState<string>();
+  const [password, setPassword] = useState<string>();
+  const [error, setError] = useState<string>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const auth = useAuth();
   const location = useLocation<{ from: Location }>();
@@ -52,6 +61,8 @@ const LoginPage = (): JSX.Element => {
       setError("Some fields are required");
       return;
     }
+
+    setIsLoading(true);
 
     Zou.login({ email, password })
       .then((response) => {
@@ -71,7 +82,8 @@ const LoginPage = (): JSX.Element => {
             `Zou server at ${process.env.REACT_APP_ZOU_API} is not reachable, check your internet connection or retry later`
           );
         }
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
 
   // TODO: better regexp?
@@ -141,17 +153,29 @@ const LoginPage = (): JSX.Element => {
         </Grid>
 
         <Grid item xs={12}>
-          <Button
-            type="submit"
-            color="primary"
-            variant="contained"
-            onClick={onLogIn}
+          <Box
             sx={{
-              textTransform: "none",
+              display: "flex",
+              alignItems: "center",
             }}
           >
-            Log In
-          </Button>
+            <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+              onClick={onLogIn}
+              sx={{
+                textTransform: "none",
+                width: 100,
+              }}
+            >
+              Log In
+            </Button>
+
+            <Collapse in={isLoading} orientation="horizontal">
+              <CircularProgress size={20} sx={{ ml: 3 }} />
+            </Collapse>
+          </Box>
         </Grid>
 
         <Grid item xs={12}>
