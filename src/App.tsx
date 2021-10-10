@@ -2,7 +2,6 @@ import Header from "components/Header/Header";
 import ActionPage from "components/pages/ActionPage/ActionPage";
 import DCCClientsPage from "components/pages/DCCClientsPage/DCCClientsPage";
 import ExplorerPage from "components/pages/ExplorerPage/ExplorerPage";
-// Pages
 import HomePage from "components/pages/HomePage/HomePage";
 import LoginPage from "components/pages/LoginPage/LoginPage";
 import ProfilePage from "components/pages/ProfilePage/ProfilePage";
