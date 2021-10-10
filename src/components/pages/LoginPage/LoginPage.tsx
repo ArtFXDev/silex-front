@@ -140,10 +140,10 @@ const LoginPage = (): JSX.Element => {
           />
         </Grid>
 
-        <Grid item xs={12} maxWidth="100%">
+        <Grid item xs={12}>
           <Button
             type="submit"
-            color="secondary"
+            color="primary"
             variant="contained"
             onClick={onLogIn}
             sx={{
