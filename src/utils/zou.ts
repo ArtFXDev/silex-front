@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { Person, Project } from "types";
+import { Person, Project } from "types/entities";
 
 type PromiseResponse<T> = Promise<AxiosResponse<T>>;
 

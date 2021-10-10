@@ -10,7 +10,7 @@ import ColorHash from "color-hash";
 import { useAuth } from "context/AuthContext";
 import { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { ProjectId } from "types";
+import { ProjectId } from "types/entities";
 
 const ProjectSelector = (): JSX.Element => {
   const [selectedProject, setSelectedProject] = useState<ProjectId>();

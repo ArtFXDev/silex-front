@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { BaseEntity } from "types";
+import { BaseEntity } from "types/entities";
 
 export interface TaskStatus extends BaseEntity {
   short_name: string;

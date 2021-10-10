@@ -16,7 +16,7 @@ import LazyImage from "components/LazyImage/LazyImage";
 import TaskStatusBadge from "components/TaskStatusBadge/TaskStatusBadge";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
-import { Asset, Shot, Task } from "types";
+import { Asset, Shot, Task } from "types/entities";
 import { pictureThumbnailURL } from "utils/zou";
 
 interface EntityItemProps {

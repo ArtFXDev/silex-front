@@ -1,5 +1,5 @@
 import { Avatar, AvatarProps, Tooltip } from "@mui/material";
-import { Person } from "types";
+import { Person } from "types/entities";
 import { firstTwoLetters, getPersonColor } from "utils/person";
 import * as Zou from "utils/zou";
 

@@ -14,7 +14,7 @@ import LazyImage from "components/LazyImage/LazyImage";
 import QueryWrapper from "components/QueryWrapper/QueryWrapper";
 import TaskStatusBadge from "components/TaskStatusBadge/TaskStatusBadge";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { Task } from "types";
+import { Task } from "types/entities";
 import { formatDateTime } from "utils/date";
 
 import SceneList from "./SceneList";

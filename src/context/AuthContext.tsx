@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Person, Project, ProjectId } from "types";
+import { Person, Project, ProjectId } from "types/entities";
 import * as Zou from "utils/zou";
 
 export interface AuthContext {
