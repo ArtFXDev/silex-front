@@ -42,5 +42,14 @@ export const theme = createTheme({
         }
       `,
     },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        input: {
+          "&:-webkit-autofill": {
+            WebkitBoxShadow: "0 0 0 1000px rgba(100, 100, 100, 0.2) inset",
+          },
+        },
+      },
+    },
   },
 });
