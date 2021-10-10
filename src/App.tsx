@@ -1,11 +1,11 @@
-import Header from "components/Header/Header";
 import ActionPage from "components/pages/ActionPage/ActionPage";
 import DCCClientsPage from "components/pages/DCCClientsPage/DCCClientsPage";
 import ExplorerPage from "components/pages/ExplorerPage/ExplorerPage";
 import HomePage from "components/pages/HomePage/HomePage";
 import LoginPage from "components/pages/LoginPage/LoginPage";
 import ProfilePage from "components/pages/ProfilePage/ProfilePage";
-import PrivateRoute from "components/PrivateRoute/PrivateRoute";
+import Header from "components/structure/Header/Header";
+import PrivateRoute from "components/utils/PrivateRoute/PrivateRoute";
 import {
   ProvideAction,
   ProvideAuth,

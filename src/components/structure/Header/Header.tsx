@@ -2,7 +2,7 @@ import { Menu as MenuIcon } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar } from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
-import Menu from "components/Menu/Menu";
+import Menu from "components/structure/Menu/Menu";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 

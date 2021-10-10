@@ -11,7 +11,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import DCCLogo from "components/DCCLogo/DCCLogo";
+import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { useSocket } from "context";
 import { DCCContext } from "types/action/context";
 

@@ -11,9 +11,9 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { PersonsAvatarGroup } from "components/avatar";
-import LazyImage from "components/LazyImage/LazyImage";
-import TaskStatusBadge from "components/TaskStatusBadge/TaskStatusBadge";
+import { PersonsAvatarGroup } from "components/common/avatar";
+import TaskStatusBadge from "components/common/TaskStatusBadge/TaskStatusBadge";
+import LazyImage from "components/utils/LazyImage/LazyImage";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Asset, Shot, Task } from "types/entities";

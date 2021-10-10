@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import QueryWrapper from "components/QueryWrapper/QueryWrapper";
+import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useRouteMatch } from "react-router";
 import { Project } from "types/entities";
 

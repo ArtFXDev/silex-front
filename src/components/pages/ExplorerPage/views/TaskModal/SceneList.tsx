@@ -7,7 +7,7 @@ import {
   ListItemText,
   Paper,
 } from "@mui/material";
-import DCCLogo from "components/DCCLogo/DCCLogo";
+import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";

@@ -1,6 +1,6 @@
 import { AccountCircle, Logout } from "@mui/icons-material";
 import { ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
-import { PersonAvatar } from "components/avatar";
+import { PersonAvatar } from "components/common/avatar";
 import { useAuth } from "context";
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
