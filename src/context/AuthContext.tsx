@@ -1,3 +1,4 @@
+import { useApolloClient } from "@apollo/client";
 import React, { useContext, useState } from "react";
 import { Person, Project, ProjectId } from "types/entities";
 import * as Zou from "utils/zou";
@@ -25,6 +26,8 @@ export const ProvideAuth = ({ children }: ProvideAuthProps): JSX.Element => {
   const [currentProjectId, setCurrentProjectId] = useState<ProjectId>();
   const [projects, setProjects] = useState<Project[]>();
 
+  const client = useApolloClient();
+
   const signin = async (user: Person) => {
     setUser(user);
 
@@ -40,6 +43,10 @@ export const ProvideAuth = ({ children }: ProvideAuthProps): JSX.Element => {
 
   const signout = () => {
     setUser(undefined);
+
+    // Clear the GraphQL store
+    // See: https://www.apollographql.com/docs/react/networking/authentication/#reset-store-on-logout
+    client.clearStore();
   };
 
   const getCurrentProject = () => {
