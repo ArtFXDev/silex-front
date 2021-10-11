@@ -58,11 +58,7 @@ const EntityItem = ({
   const onClickAction = () => {
     openTaskModal
       ? openTaskModal(entity.id)
-      : history.push(
-          `${routeMatch.url}/${entity.id}${
-            entity.type === "Shot" ? "/tasks" : ""
-          }`
-        );
+      : history.push(`${routeMatch.url}/${entity.id}/tasks`);
   };
 
   return (

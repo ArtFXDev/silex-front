@@ -12,18 +12,11 @@ interface EntitiesViewProps {
 const EntitiesView = ({
   entities,
   listView,
-  openTaskModal,
 }: EntitiesViewProps): JSX.Element => {
   const entitiesItems = (
     <>
       {entities.map((e, i) => (
-        <EntityItem
-          index={i}
-          entity={e}
-          key={e.id}
-          listView={listView}
-          openTaskModal={openTaskModal}
-        />
+        <EntityItem index={i} entity={e} key={e.id} listView={listView} />
       ))}
     </>
   );
