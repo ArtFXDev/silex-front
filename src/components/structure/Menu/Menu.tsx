@@ -4,16 +4,23 @@ import SilexLogo from "assets/images/silex_logo.png";
 import { useAuth } from "context";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
+/**
+ * List of links to display
+ * TODO: should be centralized in one place?
+ */
 const links = [
   { text: "Home", to: "/", exact: true, needProjectId: false },
   { text: "File explorer", to: "/explorer", exact: false, needProjectId: true },
 ];
 
-type MenuProps = {
+interface MenuProps {
   closeMenu: () => void;
   open: boolean;
-};
+}
 
+/**
+ * Menu component with links pointing to the different pages
+ */
 const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
   const location = useLocation();
   const auth = useAuth();

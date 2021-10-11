@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
-import QueryWrapper from "components/QueryWrapper/QueryWrapper";
+import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
-import { Asset, Shot } from "types";
+import { Asset, Shot } from "types/entities";
 
 import EntitiesView from "./EntitiesView";
 import TaskModal from "./TaskModal/TaskModal";

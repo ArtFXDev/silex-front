@@ -6,9 +6,14 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { theme } from "./style/theme";
 
+/**
+ * This is the entry point used by React to render the whole component hierarchy.
+ * The StrictMode is only used in development for extra checks.
+ */
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
+      {/* Does a CSS normalize */}
       <CssBaseline />
       <App />
     </ThemeProvider>

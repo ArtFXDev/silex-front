@@ -1,22 +1,29 @@
 import { AvatarGroup, Theme, Typography } from "@mui/material";
 import { SxProps } from "@mui/system";
-import { Person } from "types";
+import { Person } from "types/entities";
 
 import PersonAvatar from "./PersonAvatar";
 
 interface PersonsAvatarGroupProps {
   /** The array of persons to display */
   persons: Person[];
+
   /** The size passed to each avatar */
   size?: number;
+
   /** The font size passed to each avatar */
   fontSize?: number;
+
   /** Displayed when there are no persons */
   fallbackMessage?: string;
+
   /** sx props passed to AvatarGroup */
   sx?: SxProps<Theme>;
 }
 
+/**
+ * Group of avatars using the PersonAvatar component
+ */
 const PersonsAvatarGroup = ({
   persons,
   fontSize,

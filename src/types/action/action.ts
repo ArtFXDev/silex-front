@@ -2,6 +2,9 @@
 import { DCCContext } from "./context";
 import { Status } from "./status";
 
+/**
+ * Common fields used by the types below
+ */
 interface CommonFields {
   hide: boolean;
   index: number;
@@ -11,6 +14,9 @@ interface CommonFields {
   uuid: string;
 }
 
+/**
+ * A parameter has a name and a default value
+ */
 export type Parameter = {
   label: string;
   name: string;
@@ -18,6 +24,9 @@ export type Parameter = {
   value: string;
 };
 
+/**
+ * A command is a piece of code with parameters
+ */
 export type Command = CommonFields & {
   path: string;
   status: Status;
@@ -25,11 +34,17 @@ export type Command = CommonFields & {
   parameters: { [paramName: string]: Parameter };
 };
 
+/**
+ * A step is a list of commands
+ */
 export type Step = CommonFields & {
   status: Status;
   commands: { [commandName: string]: Command };
 };
 
+/**
+ * An action is the whole object sent by the silex_client library running in the DCC
+ */
 export interface Action {
   name: string;
   context_metadata: DCCContext;

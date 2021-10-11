@@ -2,13 +2,16 @@ import { Menu as MenuIcon } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Toolbar } from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
-import Menu from "components/Menu/Menu";
+import Menu from "components/structure/Menu/Menu";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import AvatarMenu from "./AvatarMenu";
 import ConnectedDCCButton from "./ConnectedDCCButton";
 
+/**
+ * The Silex logo and text displayed on the top left
+ */
 const SilexLogoAndText = (): JSX.Element => {
   const history = useHistory();
   return (
@@ -45,12 +48,16 @@ const SilexLogoAndText = (): JSX.Element => {
   );
 };
 
+/**
+ * Header component visible on most of the pages
+ */
 const Header = (): JSX.Element => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   return (
     <AppBar position="static" elevation={1}>
       <Toolbar>
+        {/* Hamburger menu icon */}
         <IconButton
           edge="start"
           color="inherit"
@@ -60,12 +67,11 @@ const Header = (): JSX.Element => {
           <MenuIcon />
         </IconButton>
 
+        {/* Menu component */}
         <Menu open={menuOpen} closeMenu={() => setMenuOpen(false)} />
 
         <SilexLogoAndText />
-
         <ConnectedDCCButton sx={{ ml: 2.5, mr: 3 }} />
-
         <AvatarMenu />
       </Toolbar>
     </AppBar>

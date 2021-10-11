@@ -9,12 +9,12 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { PersonsAvatarGroup } from "components/avatar";
-import LazyImage from "components/LazyImage/LazyImage";
-import QueryWrapper from "components/QueryWrapper/QueryWrapper";
-import TaskStatusBadge from "components/TaskStatusBadge/TaskStatusBadge";
+import { PersonsAvatarGroup } from "components/common/avatar";
+import TaskStatusBadge from "components/common/TaskStatusBadge/TaskStatusBadge";
+import LazyImage from "components/utils/LazyImage/LazyImage";
+import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { Task } from "types";
+import { Task } from "types/entities";
 import { formatDateTime } from "utils/date";
 
 import SceneList from "./SceneList";

@@ -1,6 +1,6 @@
 import { Theme, Typography } from "@mui/material";
 import { SxProps } from "@mui/system";
-import { TaskStatus } from "types";
+import { TaskStatus } from "types/entities";
 
 interface TaskStatusBadgeProps {
   taskStatus: TaskStatus;
@@ -9,6 +9,9 @@ interface TaskStatusBadgeProps {
   sx?: SxProps<Theme>;
 }
 
+/**
+ * Status badge for tasks
+ */
 const TaskStatusBadge = ({
   fontSize,
   taskStatus,

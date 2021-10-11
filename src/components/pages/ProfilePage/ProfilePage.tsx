@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import { PersonAvatar } from "components/avatar";
+import { PersonAvatar } from "components/common/avatar";
 import { useAuth } from "context";
 
 import PageWrapper from "../PageWrapper/PageWrapper";

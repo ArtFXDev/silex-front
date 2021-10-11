@@ -1,3 +1,6 @@
+/**
+ * Step and command status codes
+ */
 export enum Status {
   COMPLETED = 0,
   INITIALIZED = 1,

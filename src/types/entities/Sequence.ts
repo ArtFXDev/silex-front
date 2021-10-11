@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { ProjectId } from "types";
+import { ProjectId } from "types/entities";
 
 import { BaseEntity } from "./BaseEntity";
 import { Shot } from "./Shot";

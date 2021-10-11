@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { BaseEntity, ProjectId } from "types";
+import { BaseEntity, ProjectId } from "types/entities";
 
 import { Person } from "./Person";
 import { TaskStatus } from "./TaskStatus";

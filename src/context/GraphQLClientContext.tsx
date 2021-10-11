@@ -18,6 +18,9 @@ interface ProvideGraphQLClientProps {
   children: JSX.Element;
 }
 
+/**
+ * Wrapper over the Apollo client provider
+ */
 export const ProvideGraphQLClient = ({
   children,
 }: ProvideGraphQLClientProps): JSX.Element => {
