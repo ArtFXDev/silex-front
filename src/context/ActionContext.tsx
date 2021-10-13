@@ -2,7 +2,7 @@ import { useSocket } from "context";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { Action } from "types/action/action";
-import { OnServerEvents } from "types/socket/events";
+import { UIOnServerEvents } from "types/socket";
 
 export interface ActionContext {
   action: Action | undefined;
@@ -25,7 +25,7 @@ export const ProvideAction = ({
   const [action, setAction] = useState<Action>();
 
   const history = useHistory();
-  const { socket } = useSocket();
+  const { uiSocket } = useSocket();
 
   const setActionAndRedirect = useCallback(
     (action: Action) => {
@@ -40,19 +40,19 @@ export const ProvideAction = ({
    * On socketio connect, retrieve the current action if exists
    */
   const onConnect = useCallback(() => {
-    socket.emit("getCurrentAction", (currentAction) => {
+    uiSocket.emit("getCurrentAction", (currentAction) => {
       if (currentAction.data) {
         setActionAndRedirect(currentAction.data);
       }
     });
-  }, [setActionAndRedirect, socket]);
+  }, [setActionAndRedirect, uiSocket]);
 
   /**
    * Called when receiving an action from the server
    */
-  const onActionQuery = useCallback<OnServerEvents["actionQuery"]>(
+  const onActionQuery = useCallback<UIOnServerEvents["actionQuery"]>(
     (action) => {
-      setActionAndRedirect(action.data);
+      if (action.data) setActionAndRedirect(action.data);
     },
     [setActionAndRedirect]
   );
@@ -60,7 +60,7 @@ export const ProvideAction = ({
   /**
    * Called when receiving updates on the current action from the server
    */
-  const onActionUpdate = useCallback<OnServerEvents["actionUpdate"]>(
+  const onActionUpdate = useCallback<UIOnServerEvents["actionUpdate"]>(
     (updatedAction) => {
       setAction(updatedAction.data);
     },
@@ -68,18 +68,18 @@ export const ProvideAction = ({
   );
 
   useEffect(() => {
-    socket.on("connect", onConnect);
+    uiSocket.on("connect", onConnect);
 
-    socket.on("actionQuery", onActionQuery);
-    socket.on("actionUpdate", onActionUpdate);
+    uiSocket.on("actionQuery", onActionQuery);
+    uiSocket.on("actionUpdate", onActionUpdate);
 
     return () => {
-      socket.off("connect", onConnect);
+      uiSocket.off("connect", onConnect);
 
-      socket.off("query", onActionQuery);
-      socket.off("update", onActionUpdate);
+      uiSocket.off("query", onActionQuery);
+      uiSocket.off("update", onActionUpdate);
     };
-  }, [socket, onConnect, onActionQuery, onActionUpdate]);
+  }, [uiSocket, onConnect, onActionQuery, onActionUpdate]);
 
   return (
     <ActionContext.Provider

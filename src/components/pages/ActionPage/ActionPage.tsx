@@ -9,7 +9,7 @@ import StepItem from "./StepItem";
 
 const ActionPage = (): JSX.Element => {
   const { action } = useAction();
-  const { socket } = useSocket();
+  const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
 
   if (!action) return <PageWrapper title={`No action...`} />;
@@ -25,7 +25,7 @@ const ActionPage = (): JSX.Element => {
       }
     }
 
-    socket.emit("actionUpdate", action, (data) => {
+    uiSocket.emit("actionUpdate", action, (data) => {
       enqueueSnackbar(`Action ${action.name} sent (${data.status})`, {
         variant: "success",
       });
