@@ -119,7 +119,8 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
         <List>
           {scenes &&
             scenes.map((scene) => {
-              const dcc = extensionToDCCName(scene.split(".")[1]);
+              const tokens = scene.split(".");
+              const dcc = extensionToDCCName(tokens[tokens.length - 1]);
 
               return (
                 <Paper key={scene} sx={{ my: 1 }} elevation={6}>
@@ -148,8 +149,8 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
         </List>
 
         {error && (
-          <Alert variant="outlined" severity="warning">
-            {error}
+          <Alert variant="outlined" severity="info">
+            You don{"'"}t have any working scenes...
           </Alert>
         )}
       </Box>
