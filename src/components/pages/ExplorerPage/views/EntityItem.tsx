@@ -24,7 +24,6 @@ interface EntityItemProps {
   entity: Shot | Task | Asset;
   selected?: boolean;
   listView: boolean;
-  openTaskModal?: (taskId: string) => void;
 }
 
 const ProgressBar = ({ shot }: { shot: Shot }): JSX.Element => {
@@ -48,7 +47,6 @@ const EntityItem = ({
   entity,
   selected,
   listView,
-  openTaskModal,
 }: EntityItemProps): JSX.Element => {
   const history = useHistory();
   const routeMatch = useRouteMatch();
@@ -56,9 +54,9 @@ const EntityItem = ({
   const name = entity.type === "Task" ? entity.taskType.name : entity.name;
 
   const onClickAction = () => {
-    openTaskModal
-      ? openTaskModal(entity.id)
-      : history.push(`${routeMatch.url}/${entity.id}/tasks`);
+    history.push(
+      `${routeMatch.url}/${entity.id}${entity.type === "Task" ? "" : "/tasks"}`
+    );
   };
 
   return (
