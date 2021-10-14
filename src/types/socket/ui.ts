@@ -22,9 +22,17 @@ export interface UIClientEmitEvents {
   getCurrentAction: WithCallback<ServerResponseWithData<Action>>;
   actionUpdate: EmitWithCallback<Action>;
 
-  // TODO: refactor types
-  // ls: (taskId: string, ack: (paths: { data: string[] }) => void) => void;
-  // exec: (command: string, ack: (response: ServerResponse) => void) => void;
+  getWorkingFilesForTask: EmitWithCallback<
+    { taskId: string },
+    ServerResponseWithData<{ path: string; files: string[] }>
+  >;
+
+  launchScene: EmitWithCallback<{
+    taskId: string;
+    scene?: string;
+    dcc: string;
+    path?: string;
+  }>;
 }
 
 export interface UIOnServerEvents {
