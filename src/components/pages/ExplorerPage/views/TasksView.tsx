@@ -25,6 +25,10 @@ const TASK_FIELDS = gql`
       short_name
       color
     }
+
+    previews {
+      id
+    }
   }
 `;
 

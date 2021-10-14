@@ -2,6 +2,7 @@
 import { BaseEntity, ProjectId } from "types/entities";
 
 import { Person } from "./Person";
+import { PreviewFile } from "./PreviewFile";
 import { TaskStatus } from "./TaskStatus";
 import { TaskType } from "./TaskType";
 
@@ -33,4 +34,5 @@ export interface Task extends BaseEntity {
   taskType: TaskType;
   taskStatus: TaskStatus;
   assignees: Person[];
+  previews: PreviewFile[];
 }

@@ -16,6 +16,7 @@ import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { Task } from "types/entities";
 import { formatDateTime } from "utils/date";
+import { entityPreviewURL } from "utils/entity";
 
 import SceneList from "./SceneList";
 
@@ -41,6 +42,10 @@ const TASK = gql`
       taskStatus {
         short_name
         color
+      }
+
+      previews {
+        id
       }
     }
   }
@@ -129,6 +134,7 @@ const TaskModal = (): JSX.Element => {
 
                 <Grid item xs={6}>
                   <LazyImage
+                    src={data ? entityPreviewURL(data.task) : undefined}
                     width={248}
                     height={140}
                     alt="task image"

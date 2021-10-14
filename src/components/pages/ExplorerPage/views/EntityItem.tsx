@@ -17,7 +17,7 @@ import LazyImage from "components/utils/LazyImage/LazyImage";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Asset, Shot, Task } from "types/entities";
-import { pictureThumbnailURL } from "utils/zou";
+import { entityPreviewURL } from "utils/entity";
 
 interface EntityItemProps {
   index: number;
@@ -101,15 +101,7 @@ const EntityItem = ({
           >
             <CardMedia sx={{ width: 180, height: 100 }}>
               <LazyImage
-                src={
-                  (entity.type === "Shot" || entity.type === "Asset") &&
-                  entity.preview_file_id
-                    ? pictureThumbnailURL(
-                        "preview-files",
-                        entity.preview_file_id
-                      )
-                    : undefined
-                }
+                src={entityPreviewURL(entity)}
                 width={180}
                 height={100}
                 alt="test"

@@ -43,7 +43,7 @@ const LazyImage = (props: LazyImageProps): JSX.Element => {
     >
       {props.src &&
         (props.disableFade ? (
-          { img }
+          img
         ) : (
           <Fade in={!isImageLoading} timeout={400}>
             {img}
