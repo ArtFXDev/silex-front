@@ -1,18 +1,24 @@
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import {
+  Alert,
+  Box,
   IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   Paper,
+  SpeedDial,
+  SpeedDialAction,
+  Typography,
 } from "@mui/material";
+import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 
-const extensionToDCCName = (ext: string): string => {
+const extensionToDCCName = (ext: string): string | null => {
   switch (ext) {
     case "ma":
     case "mb":
@@ -22,58 +28,132 @@ const extensionToDCCName = (ext: string): string => {
     case "nk":
       return "nuke";
     case "hip":
+    case "hipnc":
       return "houdini";
     default:
-      return "";
+      return null;
   }
 };
 
-const SceneList = (): JSX.Element => {
-  const [scenes, setScenes] = useState<string[]>();
-  const { socket } = useSocket();
-  const { enqueueSnackbar } = useSnackbar();
+interface SceneListProps {
+  taskId: string;
+}
 
-  // TODO: path needs to be computed on the server side
-  const path = "/home/josephhenry/Desktop/pipeline";
+const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
+  const [path, setPath] = useState<string>();
+  const [scenes, setScenes] = useState<string[]>();
+  const [error, setError] = useState<string>();
+
+  const { enqueueSnackbar } = useSnackbar();
+  const { uiSocket } = useSocket();
 
   useEffect(() => {
-    socket.emit("ls", path, (paths) => {
-      setScenes(paths.data);
+    uiSocket.emit("getWorkingFilesForTask", { taskId }, (response) => {
+      if (response.data) {
+        setPath(response.data.path);
+        setScenes(response.data.files);
+      } else {
+        setError(response.msg);
+      }
     });
-  }, [socket]);
+  }, [uiSocket, taskId]);
 
-  const openDCC = (dcc: string, scene: string) => {
-    const cmd = `rez env silex_client ${dcc} -- ${dcc} ${path}/${scene}`;
-    socket.emit("exec", cmd, (response) => {
-      enqueueSnackbar(`Sent command "${cmd} (${response.status})"`, {
-        variant: "success",
+  const openScene = (dcc: string, scene: string) => {
+    uiSocket.emit(
+      "launchScene",
+      { taskId, scene, dcc, path: path as string },
+      (response) => {
+        enqueueSnackbar(`Launching dcc ${dcc} (${response.msg})`, {
+          variant: "info",
+        });
+      }
+    );
+  };
+
+  const onCreateNewScene = (dcc: string) => {
+    uiSocket.emit("launchScene", { taskId, dcc }, (response) => {
+      enqueueSnackbar(`Creating new scene with ${dcc} (${response.msg})`, {
+        variant: "info",
       });
     });
   };
 
   return (
-    <List>
-      {scenes &&
-        scenes.map((scene) => {
-          const dcc = extensionToDCCName(scene.split(".")[1]);
+    <div>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          position: "relative",
+        }}
+      >
+        <div>
+          <Typography variant="h6">Working scenes:</Typography>
+          {/* {path && (
+            <Typography variant="subtitle2" color="text.disabled">
+              {path}
+            </Typography>
+          )} */}
+        </div>
 
-          return (
-            <Paper key={scene} sx={{ my: 1 }}>
-              <ListItem>
-                <DCCLogo name={dcc} size={30} sx={{ mr: 2 }} />
+        <SpeedDial
+          icon={<SpeedDialIcon />}
+          ariaLabel="open dcc"
+          sx={{ position: "absolute", right: 0, bottom: 0 }}
+          FabProps={{ size: "small" }}
+          direction="left"
+        >
+          {["blender", "houdini", "nuke", "maya"].map((dcc) => (
+            <SpeedDialAction
+              key={dcc}
+              icon={<DCCLogo name={dcc} size={30} />}
+              tooltipTitle={dcc}
+              onClick={() => onCreateNewScene(dcc)}
+            />
+          ))}
+        </SpeedDial>
+      </Box>
 
-                <ListItemText>{scene}</ListItemText>
+      <Box sx={{ overflow: "auto", maxHeight: 250, borderRadius: 3, p: 1 }}>
+        <List>
+          {scenes &&
+            scenes.map((scene) => {
+              const dcc = extensionToDCCName(scene.split(".")[1]);
 
-                <ListItemIcon>
-                  <IconButton onClick={() => openDCC(dcc, scene)}>
-                    <PlayCircleOutlineIcon />
-                  </IconButton>
-                </ListItemIcon>
-              </ListItem>
-            </Paper>
-          );
-        })}
-    </List>
+              return (
+                <Paper key={scene} sx={{ my: 1 }} elevation={6}>
+                  <ListItem>
+                    <DCCLogo name={dcc} size={30} sx={{ mr: 2 }} />
+
+                    <ListItemText
+                      primaryTypographyProps={{
+                        fontSize: 14,
+                      }}
+                    >
+                      {scene}
+                    </ListItemText>
+
+                    {dcc && (
+                      <ListItemIcon>
+                        <IconButton onClick={() => openScene(dcc, scene)}>
+                          <PlayCircleOutlineIcon />
+                        </IconButton>
+                      </ListItemIcon>
+                    )}
+                  </ListItem>
+                </Paper>
+              );
+            })}
+        </List>
+
+        {error && (
+          <Alert variant="outlined" severity="warning">
+            {error}
+          </Alert>
+        )}
+      </Box>
+    </div>
   );
 };
 

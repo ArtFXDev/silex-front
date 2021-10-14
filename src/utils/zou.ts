@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { Person, Project } from "types/entities";
 
@@ -57,27 +58,33 @@ export function originalPreviewFileURL(id: string): string {
   return zouAPIURL(`pictures/originals/preview-files/${id}.png`);
 }
 
-type UserResponse = PromiseResponse<{ user: Person }>;
-
 /**
  * Checks if the user is authenticated with the backend.
  * We add a timeout in case the host is not reachable.
  * @returns the authenticated user if successfull
  */
-export function isAuthenticated(): UserResponse {
+export function isAuthenticated(): PromiseResponse<{
+  user: Person;
+}> {
   return getWithCredentials("auth/authenticated", { timeout: 1500 });
 }
 
 type LoginInput = { email: string; password: string };
+type LoginResponse = PromiseResponse<{
+  login: boolean;
+  ldap: boolean;
+  access_token: string;
+  refresh_token: string;
+  user: Person;
+}>;
 
 /**
- * Queries the login route to authenticate the client
+ * Queries the login route to authenticate the client on both zou and ws server
  * @param data the email and password
  */
-export function login(data: LoginInput): UserResponse {
-  return axios.post(zouAPIURL("auth/login"), data, {
-    withCredentials: true,
-  });
+export function login(data: LoginInput): LoginResponse {
+  axios.post(`${process.env.REACT_APP_WS_SERVER}/auth/login`, data);
+  return axios.post(zouAPIURL("auth/login"), data, { withCredentials: true });
 }
 
 /**

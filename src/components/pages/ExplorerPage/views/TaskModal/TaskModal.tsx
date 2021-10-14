@@ -65,6 +65,7 @@ const TaskModal = (): JSX.Element => {
       open
       onClose={onClose}
       fullWidth
+      maxWidth="lg"
       PaperProps={{
         sx: { bgcolor: "background.paper" },
         elevation: 3,
@@ -113,7 +114,7 @@ const TaskModal = (): JSX.Element => {
             </DialogTitle>
 
             <DialogContent dividers>
-              <Grid container sx={{ p: 2 }}>
+              <Grid container sx={{ p: 2 }} spacing={3}>
                 <Grid item xs={6}>
                   <Typography variant="subtitle1">
                     <Typography color="text.disabled">Created at:</Typography>{" "}
@@ -138,7 +139,7 @@ const TaskModal = (): JSX.Element => {
                 <Grid item xs={6} />
 
                 <Grid item xs={6}>
-                  <SceneList />
+                  <SceneList taskId={data.task.id} />
                 </Grid>
               </Grid>
             </DialogContent>
