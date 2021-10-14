@@ -1,4 +1,5 @@
 import { Backdrop, CircularProgress } from "@mui/material";
+import axios from "axios";
 import { useAuth } from "context";
 import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
@@ -22,13 +23,19 @@ const PrivateRoute = ({ children, ...rest }: RouteProps): JSX.Element => {
     const checkIfUserLoggedIn = async () => {
       try {
         setFetching(true);
+
+        // Check if the token is on the socket server side
+        await axios.get(`${process.env.REACT_APP_WS_SERVER}/auth/token`);
+
+        // Make the request on zou
         const response = await Zou.isAuthenticated();
         await auth.signin(response.data.user);
+
         setFetching(false);
         setIsUserLoggedIn(true);
-      } catch (err) {
+      } catch (err: unknown) {
         setIsUserLoggedIn(false);
-        enqueueSnackbar(`You are not authenticated. Error: ${err}`, {
+        enqueueSnackbar(`You are not authenticated. ${err}`, {
           variant: "error",
         });
       } finally {
