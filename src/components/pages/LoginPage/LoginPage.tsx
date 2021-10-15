@@ -82,8 +82,7 @@ const LoginPage = (): JSX.Element => {
             `Zou server at ${process.env.REACT_APP_ZOU_API} is not reachable, check your internet connection or retry later`
           );
         }
-      })
-      .finally(() => setIsLoading(false));
+      });
   };
 
   // TODO: better regexp?
