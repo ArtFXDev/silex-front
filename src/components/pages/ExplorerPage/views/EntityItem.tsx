@@ -60,7 +60,7 @@ const EntityItem = ({
   };
 
   return (
-    <Fade in={true} timeout={index * 200}>
+    <Fade in timeout={index * 200}>
       {listView ? (
         <Paper
           elevation={1}

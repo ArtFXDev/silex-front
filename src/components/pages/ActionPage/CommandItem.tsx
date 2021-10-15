@@ -60,9 +60,11 @@ const CommandItem = ({ command }: CommandItemProps): JSX.Element => {
 
           <ListItemText>{command.label}</ListItemText>
 
-          <Tooltip title={command.tooltip} arrow>
-            <HelpOutlineIcon color="disabled" />
-          </Tooltip>
+          {command.tooltip && (
+            <Tooltip title={command.tooltip} arrow>
+              <HelpOutlineIcon color="disabled" />
+            </Tooltip>
+          )}
         </ListItem>
       </Paper>
 

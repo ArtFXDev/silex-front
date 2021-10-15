@@ -2,7 +2,10 @@ import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import {
   Alert,
   Box,
+  Button,
+  Fade,
   IconButton,
+  LinearProgress,
   List,
   ListItem,
   ListItemIcon,
@@ -10,6 +13,7 @@ import {
   Paper,
   SpeedDial,
   SpeedDialAction,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
@@ -43,6 +47,7 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
   const [path, setPath] = useState<string>();
   const [scenes, setScenes] = useState<string[]>();
   const [error, setError] = useState<string>();
+  const [loading, setLoading] = useState<boolean>(true);
 
   const { enqueueSnackbar } = useSnackbar();
   const { uiSocket } = useSocket();
@@ -55,6 +60,8 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
       } else {
         setError(response.msg);
       }
+
+      setLoading(false);
     });
   }, [uiSocket, taskId]);
 
@@ -78,14 +85,19 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
     });
   };
 
+  const onConform = () => {
+    uiSocket.emit("launchAction", { action: "conform", taskId }, (response) => {
+      console.log(response);
+    });
+  };
+
   return (
-    <div>
+    <>
       <Box
         sx={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          position: "relative",
         }}
       >
         <div>
@@ -97,56 +109,73 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
           )} */}
         </div>
 
-        <SpeedDial
-          icon={<SpeedDialIcon />}
-          ariaLabel="open dcc"
-          sx={{ position: "absolute", right: 0, bottom: 0 }}
-          FabProps={{ size: "small" }}
-          direction="left"
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
         >
-          {["blender", "houdini", "nuke", "maya"].map((dcc) => (
-            <SpeedDialAction
-              key={dcc}
-              icon={<DCCLogo name={dcc} size={30} />}
-              tooltipTitle={dcc}
-              onClick={() => onCreateNewScene(dcc)}
-            />
-          ))}
-        </SpeedDial>
+          <SpeedDial
+            icon={<SpeedDialIcon />}
+            ariaLabel="open dcc"
+            FabProps={{ size: "small" }}
+            direction="left"
+            sx={{ mr: 3 }}
+          >
+            {["blender", "houdini", "nuke", "maya"].map((dcc) => (
+              <SpeedDialAction
+                key={dcc}
+                icon={<DCCLogo name={dcc} size={30} />}
+                tooltipTitle={dcc}
+                onClick={() => onCreateNewScene(dcc)}
+              />
+            ))}
+          </SpeedDial>
+
+          <Button onClick={() => onConform()}>Conform</Button>
+        </div>
       </Box>
 
-      <Box sx={{ overflow: "auto", maxHeight: 250, borderRadius: 3, p: 1 }}>
-        <List>
-          {scenes &&
-            scenes.map((scene) => {
-              const tokens = scene.split(".");
-              const dcc = extensionToDCCName(tokens[tokens.length - 1]);
+      <Box sx={{ borderRadius: 3, p: 1 }}>
+        {loading ? (
+          <LinearProgress />
+        ) : (
+          <List>
+            {scenes &&
+              scenes.map((scene, i) => {
+                const tokens = scene.split(".");
+                const dcc = extensionToDCCName(tokens[tokens.length - 1]);
 
-              return (
-                <Paper key={scene} sx={{ my: 1 }} elevation={6}>
-                  <ListItem>
-                    <DCCLogo name={dcc} size={30} sx={{ mr: 2 }} />
+                return (
+                  <Fade in timeout={i * 200} key={scene}>
+                    <Paper sx={{ my: 1 }} elevation={6}>
+                      <ListItem>
+                        <DCCLogo name={dcc} size={30} sx={{ mr: 2 }} />
 
-                    <ListItemText
-                      primaryTypographyProps={{
-                        fontSize: 14,
-                      }}
-                    >
-                      {scene}
-                    </ListItemText>
+                        <ListItemText
+                          primaryTypographyProps={{
+                            fontSize: 14,
+                          }}
+                        >
+                          {scene}
+                        </ListItemText>
 
-                    {dcc && (
-                      <ListItemIcon>
-                        <IconButton onClick={() => openScene(dcc, scene)}>
-                          <PlayCircleOutlineIcon />
-                        </IconButton>
-                      </ListItemIcon>
-                    )}
-                  </ListItem>
-                </Paper>
-              );
-            })}
-        </List>
+                        {dcc && (
+                          <ListItemIcon>
+                            <Tooltip title="Open scene" placement="left">
+                              <IconButton onClick={() => openScene(dcc, scene)}>
+                                <PlayCircleOutlineIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </ListItemIcon>
+                        )}
+                      </ListItem>
+                    </Paper>
+                  </Fade>
+                );
+              })}
+          </List>
+        )}
 
         {error && (
           <Alert variant="outlined" severity="info">
@@ -154,7 +183,7 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
           </Alert>
         )}
       </Box>
-    </div>
+    </>
   );
 };
 

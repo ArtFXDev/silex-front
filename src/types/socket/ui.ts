@@ -33,6 +33,8 @@ export interface UIClientEmitEvents {
     dcc: string;
     path?: string;
   }>;
+
+  launchAction: EmitWithCallback<{ action: string; taskId: string }>;
 }
 
 export interface UIOnServerEvents {

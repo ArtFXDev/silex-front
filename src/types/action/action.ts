@@ -10,7 +10,7 @@ interface CommonFields {
   index: number;
   label: string;
   name: string;
-  tooltip: string;
+  tooltip: string | null;
   uuid: string;
 }
 
@@ -20,7 +20,7 @@ interface CommonFields {
 export type Parameter = {
   label: string;
   name: string;
-  type: "str" | "int" | null;
+  type: "str" | "int" | "bool" | "Path" | null;
   value: string;
 };
 

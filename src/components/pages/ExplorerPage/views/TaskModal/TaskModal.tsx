@@ -5,14 +5,16 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Fade,
   Grid,
   IconButton,
   Typography,
 } from "@mui/material";
+import { TransitionProps } from "@mui/material/transitions";
 import { PersonsAvatarGroup } from "components/common/avatar";
 import TaskStatusBadge from "components/common/TaskStatusBadge/TaskStatusBadge";
 import LazyImage from "components/utils/LazyImage/LazyImage";
-import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
+import { forwardRef } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { Task } from "types/entities";
 import { formatDateTime } from "utils/date";
@@ -51,6 +53,15 @@ const TASK = gql`
   }
 `;
 
+const Transition = forwardRef(function Transition(
+  props: TransitionProps & {
+    children?: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Fade in ref={ref} {...props} timeout={500} />;
+});
+
 const TaskModal = (): JSX.Element => {
   const routeMatch = useRouteMatch<{ taskId: string }>();
 
@@ -71,87 +82,84 @@ const TaskModal = (): JSX.Element => {
       onClose={onClose}
       fullWidth
       maxWidth="lg"
+      TransitionComponent={Transition}
       PaperProps={{
-        sx: { bgcolor: "background.paper" },
+        sx: { bgcolor: "background.paper", height: "80%" },
         elevation: 3,
       }}
     >
-      <QueryWrapper query={query}>
-        {data && (
-          <>
-            <DialogTitle>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div>
-                  <Typography color="text.disabled" component="span">
-                    Task:
-                  </Typography>{" "}
-                  <Typography variant="h6" component="span">
-                    {data.task.taskType.name}
-                  </Typography>
-                </div>
+      {data && (
+        <>
+          <DialogTitle>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <div>
+                <Typography color="text.disabled" component="span">
+                  Task:
+                </Typography>{" "}
+                <Typography variant="h6" component="span">
+                  {data.task.taskType.name}
+                </Typography>
+              </div>
 
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <PersonsAvatarGroup
-                    persons={data.task.assignees}
-                    size={35}
-                    fontSize={20}
-                    sx={{ mr: 2 }}
-                    fallbackMessage="No assignees yet..."
-                  />
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <PersonsAvatarGroup
+                  persons={data.task.assignees}
+                  size={35}
+                  fontSize={20}
+                  sx={{ mr: 2 }}
+                  fallbackMessage="No assignees yet..."
+                />
 
-                  <TaskStatusBadge
-                    taskStatus={data.task.taskStatus}
-                    sx={{ mr: 2 }}
-                    fontSize={15}
-                  />
+                <TaskStatusBadge
+                  taskStatus={data.task.taskStatus}
+                  sx={{ mr: 2 }}
+                  fontSize={15}
+                />
 
-                  <IconButton onClick={onClose}>
-                    <CloseIcon color="disabled" />
-                  </IconButton>
-                </Box>
+                <IconButton onClick={onClose}>
+                  <CloseIcon color="disabled" />
+                </IconButton>
               </Box>
-            </DialogTitle>
+            </Box>
+          </DialogTitle>
 
-            <DialogContent dividers>
-              <Grid container sx={{ p: 2 }} spacing={3}>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle1">
-                    <Typography color="text.disabled">Created at:</Typography>{" "}
-                    {formatDateTime(data.task.created_at)}
-                  </Typography>
+          <DialogContent dividers sx={{ height: "100%" }}>
+            <Grid container sx={{ p: 2 }} spacing={5}>
+              <Grid item xs={6}>
+                <Typography variant="subtitle1">
+                  <Typography color="text.disabled">Created at:</Typography>{" "}
+                  {formatDateTime(data.task.created_at)}
+                </Typography>
 
-                  <Typography variant="subtitle1">
-                    <Typography color="text.disabled">Updated at:</Typography>{" "}
-                    {formatDateTime(data.task.updated_at)}
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={6}>
-                  <LazyImage
-                    src={data ? entityPreviewURL(data.task) : undefined}
-                    width={248}
-                    height={140}
-                    alt="task image"
-                    disableFade
-                  />
-                </Grid>
-
-                <Grid item xs={6} />
-
-                <Grid item xs={6}>
-                  <SceneList taskId={data.task.id} />
-                </Grid>
+                <Typography variant="subtitle1">
+                  <Typography color="text.disabled">Updated at:</Typography>{" "}
+                  {formatDateTime(data.task.updated_at)}
+                </Typography>
               </Grid>
-            </DialogContent>
-          </>
-        )}
-      </QueryWrapper>
+
+              <Grid item xs={6}>
+                <LazyImage
+                  src={data ? entityPreviewURL(data.task) : undefined}
+                  width={248}
+                  height={140}
+                  alt="task image"
+                  disableFade
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <SceneList taskId={data.task.id} />
+              </Grid>
+            </Grid>
+          </DialogContent>
+        </>
+      )}
     </Dialog>
   );
 };
