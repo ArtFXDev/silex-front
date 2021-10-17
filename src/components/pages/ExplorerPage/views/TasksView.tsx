@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
+import { Typography } from "@mui/material";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { Asset, Shot } from "types/entities";
@@ -37,6 +38,12 @@ const SHOT_TASKS = gql`
   query getShotTasks($id: ID!) {
     shot(id: $id) {
       name
+      type
+
+      sequence {
+        name
+      }
+
       tasks {
         ...TaskFields
       }
@@ -49,6 +56,8 @@ const ASSET_TASKS = gql`
   query getAssetTasks($id: ID!) {
     asset(id: $id) {
       name
+      type
+
       tasks {
         ...TaskFields
       }
@@ -74,7 +83,26 @@ const TasksView = ({ listView }: { listView: boolean }): JSX.Element => {
     <QueryWrapper query={query}>
       {data && (
         <div>
-          <h2 style={{ marginBottom: 0, marginTop: 0 }}>{entity.name}</h2>
+          {entity.type === "Shot" && (
+            <Typography
+              variant="h6"
+              color="text.disabled"
+              display="inline-block"
+              sx={{ mr: 1 }}
+            >
+              {entity.sequence.name} /{" "}
+            </Typography>
+          )}
+
+          <h2
+            style={{
+              marginBottom: 0,
+              marginTop: 0,
+              display: "inline-block",
+            }}
+          >
+            {entity.name}
+          </h2>
           <EntitiesView entities={entity.tasks} listView={listView} />
         </div>
       )}
