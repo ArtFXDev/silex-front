@@ -87,7 +87,9 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
 
   const onConform = () => {
     uiSocket.emit("launchAction", { action: "conform", taskId }, (response) => {
-      console.log(response);
+      enqueueSnackbar(`Launched conform action ${response.msg}`, {
+        variant: "info",
+      });
     });
   };
 
