@@ -69,7 +69,7 @@ const ExplorerPage = (): JSX.Element => {
         </Box>
       </Box>
 
-      <Box sx={{ mt: 4 }}>
+      <Box sx={{ mt: 5 }}>
         <Switch>
           {/* Redirect to the shots by default when we go to the explorer */}
           <Route exact path={`/explorer`}>
