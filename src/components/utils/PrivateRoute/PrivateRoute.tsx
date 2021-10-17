@@ -1,8 +1,7 @@
 import { Backdrop, CircularProgress } from "@mui/material";
-import axios from "axios";
 import { useAuth } from "context";
 import { useSnackbar } from "notistack";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Redirect, Route, RouteProps, useRouteMatch } from "react-router-dom";
 import * as Zou from "utils/zou";
 
@@ -24,10 +23,7 @@ const PrivateRoute = ({ children, ...rest }: RouteProps): JSX.Element => {
       try {
         setFetching(true);
 
-        // Check if the token is on the socket server side
-        await axios.get(`${process.env.REACT_APP_WS_SERVER}/auth/token`);
-
-        // Make the request on zou
+        // Check if authenticated
         const response = await Zou.isAuthenticated();
         await auth.signin(response.data.user);
 

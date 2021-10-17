@@ -59,14 +59,27 @@ export function originalPreviewFileURL(id: string): string {
 }
 
 /**
- * Checks if the user is authenticated with the backend.
- * We add a timeout in case the host is not reachable.
+ * Checks if the user is authenticated with the backend and the WS server
  * @returns the authenticated user if successfull
  */
 export function isAuthenticated(): PromiseResponse<{
   user: Person;
 }> {
-  return getWithCredentials("auth/authenticated", { timeout: 1500 });
+  return new Promise((resolve, reject) => {
+    // Check if the token is on the socket server side
+    axios
+      .get(`${process.env.REACT_APP_WS_SERVER}/auth/token`)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .then((_token) => {
+        // Check if authenticated on the zou side
+        getWithCredentials<{ user: Person }>("auth/authenticated", {
+          timeout: 1500,
+        })
+          .then((response) => resolve(response))
+          .catch((err) => reject(err));
+      })
+      .catch((err) => reject(err));
+  });
 }
 
 type LoginInput = { email: string; password: string };
@@ -83,8 +96,20 @@ type LoginResponse = PromiseResponse<{
  * @param data the email and password
  */
 export function login(data: LoginInput): LoginResponse {
-  axios.post(`${process.env.REACT_APP_WS_SERVER}/auth/login`, data);
-  return axios.post(zouAPIURL("auth/login"), data, { withCredentials: true });
+  return new Promise((resolve, reject) => {
+    // Login to the WS server first
+    axios
+      .post(`${process.env.REACT_APP_WS_SERVER}/auth/login`, data)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .then((_response) => {
+        // Login directly to Zou for cookies
+        axios
+          .post(zouAPIURL("auth/login"), data, { withCredentials: true })
+          .then((response) => resolve(response))
+          .catch((err) => reject(err));
+      })
+      .catch((err) => reject(err));
+  });
 }
 
 /**
