@@ -1,48 +1,23 @@
-import { Socket } from "socket.io-client";
-import { Action } from "types/action/action";
-import { DCCContext } from "types/action/context";
+export type ServerResponse = { status: number; msg: string };
 
-type ServerResponse<Data = undefined> = {
-  data: Data | undefined;
-  status: number;
+export type ServerResponseWithData<Data> = {
+  data?: Data;
+  status: 200;
   msg: string;
 };
+
+export type Listener<Request> = (response: { data: Request }) => void;
 
 /** Callback function */
 type Acknowledgement<Response> = (response: Response) => void;
 
 /** Emit without a payload where you only need a response */
-type WithCallback<Response> = (ack: Acknowledgement<Response>) => void;
-
-/** Emit with a payload and receive a response with a callback */
-type EmitWithCallback<Payload, Response> = (
-  payload: Payload,
+export type WithCallback<Response = ServerResponse> = (
   ack: Acknowledgement<Response>
 ) => void;
 
-export interface ClientEmitEvents {
-  /** Emit this to register the UI as a client */
-  initialization: EmitWithCallback<{ uuid: string }, ServerResponse>;
-
-  /** Used to get the list of the connected dcc clients */
-  getClients: WithCallback<{ [uuid: string]: DCCContext }>;
-
-  // Action related events
-  getCurrentAction: WithCallback<ServerResponse<Action>>;
-  actionUpdate: EmitWithCallback<Action, ServerResponse>;
-
-  // TODO: refactor types
-  ls: (path: string, ack: (paths: { data: string[] }) => void) => void;
-  exec: (command: string, ack: (response: ServerResponse) => void) => void;
-}
-
-export interface OnServerEvents {
-  dccConnect: (data: { uuid: string; context: DCCContext }) => void;
-  dccDisconnect: (data: { uuid: string }) => void;
-
-  // Action related events
-  actionQuery: (action: { data: Action }) => void;
-  actionUpdate: (updatedAction: { data: Action | undefined }) => void;
-}
-
-export type TypedSocket = Socket<OnServerEvents, ClientEmitEvents>;
+/** Emit with a payload and receive a response with a callback */
+export type EmitWithCallback<Payload, Response = ServerResponse> = (
+  payload: Payload,
+  ack: Acknowledgement<Response>
+) => void;

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { Person, Project } from "types/entities";
 
@@ -57,26 +58,57 @@ export function originalPreviewFileURL(id: string): string {
   return zouAPIURL(`pictures/originals/preview-files/${id}.png`);
 }
 
-type UserResponse = PromiseResponse<{ user: Person }>;
-
 /**
- * Checks if the user is authenticated with the backend.
- * We add a timeout in case the host is not reachable.
+ * Checks if the user is authenticated with the backend and the WS server
  * @returns the authenticated user if successfull
  */
-export function isAuthenticated(): UserResponse {
-  return getWithCredentials("auth/authenticated", { timeout: 1500 });
+export function isAuthenticated(): PromiseResponse<{
+  user: Person;
+}> {
+  return new Promise((resolve, reject) => {
+    // Check if the token is on the socket server side
+    axios
+      .get(`${process.env.REACT_APP_WS_SERVER}/auth/token`)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .then((_token) => {
+        // Check if authenticated on the zou side
+        getWithCredentials<{ user: Person }>("auth/authenticated", {
+          timeout: 1500,
+        })
+          .then((response) => resolve(response))
+          .catch((err) => reject(err));
+      })
+      .catch((err) => reject(err));
+  });
 }
 
 type LoginInput = { email: string; password: string };
+type LoginResponse = PromiseResponse<{
+  login: boolean;
+  ldap: boolean;
+  access_token: string;
+  refresh_token: string;
+  user: Person;
+}>;
 
 /**
- * Queries the login route to authenticate the client
+ * Queries the login route to authenticate the client on both zou and ws server
  * @param data the email and password
  */
-export function login(data: LoginInput): UserResponse {
-  return axios.post(zouAPIURL("auth/login"), data, {
-    withCredentials: true,
+export function login(data: LoginInput): LoginResponse {
+  return new Promise((resolve, reject) => {
+    // Login to the WS server first
+    axios
+      .post(`${process.env.REACT_APP_WS_SERVER}/auth/login`, data)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .then((_response) => {
+        // Login directly to Zou for cookies
+        axios
+          .post(zouAPIURL("auth/login"), data, { withCredentials: true })
+          .then((response) => resolve(response))
+          .catch((err) => reject(err));
+      })
+      .catch((err) => reject(err));
   });
 }
 

@@ -17,14 +17,13 @@ import LazyImage from "components/utils/LazyImage/LazyImage";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Asset, Shot, Task } from "types/entities";
-import { pictureThumbnailURL } from "utils/zou";
+import { entityPreviewURL } from "utils/entity";
 
 interface EntityItemProps {
   index: number;
   entity: Shot | Task | Asset;
   selected?: boolean;
   listView: boolean;
-  openTaskModal?: (taskId: string) => void;
 }
 
 const ProgressBar = ({ shot }: { shot: Shot }): JSX.Element => {
@@ -48,7 +47,6 @@ const EntityItem = ({
   entity,
   selected,
   listView,
-  openTaskModal,
 }: EntityItemProps): JSX.Element => {
   const history = useHistory();
   const routeMatch = useRouteMatch();
@@ -56,13 +54,13 @@ const EntityItem = ({
   const name = entity.type === "Task" ? entity.taskType.name : entity.name;
 
   const onClickAction = () => {
-    openTaskModal
-      ? openTaskModal(entity.id)
-      : history.push(`${routeMatch.url}/${entity.id}/tasks`);
+    history.push(
+      `${routeMatch.url}/${entity.id}${entity.type === "Task" ? "" : "/tasks"}`
+    );
   };
 
   return (
-    <Fade in={true} timeout={index * 200}>
+    <Fade in timeout={index * 200}>
       {listView ? (
         <Paper
           elevation={1}
@@ -103,15 +101,7 @@ const EntityItem = ({
           >
             <CardMedia sx={{ width: 180, height: 100 }}>
               <LazyImage
-                src={
-                  (entity.type === "Shot" || entity.type === "Asset") &&
-                  entity.preview_file_id
-                    ? pictureThumbnailURL(
-                        "preview-files",
-                        entity.preview_file_id
-                      )
-                    : undefined
-                }
+                src={entityPreviewURL(entity)}
                 width={180}
                 height={100}
                 alt="test"

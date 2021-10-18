@@ -1,7 +1,7 @@
 import { Backdrop, CircularProgress } from "@mui/material";
 import { useAuth } from "context";
 import { useSnackbar } from "notistack";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Redirect, Route, RouteProps, useRouteMatch } from "react-router-dom";
 import * as Zou from "utils/zou";
 
@@ -22,13 +22,16 @@ const PrivateRoute = ({ children, ...rest }: RouteProps): JSX.Element => {
     const checkIfUserLoggedIn = async () => {
       try {
         setFetching(true);
+
+        // Check if authenticated
         const response = await Zou.isAuthenticated();
         await auth.signin(response.data.user);
+
         setFetching(false);
         setIsUserLoggedIn(true);
-      } catch (err) {
+      } catch (err: unknown) {
         setIsUserLoggedIn(false);
-        enqueueSnackbar(`You are not authenticated. Error: ${err}`, {
+        enqueueSnackbar(`You are not authenticated. ${err}`, {
           variant: "error",
         });
       } finally {
