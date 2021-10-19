@@ -3,6 +3,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { Action } from "types/action/action";
 import { UIOnServerEvents } from "types/socket";
+import { runIfInElectron } from "utils/electron";
 
 export interface ActionContext {
   action: Action | undefined;
@@ -32,6 +33,9 @@ export const ProvideAction = ({
       setAction(action);
       // Redirect to the action page
       history.push("/action");
+
+      // Brings the app on top
+      runIfInElectron(() => window.electron.send("bringWindowToFront"));
     },
     [history]
   );
