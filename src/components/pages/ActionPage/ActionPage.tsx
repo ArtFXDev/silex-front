@@ -1,11 +1,17 @@
-import { Box, Button, List, Typography } from "@mui/material";
+import { Box, Button, Fade, List, Typography } from "@mui/material";
 import { useAction, useSocket } from "context";
 import { useSnackbar } from "notistack";
+import { Action } from "types/action/action";
 import { Status } from "types/action/status";
 import { capitalize } from "utils/string";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 import StepItem from "./StepItem";
+
+const someStepsAreWaitingForInput = (action: Action) =>
+  Object.values(action.steps).some(
+    (step) => step.status === Status.WAITING_FOR_RESPONSE
+  );
 
 const ActionPage = (): JSX.Element => {
   const { action } = useAction();
@@ -56,13 +62,15 @@ const ActionPage = (): JSX.Element => {
           )}
         </List>
 
-        <Button
-          variant="contained"
-          sx={{ float: "right" }}
-          onClick={handleClickOnAction}
-        >
-          {action.name}
-        </Button>
+        <Fade in={someStepsAreWaitingForInput(action)}>
+          <Button
+            variant="contained"
+            sx={{ float: "right" }}
+            onClick={handleClickOnAction}
+          >
+            {action.name}
+          </Button>
+        </Fade>
       </Box>
     </PageWrapper>
   );
