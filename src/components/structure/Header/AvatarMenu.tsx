@@ -38,7 +38,7 @@ const AvatarMenu = (): JSX.Element => {
         <PersonAvatar
           person={auth.user}
           onClick={handleMenu}
-          size={45}
+          size={42}
           clickable
         />
 

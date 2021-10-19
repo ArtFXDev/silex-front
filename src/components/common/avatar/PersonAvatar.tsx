@@ -47,7 +47,7 @@ const PersonAvatar = ({
         width: size,
         height: size,
         borderColor: personColor,
-        borderWidth: 5,
+        borderWidth: size / 20,
         fontSize: fontSize,
         borderStyle: "solid",
       }}
