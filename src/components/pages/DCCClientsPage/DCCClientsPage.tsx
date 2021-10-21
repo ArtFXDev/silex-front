@@ -62,26 +62,26 @@ const DCCClientsTable = ({
 const DCCClientsPage = (): JSX.Element => {
   const socket = useSocket();
 
-  return (
-    <PageWrapper title="Connected dccs">
-      <>
-        {!socket.isConnected && (
-          <Alert severity="error">
-            <AlertTitle>Connection error</AlertTitle>
-            Can{"'"}t connect to the Silex WS server at{" "}
-            {process.env.REACT_APP_WS_SERVER} —{" "}
-            <strong>make sure it{"'"}s running or restart it</strong>
-          </Alert>
-        )}
+  const content = () => {
+    if (socket.isConnected) {
+      return socket.dccClients.length !== 0 ? (
+        <DCCClientsTable dccClients={socket.dccClients} />
+      ) : (
+        <Typography color="text.disabled">No sofware connected...</Typography>
+      );
+    } else {
+      return (
+        <Alert severity="error">
+          <AlertTitle>Connection error</AlertTitle>
+          Can{"'"}t connect to the Silex WS server at{" "}
+          {process.env.REACT_APP_WS_SERVER} —{" "}
+          <strong>make sure it{"'"}s running or restart it</strong>
+        </Alert>
+      );
+    }
+  };
 
-        {socket.dccClients.length !== 0 ? (
-          <DCCClientsTable dccClients={socket.dccClients} />
-        ) : (
-          <Typography color="text.disabled">No dccs connected...</Typography>
-        )}
-      </>
-    </PageWrapper>
-  );
+  return <PageWrapper title="Connected softwares">{content()}</PageWrapper>;
 };
 
 export default DCCClientsPage;
