@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { DCCContext } from "./context";
+import { Parameter } from "./parameters";
 import { Status } from "./status";
 
 /**
@@ -13,16 +14,6 @@ interface CommonFields {
   tooltip: string | null;
   uuid: string;
 }
-
-/**
- * A parameter has a name and a default value
- */
-export type Parameter = {
-  label: string;
-  name: string;
-  type: "str" | "int" | "bool" | "Path" | null;
-  value: string;
-};
 
 /**
  * A command is a piece of code with parameters

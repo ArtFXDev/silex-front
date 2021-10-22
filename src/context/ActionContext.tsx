@@ -7,6 +7,7 @@ import { runIfInElectron } from "utils/electron";
 
 export interface ActionContext {
   action: Action | undefined;
+  setAction: (action: Action | undefined) => void;
 }
 
 export const ActionContext = React.createContext<ActionContext>(
@@ -41,17 +42,6 @@ export const ProvideAction = ({
   );
 
   /**
-   * On socketio connect, retrieve the current action if exists
-   */
-  const onConnect = useCallback(() => {
-    uiSocket.emit("getCurrentAction", (currentAction) => {
-      if (currentAction.data) {
-        setActionAndRedirect(currentAction.data);
-      }
-    });
-  }, [setActionAndRedirect, uiSocket]);
-
-  /**
    * Called when receiving an action from the server
    */
   const onActionQuery = useCallback<UIOnServerEvents["actionQuery"]>(
@@ -72,23 +62,20 @@ export const ProvideAction = ({
   );
 
   useEffect(() => {
-    uiSocket.on("connect", onConnect);
-
     uiSocket.on("actionQuery", onActionQuery);
     uiSocket.on("actionUpdate", onActionUpdate);
 
     return () => {
-      uiSocket.off("connect", onConnect);
-
       uiSocket.off("query", onActionQuery);
       uiSocket.off("update", onActionUpdate);
     };
-  }, [uiSocket, onConnect, onActionQuery, onActionUpdate]);
+  }, [uiSocket, onActionQuery, onActionUpdate]);
 
   return (
     <ActionContext.Provider
       value={{
         action,
+        setAction,
       }}
     >
       {children}

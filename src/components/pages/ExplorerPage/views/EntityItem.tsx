@@ -94,7 +94,7 @@ const EntityItem = ({
             elevation={2}
             sx={{
               transition: "box-shadow 0.1s ease",
-              "&:hover": {
+              ":hover": {
                 boxShadow: "0 0 0 2px rgba(200, 200, 200, 0.4)",
               },
             }}

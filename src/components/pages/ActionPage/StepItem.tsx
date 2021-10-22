@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { linearProgressClasses } from "@mui/material/LinearProgress";
 import { useState } from "react";
-import { Step } from "types/action/action";
+import { Command, Step } from "types/action/action";
 import { Status } from "types/action/status";
 import { getStatusColor, getStatusIcon } from "utils/status";
 
@@ -19,6 +19,7 @@ import CommandItem from "./CommandItem";
 
 interface StepItemProps {
   step: Step;
+  disabled: boolean;
 }
 
 /**
@@ -33,7 +34,7 @@ const computeStepProgress = (step: Step) => {
   );
 };
 
-const StepItem = ({ step }: StepItemProps): JSX.Element => {
+const StepItem = ({ step, disabled }: StepItemProps): JSX.Element => {
   const [open, setOpen] = useState<boolean>(true);
 
   const stepProgress = computeStepProgress(step);
@@ -44,7 +45,7 @@ const StepItem = ({ step }: StepItemProps): JSX.Element => {
   return (
     <Box sx={{ mb: 2 }}>
       <Paper elevation={3}>
-        <ListItem onClick={() => setOpen(!open)}>
+        <ListItem onClick={() => setOpen(!open)} disabled={disabled}>
           <ListItemIcon>{getStatusIcon(step.status, true)}</ListItemIcon>
 
           <ListItemText>
@@ -73,11 +74,17 @@ const StepItem = ({ step }: StepItemProps): JSX.Element => {
             step.status !== Status.COMPLETED
           }
         >
-          <List sx={{ pl: 4, py: 0 }}>
-            {commands.map((command) => (
-              <CommandItem command={command} key={command.uuid} />
-            ))}
-          </List>
+          {commands.length !== 0 && (
+            <List sx={{ pl: 4, py: 0 }}>
+              {commands.map((command: Command) => (
+                <CommandItem
+                  key={Math.random()}
+                  command={command}
+                  disabled={disabled}
+                />
+              ))}
+            </List>
+          )}
         </Collapse>
       )}
     </Box>
