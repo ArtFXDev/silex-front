@@ -1,9 +1,10 @@
 import { Menu as MenuIcon } from "@mui/icons-material";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { AppBar, Box, IconButton, Toolbar } from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
 import Menu from "components/structure/Menu/Menu";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import AvatarMenu from "./AvatarMenu";
@@ -71,7 +72,19 @@ const Header = (): JSX.Element => {
         <Menu open={menuOpen} closeMenu={() => setMenuOpen(false)} />
 
         <SilexLogoAndText />
-        <ConnectedDCCButton sx={{ ml: 2.5, mr: 3 }} />
+
+        <IconButton
+          onClick={() => window.location.reload()}
+          sx={{
+            transition: "all 0.7s cubic-bezier(0, 0.55, 0.45, 1)",
+            ":hover": { transform: "rotate(360deg)" },
+          }}
+        >
+          <RefreshIcon />
+        </IconButton>
+
+        <ConnectedDCCButton sx={{ ml: 2, mr: 3 }} />
+
         <AvatarMenu />
       </Toolbar>
     </AppBar>

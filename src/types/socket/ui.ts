@@ -42,6 +42,7 @@ export interface UIOnServerEvents {
   dccDisconnect: Listener<{ uuid: string }>;
 
   // Action related events
+  clearAction: Listener<{ uuid: string }>;
   actionQuery: Listener<Action>;
   actionUpdate: Listener<Action | undefined>;
 }

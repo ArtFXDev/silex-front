@@ -1,24 +1,70 @@
-import { Box, Button, Fade, List, Typography } from "@mui/material";
+import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
+import {
+  Box,
+  Button,
+  Fade,
+  IconButton,
+  List,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { useAction, useSocket } from "context";
 import { useSnackbar } from "notistack";
+import { useCallback, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Action } from "types/action/action";
 import { Status } from "types/action/status";
+import { UIOnServerEvents } from "types/socket";
 import { capitalize } from "utils/string";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 import StepItem from "./StepItem";
 
+/**
+ * Returns true if any of the steps of the action is waiting for user input
+ */
 const someStepsAreWaitingForInput = (action: Action) =>
   Object.values(action.steps).some(
     (step) => step.status === Status.WAITING_FOR_RESPONSE
   );
 
-const ActionPage = (): JSX.Element => {
-  const { action } = useAction();
+const ActionPage = (): JSX.Element | null => {
+  const [actionFinished, setActionFinished] = useState<boolean>(false);
+
+  const { action, setAction } = useAction();
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
+  const history = useHistory();
 
-  if (!action) return <PageWrapper title={`No action...`} />;
+  const onClearAction = useCallback<UIOnServerEvents["clearAction"]>((data) => {
+    // TODO: support multiple actions and use data.uuid
+    setActionFinished(true);
+  }, []);
+
+  const onActionQuery = useCallback<UIOnServerEvents["actionQuery"]>(
+    (action) => {
+      if (action.data) setActionFinished(false);
+    },
+    []
+  );
+
+  useEffect(() => {
+    uiSocket.on("actionQuery", onActionQuery);
+    uiSocket.on("clearAction", onClearAction);
+
+    // Clear the current action on route change
+    const unlisten = history.listen(() => {
+      setAction(undefined);
+    });
+
+    return () => {
+      unlisten();
+      uiSocket.off("actionQuery", onActionQuery);
+      uiSocket.off("clearAction", onClearAction);
+    };
+  }, [history, onActionQuery, onClearAction, setAction, uiSocket]);
+
+  if (!action) return null;
 
   const handleClickOnAction = () => {
     // TODO: hack
@@ -41,24 +87,50 @@ const ActionPage = (): JSX.Element => {
   return (
     <PageWrapper>
       <Box sx={{ width: 800 }}>
-        <Box sx={{ mb: 3 }}>
-          <Typography
-            color="text.disabled"
-            variant="h5"
-            sx={{ display: "inline-block", mr: 2 }}
-            display="inline-block"
-          >
-            Action:
-          </Typography>
+        <Box sx={{ mb: 3, display: "flex", alignItems: "center" }}>
+          <div>
+            <Typography
+              color="text.disabled"
+              variant="h5"
+              sx={{ display: "inline-block", mr: 2 }}
+              display="inline-block"
+            >
+              Action:
+            </Typography>
 
-          <Typography variant="h4" display="inline-block">
-            {capitalize(action.name)}
-          </Typography>
+            <Typography variant="h4" display="inline-block" sx={{ mr: 3 }}>
+              {capitalize(action.name)}
+            </Typography>
+
+            {actionFinished && (
+              <Tooltip title="The action is finished" placement="top" arrow>
+                <Typography
+                  fontSize={30}
+                  sx={{ cursor: "default", display: "inline-block" }}
+                >
+                  🏁
+                </Typography>
+              </Tooltip>
+            )}
+          </div>
+
+          <Tooltip title="Go back" placement="top" arrow>
+            <IconButton sx={{ ml: "auto" }} onClick={() => history.goBack()}>
+              <KeyboardReturnIcon fontSize="large" />
+            </IconButton>
+          </Tooltip>
         </Box>
 
         <List>
           {Object.values(action.steps).map(
-            (step) => !step.hide && <StepItem key={step.uuid} step={step} />
+            (step) =>
+              !step.hide && (
+                <StepItem
+                  key={step.uuid}
+                  step={step}
+                  disabled={actionFinished}
+                />
+              )
           )}
         </List>
 

@@ -20,6 +20,7 @@ import ParameterItem from "./ParameterItem";
 
 interface CommandItemProps {
   command: Command;
+  disabled: boolean;
 }
 
 const borderRadiusTop = `${LIST_ITEM_BORDER_RADIUS * 5}px ${
@@ -30,7 +31,7 @@ const borderRadiusBottom = `0 0 ${LIST_ITEM_BORDER_RADIUS * 5}px ${
   LIST_ITEM_BORDER_RADIUS * 5
 }px`;
 
-const CommandItem = ({ command }: CommandItemProps): JSX.Element => {
+const CommandItem = ({ command, disabled }: CommandItemProps): JSX.Element => {
   const [open, setOpen] = useState<boolean>(true);
 
   const parameters = Object.values(command.parameters);
@@ -48,12 +49,8 @@ const CommandItem = ({ command }: CommandItemProps): JSX.Element => {
           sx={{
             borderRadius: borderRadiusTop,
             backgroundColor: getStatusColor(command.status),
-            "&:hover": {
-              backgroundColor:
-                command.status === Status.COMPLETED ? "success.light" : "",
-            },
           }}
-          disabled={command.hide}
+          disabled={disabled}
           onClick={() => setOpen(!open)}
         >
           <ListItemIcon>{getStatusIcon(command.status)}</ListItemIcon>
