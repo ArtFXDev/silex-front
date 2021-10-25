@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
+import { Typography } from "@mui/material";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useRouteMatch } from "react-router";
 import { Project } from "types/entities";
@@ -41,16 +42,26 @@ const ShotsView = ({ listView }: { listView: boolean }): JSX.Element => {
 
   return (
     <QueryWrapper query={query}>
-      {data &&
+      {data && data.project.sequences.length !== 0 ? (
         data.project.sequences.map((seq, i) => (
           <div key={seq.id}>
             <h2 style={{ marginBottom: 0, marginTop: 0 }}>
               {seq.name} {seq.nb_frames && <h4>({seq.nb_frames} frames)</h4>}
             </h2>
-            <EntitiesView entities={seq.shots} listView={listView} />
+
+            {seq.shots.length !== 0 ? (
+              <EntitiesView entities={seq.shots} listView={listView} />
+            ) : (
+              <Typography color="text.disabled">No shots...</Typography>
+            )}
             {i !== data.project.sequences.length - 1 && <br />}
           </div>
-        ))}
+        ))
+      ) : (
+        <Typography color="text.disabled">
+          The project doesn{"'"}t contain any sequences or shots...
+        </Typography>
+      )}
     </QueryWrapper>
   );
 };

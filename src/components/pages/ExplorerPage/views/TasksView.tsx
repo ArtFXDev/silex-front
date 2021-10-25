@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import { Typography } from "@mui/material";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import { Asset, Shot } from "types/entities";
 
 import EntitiesView from "./EntitiesView";
@@ -67,6 +67,7 @@ const ASSET_TASKS = gql`
 
 const TasksView = ({ listView }: { listView: boolean }): JSX.Element => {
   const routeMatch = useRouteMatch<{ category: string; entityId: string }>();
+  const history = useHistory();
 
   const query = useQuery<{ shot?: Shot; asset?: Asset }>(
     routeMatch.params.category === "shots" ? SHOT_TASKS : ASSET_TASKS,
@@ -88,7 +89,13 @@ const TasksView = ({ listView }: { listView: boolean }): JSX.Element => {
               variant="h6"
               color="text.disabled"
               display="inline-block"
-              sx={{ mr: 1 }}
+              sx={{
+                mr: 1,
+                transition: "all 0.2s ease",
+                cursor: "pointer",
+                ":hover": { color: "rgba(255, 255, 255, 0.8)" },
+              }}
+              onClick={() => history.goBack()}
             >
               {entity.sequence.name} /{" "}
             </Typography>
