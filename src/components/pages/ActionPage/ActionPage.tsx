@@ -36,10 +36,13 @@ const ActionPage = (): JSX.Element | null => {
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
 
-  const onClearAction = useCallback<UIOnServerEvents["clearAction"]>((data) => {
-    // TODO: support multiple actions and use data.uuid
-    setActionFinished(true);
-  }, []);
+  const onClearAction = useCallback<UIOnServerEvents["clearAction"]>(
+    (_data) => {
+      // TODO: support multiple actions and use data.uuid
+      setActionFinished(true);
+    },
+    []
+  );
 
   const onActionQuery = useCallback<UIOnServerEvents["actionQuery"]>(
     (action) => {
