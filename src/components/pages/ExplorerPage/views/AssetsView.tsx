@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
+import { Typography } from "@mui/material";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useRouteMatch } from "react-router";
 import { Project } from "types/entities";
@@ -28,8 +29,12 @@ const AssetsView = ({ listView }: { listView: boolean }): JSX.Element => {
 
   return (
     <QueryWrapper query={query}>
-      {data && (
+      {data && data.project.assets.length > 0 ? (
         <EntitiesView entities={data.project.assets} listView={listView} />
+      ) : (
+        <Typography color="text.disabled">
+          The project doesn{"'"}t contain any assets...
+        </Typography>
       )}
     </QueryWrapper>
   );
