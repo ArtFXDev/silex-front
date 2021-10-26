@@ -11,6 +11,7 @@ import { useAuth } from "context/AuthContext";
 import { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { ProjectId } from "types/entities";
+import { capitalize } from "utils/string";
 
 const ProjectSelector = (): JSX.Element => {
   const [selectedProject, setSelectedProject] = useState<ProjectId>();
@@ -63,7 +64,10 @@ const ProjectSelector = (): JSX.Element => {
             >
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <AirIcon sx={{ color: colorhash.hex(project.name), mr: 1 }} />
-                {project.name[0] + project.name.slice(1).toLowerCase()}
+                {project.name
+                  .split("_")
+                  .map((s) => capitalize(s))
+                  .join(" ")}
               </Box>
             </MenuItem>
           ))}
