@@ -34,7 +34,8 @@ const borderRadiusBottom = `0 0 ${LIST_ITEM_BORDER_RADIUS * 5}px ${
 const CommandItem = ({ command, disabled }: CommandItemProps): JSX.Element => {
   const [open, setOpen] = useState<boolean>(true);
 
-  const parameters = Object.values(command.parameters);
+  // Get parameters and delete hidden ones
+  const parameters = Object.values(command.parameters).filter((p) => !p.hide);
 
   return (
     <Box sx={{ my: 2 }}>
