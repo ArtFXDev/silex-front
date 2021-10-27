@@ -39,7 +39,7 @@ const PrivateRoute = ({ children, ...rest }: RouteProps): JSX.Element => {
       }
     };
 
-    if (auth.user && auth.currentProjectId) {
+    if (auth.user) {
       setIsUserLoggedIn(true);
       setLoading(false);
     } else {

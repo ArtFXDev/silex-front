@@ -1,12 +1,22 @@
 import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 
+const categories = [
+  { value: "shots", label: "Shots" },
+  { value: "assets", label: "Assets" },
+];
+
 const CategorySelector = (): JSX.Element => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("shots");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   const location = useLocation();
   const history = useHistory();
+
+  useEffect(() => {
+    const tokens = location.pathname.split("/");
+    setSelectedCategory(tokens[3]);
+  }, [location.pathname]);
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     history.push(
@@ -28,8 +38,11 @@ const CategorySelector = (): JSX.Element => {
       value={selectedCategory}
       onChange={handleChange}
     >
-      <MenuItem value="shots">Shots</MenuItem>
-      <MenuItem value="assets">Assets</MenuItem>
+      {categories.map((category) => (
+        <MenuItem key={category.value} value={category.value}>
+          {category.label}
+        </MenuItem>
+      ))}
     </Select>
   );
 };

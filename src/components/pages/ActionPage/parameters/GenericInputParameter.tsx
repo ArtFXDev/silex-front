@@ -38,7 +38,8 @@ const GenericInputParameter = ({
   if (!isElectron() && parameter.type.name === "Path") {
     return (
       <Alert variant="filled" color="warning">
-        You are not running in Electron, the Path input is not going to work
+        You are not viewing this inside Electron, the Path input is not going to
+        work
       </Alert>
     );
   }

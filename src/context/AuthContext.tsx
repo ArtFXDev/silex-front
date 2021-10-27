@@ -40,10 +40,13 @@ export const ProvideAuth = ({ children }: ProvideAuthProps): JSX.Element => {
 
     // Store the list of projects for that user
     const projectsData = await Zou.getUserProjects();
-    setProjects(projectsData.data);
+
+    if (projectsData.data) {
+      setProjects(projectsData.data);
+    }
 
     // And the current project id
-    if (projectsData.data.length !== 0) {
+    if (projectsData.data.length > 0) {
       setCurrentProjectId(projectsData.data[0].id);
     }
   };

@@ -3,6 +3,7 @@ export interface BaseParameter {
   name: string;
   type: { name: string };
   value: number | boolean | string | null;
+  hide: boolean;
 }
 
 export interface StringParameter extends BaseParameter {
