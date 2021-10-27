@@ -32,8 +32,6 @@ They are:
 
 - `REACT_APP_ZOU_API` - the url of the Zou server (like `http://my-zou-server`). It's the same URL as the Kitsu app (since they are behind a Nginx proxy).
 
-- `REACT_APP_ZOU_GRAPHQL_API` - the url of the GraphQL API connected to the Zou backend. It should be on the same host but with a different route (usually `/api/graphql`)
-
 - `REACT_APP_WS_SERVER` - the url of the Silex websocket service running on the client machine (open on the port `5118`).
 
 ### Available scripts

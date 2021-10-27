@@ -7,9 +7,6 @@ declare namespace NodeJS {
     /** Url of the Zou server */
     REACT_APP_ZOU_API: string;
 
-    /** Url of the GraphQL api */
-    REACT_APP_ZOU_GRAPHQL_API: string;
-
     /** Url of the silex websocket server */
     REACT_APP_WS_SERVER: string;
   }
