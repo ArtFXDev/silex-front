@@ -2,7 +2,7 @@ import AirIcon from "@mui/icons-material/Air";
 import { Box, Fade, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import ColorHash from "color-hash";
 import { useAuth } from "context/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { ProjectId } from "types/entities";
 import { capitalize } from "utils/string";
@@ -15,6 +15,12 @@ const ProjectSelector = (): JSX.Element => {
   const location = useLocation();
 
   const colorhash = new ColorHash({ lightness: 0.7, saturation: 0.8 });
+
+  // Get the current project from url
+  useEffect(() => {
+    const tokens = location.pathname.split("/");
+    setSelectedProject(tokens[2]);
+  }, [location.pathname]);
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     auth.setCurrentProjectId(event.target.value);
