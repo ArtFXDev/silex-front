@@ -19,3 +19,7 @@ export const entityPreviewURL = (
 
   return url ? pictureThumbnailURL("preview-files", url) : undefined;
 };
+
+export const getEntityName = (entity: Shot | Task | Asset): string => {
+  return entity.type === "Task" ? entity.taskType.name : entity.name;
+};

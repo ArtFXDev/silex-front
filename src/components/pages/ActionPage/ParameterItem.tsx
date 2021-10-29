@@ -33,7 +33,12 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
           />
         );
       case "select":
-        return <SelectParameter parameter={parameter as SelectParameterType} />;
+        return (
+          <SelectParameter
+            parameter={parameter as SelectParameterType}
+            onChange={(e) => (parameter.value = e.target.value)}
+          />
+        );
       case "range":
         return (
           <Slider

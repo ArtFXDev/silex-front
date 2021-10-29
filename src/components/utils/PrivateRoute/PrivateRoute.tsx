@@ -1,8 +1,9 @@
 import { Backdrop, CircularProgress } from "@mui/material";
+import Header from "components/structure/Header/Header";
 import { useAuth } from "context";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import { Redirect, Route, RouteProps, useRouteMatch } from "react-router-dom";
+import { Redirect, Route, RouteProps } from "react-router-dom";
 import * as Zou from "utils/zou";
 
 const PrivateRoute = ({ children, ...rest }: RouteProps): JSX.Element => {
@@ -11,12 +12,7 @@ const PrivateRoute = ({ children, ...rest }: RouteProps): JSX.Element => {
   const [fetching, setFetching] = useState<boolean>(false);
 
   const auth = useAuth();
-  const routeMatch = useRouteMatch();
   const { enqueueSnackbar } = useSnackbar();
-
-  const isTheRightRoute = routeMatch.isExact
-    ? rest.path === routeMatch.url
-    : routeMatch.url.includes(rest.path as string);
 
   useEffect(() => {
     const checkIfUserLoggedIn = async () => {
@@ -43,17 +39,9 @@ const PrivateRoute = ({ children, ...rest }: RouteProps): JSX.Element => {
       setIsUserLoggedIn(true);
       setLoading(false);
     } else {
-      if (isTheRightRoute && !isUserLoggedIn && !fetching)
-        checkIfUserLoggedIn();
+      if (!isUserLoggedIn && !fetching) checkIfUserLoggedIn();
     }
-  }, [
-    auth,
-    isTheRightRoute,
-    isUserLoggedIn,
-    loading,
-    fetching,
-    enqueueSnackbar,
-  ]);
+  }, [auth, isUserLoggedIn, loading, fetching, enqueueSnackbar]);
 
   return (
     <Route
@@ -71,7 +59,10 @@ const PrivateRoute = ({ children, ...rest }: RouteProps): JSX.Element => {
             }}
           />
         ) : (
-          children
+          <>
+            <Header />
+            {children}
+          </>
         )
       }
     />

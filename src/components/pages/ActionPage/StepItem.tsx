@@ -78,7 +78,7 @@ const StepItem = ({ step, disabled }: StepItemProps): JSX.Element => {
             <List sx={{ pl: 4, py: 0 }}>
               {commands.map((command: Command) => (
                 <CommandItem
-                  key={Math.random()}
+                  key={command.uuid}
                   command={command}
                   disabled={disabled}
                 />

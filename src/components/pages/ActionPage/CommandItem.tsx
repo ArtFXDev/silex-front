@@ -66,18 +66,20 @@ const CommandItem = ({ command, disabled }: CommandItemProps): JSX.Element => {
         </ListItem>
       </Paper>
 
-      <Collapse in={command.status === Status.WAITING_FOR_RESPONSE}>
-        <Paper elevation={2} sx={{ borderRadius: borderRadiusBottom }}>
-          <List sx={{ px: 3 }}>
-            {parameters.map((parameter, i) => (
-              <>
-                <ParameterItem parameter={parameter} key={i} />
-                {i !== parameters.length - 1 && <Divider />}
-              </>
-            ))}
-          </List>
-        </Paper>
-      </Collapse>
+      {parameters.length > 0 && (
+        <Collapse in={command.status === Status.WAITING_FOR_RESPONSE}>
+          <Paper elevation={2} sx={{ borderRadius: borderRadiusBottom }}>
+            <List sx={{ px: 3 }}>
+              {parameters.map((parameter, i) => (
+                <>
+                  <ParameterItem parameter={parameter} key={i} />
+                  {i !== parameters.length - 1 && <Divider />}
+                </>
+              ))}
+            </List>
+          </Paper>
+        </Collapse>
+      )}
     </Box>
   );
 };

@@ -1,12 +1,22 @@
-import { FormControl, FormHelperText, MenuItem, Select } from "@mui/material";
+import {
+  FormControl,
+  FormHelperText,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 import { useState } from "react";
 import { SelectParameter as SelectParameterType } from "types/action/parameters";
 
 interface SelectParameterProps {
   parameter: SelectParameterType;
+  onChange: (event: SelectChangeEvent<string | null>) => void;
 }
 
-const SelectParameter = ({ parameter }: SelectParameterProps): JSX.Element => {
+const SelectParameter = ({
+  parameter,
+  onChange,
+}: SelectParameterProps): JSX.Element => {
   const [value, setValue] = useState<string | null>(parameter.value);
   const error = parameter.value === null;
 
@@ -24,13 +34,14 @@ const SelectParameter = ({ parameter }: SelectParameterProps): JSX.Element => {
         variant="outlined"
         defaultValue={parameter.value}
         onChange={(e) => {
+          onChange(e);
           setValue(e.target.value);
         }}
         value={value}
       >
-        {parameter.type.options.map((value) => (
-          <MenuItem key={value} value={value}>
-            {value}
+        {parameter.type.options.map((option) => (
+          <MenuItem key={option} value={option}>
+            {option}
           </MenuItem>
         ))}
       </Select>

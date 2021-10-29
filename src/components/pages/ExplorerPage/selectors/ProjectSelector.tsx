@@ -19,12 +19,16 @@ const ProjectSelector = (): JSX.Element => {
   // Get the current project from url
   useEffect(() => {
     const tokens = location.pathname.split("/");
-    setSelectedProject(tokens[2]);
+    if (tokens.length >= 2) {
+      setSelectedProject(tokens[2]);
+    }
   }, [location.pathname]);
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     auth.setCurrentProjectId(event.target.value);
+
     setSelectedProject(event.target.value);
+    window.localStorage.setItem("last-project-id", event.target.value);
 
     const sp = location.pathname.split("/");
     history.push(`/${sp[1]}/${event.target.value}/${sp[3]}`);

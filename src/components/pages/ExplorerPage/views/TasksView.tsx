@@ -3,6 +3,7 @@ import { Typography } from "@mui/material";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import { Asset, Shot } from "types/entities";
+import { fuzzyMatch } from "utils/string";
 
 import EntitiesView from "./EntitiesView";
 import TaskModal from "./TaskModal/TaskModal";
@@ -65,7 +66,12 @@ const ASSET_TASKS = gql`
   }
 `;
 
-const TasksView = ({ listView }: { listView: boolean }): JSX.Element => {
+interface TasksViewProps {
+  listView: boolean;
+  search: string;
+}
+
+const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
   const routeMatch = useRouteMatch<{ category: string; entityId: string }>();
   const history = useHistory();
 
@@ -110,7 +116,13 @@ const TasksView = ({ listView }: { listView: boolean }): JSX.Element => {
           >
             {entity.name}
           </h2>
-          <EntitiesView entities={entity.tasks} listView={listView} />
+
+          <EntitiesView
+            entities={entity.tasks.filter((task) =>
+              fuzzyMatch(task.taskType.name, search)
+            )}
+            listView={listView}
+          />
         </div>
       )}
 

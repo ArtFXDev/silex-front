@@ -26,7 +26,7 @@ const EntitiesView = ({
       {listView ? (
         <List>{entitiesItems}</List>
       ) : (
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mt: 1 }}>
           {entitiesItems}
         </Box>
       )}

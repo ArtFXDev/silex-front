@@ -1,4 +1,4 @@
-import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
+import CancelIcon from "@mui/icons-material/Cancel";
 import {
   Box,
   Button,
@@ -117,9 +117,17 @@ const ActionPage = (): JSX.Element | null => {
             )}
           </div>
 
-          <Tooltip title="Go back" placement="top" arrow>
-            <IconButton sx={{ ml: "auto" }} onClick={() => history.goBack()}>
-              <KeyboardReturnIcon fontSize="large" />
+          <Tooltip title="Cancel action" placement="top" arrow>
+            <IconButton
+              sx={{ ml: "auto" }}
+              onClick={() => {
+                history.goBack();
+                enqueueSnackbar(`Cancelled action ${action.name}`, {
+                  variant: "error",
+                });
+              }}
+            >
+              <CancelIcon fontSize="large" />
             </IconButton>
           </Tooltip>
         </Box>
