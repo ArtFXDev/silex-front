@@ -21,6 +21,7 @@ const TASK_FIELDS = gql`
 
     taskType {
       name
+      priority
     }
 
     taskStatus {
@@ -59,6 +60,10 @@ const ASSET_TASKS = gql`
       name
       type
 
+      entity_type {
+        name
+      }
+
       tasks {
         ...TaskFields
       }
@@ -90,7 +95,7 @@ const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
     <QueryWrapper query={query}>
       {data && (
         <div>
-          {entity.type === "Shot" && (
+          <>
             <Typography
               variant="h6"
               color="text.disabled"
@@ -103,9 +108,20 @@ const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
               }}
               onClick={() => history.goBack()}
             >
-              {entity.sequence.name} /{" "}
+              {entity.type === "Shot"
+                ? entity.sequence.name
+                : entity.entity_type.name}
             </Typography>
-          )}
+
+            <Typography
+              variant="h6"
+              display="inline-block"
+              color="text.disabled"
+              mr={1}
+            >
+              /
+            </Typography>
+          </>
 
           <h2
             style={{
@@ -118,9 +134,9 @@ const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
           </h2>
 
           <EntitiesView
-            entities={entity.tasks.filter((task) =>
-              fuzzyMatch(task.taskType.name, search)
-            )}
+            entities={entity.tasks
+              .filter((task) => fuzzyMatch(task.taskType.name, search))
+              .sort((a, b) => a.taskType.priority - b.taskType.priority)}
             listView={listView}
           />
         </div>
