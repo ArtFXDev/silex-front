@@ -117,6 +117,7 @@ export function login(data: LoginInput): LoginResponse {
  * @returns logout if successfull
  */
 export function logout(): PromiseResponse<{ logout: boolean }> {
+  axios.post(`${process.env.REACT_APP_WS_SERVER}/auth/logout`);
   return getWithCredentials("auth/logout");
 }
 
