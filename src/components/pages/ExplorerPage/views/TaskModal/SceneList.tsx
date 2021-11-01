@@ -104,11 +104,6 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
       >
         <div>
           <Typography variant="h6">Working scenes:</Typography>
-          {/* {path && (
-            <Typography variant="subtitle2" color="text.disabled">
-              {path}
-            </Typography>
-          )} */}
         </div>
 
         <div
