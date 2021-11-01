@@ -77,24 +77,6 @@ const AssetsView = ({ listView, search }: AssetsViewProps): JSX.Element => {
       )}
     </QueryWrapper>
   );
-
-  // return (
-  //   <QueryWrapper query={query}>
-  //     {data && data.project.assets.length > 0 ? (
-
-  //         <EntitiesView
-  //           entities={data.project.assets}
-  //           listView={listView}
-  //           search={search}
-  //         />
-  //       )
-  //     ) : (
-  //       <Typography color="text.disabled">
-  //         The project doesn{"'"}t contain any assets...
-  //       </Typography>
-  //     )}
-  //   </QueryWrapper>
-  // );
 };
 
 export default AssetsView;
