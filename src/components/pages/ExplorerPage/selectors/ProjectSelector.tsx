@@ -52,14 +52,9 @@ const ProjectSelector = (): JSX.Element => {
   return (
     <Select
       sx={{
-        width: 230,
+        minWidth: 230,
         height: 50,
         borderRadius: 3,
-        borderColor: colorhash.hex(
-          auth.getCurrentProject()
-            ? (auth.getCurrentProject()?.name as string)
-            : ""
-        ),
         paddingTop: 0,
         fontSize: 20,
       }}
