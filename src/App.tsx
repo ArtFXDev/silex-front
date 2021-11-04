@@ -3,8 +3,8 @@ import DCCClientsPage from "components/pages/DCCClientsPage/DCCClientsPage";
 import ExplorerPage from "components/pages/ExplorerPage/ExplorerPage";
 import HomePage from "components/pages/HomePage/HomePage";
 import LoginPage from "components/pages/LoginPage/LoginPage";
+import NotFoundPage from "components/pages/NotFoundPage/NotFoundPage";
 import ProfilePage from "components/pages/ProfilePage/ProfilePage";
-import Header from "components/structure/Header/Header";
 import PrivateRoute from "components/utils/PrivateRoute/PrivateRoute";
 import {
   ProvideAction,
@@ -33,29 +33,29 @@ const App = (): JSX.Element => {
                     <LoginPage />
                   </Route>
 
-                  <>
-                    <Header />
+                  <PrivateRoute exact path="/">
+                    <HomePage />
+                  </PrivateRoute>
 
-                    <PrivateRoute exact path="/">
-                      <HomePage />
-                    </PrivateRoute>
+                  <PrivateRoute exact path="/profile">
+                    <ProfilePage />
+                  </PrivateRoute>
 
-                    <PrivateRoute exact path="/profile">
-                      <ProfilePage />
-                    </PrivateRoute>
+                  <PrivateRoute exact path="/dccs">
+                    <DCCClientsPage />
+                  </PrivateRoute>
 
-                    <PrivateRoute path="/explorer">
-                      <ExplorerPage />
-                    </PrivateRoute>
+                  <PrivateRoute exact path="/action">
+                    <ActionPage />
+                  </PrivateRoute>
 
-                    <PrivateRoute exact path="/dccs">
-                      <DCCClientsPage />
-                    </PrivateRoute>
+                  <PrivateRoute path="/explorer">
+                    <ExplorerPage />
+                  </PrivateRoute>
 
-                    <PrivateRoute exact path="/action">
-                      <ActionPage />
-                    </PrivateRoute>
-                  </>
+                  <Route path="/*">
+                    <NotFoundPage />
+                  </Route>
                 </Switch>
               </ProvideAction>
             </ProvideAuth>

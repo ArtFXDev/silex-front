@@ -5,12 +5,12 @@ interface PageWrapperProps {
   title?: string;
 
   /** Children to put in the page */
-  children?: JSX.Element;
+  children?: React.ReactNode;
 }
 
 const PageWrapper = ({ title, children }: PageWrapperProps): JSX.Element => (
   <Fade in timeout={200}>
-    <Box p={6} height="100%">
+    <Box p={6}>
       {title && <Typography variant="h4">{title}</Typography>}
       <Box sx={{ py: 2 }}>{children}</Box>
     </Box>

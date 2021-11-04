@@ -37,7 +37,7 @@ const GenericInputParameter = ({
 }: GenericInputParameterProps): JSX.Element => {
   if (!isElectron() && parameter.type.name === "Path") {
     return (
-      <Alert variant="filled" color="warning">
+      <Alert variant="outlined" color="warning">
         You are not viewing this inside Electron, the Path input is not going to
         work
       </Alert>

@@ -19,7 +19,7 @@ import CommandItem from "./CommandItem";
 
 interface StepItemProps {
   step: Step;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 /**
@@ -67,26 +67,20 @@ const StepItem = ({ step, disabled }: StepItemProps): JSX.Element => {
         />
       </Paper>
 
-      {commands.length > 0 && (
-        <Collapse
-          in={
-            step.status !== Status.INITIALIZED &&
-            step.status !== Status.COMPLETED
-          }
-        >
-          {commands.length !== 0 && (
-            <List sx={{ pl: 4, py: 0 }}>
-              {commands.map((command: Command) => (
-                <CommandItem
-                  key={Math.random()}
-                  command={command}
-                  disabled={disabled}
-                />
-              ))}
-            </List>
-          )}
-        </Collapse>
-      )}
+      {/* && step.status !== Status.COMPLETED */}
+      <Collapse in={step.status !== Status.INITIALIZED}>
+        {commands.length > 0 && (
+          <List sx={{ pl: 4, py: 0 }}>
+            {commands.map((command: Command) => (
+              <CommandItem
+                key={command.uuid}
+                command={command}
+                disabled={disabled}
+              />
+            ))}
+          </List>
+        )}
+      </Collapse>
     </Box>
   );
 };

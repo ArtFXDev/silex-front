@@ -1,6 +1,6 @@
 import { Menu as MenuIcon } from "@mui/icons-material";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import { AppBar, Box, IconButton, Toolbar } from "@mui/material";
+import { AppBar, Box, IconButton, Toolbar, Tooltip } from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
 import Menu from "components/structure/Menu/Menu";
@@ -73,15 +73,17 @@ const Header = (): JSX.Element => {
 
         <SilexLogoAndText />
 
-        <IconButton
-          onClick={() => window.location.reload()}
-          sx={{
-            transition: "all 0.7s cubic-bezier(0, 0.55, 0.45, 1)",
-            ":hover": { transform: "rotate(360deg)" },
-          }}
-        >
-          <RefreshIcon />
-        </IconButton>
+        <Tooltip title="Refresh data" placement="bottom" arrow>
+          <IconButton
+            onClick={() => window.location.reload()}
+            sx={{
+              transition: "all 0.7s cubic-bezier(0, 0.55, 0.45, 1)",
+              ":hover": { transform: "rotate(360deg)" },
+            }}
+          >
+            <RefreshIcon />
+          </IconButton>
+        </Tooltip>
 
         <ConnectedDCCButton sx={{ ml: 2, mr: 3 }} />
 

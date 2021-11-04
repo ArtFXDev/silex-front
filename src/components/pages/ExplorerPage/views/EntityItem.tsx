@@ -17,7 +17,7 @@ import LazyImage from "components/utils/LazyImage/LazyImage";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Asset, Shot, Task } from "types/entities";
-import { entityPreviewURL } from "utils/entity";
+import { entityPreviewURL, getEntityName } from "utils/entity";
 
 interface EntityItemProps {
   index: number;
@@ -51,7 +51,7 @@ const EntityItem = ({
   const history = useHistory();
   const routeMatch = useRouteMatch();
 
-  const name = entity.type === "Task" ? entity.taskType.name : entity.name;
+  const name = getEntityName(entity);
 
   const onClickAction = () => {
     history.push(
@@ -60,7 +60,7 @@ const EntityItem = ({
   };
 
   return (
-    <Fade in timeout={index * 200}>
+    <Fade in timeout={{ appear: 2000 * index, enter: 800 }}>
       {listView ? (
         <Paper
           elevation={1}
@@ -97,7 +97,9 @@ const EntityItem = ({
               ":hover": {
                 boxShadow: "0 0 0 2px rgba(200, 200, 200, 0.4)",
               },
+              cursor: "pointer",
             }}
+            onClick={onClickAction}
           >
             <CardMedia sx={{ width: 180, height: 100 }}>
               <LazyImage
@@ -105,7 +107,6 @@ const EntityItem = ({
                 width={180}
                 height={100}
                 alt="test"
-                onClick={onClickAction}
                 disableBorder
               />
             </CardMedia>

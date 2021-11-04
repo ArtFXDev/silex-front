@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { BaseEntity } from "./BaseEntity";
+import { BaseEntity, EntityType } from "./BaseEntity";
 import { ProjectId } from "./Project";
 import { Task } from "./Task";
 
@@ -15,5 +15,6 @@ export interface Asset extends BaseEntity {
   data: unknown;
   type: "Asset";
 
+  entity_type: EntityType;
   tasks: Task[];
 }

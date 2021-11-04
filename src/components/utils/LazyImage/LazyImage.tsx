@@ -9,7 +9,6 @@ interface LazyImageProps {
   width: number;
   height: number;
   disableBorder?: boolean;
-  onClick?: () => void;
   disableFade?: boolean;
 }
 
@@ -37,10 +36,7 @@ const LazyImage = (props: LazyImageProps): JSX.Element => {
   );
 
   return (
-    <div
-      style={{ cursor: props.onClick ? "pointer" : "default" }}
-      onClick={props.onClick}
-    >
+    <div>
       {props.src &&
         (props.disableFade ? (
           img

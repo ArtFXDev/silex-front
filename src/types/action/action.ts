@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-import { DCCContext } from "./context";
 import { Parameter } from "./parameters";
 import { Status } from "./status";
 
@@ -15,6 +14,11 @@ interface CommonFields {
   uuid: string;
 }
 
+export type LogLine = {
+  level: "DEBUG" | "INFO" | "WARNING" | "ERROR" | "CRITICAL" | "TRACEBACK";
+  message: string;
+};
+
 /**
  * A command is a piece of code with parameters
  */
@@ -23,6 +27,7 @@ export type Command = CommonFields & {
   status: Status;
   ask_user: boolean;
   parameters: { [paramName: string]: Parameter };
+  logs: LogLine[];
 };
 
 /**
@@ -33,12 +38,30 @@ export type Step = CommonFields & {
   commands: { [commandName: string]: Command };
 };
 
+export interface ActionContext {
+  dcc?: string;
+  name?: string;
+  pid: number;
+  project?: string;
+  project_id?: string;
+  sequence?: string;
+  sequence_id?: string;
+  shot?: string;
+  shot_id?: string;
+  task?: string;
+  task_id?: string;
+  task_type?: string;
+  user?: string;
+  user_email?: string;
+  uuid?: string;
+}
+
 /**
  * An action is the whole object sent by the silex_client library running in the DCC
  */
 export interface Action {
   name: string;
-  context_metadata: DCCContext;
+  context_metadata: ActionContext;
   steps: { [stepName: string]: Step };
   uuid: string;
 }

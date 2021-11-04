@@ -6,3 +6,5 @@ export interface BaseEntity {
   name: string;
   type: string;
 }
+
+export type EntityType = BaseEntity;

@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
-import { useAuth } from "context";
+import { useAuth, useSocket } from "context";
 import { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import * as Zou from "utils/zou";
@@ -48,6 +48,7 @@ const LoginPage = (): JSX.Element => {
 
   const auth = useAuth();
   const location = useLocation<{ from: Location }>();
+  const socket = useSocket();
   const history = useHistory();
 
   /**
@@ -169,6 +170,7 @@ const LoginPage = (): JSX.Element => {
                 color="primary"
                 variant="contained"
                 onClick={onLogIn}
+                disabled={!socket.isConnected}
                 sx={{
                   textTransform: "none",
                   width: 100,
@@ -184,9 +186,11 @@ const LoginPage = (): JSX.Element => {
           </Grid>
 
           <Grid item xs={12}>
-            <Collapse in={error !== undefined}>
+            <Collapse in={error !== undefined || !socket.isConnected}>
               <Alert severity="error" variant="outlined">
-                {error}
+                {!socket.isConnected
+                  ? "The application is not connected to the WebSocket server. You can't login."
+                  : error}
               </Alert>
             </Collapse>
           </Grid>

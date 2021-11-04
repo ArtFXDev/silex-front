@@ -3,6 +3,13 @@ import { GlobalStyles } from "@mui/material";
 const AppGlobalStyles = (): JSX.Element => (
   <GlobalStyles
     styles={{
+      "html, body": {
+        height: "100%",
+        minHeight: "100%",
+      },
+      "#root": {
+        height: "100%",
+      },
       /* Customizing the scroll bar on Electron */
       "*::-webkit-scrollbar": {
         width: "8px",

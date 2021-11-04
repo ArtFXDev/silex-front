@@ -3,6 +3,7 @@ import { Typography } from "@mui/material";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useRouteMatch } from "react-router";
 import { Project } from "types/entities";
+import { fuzzyMatch } from "utils/string";
 
 import EntitiesView from "./EntitiesView";
 
@@ -32,7 +33,12 @@ const SEQUENCES_AND_SHOTS = gql`
   }
 `;
 
-const ShotsView = ({ listView }: { listView: boolean }): JSX.Element => {
+interface ShotsViewProps {
+  listView: boolean;
+  search: string;
+}
+
+const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
   const routeMatch = useRouteMatch<{ projectId: string }>();
 
   const query = useQuery<{ project: Project }>(SEQUENCES_AND_SHOTS, {
@@ -42,21 +48,37 @@ const ShotsView = ({ listView }: { listView: boolean }): JSX.Element => {
 
   return (
     <QueryWrapper query={query}>
-      {data && data.project.sequences.length !== 0 ? (
-        data.project.sequences.map((seq, i) => (
-          <div key={seq.id}>
-            <h2 style={{ marginBottom: 0, marginTop: 0 }}>
-              {seq.name} {seq.nb_frames && <h4>({seq.nb_frames} frames)</h4>}
-            </h2>
+      {data && data.project.sequences.length > 0 ? (
+        data.project.sequences.map((seq, i) => {
+          const filteredShots = seq.shots
+            .filter((sh) => fuzzyMatch(sh.name, search))
+            .sort((a, b) => a.name.localeCompare(b.name));
 
-            {seq.shots.length !== 0 ? (
-              <EntitiesView entities={seq.shots} listView={listView} />
-            ) : (
-              <Typography color="text.disabled">No shots...</Typography>
-            )}
-            {i !== data.project.sequences.length - 1 && <br />}
-          </div>
-        ))
+          const isLast = i === data.project.sequences.length - 1;
+
+          return (
+            <div key={seq.id}>
+              {filteredShots.length !== 0 ? (
+                <>
+                  <h2 style={{ marginBottom: 0, marginTop: 0 }}>
+                    {seq.name}{" "}
+                    {seq.nb_frames && <h4>({seq.nb_frames} frames)</h4>}
+                  </h2>
+                  <EntitiesView entities={filteredShots} listView={listView} />
+                  {!isLast && <br />}
+                </>
+              ) : (
+                search.length === 0 &&
+                seq.shots.length !== 0 && (
+                  <>
+                    <Typography color="text.disabled">No shots...</Typography>
+                    {!isLast && <br />}
+                  </>
+                )
+              )}
+            </div>
+          );
+        })
       ) : (
         <Typography color="text.disabled">
           The project doesn{"'"}t contain any sequences or shots...

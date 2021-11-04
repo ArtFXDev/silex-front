@@ -16,11 +16,11 @@ export const getStatusColor = (status: Status): string => {
     case Status.COMPLETED:
       return "success.dark";
     case Status.ERROR:
-      return "error.main";
+      return "error.dark";
     case Status.PROCESSING:
       return "info.main";
     case Status.INVALID:
-      return "warning.main";
+      return "warning.dark";
     case Status.INITIALIZED:
       return "";
     case Status.WAITING_FOR_RESPONSE:

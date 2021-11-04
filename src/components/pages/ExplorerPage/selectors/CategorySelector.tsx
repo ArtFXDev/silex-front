@@ -15,7 +15,9 @@ const CategorySelector = (): JSX.Element => {
 
   useEffect(() => {
     const tokens = location.pathname.split("/");
-    setSelectedCategory(tokens[3]);
+    if (tokens.length >= 3) {
+      setSelectedCategory(tokens[3]);
+    }
   }, [location.pathname]);
 
   const handleChange = (event: SelectChangeEvent<string>) => {

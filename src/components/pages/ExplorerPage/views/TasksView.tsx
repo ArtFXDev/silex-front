@@ -3,6 +3,7 @@ import { Typography } from "@mui/material";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import { Asset, Shot } from "types/entities";
+import { fuzzyMatch } from "utils/string";
 
 import EntitiesView from "./EntitiesView";
 import TaskModal from "./TaskModal/TaskModal";
@@ -20,6 +21,7 @@ const TASK_FIELDS = gql`
 
     taskType {
       name
+      priority
     }
 
     taskStatus {
@@ -58,6 +60,10 @@ const ASSET_TASKS = gql`
       name
       type
 
+      entity_type {
+        name
+      }
+
       tasks {
         ...TaskFields
       }
@@ -65,7 +71,12 @@ const ASSET_TASKS = gql`
   }
 `;
 
-const TasksView = ({ listView }: { listView: boolean }): JSX.Element => {
+interface TasksViewProps {
+  listView: boolean;
+  search: string;
+}
+
+const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
   const routeMatch = useRouteMatch<{ category: string; entityId: string }>();
   const history = useHistory();
 
@@ -84,7 +95,7 @@ const TasksView = ({ listView }: { listView: boolean }): JSX.Element => {
     <QueryWrapper query={query}>
       {data && (
         <div>
-          {entity.type === "Shot" && (
+          <>
             <Typography
               variant="h6"
               color="text.disabled"
@@ -97,9 +108,20 @@ const TasksView = ({ listView }: { listView: boolean }): JSX.Element => {
               }}
               onClick={() => history.goBack()}
             >
-              {entity.sequence.name} /{" "}
+              {entity.type === "Shot"
+                ? entity.sequence.name
+                : entity.entity_type.name}
             </Typography>
-          )}
+
+            <Typography
+              variant="h6"
+              display="inline-block"
+              color="text.disabled"
+              mr={1}
+            >
+              /
+            </Typography>
+          </>
 
           <h2
             style={{
@@ -110,7 +132,13 @@ const TasksView = ({ listView }: { listView: boolean }): JSX.Element => {
           >
             {entity.name}
           </h2>
-          <EntitiesView entities={entity.tasks} listView={listView} />
+
+          <EntitiesView
+            entities={entity.tasks
+              .filter((task) => fuzzyMatch(task.taskType.name, search))
+              .sort((a, b) => a.taskType.priority - b.taskType.priority)}
+            listView={listView}
+          />
         </div>
       )}
 
