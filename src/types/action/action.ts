@@ -14,6 +14,11 @@ interface CommonFields {
   uuid: string;
 }
 
+export type LogLine = {
+  level: "DEBUG" | "INFO" | "WARNING" | "ERROR" | "CRITICAL" | "TRACEBACK";
+  message: string;
+};
+
 /**
  * A command is a piece of code with parameters
  */
@@ -22,6 +27,7 @@ export type Command = CommonFields & {
   status: Status;
   ask_user: boolean;
   parameters: { [paramName: string]: Parameter };
+  logs: LogLine[];
 };
 
 /**

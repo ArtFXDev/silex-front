@@ -39,9 +39,9 @@ const SelectParameter = ({
         }}
         value={value}
       >
-        {parameter.type.options.map((option) => (
-          <MenuItem key={option} value={option}>
-            {option}
+        {Object.keys(parameter.type.options).map((label) => (
+          <MenuItem key={label} value={parameter.type.options[label]}>
+            {label}
           </MenuItem>
         ))}
       </Select>

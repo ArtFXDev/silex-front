@@ -2,7 +2,6 @@ import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import {
   Alert,
   Box,
-  Button,
   Fade,
   IconButton,
   LinearProgress,
@@ -11,16 +10,15 @@ import {
   ListItemIcon,
   ListItemText,
   Paper,
-  SpeedDial,
-  SpeedDialAction,
   Tooltip,
   Typography,
 } from "@mui/material";
-import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
+
+import DCCIconButton from "./DCCIconButton";
 
 const extensionToDCCName = (ext: string): string | null => {
   switch (ext) {
@@ -49,8 +47,8 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState<boolean>(true);
 
-  const { enqueueSnackbar } = useSnackbar();
   const { uiSocket } = useSocket();
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     uiSocket.emit("getWorkingFilesForTask", { taskId }, (response) => {
@@ -75,14 +73,6 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
         });
       }
     );
-  };
-
-  const onCreateNewScene = (dcc: string) => {
-    uiSocket.emit("launchScene", { taskId, dcc }, (response) => {
-      enqueueSnackbar(`Creating new scene with ${dcc} (${response.msg})`, {
-        variant: "info",
-      });
-    });
   };
 
   const onConform = () => {
@@ -112,24 +102,13 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
             alignItems: "center",
           }}
         >
-          <SpeedDial
-            icon={<SpeedDialIcon />}
-            ariaLabel="open dcc"
-            FabProps={{ size: "small" }}
-            direction="left"
-            sx={{ mr: 3 }}
-          >
+          <Box sx={{ mr: 3 }}>
             {["blender", "houdini", "nuke", "maya"].map((dcc) => (
-              <SpeedDialAction
-                key={dcc}
-                icon={<DCCLogo name={dcc} size={30} />}
-                tooltipTitle={dcc}
-                onClick={() => onCreateNewScene(dcc)}
-              />
+              <DCCIconButton key={dcc} taskId={taskId} dcc={dcc} />
             ))}
-          </SpeedDial>
+          </Box>
 
-          <Button onClick={() => onConform()}>Conform</Button>
+          {/* <Button onClick={() => onConform()}>Conform</Button> */}
         </div>
       </Box>
 

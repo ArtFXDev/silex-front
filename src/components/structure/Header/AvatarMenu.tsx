@@ -1,5 +1,5 @@
 import { AccountCircle, Logout } from "@mui/icons-material";
-import { ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
+import { ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { PersonAvatar } from "components/common/avatar";
 import { useAuth } from "context";
 import { useState } from "react";
@@ -33,37 +33,35 @@ const AvatarMenu = (): JSX.Element => {
   if (!auth.user) return <div>NO USER</div>;
 
   return (
-    <Tooltip title="User settings" placement="left">
-      <div>
-        <PersonAvatar
-          person={auth.user}
-          onClick={handleMenu}
-          size={42}
-          clickable
-        />
+    <div>
+      <PersonAvatar
+        person={auth.user}
+        onClick={handleMenu}
+        size={42}
+        clickable
+      />
 
-        <Menu
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          <MenuItem onClick={handleClose} component={Link} to="/profile">
-            <ListItemIcon>
-              <AccountCircle fontSize="small" />
-            </ListItemIcon>
-            Profile
-          </MenuItem>
+      <Menu
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={handleClose} component={Link} to="/profile">
+          <ListItemIcon>
+            <AccountCircle fontSize="small" />
+          </ListItemIcon>
+          Profile
+        </MenuItem>
 
-          <MenuItem onClick={onLogout}>
-            <ListItemIcon>
-              <Logout fontSize="small" />
-            </ListItemIcon>
-            Logout
-          </MenuItem>
-        </Menu>
-      </div>
-    </Tooltip>
+        <MenuItem onClick={onLogout}>
+          <ListItemIcon>
+            <Logout fontSize="small" />
+          </ListItemIcon>
+          Logout
+        </MenuItem>
+      </Menu>
+    </div>
   );
 };
 

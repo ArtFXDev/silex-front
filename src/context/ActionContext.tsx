@@ -32,6 +32,7 @@ export const ProvideAction = ({
   const setActionAndRedirect = useCallback(
     (action: Action) => {
       setAction(action);
+
       // Redirect to the action page
       history.push("/action");
 

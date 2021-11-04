@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { Person, Project } from "types/entities";
+import { Person, Project, Task } from "types/entities";
 
 /**
  * Type of an axios response that returns a promise
@@ -127,4 +127,28 @@ export function logout(): PromiseResponse<{ logout: boolean }> {
  */
 export function getUserProjects(): PromiseResponse<Project[]> {
   return getWithCredentials("data/user/projects/open");
+}
+
+export function assignUserToTask(
+  personId: string,
+  taskId: string
+): PromiseResponse<Task> {
+  return axios.put(
+    zouAPIURL(`actions/persons/${personId}/assign`),
+    {
+      task_ids: [taskId],
+    },
+    { withCredentials: true }
+  );
+}
+
+export function clearAssignation(
+  personId: string,
+  taskId: string
+): PromiseResponse<string[]> {
+  return axios.put(
+    zouAPIURL(`actions/tasks/clear-assignation`),
+    { task_ids: [taskId] },
+    { withCredentials: true }
+  );
 }

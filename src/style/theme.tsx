@@ -25,6 +25,14 @@ export const themeOptions: ThemeOptions = {
     info: {
       main: "#4D7D98",
     },
+    warning: {
+      main: "#ffa726",
+      dark: "#E68900",
+    },
+    error: {
+      main: "#f44336",
+      dark: "#e74c3c",
+    },
   },
 };
 

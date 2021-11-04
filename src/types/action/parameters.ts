@@ -38,7 +38,7 @@ export interface RangeParameter extends BaseParameter {
 export interface SelectParameter extends BaseParameter {
   type: {
     name: "select";
-    options: string[];
+    options: { [label: string]: string };
   };
   value: string | null;
 }

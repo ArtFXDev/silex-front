@@ -1,5 +1,8 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import CloseIcon from "@mui/icons-material/Close";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import PersonAddDisabledIcon from "@mui/icons-material/PersonAddDisabled";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import {
   Box,
   Dialog,
@@ -8,17 +11,24 @@ import {
   Fade,
   Grid,
   IconButton,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 import { PersonsAvatarGroup } from "components/common/avatar";
 import TaskStatusBadge from "components/common/TaskStatusBadge/TaskStatusBadge";
 import LazyImage from "components/utils/LazyImage/LazyImage";
-import { forwardRef } from "react";
+import { useAuth } from "context";
+import { forwardRef, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { Task } from "types/entities";
 import { formatDateTime } from "utils/date";
 import { entityPreviewURL } from "utils/entity";
+import {
+  assignUserToTask,
+  clearAssignation,
+  originalPreviewFileURL,
+} from "utils/zou";
 
 import SceneList from "./SceneList";
 
@@ -66,9 +76,12 @@ const Transition = forwardRef(function Transition(
 });
 
 const TaskModal = (): JSX.Element => {
+  const [zoomPreview, setZoomPreview] = useState<boolean>(false);
   const routeMatch = useRouteMatch<{ taskId: string }>();
 
   const history = useHistory();
+  const { user } = useAuth();
+  const client = useApolloClient();
 
   const onClose = () => {
     history.goBack();
@@ -78,6 +91,9 @@ const TaskModal = (): JSX.Element => {
     variables: { id: routeMatch.params.taskId },
   });
   const { data } = query;
+
+  const currentUserAssignedToTask =
+    data && data.task.assignees.some((p) => p.id === user?.id);
 
   return (
     <Dialog
@@ -111,6 +127,32 @@ const TaskModal = (): JSX.Element => {
               </div>
 
               <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Tooltip
+                  title={
+                    !currentUserAssignedToTask
+                      ? "Assign yourself"
+                      : "Clear assignation"
+                  }
+                  placement="top"
+                  arrow
+                >
+                  <IconButton
+                    sx={{ mr: 1 }}
+                    onClick={() => {
+                      (!currentUserAssignedToTask
+                        ? assignUserToTask(user?.id as string, data.task.id)
+                        : clearAssignation(user?.id as string, data.task.id)
+                      ).then(() => client.refetchQueries({ include: [TASK] }));
+                    }}
+                  >
+                    {!currentUserAssignedToTask ? (
+                      <PersonAddIcon />
+                    ) : (
+                      <PersonAddDisabledIcon />
+                    )}
+                  </IconButton>
+                </Tooltip>
+
                 <PersonsAvatarGroup
                   persons={data.task.assignees}
                   size={35}
@@ -147,13 +189,32 @@ const TaskModal = (): JSX.Element => {
               </Grid>
 
               <Grid item xs={6}>
-                <LazyImage
-                  src={data ? entityPreviewURL(data.task) : undefined}
-                  width={248}
-                  height={140}
-                  alt="task image"
-                  disableFade
-                />
+                <Box sx={{ float: "right", position: "relative" }}>
+                  <LazyImage
+                    src={entityPreviewURL(data.task)}
+                    width={248}
+                    height={140}
+                    alt="task image"
+                    disableFade
+                  />
+
+                  {data.task.previews.length >= 1 && (
+                    <IconButton
+                      sx={{ position: "absolute", top: 0, right: 0 }}
+                      onClick={() => setZoomPreview(true)}
+                    >
+                      <ZoomInIcon />
+                    </IconButton>
+                  )}
+
+                  {zoomPreview && (
+                    <Dialog open onClose={() => setZoomPreview(false)}>
+                      <img
+                        src={originalPreviewFileURL(data.task.previews[0].id)}
+                      />
+                    </Dialog>
+                  )}
+                </Box>
               </Grid>
 
               <Grid item xs={12}>

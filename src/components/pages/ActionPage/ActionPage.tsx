@@ -89,7 +89,7 @@ const ActionPage = (): JSX.Element | null => {
 
   return (
     <PageWrapper>
-      <Box sx={{ width: 800 }}>
+      <Box sx={{ maxWidth: 800 }}>
         <Box sx={{ mb: 3, display: "flex", alignItems: "center" }}>
           <div>
             <Typography
@@ -134,14 +134,7 @@ const ActionPage = (): JSX.Element | null => {
 
         <List>
           {Object.values(action.steps).map(
-            (step) =>
-              !step.hide && (
-                <StepItem
-                  key={step.uuid}
-                  step={step}
-                  disabled={actionFinished}
-                />
-              )
+            (step) => !step.hide && <StepItem key={step.uuid} step={step} />
           )}
         </List>
 
@@ -149,7 +142,10 @@ const ActionPage = (): JSX.Element | null => {
           <Button
             variant="contained"
             sx={{ float: "right" }}
-            onClick={handleClickOnAction}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              handleClickOnAction();
+            }}
           >
             {action.name}
           </Button>
