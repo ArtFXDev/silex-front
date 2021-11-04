@@ -90,7 +90,7 @@ const CommandLogs = ({
                   overflowX: "auto",
                 }}
               >
-                {splitLine &&
+                {splitLine ? (
                   splitLine.splice(1).map((part, i) => (
                     <Typography
                       key={i}
@@ -113,7 +113,26 @@ const CommandLogs = ({
                     >
                       {part}&nbsp;
                     </Typography>
-                  ))}
+                  ))
+                ) : (
+                  <Typography
+                    key={i}
+                    component="span"
+                    color={"inherit"}
+                    sx={{
+                      display: "inline-block",
+                      fontFamily:
+                        "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace",
+                      fontSize: "12px",
+                      ml: "15px",
+                      wordWrap: "break-word",
+                      whiteSpace: "initial",
+                      lineHeight: "20px",
+                    }}
+                  >
+                    {logLine.message}
+                  </Typography>
+                )}
               </span>
             </Box>
           );
