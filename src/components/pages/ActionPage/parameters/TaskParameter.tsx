@@ -91,7 +91,7 @@ const EntityCard = ({
   );
 };
 
-const ReferenceParameter = (): JSX.Element => {
+const TaskParameter = (): JSX.Element => {
   const [search, setSearch] = useState<string>();
   const [selectedEntityId, setSelectedEntityId] = useState<string>();
 
@@ -167,4 +167,4 @@ const ReferenceParameter = (): JSX.Element => {
   );
 };
 
-export default ReferenceParameter;
+export default TaskParameter;

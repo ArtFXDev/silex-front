@@ -8,6 +8,7 @@ import {
 
 import GenericInputParameter from "./parameters/GenericInputParameter";
 import SelectParameter from "./parameters/SelectParameter";
+import TaskParameter from "./parameters/TaskParameter";
 
 interface ParameterItemProps {
   parameter: Parameter;
@@ -53,6 +54,8 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
             valueLabelDisplay="on"
           />
         );
+      case "task":
+        return <TaskParameter />;
       default:
         return <div>Unknown parameter type</div>;
     }

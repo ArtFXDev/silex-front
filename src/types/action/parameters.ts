@@ -43,6 +43,10 @@ export interface SelectParameter extends BaseParameter {
   value: string | null;
 }
 
+export interface TaskParameter extends BaseParameter {
+  type: { name: "task" };
+}
+
 export type ParameterInputType =
   | IntegerParameter
   | StringParameter
@@ -54,4 +58,5 @@ export type Parameter =
   | IntegerParameter
   | StringParameter
   | RangeParameter
-  | SelectParameter;
+  | SelectParameter
+  | TaskParameter;
