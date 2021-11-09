@@ -24,7 +24,7 @@ const ProfilePage = (): JSX.Element => {
   ];
 
   return (
-    <PageWrapper>
+    <PageWrapper goBack>
       <Box
         sx={{
           display: "flex",
