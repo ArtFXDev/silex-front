@@ -34,6 +34,8 @@ They are:
 
 - `REACT_APP_WS_SERVER` - the url of the Silex websocket service running on the client machine (open on the port `5118`).
 
+- `REACT_APP_TRACTOR_BLADE` - the url of the Pixar Tractor Blade service running on the computer.
+
 ### Available scripts
 
 - 🚀 `yarn start` -> runs the [Webpack](https://webpack.js.org/configuration/dev-server/) development server with HMR (hot module replacement).

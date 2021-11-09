@@ -133,9 +133,11 @@ const ActionPage = (): JSX.Element | null => {
         </Box>
 
         <List>
-          {Object.values(action.steps).map(
-            (step) => !step.hide && <StepItem key={step.uuid} step={step} />
-          )}
+          {Object.values(action.steps)
+            .filter((s) => !s.hide)
+            .map((step) => (
+              <StepItem key={step.uuid} step={step} />
+            ))}
         </List>
 
         <Fade in={someStepsAreWaitingForInput(action)}>
