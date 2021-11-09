@@ -3,7 +3,9 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import { AppBar, Box, IconButton, Toolbar, Tooltip } from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
+import NimbyController from "components/common/NimbyController/NimbyController";
 import Menu from "components/structure/Menu/Menu";
+import isElectron from "is-electron";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 
@@ -86,6 +88,8 @@ const Header = (): JSX.Element => {
         </Tooltip>
 
         <ConnectedDCCButton sx={{ ml: 2, mr: 3 }} />
+
+        {isElectron() && <NimbyController sx={{ mr: 3 }} />}
 
         <AvatarMenu />
       </Toolbar>

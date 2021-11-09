@@ -9,5 +9,8 @@ declare namespace NodeJS {
 
     /** Url of the silex websocket server */
     REACT_APP_WS_SERVER: string;
+
+    /** Url of the Tractor blade api */
+    REACT_APP_TRACTOR_BLADE: string;
   }
 }

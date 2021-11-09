@@ -11,9 +11,12 @@ import {
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
 import { useAuth, useSocket } from "context";
+import isElectron from "is-electron";
 import { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import * as Zou from "utils/zou";
+
+import NimbyController from "../../common/NimbyController/NimbyController";
 
 const SilexLogoAndText = (): JSX.Element => (
   <Grid
@@ -93,110 +96,116 @@ const LoginPage = (): JSX.Element => {
   const isPasswordError = password !== undefined && password.length === 0;
 
   return (
-    <Fade in>
-      <Box
-        component="form"
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-        }}
-      >
-        <Grid
-          container
-          spacing={3}
-          alignItems="center"
-          flexDirection="column"
-          maxWidth="50%"
+    <div style={{ position: "relative" }}>
+      <Fade in>
+        <Box
+          component="form"
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "100vh",
+          }}
         >
-          <SilexLogoAndText />
+          <Grid
+            container
+            spacing={3}
+            alignItems="center"
+            flexDirection="column"
+            maxWidth="50%"
+          >
+            <SilexLogoAndText />
 
-          <Grid item xs={12}>
-            <TextField
-              variant="outlined"
-              type="email"
-              label="Email"
-              size="small"
-              required
-              error={isEmailError}
-              helperText={
-                isEmailError
-                  ? email.length === 0
-                    ? "Email cannot be empty"
-                    : "Incorrect email"
-                  : null
-              }
-              color={
-                email === undefined
-                  ? "info"
-                  : isEmailError
-                  ? "error"
-                  : "success"
-              }
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                type="email"
+                label="Email"
+                size="small"
+                required
+                error={isEmailError}
+                helperText={
+                  isEmailError
+                    ? email.length === 0
+                      ? "Email cannot be empty"
+                      : "Incorrect email"
+                    : null
+                }
+                color={
+                  email === undefined
+                    ? "info"
+                    : isEmailError
+                    ? "error"
+                    : "success"
+                }
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Grid>
 
-          <Grid item xs={12}>
-            <TextField
-              variant="outlined"
-              type="password"
-              label="Password"
-              size="small"
-              required
-              error={isPasswordError}
-              helperText={isPasswordError ? "Password cannot be empty" : null}
-              color={
-                password === undefined
-                  ? "info"
-                  : isPasswordError
-                  ? "error"
-                  : "success"
-              }
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                type="password"
+                label="Password"
+                size="small"
+                required
+                error={isPasswordError}
+                helperText={isPasswordError ? "Password cannot be empty" : null}
+                color={
+                  password === undefined
+                    ? "info"
+                    : isPasswordError
+                    ? "error"
+                    : "success"
+                }
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Grid>
 
-          <Grid item xs={12}>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <Button
-                type="submit"
-                color="primary"
-                variant="contained"
-                onClick={onLogIn}
-                disabled={!socket.isConnected}
+            <Grid item xs={12}>
+              <Box
                 sx={{
-                  textTransform: "none",
-                  width: 100,
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
-                Log In
-              </Button>
+                <Button
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  onClick={onLogIn}
+                  disabled={!socket.isConnected}
+                  sx={{
+                    textTransform: "none",
+                    width: 100,
+                  }}
+                >
+                  Log In
+                </Button>
 
-              <Collapse in={isLoading} orientation="horizontal">
-                <CircularProgress size={20} sx={{ ml: 3 }} />
+                <Collapse in={isLoading} orientation="horizontal">
+                  <CircularProgress size={20} sx={{ ml: 3 }} />
+                </Collapse>
+              </Box>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Collapse in={error !== undefined || !socket.isConnected}>
+                <Alert severity="error" variant="outlined">
+                  {!socket.isConnected
+                    ? "The application is not connected to the WebSocket server. You can't login."
+                    : error}
+                </Alert>
               </Collapse>
-            </Box>
+            </Grid>
           </Grid>
+        </Box>
+      </Fade>
 
-          <Grid item xs={12}>
-            <Collapse in={error !== undefined || !socket.isConnected}>
-              <Alert severity="error" variant="outlined">
-                {!socket.isConnected
-                  ? "The application is not connected to the WebSocket server. You can't login."
-                  : error}
-              </Alert>
-            </Collapse>
-          </Grid>
-        </Grid>
-      </Box>
-    </Fade>
+      {isElectron() && (
+        <NimbyController sx={{ position: "absolute", top: 20, right: 20 }} />
+      )}
+    </div>
   );
 };
 
