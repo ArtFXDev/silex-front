@@ -6,9 +6,10 @@ import {
   Tooltip,
 } from "@mui/material";
 import DCCLogo from "components/common/DCCLogo/DCCLogo";
-import { useSocket } from "context";
+import { useAuth, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
+import { Project } from "types/entities";
 
 interface DCCIconButtonProps {
   taskId: string;
@@ -21,6 +22,7 @@ const DCCIconButton = ({ dcc, taskId }: DCCIconButtonProps): JSX.Element => {
 
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
+  const { getCurrentProject } = useAuth();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -31,11 +33,15 @@ const DCCIconButton = ({ dcc, taskId }: DCCIconButtonProps): JSX.Element => {
   };
 
   const onCreateNewScene = (dcc: string) => {
-    uiSocket.emit("launchScene", { taskId, dcc }, (response) => {
-      enqueueSnackbar(`Creating new scene with ${dcc} (${response.msg})`, {
-        variant: "info",
-      });
-    });
+    uiSocket.emit(
+      "launchScene",
+      { taskId, dcc, projectName: (getCurrentProject() as Project).name },
+      (response) => {
+        enqueueSnackbar(`Creating new scene with ${dcc} (${response.msg})`, {
+          variant: "info",
+        });
+      }
+    );
   };
 
   return (

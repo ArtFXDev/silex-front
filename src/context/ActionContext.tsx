@@ -57,9 +57,29 @@ export const ProvideAction = ({
    */
   const onActionUpdate = useCallback<UIOnServerEvents["actionUpdate"]>(
     (updatedAction) => {
+      let scrollToNextCommand = true;
+      if (!action) scrollToNextCommand = false;
+
       setAction(updatedAction.data);
+
+      if (scrollToNextCommand && updatedAction.data) {
+        const steps = updatedAction.data.steps;
+
+        const sortedCommands = Object.values(steps)
+          .map((s) => Object.values(s.commands))
+          .flat()
+          .sort((a, b) => a.status - b.status);
+
+        const lastCommand = sortedCommands[sortedCommands.length - 1];
+
+        document.getElementById(`cmd-${lastCommand.uuid}`)?.scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "center",
+        });
+      }
     },
-    []
+    [action]
   );
 
   useEffect(() => {

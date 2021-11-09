@@ -14,9 +14,10 @@ import {
   Typography,
 } from "@mui/material";
 import DCCLogo from "components/common/DCCLogo/DCCLogo";
-import { useSocket } from "context";
+import { useAuth, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
+import { Project } from "types/entities";
 
 import DCCIconButton from "./DCCIconButton";
 
@@ -49,6 +50,7 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
 
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
+  const { getCurrentProject } = useAuth();
 
   useEffect(() => {
     uiSocket.emit("getWorkingFilesForTask", { taskId }, (response) => {
@@ -66,7 +68,13 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
   const openScene = (dcc: string, scene: string) => {
     uiSocket.emit(
       "launchScene",
-      { taskId, scene, dcc, path: path as string },
+      {
+        taskId,
+        scene,
+        dcc,
+        path: path as string,
+        projectName: (getCurrentProject() as Project).name,
+      },
       (response) => {
         enqueueSnackbar(`Launching dcc ${dcc} (${response.msg})`, {
           variant: "info",
@@ -76,11 +84,19 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
   };
 
   const onConform = () => {
-    uiSocket.emit("launchAction", { action: "conform", taskId }, (response) => {
-      enqueueSnackbar(`Launched conform action ${response.msg}`, {
-        variant: "info",
-      });
-    });
+    uiSocket.emit(
+      "launchAction",
+      {
+        action: "conform",
+        taskId,
+        projectName: (getCurrentProject() as Project).name,
+      },
+      (response) => {
+        enqueueSnackbar(`Launched conform action ${response.msg}`, {
+          variant: "info",
+        });
+      }
+    );
   };
 
   return (
@@ -153,7 +169,7 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
           </List>
         )}
 
-        {error && (
+        {(error || (scenes && scenes.length === 0)) && (
           <Alert variant="outlined" severity="info">
             You don{"'"}t have any working scenes...
           </Alert>

@@ -135,6 +135,7 @@ const ActionPage = (): JSX.Element | null => {
         <List>
           {Object.values(action.steps)
             .filter((s) => !s.hide)
+            .sort((a, b) => a.index - b.index)
             .map((step) => (
               <StepItem key={step.uuid} step={step} />
             ))}
@@ -143,11 +144,8 @@ const ActionPage = (): JSX.Element | null => {
         <Fade in={someStepsAreWaitingForInput(action)}>
           <Button
             variant="contained"
-            sx={{ float: "right" }}
-            onClick={() => {
-              window.scrollTo({ top: 0, behavior: "smooth" });
-              handleClickOnAction();
-            }}
+            sx={{ position: "sticky", bottom: 30, left: 800 }}
+            onClick={handleClickOnAction}
           >
             {action.name}
           </Button>

@@ -32,9 +32,15 @@ export interface UIClientEmitEvents {
     scene?: string;
     dcc: string;
     path?: string;
+    projectName: string;
   }>;
 
-  launchAction: EmitWithCallback<{ action: string; taskId: string }>;
+  launchAction: EmitWithCallback<{
+    action: string;
+    taskId: string;
+    dcc?: string;
+    projectName: string;
+  }>;
 }
 
 export interface UIOnServerEvents {
