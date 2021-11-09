@@ -52,6 +52,7 @@ const CommandItem = ({ command, disabled }: CommandItemProps): JSX.Element => {
             backgroundColor: getStatusColor(command.status),
           }}
           disabled={disabled}
+          id={`cmd-${command.uuid}`}
         >
           <ListItemIcon>{getStatusIcon(command.status)}</ListItemIcon>
 

@@ -145,10 +145,7 @@ const ActionPage = (): JSX.Element | null => {
           <Button
             variant="contained"
             sx={{ position: "sticky", bottom: 30, left: 800 }}
-            onClick={() => {
-              window.scrollTo({ top: 0, behavior: "smooth" });
-              handleClickOnAction();
-            }}
+            onClick={handleClickOnAction}
           >
             {action.name}
           </Button>
