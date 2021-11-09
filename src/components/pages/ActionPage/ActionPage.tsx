@@ -144,7 +144,7 @@ const ActionPage = (): JSX.Element | null => {
         <Fade in={someStepsAreWaitingForInput(action)}>
           <Button
             variant="contained"
-            sx={{ float: "right" }}
+            sx={{ position: "sticky", bottom: 30, left: 800 }}
             onClick={() => {
               window.scrollTo({ top: 0, behavior: "smooth" });
               handleClickOnAction();
