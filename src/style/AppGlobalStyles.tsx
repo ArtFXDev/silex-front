@@ -13,6 +13,7 @@ const AppGlobalStyles = (): JSX.Element => (
       /* Customizing the scroll bar on Electron */
       "*::-webkit-scrollbar": {
         width: "8px",
+        height: "8px",
       },
       "*::-webkit-scrollbar-track": {
         backgroundColor: "#323131",
