@@ -3,6 +3,7 @@ import DCCClientsPage from "components/pages/DCCClientsPage/DCCClientsPage";
 import ExplorerPage from "components/pages/ExplorerPage/ExplorerPage";
 import HomePage from "components/pages/HomePage/HomePage";
 import LoginPage from "components/pages/LoginPage/LoginPage";
+import LogsPage from "components/pages/LogsPage/LogsPage";
 import NotFoundPage from "components/pages/NotFoundPage/NotFoundPage";
 import ProfilePage from "components/pages/ProfilePage/ProfilePage";
 import PrivateRoute from "components/utils/PrivateRoute/PrivateRoute";
@@ -32,6 +33,10 @@ const App = (): JSX.Element => {
                   <Route exact path="/login">
                     <LoginPage />
                   </Route>
+
+                  <PrivateRoute exact path="/logs">
+                    <LogsPage />
+                  </PrivateRoute>
 
                   <PrivateRoute exact path="/">
                     <HomePage />

@@ -1,5 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, Drawer, Grid, IconButton, Link } from "@mui/material";
+import DescriptionIcon from "@mui/icons-material/Description";
+import { Box, Drawer, Grid, IconButton, Link, Tooltip } from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
 import { useAuth } from "context";
 import { Link as RouterLink, useLocation } from "react-router-dom";
@@ -54,6 +55,7 @@ const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
           <Grid item sx={{ mb: 2 }}>
             <img src={SilexLogo} alt="Silex Logo" width={100} height={100} />
           </Grid>
+
           {links
             .filter((link) => !(!auth.currentProjectId && link.needProjectId))
             .map((link, i) => (
@@ -79,6 +81,17 @@ const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
             ))}
         </Grid>
       </Box>
+
+      <Tooltip title="Logs" placement="top" arrow>
+        <IconButton
+          sx={{ position: "absolute", bottom: 0, right: 0, m: 1 }}
+          component={RouterLink}
+          to="/logs"
+          onClick={closeMenu}
+        >
+          <DescriptionIcon color="disabled" />
+        </IconButton>
+      </Tooltip>
     </Drawer>
   );
 };

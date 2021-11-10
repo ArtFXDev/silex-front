@@ -12,13 +12,13 @@ import {
   Paper,
   Tooltip,
 } from "@mui/material";
+import Logs from "components/common/Logs/Logs";
 import { useState } from "react";
 import { BORDER_RADIUS_BOTTOM, BORDER_RADIUS_TOP } from "style/constants";
 import { Command } from "types/action/action";
 import { Status } from "types/action/status";
 import { getStatusColor, getStatusIcon } from "utils/status";
 
-import CommandLogs from "./CommandLogs";
 import ParameterItem from "./ParameterItem";
 
 interface CommandItemProps {
@@ -85,11 +85,14 @@ const CommandItem = ({ command, disabled }: CommandItemProps): JSX.Element => {
       </Paper>
 
       {command.logs.length > 0 && (
-        <CommandLogs
-          command={command}
-          openLogs={openLogs}
-          openLogsBasedOnStatus={openLogsBasedOnStatus}
-        />
+        <Collapse in={openLogs || openLogsBasedOnStatus}>
+          <Logs
+            logs={command.logs}
+            regexp={
+              /(\[SILEX\] {4}\[.+\]) ([A-Z ]{10})(\| {4}\[.+\]) (.{50,}) (\([0-9]+\))/g
+            }
+          />
+        </Collapse>
       )}
 
       <Collapse in={command.status === Status.WAITING_FOR_RESPONSE}>

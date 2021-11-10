@@ -83,22 +83,6 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
     );
   };
 
-  const onConform = () => {
-    uiSocket.emit(
-      "launchAction",
-      {
-        action: "conform",
-        taskId,
-        projectName: (getCurrentProject() as Project).name,
-      },
-      (response) => {
-        enqueueSnackbar(`Launched conform action ${response.msg}`, {
-          variant: "info",
-        });
-      }
-    );
-  };
-
   return (
     <>
       <Box
@@ -123,8 +107,6 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
               <DCCIconButton key={dcc} taskId={taskId} dcc={dcc} />
             ))}
           </Box>
-
-          {/* <Button onClick={() => onConform()}>Conform</Button> */}
         </div>
       </Box>
 

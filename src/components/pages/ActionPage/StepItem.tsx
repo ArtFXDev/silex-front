@@ -49,7 +49,9 @@ const StepItem = ({ step, disabled }: StepItemProps): JSX.Element => {
           <ListItemIcon>{getStatusIcon(step.status, true)}</ListItemIcon>
 
           <ListItemText>
-            <Typography variant="h6">{step.label}</Typography>
+            <Typography variant="h6" sx={{ wordBreak: "break-word" }}>
+              {step.label}
+            </Typography>
           </ListItemText>
         </ListItem>
 
@@ -67,19 +69,17 @@ const StepItem = ({ step, disabled }: StepItemProps): JSX.Element => {
         />
       </Paper>
 
-      {/* && step.status !== Status.COMPLETED */}
       <Collapse in={step.status !== Status.INITIALIZED}>
-        {commands.length > 0 && (
-          <List sx={{ pl: 4, py: 0 }}>
-            {commands.map((command: Command) => (
+        <List sx={{ pl: 4, py: 0 }}>
+          {commands.length > 0 &&
+            commands.map((command: Command) => (
               <CommandItem
                 key={command.uuid}
                 command={command}
                 disabled={disabled}
               />
             ))}
-          </List>
-        )}
+        </List>
       </Collapse>
     </Box>
   );

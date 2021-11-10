@@ -1,6 +1,9 @@
+import AddIcon from "@mui/icons-material/Add";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 import {
   CircularProgress,
   IconButton,
+  ListItemIcon,
   Menu,
   MenuItem,
   Tooltip,
@@ -44,6 +47,22 @@ const DCCIconButton = ({ dcc, taskId }: DCCIconButtonProps): JSX.Element => {
     );
   };
 
+  const onConform = () => {
+    uiSocket.emit(
+      "launchAction",
+      {
+        action: "conform",
+        taskId,
+        projectName: (getCurrentProject() as Project).name,
+      },
+      (response) => {
+        enqueueSnackbar(`Launched conform action ${response.msg}`, {
+          variant: "info",
+        });
+      }
+    );
+  };
+
   return (
     <>
       <Tooltip title={dcc} arrow placement="top">
@@ -70,9 +89,23 @@ const DCCIconButton = ({ dcc, taskId }: DCCIconButtonProps): JSX.Element => {
             handleClose();
           }}
         >
+          <ListItemIcon>
+            <AddIcon />
+          </ListItemIcon>
           New scene
         </MenuItem>
-        <MenuItem onClick={handleClose}>Conform</MenuItem>
+
+        <MenuItem
+          onClick={() => {
+            onConform();
+            handleClose();
+          }}
+        >
+          <ListItemIcon>
+            <FileUploadIcon />
+          </ListItemIcon>
+          Conform
+        </MenuItem>
       </Menu>
     </>
   );

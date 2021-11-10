@@ -47,7 +47,9 @@ export const ProvideAction = ({
    */
   const onActionQuery = useCallback<UIOnServerEvents["actionQuery"]>(
     (action) => {
-      if (action.data) setActionAndRedirect(action.data);
+      if (action.data) {
+        setActionAndRedirect(action.data);
+      }
     },
     [setActionAndRedirect]
   );
@@ -87,8 +89,8 @@ export const ProvideAction = ({
     uiSocket.on("actionUpdate", onActionUpdate);
 
     return () => {
-      uiSocket.off("query", onActionQuery);
-      uiSocket.off("update", onActionUpdate);
+      uiSocket.off("actionQuery", onActionQuery);
+      uiSocket.off("actionUpdate", onActionUpdate);
     };
   }, [uiSocket, onActionQuery, onActionUpdate]);
 

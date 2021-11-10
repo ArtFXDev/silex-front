@@ -11,7 +11,7 @@ import { Status } from "types/action/status";
  * @param status the status of a command or a step
  * @returns a MUI color
  */
-export const getStatusColor = (status: Status): string => {
+export const getStatusColor = (status: Status | undefined): string => {
   switch (status) {
     case Status.COMPLETED:
       return "success.dark";
@@ -26,7 +26,7 @@ export const getStatusColor = (status: Status): string => {
     case Status.WAITING_FOR_RESPONSE:
       return "info.main";
     default:
-      throw new Error("Status not handled");
+      return "";
   }
 };
 

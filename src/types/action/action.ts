@@ -15,7 +15,7 @@ interface CommonFields {
 }
 
 export type LogLine = {
-  level: "DEBUG" | "INFO" | "WARNING" | "ERROR" | "CRITICAL" | "TRACEBACK";
+  level?: "DEBUG" | "INFO" | "WARNING" | "ERROR" | "CRITICAL" | "TRACEBACK";
   message: string;
 };
 

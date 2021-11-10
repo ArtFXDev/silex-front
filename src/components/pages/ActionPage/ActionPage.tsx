@@ -1,4 +1,5 @@
 import CancelIcon from "@mui/icons-material/Cancel";
+import FlagIcon from "@mui/icons-material/Flag";
 import {
   Box,
   Button,
@@ -11,10 +12,11 @@ import {
 import { useAction, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { Action } from "types/action/action";
 import { Status } from "types/action/status";
 import { UIOnServerEvents } from "types/socket";
+import { getStatusColor } from "utils/status";
 import { capitalize } from "utils/string";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
@@ -37,6 +39,7 @@ const ActionPage = (): JSX.Element | null => {
   const history = useHistory();
 
   const onClearAction = useCallback<UIOnServerEvents["clearAction"]>(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (_data) => {
       // TODO: support multiple actions and use data.uuid
       setActionFinished(true);
@@ -67,7 +70,9 @@ const ActionPage = (): JSX.Element | null => {
     };
   }, [history, onActionQuery, onClearAction, setAction, uiSocket]);
 
-  if (!action) return null;
+  if (!action) {
+    return <Redirect to="/" />;
+  }
 
   const handleClickOnAction = () => {
     // TODO: hack
@@ -111,7 +116,15 @@ const ActionPage = (): JSX.Element | null => {
                   fontSize={30}
                   sx={{ cursor: "default", display: "inline-block" }}
                 >
-                  🏁
+                  <FlagIcon
+                    sx={{
+                      color: getStatusColor(
+                        Object.values(action.steps)
+                          .reverse()
+                          .find((a) => a.status !== Status.INITIALIZED)?.status
+                      ),
+                    }}
+                  />
                 </Typography>
               </Tooltip>
             )}
@@ -122,6 +135,7 @@ const ActionPage = (): JSX.Element | null => {
               sx={{ ml: "auto" }}
               onClick={() => {
                 history.goBack();
+                setAction(undefined);
                 enqueueSnackbar(`Cancelled action ${action.name}`, {
                   variant: "error",
                 });

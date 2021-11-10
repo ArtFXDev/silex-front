@@ -19,6 +19,8 @@ import { useEffect, useState } from "react";
 import { BladeStatus } from "types/tractor/blade";
 import { secondsToDhms } from "utils/date";
 
+import Separator from "../Separator/Separator";
+
 const Arrow = styled("div")({
   position: "absolute",
   fontSize: 8,
@@ -49,10 +51,6 @@ const PopperWithArrow = styled(Popper)(() => ({
     },
   },
 }));
-
-const Separator = (): JSX.Element => (
-  <hr style={{ border: "1px solid rgb(80, 80, 80)" }} />
-);
 
 const NimbyController = ({ sx }: BoxProps): JSX.Element => {
   const [bladeStatus, setBladeStatus] = useState<BladeStatus>();
@@ -186,7 +184,7 @@ const NimbyController = ({ sx }: BoxProps): JSX.Element => {
                         Uptime: <br />
                         {secondsToDhms(bladeStatus.uptime)}
                         <Separator />
-                        Pool: {bladeStatus.profile}
+                        Profile: {bladeStatus.profile}
                       </>
                     ) : (
                       <Typography color="warning.main" fontSize="14px">
