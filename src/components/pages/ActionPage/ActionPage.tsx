@@ -12,7 +12,7 @@ import {
 import { useAction, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
-import { Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Action } from "types/action/action";
 import { Status } from "types/action/status";
 import { UIOnServerEvents } from "types/socket";
@@ -71,7 +71,7 @@ const ActionPage = (): JSX.Element | null => {
   }, [history, onActionQuery, onClearAction, setAction, uiSocket]);
 
   if (!action) {
-    return <Redirect to="/" />;
+    return null;
   }
 
   const handleClickOnAction = () => {
