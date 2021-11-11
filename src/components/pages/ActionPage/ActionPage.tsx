@@ -38,6 +38,7 @@ const ActionPage = (): JSX.Element | null => {
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
 
+  // Received when the action is finished
   const onClearAction = useCallback<UIOnServerEvents["clearAction"]>(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (_data) => {
@@ -47,6 +48,7 @@ const ActionPage = (): JSX.Element | null => {
     []
   );
 
+  // In case we received a new action, we reset the finish status
   const onActionQuery = useCallback<UIOnServerEvents["actionQuery"]>(
     (action) => {
       if (action.data) setActionFinished(false);
@@ -58,13 +60,7 @@ const ActionPage = (): JSX.Element | null => {
     uiSocket.on("actionQuery", onActionQuery);
     uiSocket.on("clearAction", onClearAction);
 
-    // Clear the current action on route change
-    const unlisten = history.listen(() => {
-      setAction(undefined);
-    });
-
     return () => {
-      unlisten();
       uiSocket.off("actionQuery", onActionQuery);
       uiSocket.off("clearAction", onClearAction);
     };
@@ -74,8 +70,9 @@ const ActionPage = (): JSX.Element | null => {
     return null;
   }
 
+  // Called when clicking on the submit button
   const handleClickOnAction = () => {
-    // TODO: hack
+    // TODO: heck because we need to manually set the ask_user status to false
     for (const step of Object.values(action.steps)) {
       for (const cmd of Object.values(step.commands)) {
         if (cmd.status === Status.WAITING_FOR_RESPONSE) {
@@ -85,6 +82,7 @@ const ActionPage = (): JSX.Element | null => {
       }
     }
 
+    // Send the whole action object to the socket server
     uiSocket.emit("actionUpdate", action, (data) => {
       enqueueSnackbar(`Action ${action.name} sent (${data.status})`, {
         variant: "success",
@@ -118,6 +116,7 @@ const ActionPage = (): JSX.Element | null => {
                 >
                   <FlagIcon
                     sx={{
+                      // Get the color of the last step
                       color: getStatusColor(
                         Object.values(action.steps)
                           .reverse()
