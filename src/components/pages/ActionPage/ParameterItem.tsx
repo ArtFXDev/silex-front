@@ -1,12 +1,16 @@
 import { Box, ListItem, Slider, Switch, Typography } from "@mui/material";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import {
+  ArrayParameter as ArrayParameterType,
+  MultipleSelectParameter as MultipleSelectParameterType,
   Parameter,
   ParameterInputType,
   SelectParameter as SelectParameterType,
 } from "types/action/parameters";
 
+import ArrayParameter from "./parameters/ArrayParameter";
 import GenericInputParameter from "./parameters/GenericInputParameter";
+import MultipleSelectParameter from "./parameters/MultipleSelectParameter";
 import SelectParameter from "./parameters/SelectParameter";
 import TaskParameter from "./parameters/TaskParameter";
 
@@ -15,6 +19,10 @@ interface ParameterItemProps {
 }
 
 const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
+  /**
+   * Returns the apprioriate parameter component based on the type
+   * For now the state handling part is not ideal since we modify the object directly
+   */
   const inputComponent = (): JSX.Element => {
     const type = parameter.type;
 
@@ -56,6 +64,20 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
         );
       case "task":
         return <TaskParameter />;
+      case "multiple_select":
+        return (
+          <MultipleSelectParameter
+            parameter={parameter as MultipleSelectParameterType}
+            onChange={(newValues) => (parameter.value = newValues)}
+          />
+        );
+      case "int_array":
+        return (
+          <ArrayParameter
+            parameter={parameter as ArrayParameterType}
+            onChange={(newValues) => (parameter.value = newValues)}
+          />
+        );
       default:
         return <div>Unknown parameter type</div>;
     }

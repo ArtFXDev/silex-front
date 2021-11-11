@@ -1,8 +1,9 @@
+type DataType = number | boolean | string;
 export interface BaseParameter {
   label: string;
   name: string;
   type: { name: string };
-  value: number | boolean | string | null;
+  value: DataType | DataType[] | null;
   hide: boolean;
 }
 
@@ -47,6 +48,16 @@ export interface TaskParameter extends BaseParameter {
   type: { name: "task" };
 }
 
+export interface MultipleSelectParameter extends BaseParameter {
+  type: { name: "multiple_select"; options: { [label: string]: string } };
+  value: string[] | null;
+}
+
+export interface ArrayParameter extends BaseParameter {
+  type: { name: "int_array"; size: number };
+  value: number[] | null;
+}
+
 export type ParameterInputType =
   | IntegerParameter
   | StringParameter
@@ -59,4 +70,6 @@ export type Parameter =
   | StringParameter
   | RangeParameter
   | SelectParameter
-  | TaskParameter;
+  | TaskParameter
+  | MultipleSelectParameter
+  | ArrayParameter;
