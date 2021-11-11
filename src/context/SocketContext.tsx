@@ -71,9 +71,12 @@ export const ProvideSocket = ({
         const { context } = response.data;
         setDCCClients([...dccClients, context]);
 
-        enqueueSnackbar(`New dcc connected: ${context.dcc} - ${context.pid}`, {
-          variant: "info",
-        });
+        enqueueSnackbar(
+          `New dcc connected: ${context.dcc || "standalone"} - ${context.pid}`,
+          {
+            variant: "info",
+          }
+        );
       }
     },
     [dccClients, enqueueSnackbar]
