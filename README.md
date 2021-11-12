@@ -2,9 +2,15 @@
 
 ![](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white) ![](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) ![](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white) ![](https://img.shields.io/badge/Material--UI-0081CB?style=for-the-badge&logo=material-ui&logoColor=white) ![](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white) ![](https://img.shields.io/badge/ESLint-4b32c3?style=for-the-badge&logo=eslint&logoColor=white) ![](https://img.shields.io/badge/Prettier-c188c1?style=for-the-badge&logo=prettier&logoColor=white) ![](https://img.shields.io/badge/graphql-e535ab?style=for-the-badge&logo=GraphQL&logoColor=white)
 
-<img align="right" width="100" height="100" src="./src/assets/images/silex_logo.png">
+<br>
 
-Front-end application of the Silex ecosystem.
+<p align="center">
+  <img width="700" src="./img/silex_front_capture_1.png">
+  <br><br>
+  Front-end application of the Silex ecosystem.<br>
+</p>
+
+<br>
 
 ## Introduction
 
