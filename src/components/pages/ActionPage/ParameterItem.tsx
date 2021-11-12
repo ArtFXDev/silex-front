@@ -12,7 +12,7 @@ import ArrayParameter from "./parameters/ArrayParameter";
 import GenericInputParameter from "./parameters/GenericInputParameter";
 import MultipleSelectParameter from "./parameters/MultipleSelectParameter";
 import SelectParameter from "./parameters/SelectParameter";
-import TaskParameter from "./parameters/TaskParameter";
+import TaskParameter from "./parameters/TaskParameter/TaskParameter";
 
 interface ParameterItemProps {
   parameter: Parameter;
@@ -63,7 +63,11 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
           />
         );
       case "task":
-        return <TaskParameter />;
+        return (
+          <TaskParameter
+            onTaskSelect={(newTaskId) => (parameter.value = newTaskId)}
+          />
+        );
       case "multiple_select":
         return (
           <MultipleSelectParameter
