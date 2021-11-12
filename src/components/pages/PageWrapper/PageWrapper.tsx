@@ -23,7 +23,7 @@ const PageWrapper = ({
   return (
     <Fade in timeout={200}>
       <Box p={6}>
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           {title && <Typography variant="h4">{title}</Typography>}
 
           {goBack && (
