@@ -31,6 +31,7 @@ const TASK_FIELDS = gql`
 
     previews {
       id
+      extension
     }
   }
 `;
@@ -133,12 +134,18 @@ const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
             {entity.name}
           </h2>
 
-          <EntitiesView
-            entities={entity.tasks
-              .filter((task) => fuzzyMatch(task.taskType.name, search))
-              .sort((a, b) => a.taskType.priority - b.taskType.priority)}
-            listView={listView}
-          />
+          {entity.tasks.length > 0 ? (
+            <EntitiesView
+              entities={entity.tasks
+                .filter((task) => fuzzyMatch(task.taskType.name, search))
+                .sort((a, b) => a.taskType.priority - b.taskType.priority)}
+              listView={listView}
+            />
+          ) : (
+            <Typography color="text.disabled" sx={{ mt: 4 }}>
+              This {data.asset ? "asset" : "shot"} doesn{"'"}t have any tasks...
+            </Typography>
+          )}
         </div>
       )}
 

@@ -17,6 +17,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import * as Zou from "utils/zou";
 
 import NimbyController from "../../common/NimbyController/NimbyController";
+import RenderController from "./RenderController";
 
 const SilexLogoAndText = (): JSX.Element => (
   <Grid
@@ -202,9 +203,21 @@ const LoginPage = (): JSX.Element => {
         </Box>
       </Fade>
 
-      {isElectron() && (
-        <NimbyController sx={{ position: "absolute", top: 20, right: 20 }} />
-      )}
+      <div
+        style={{
+          position: "absolute",
+          top: 20,
+          right: 20,
+          display: "flex",
+          alignItems: "flex-end",
+          gap: "10px",
+          flexDirection: "column",
+        }}
+      >
+        {isElectron() && <NimbyController />}
+
+        <RenderController />
+      </div>
     </div>
   );
 };

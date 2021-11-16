@@ -17,13 +17,13 @@ import {
 import { TransitionProps } from "@mui/material/transitions";
 import { PersonsAvatarGroup } from "components/common/avatar";
 import TaskStatusBadge from "components/common/TaskStatusBadge/TaskStatusBadge";
-import LazyImage from "components/utils/LazyImage/LazyImage";
+import LazyMedia from "components/utils/LazyMedia/LazyMedia";
 import { useAuth } from "context";
 import { forwardRef, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { Task } from "types/entities";
 import { formatDateTime } from "utils/date";
-import { entityPreviewURL } from "utils/entity";
+import { entityURLAndExtension } from "utils/entity";
 import {
   assignUserToTask,
   clearAssignation,
@@ -49,6 +49,7 @@ const TASK = gql`
 
       taskType {
         name
+        priority
       }
 
       taskStatus {
@@ -58,6 +59,7 @@ const TASK = gql`
 
       previews {
         id
+        extension
       }
     }
   }
@@ -190,8 +192,8 @@ const TaskModal = (): JSX.Element => {
 
               <Grid item xs={6}>
                 <Box sx={{ float: "right", position: "relative" }}>
-                  <LazyImage
-                    src={entityPreviewURL(data.task)}
+                  <LazyMedia
+                    src={entityURLAndExtension(data.task)}
                     width={248}
                     height={140}
                     alt="task image"
@@ -210,7 +212,10 @@ const TaskModal = (): JSX.Element => {
                   {zoomPreview && (
                     <Dialog open onClose={() => setZoomPreview(false)}>
                       <img
-                        src={originalPreviewFileURL(data.task.previews[0].id)}
+                        src={originalPreviewFileURL(
+                          data.task.previews[0].id,
+                          "pictures"
+                        )}
                       />
                     </Dialog>
                   )}

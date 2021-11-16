@@ -37,9 +37,9 @@ export interface UIClientEmitEvents {
 
   launchAction: EmitWithCallback<{
     action: string;
-    taskId: string;
+    taskId?: string;
     dcc?: string;
-    projectName: string;
+    projectName?: string;
   }>;
 }
 

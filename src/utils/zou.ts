@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { Person, Project, Task } from "types/entities";
+import { Asset, Person, Project, Task } from "types/entities";
 
 /**
  * Type of an axios response that returns a promise
@@ -45,17 +45,26 @@ export function getWithCredentials<T>(
  */
 export function pictureThumbnailURL(
   category: "preview-files" | "persons",
-  id: string
+  id: string,
+  extension?: string
 ): string {
-  return zouAPIURL(`pictures/thumbnails/${category}/${id}.png`);
+  return zouAPIURL(
+    `pictures/thumbnails/${category}/${id}.${extension || "png"}`
+  );
 }
 
 /**
  * Returns the url of the full resolution image
  * @param id id of that preview
  */
-export function originalPreviewFileURL(id: string): string {
-  return zouAPIURL(`pictures/originals/preview-files/${id}.png`);
+export function originalPreviewFileURL(
+  id: string,
+  category: "pictures" | "movies",
+  extension?: string
+): string {
+  return zouAPIURL(
+    `${category}/originals/preview-files/${id}.${extension || "png"}`
+  );
 }
 
 /**
@@ -152,3 +161,26 @@ export function clearAssignation(
     { withCredentials: true }
   );
 }
+
+export function createAsset(
+  projectId: string,
+  assetTypeId: string,
+  data: {
+    data: unknown;
+    description: string;
+    episode_id: string | null;
+    name: string;
+  }
+): PromiseResponse<Asset> {
+  return axios.post(
+    zouAPIURL(
+      `data/projects/${projectId}/asset-types/${assetTypeId}/assets/new`
+    ),
+    data,
+    { withCredentials: true }
+  );
+}
+
+/*export function deleteAsset(assetId: string) {
+  
+}*/

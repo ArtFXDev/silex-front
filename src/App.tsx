@@ -50,9 +50,9 @@ const App = (): JSX.Element => {
                     <DCCClientsPage />
                   </PrivateRoute>
 
-                  <PrivateRoute exact path="/action">
+                  <Route exact path="/action">
                     <ActionPage />
-                  </PrivateRoute>
+                  </Route>
 
                   <PrivateRoute path="/explorer">
                     <ExplorerPage />
