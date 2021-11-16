@@ -1,15 +1,7 @@
 import CloseIcon from "@mui/icons-material/Close";
-import DescriptionIcon from "@mui/icons-material/Description";
-import {
-  Box,
-  Drawer,
-  Grid,
-  IconButton,
-  Link,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Box, Drawer, Grid, IconButton, Link, Typography } from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
+import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
 import { useAuth } from "context";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
@@ -104,11 +96,7 @@ const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
           {process.env.REACT_APP_NAME} v{process.env.REACT_APP_VERSION}
         </Typography>
 
-        <Tooltip title="Logs" placement="top" arrow sx={{ ml: 0.8 }}>
-          <IconButton component={RouterLink} to="/logs" onClick={closeMenu}>
-            <DescriptionIcon color="disabled" />
-          </IconButton>
-        </Tooltip>
+        <OpenLogsButton onClick={closeMenu} />
       </div>
     </Drawer>
   );

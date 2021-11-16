@@ -34,9 +34,13 @@ const App = (): JSX.Element => {
                     <LoginPage />
                   </Route>
 
-                  <PrivateRoute exact path="/logs">
+                  <Route exact path="/logs">
                     <LogsPage />
-                  </PrivateRoute>
+                  </Route>
+
+                  <Route exact path="/action">
+                    <ActionPage />
+                  </Route>
 
                   <PrivateRoute exact path="/">
                     <HomePage />
@@ -49,10 +53,6 @@ const App = (): JSX.Element => {
                   <PrivateRoute exact path="/dccs">
                     <DCCClientsPage />
                   </PrivateRoute>
-
-                  <Route exact path="/action">
-                    <ActionPage />
-                  </Route>
 
                   <PrivateRoute path="/explorer">
                     <ExplorerPage />

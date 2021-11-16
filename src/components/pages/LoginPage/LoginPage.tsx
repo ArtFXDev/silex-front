@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
+import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
 import { useAuth, useSocket } from "context";
 import isElectron from "is-electron";
 import { useState } from "react";
@@ -217,6 +218,16 @@ const LoginPage = (): JSX.Element => {
         {isElectron() && <NimbyController />}
 
         <RenderController />
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: 20,
+          right: 20,
+        }}
+      >
+        <OpenLogsButton />
       </div>
     </div>
   );
