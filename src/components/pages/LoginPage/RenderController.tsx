@@ -26,7 +26,7 @@ const RenderController = (): JSX.Element => {
 
   return (
     <Chip
-      label="Render"
+      label="Submit"
       variant="outlined"
       color="info"
       onClick={onClick}

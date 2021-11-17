@@ -71,9 +71,14 @@ const EntityItem = ({
   };
 
   const onClickAction = () => {
-    history.push(
-      `${routeMatch.url}/${entity.id}${entity.type === "Task" ? "" : "/tasks"}`
-    );
+    // Prevent clicking when the menu is open
+    if (!anchorEl) {
+      history.push(
+        `${routeMatch.url}/${entity.id}${
+          entity.type === "Task" ? "" : "/tasks"
+        }`
+      );
+    }
   };
 
   return (
@@ -105,65 +110,70 @@ const EntityItem = ({
           </ListItem>
         </Paper>
       ) : (
-        <Card
-          raised
-          elevation={2}
-          sx={{
-            position: "relative",
-            transition: "box-shadow 0.1s ease",
-            ":hover": {
-              boxShadow: "0 0 0 2px rgba(200, 200, 200, 0.4)",
-            },
-            my: 1,
-            cursor: "pointer",
-          }}
+        <div
+          style={{ position: "relative" }}
           onMouseEnter={() => setMouseOver(true)}
           onMouseLeave={() => setMouseOver(false)}
         >
-          <Button color="secondary" sx={{ p: 0 }}>
-            <CardMedia
-              sx={{ position: "relative", width: 180, height: 100 }}
-              onClick={onClickAction}
+          <Button
+            color="secondary"
+            sx={{ p: 0, my: 0, textTransform: "none" }}
+            onClick={onClickAction}
+          >
+            <Card
+              raised
+              elevation={2}
+              sx={{
+                transition: "box-shadow 0.1s ease",
+                ":hover": {
+                  boxShadow: "0 0 0 2px rgba(200, 200, 200, 0.4)",
+                },
+                cursor: "pointer",
+              }}
             >
-              <LazyMedia
-                src={entityURLAndExtension(entity)}
-                width={180}
-                height={100}
-                alt="test"
-                disableBorder
-              />
-            </CardMedia>
+              <CardMedia sx={{ position: "relative", width: 180, height: 100 }}>
+                <LazyMedia
+                  src={entityURLAndExtension(entity)}
+                  width={180}
+                  height={100}
+                  alt={entity.name}
+                  disableBorder
+                />
+              </CardMedia>
+
+              <CardActions sx={{ py: 0, height: 40 }}>
+                <Typography component="div" sx={{ marginRight: "auto" }}>
+                  {name}
+                </Typography>
+
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseMoreActions}
+                >
+                  <MenuItem>Delete</MenuItem>
+                </Menu>
+
+                {entity.type === "Shot" && entity.tasks.length > 0 && (
+                  <ProgressBar shot={entity} />
+                )}
+
+                {entity.type === "Task" && (
+                  <TaskStatusBadge taskStatus={entity.taskStatus} />
+                )}
+              </CardActions>
+            </Card>
           </Button>
 
-          <CardActions sx={{ py: 0, height: 40 }}>
-            <Typography component="div" sx={{ marginRight: "auto" }}>
-              {name}
-            </Typography>
-
-            <Fade in={mouseOver} timeout={100}>
-              <IconButton
-                sx={{ position: "absolute", top: 0, right: 0 }}
-                onClick={handleMoreActionsClick}
-              >
-                <InfoIcon color="disabled" />
-              </IconButton>
-            </Fade>
-
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleCloseMoreActions}
+          <Fade in={mouseOver} timeout={100}>
+            <IconButton
+              sx={{ position: "absolute", top: 0, right: 0 }}
+              onClick={handleMoreActionsClick}
             >
-              <MenuItem>Delete</MenuItem>
-            </Menu>
-
-            {entity.type === "Shot" && <ProgressBar shot={entity} />}
-
-            {entity.type === "Task" && (
-              <TaskStatusBadge taskStatus={entity.taskStatus} />
-            )}
-          </CardActions>
-        </Card>
+              <InfoIcon color="disabled" />
+            </IconButton>
+          </Fade>
+        </div>
       )}
     </Fade>
   );

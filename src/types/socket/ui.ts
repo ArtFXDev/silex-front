@@ -41,6 +41,8 @@ export interface UIClientEmitEvents {
     dcc?: string;
     projectName?: string;
   }>;
+
+  clearAction: EmitWithCallback<{ uuid: string }>;
 }
 
 export interface UIOnServerEvents {

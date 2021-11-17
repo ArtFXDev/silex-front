@@ -15,8 +15,8 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useEffect, useState } from "react";
-import { BladeStatus } from "types/tractor/blade";
+import { useBlade } from "context/BladeContext";
+import { useState } from "react";
 import { secondsToDhms } from "utils/date";
 
 import Separator from "../Separator/Separator";
@@ -53,7 +53,7 @@ const PopperWithArrow = styled(Popper)(() => ({
 }));
 
 const NimbyController = ({ sx }: BoxProps): JSX.Element => {
-  const [bladeStatus, setBladeStatus] = useState<BladeStatus>();
+  const { bladeStatus } = useBlade();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [open, setOpen] = useState(false);
 
@@ -70,12 +70,6 @@ const NimbyController = ({ sx }: BoxProps): JSX.Element => {
   const handleToggleAutoMode = () => {
     window.electron.send("setNimbyAutoMode", !bladeStatus?.nimbyAutoMode);
   };
-
-  useEffect(() => {
-    window.electron.receive<BladeStatus>("bladeStatusUpdate", (data) => {
-      setBladeStatus(data);
-    });
-  }, []);
 
   const nimbyON = bladeStatus?.nimby !== "None";
   const color = bladeStatus ? (nimbyON ? "success" : "error") : "warning";

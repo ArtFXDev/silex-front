@@ -12,6 +12,7 @@ import { Link as RouterLink, useLocation } from "react-router-dom";
 const links = [
   { text: "Home", to: "/", exact: true, needProjectId: false },
   { text: "File explorer", to: "/explorer", exact: false, needProjectId: true },
+  { text: "Actions", to: "/actions", exact: true },
 ];
 
 interface MenuProps {

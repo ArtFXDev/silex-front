@@ -4,7 +4,7 @@ import { Box, CircularProgress, Fade } from "@mui/material";
 import { createRef, useState } from "react";
 
 interface LazyMediaProps {
-  src: { url?: string; extension: string };
+  src: { url: string; extension: string } | undefined;
   alt: string;
   width: number;
   height: number;
@@ -25,11 +25,24 @@ const LazyMedia = (props: LazyMediaProps): JSX.Element => {
   const width = `${props.width}px`;
   const height = `${props.height}px`;
 
-  const media = (
-    <div style={{ display: isImageLoading ? "none" : "" }}>
-      {["png", "gif"].includes(props.src.extension) ? (
+  /**
+   * Called when the mouse is over a video, playback the frame based on the position
+   */
+  const onMouseMoveOnVideo = (
+    e: React.MouseEvent<HTMLVideoElement, MouseEvent>
+  ) => {
+    if (videoRef.current) {
+      const position = videoRef.current.getBoundingClientRect();
+      const diffXNorm = (e.pageX - position.x) / position.width;
+      videoRef.current.currentTime = diffXNorm * videoRef.current.duration;
+    }
+  };
+
+  const media = (src: { url: string; extension: string }): JSX.Element => (
+    <div>
+      {["png", "gif"].includes(src.extension) ? (
         <img
-          src={props.src?.url}
+          src={src.url}
           alt={props.alt}
           loading="lazy"
           style={{
@@ -46,16 +59,9 @@ const LazyMedia = (props: LazyMediaProps): JSX.Element => {
           style={{ objectFit: "cover" }}
           onLoadedData={() => setIsImageLoading(false)}
           ref={videoRef}
-          onMouseMove={(e) => {
-            if (videoRef.current) {
-              const position = videoRef.current.getBoundingClientRect();
-              const diffXNorm = (e.pageX - position.x) / position.width;
-              videoRef.current.currentTime =
-                diffXNorm * videoRef.current.duration;
-            }
-          }}
+          onMouseMove={onMouseMoveOnVideo}
         >
-          <source src={props.src.url} type={`video/${props.src.extension}`} />
+          <source src={src.url} type={`video/${src.extension}`} />
           Not supported
         </video>
       )}
@@ -63,17 +69,14 @@ const LazyMedia = (props: LazyMediaProps): JSX.Element => {
   );
 
   return (
-    <div>
-      {props.src.url &&
-        (props.disableFade ? (
-          media
-        ) : (
-          <Fade in={!isImageLoading} timeout={400}>
-            {media}
-          </Fade>
-        ))}
+    <>
+      {props.src && (
+        <Fade in={!isImageLoading} timeout={props.disableFade ? 0 : 400}>
+          {media(props.src)}
+        </Fade>
+      )}
 
-      {(isImageLoading || !props.src.url) && (
+      {(isImageLoading || !props.src) && (
         <Box
           sx={{
             display: "flex",
@@ -90,14 +93,14 @@ const LazyMedia = (props: LazyMediaProps): JSX.Element => {
         >
           {errorLoading ? (
             <ReportGmailerrorredIcon color="error" />
-          ) : props.src.url ? (
+          ) : props.src ? (
             <CircularProgress size={25} />
           ) : (
             <HideImageOutlinedIcon />
           )}
         </Box>
       )}
-    </div>
+    </>
   );
 };
 

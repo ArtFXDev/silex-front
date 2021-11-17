@@ -4,7 +4,7 @@ import { originalPreviewFileURL, pictureThumbnailURL } from "./zou";
 
 export const entityURLAndExtension = (
   entity: Shot | Task | Asset
-): { url?: string; extension: string } => {
+): { url: string; extension: string } | undefined => {
   let url,
     extension = "png";
 
@@ -22,16 +22,17 @@ export const entityURLAndExtension = (
       break;
   }
 
+  if (!url) return undefined;
+
   return {
-    url: url
-      ? extension && extension !== "png"
+    url:
+      extension && extension !== "png"
         ? originalPreviewFileURL(
             url,
             extension === "mp4" ? "movies" : "pictures",
             extension
           )
-        : pictureThumbnailURL("preview-files", url, extension)
-      : undefined,
+        : pictureThumbnailURL("preview-files", url, extension),
     extension,
   };
 };

@@ -30,11 +30,11 @@ export const ProvideAction = ({
   const { uiSocket } = useSocket();
 
   const setActionAndRedirect = useCallback(
-    (action: Action) => {
-      setAction(action);
+    (newAction: Action) => {
+      setAction(newAction);
 
       // Redirect to the action page
-      history.push("/action");
+      history.push("/actions");
 
       // Brings the app on top
       runIfInElectron(() => window.electron.send("bringWindowToFront"));

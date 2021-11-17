@@ -67,7 +67,13 @@ const ActionPage = (): JSX.Element | null => {
   }, [history, onActionQuery, onClearAction, setAction, uiSocket]);
 
   if (!action) {
-    return null;
+    return (
+      <PageWrapper title="Actions" goBack>
+        <Typography color="text.disabled">
+          You don{"'"}t have any running actions...
+        </Typography>
+      </PageWrapper>
+    );
   }
 
   // Called when clicking on the submit button
@@ -134,9 +140,13 @@ const ActionPage = (): JSX.Element | null => {
               sx={{ ml: "auto" }}
               onClick={() => {
                 history.goBack();
-                setAction(undefined);
-                enqueueSnackbar(`Cancelled action ${action.name}`, {
-                  variant: "error",
+
+                uiSocket.emit("clearAction", { uuid: action.uuid }, () => {
+                  setAction(undefined);
+
+                  enqueueSnackbar(`Cancelled action ${action.name}`, {
+                    variant: "error",
+                  });
                 });
               }}
             >
