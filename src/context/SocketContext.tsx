@@ -71,12 +71,14 @@ export const ProvideSocket = ({
         const { context } = response.data;
         setDCCClients([...dccClients, context]);
 
-        enqueueSnackbar(
-          `New dcc connected: ${context.dcc || "standalone"} - ${context.pid}`,
-          {
-            variant: "info",
-          }
-        );
+        if (context.dcc) {
+          enqueueSnackbar(
+            `New dcc connected: ${context.dcc} - ${context.pid}`,
+            {
+              variant: "info",
+            }
+          );
+        }
       }
     },
     [dccClients, enqueueSnackbar]
@@ -92,12 +94,14 @@ export const ProvideSocket = ({
         ) as DCCContext;
         setDCCClients(dccClients.filter((e) => e.uuid !== uuid));
 
-        enqueueSnackbar(
-          `dcc disconnected: ${disconnected.dcc} - ${disconnected.pid}`,
-          {
-            variant: "warning",
-          }
-        );
+        if (disconnected.dcc) {
+          enqueueSnackbar(
+            `dcc disconnected: ${disconnected.dcc} - ${disconnected.pid}`,
+            {
+              variant: "warning",
+            }
+          );
+        }
       }
     },
     [dccClients, enqueueSnackbar]

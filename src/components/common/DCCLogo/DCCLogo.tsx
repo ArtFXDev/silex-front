@@ -4,6 +4,7 @@ import BlenderLogo from "assets/images/logos/blender.svg";
 import HoudiniLogo from "assets/images/logos/houdini.svg";
 import MayaLogo from "assets/images/logos/maya.svg";
 import NukeLogo from "assets/images/logos/nuke.svg";
+import PythonLogo from "assets/images/logos/python.svg";
 
 /**
  * Dictionnary of dcc names and icon paths
@@ -13,6 +14,7 @@ const logos: Record<string, string> = {
   houdini: HoudiniLogo,
   maya: MayaLogo,
   nuke: NukeLogo,
+  python: PythonLogo,
 };
 
 interface DCCLogoProps {

@@ -36,7 +36,7 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
       case "bool":
         return (
           <Switch
-            defaultChecked={parameter.value !== null}
+            defaultChecked={parameter.value === true}
             color="info"
             onChange={(e) => (parameter.value = e.target.checked)}
           />

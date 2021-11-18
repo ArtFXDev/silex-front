@@ -1,30 +1,28 @@
+import InfoIcon from "@mui/icons-material/Info";
 import {
   Button,
   Card,
   CardActions,
   CardMedia,
   Fade,
+  IconButton,
   LinearProgress,
   ListItem,
   ListItemButton,
   ListItemText,
+  Menu,
+  MenuItem,
   Paper,
   Typography,
 } from "@mui/material";
 import { PersonsAvatarGroup } from "components/common/avatar";
 import TaskStatusBadge from "components/common/TaskStatusBadge/TaskStatusBadge";
-import LazyImage from "components/utils/LazyImage/LazyImage";
+import LazyMedia from "components/utils/LazyMedia/LazyMedia";
+import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Asset, Shot, Task } from "types/entities";
-import { entityPreviewURL, getEntityName } from "utils/entity";
-
-interface EntityItemProps {
-  index: number;
-  entity: Shot | Task | Asset;
-  selected?: boolean;
-  listView: boolean;
-}
+import { entityURLAndExtension, getEntityName } from "utils/entity";
 
 const ProgressBar = ({ shot }: { shot: Shot }): JSX.Element => {
   const nDone = shot.tasks
@@ -42,21 +40,45 @@ const ProgressBar = ({ shot }: { shot: Shot }): JSX.Element => {
   );
 };
 
+interface EntityItemProps {
+  index: number;
+  entity: Shot | Task | Asset;
+  selected?: boolean;
+  listView: boolean;
+}
+
 const EntityItem = ({
   index,
   entity,
   selected,
   listView,
 }: EntityItemProps): JSX.Element => {
+  const [mouseOver, setMouseOver] = useState<boolean>();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
   const history = useHistory();
   const routeMatch = useRouteMatch();
 
   const name = getEntityName(entity);
 
+  const handleMoreActionsClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMoreActions = () => {
+    setAnchorEl(null);
+    setMouseOver(false);
+  };
+
   const onClickAction = () => {
-    history.push(
-      `${routeMatch.url}/${entity.id}${entity.type === "Task" ? "" : "/tasks"}`
-    );
+    // Prevent clicking when the menu is open
+    if (!anchorEl) {
+      history.push(
+        `${routeMatch.url}/${entity.id}${
+          entity.type === "Task" ? "" : "/tasks"
+        }`
+      );
+    }
   };
 
   return (
@@ -88,42 +110,70 @@ const EntityItem = ({
           </ListItem>
         </Paper>
       ) : (
-        <Button color="secondary" sx={{ p: 0, textTransform: "none", my: 1 }}>
-          <Card
-            raised
-            elevation={2}
-            sx={{
-              transition: "box-shadow 0.1s ease",
-              ":hover": {
-                boxShadow: "0 0 0 2px rgba(200, 200, 200, 0.4)",
-              },
-              cursor: "pointer",
-            }}
+        <div
+          style={{ position: "relative" }}
+          onMouseEnter={() => setMouseOver(true)}
+          onMouseLeave={() => setMouseOver(false)}
+        >
+          <Button
+            color="secondary"
+            sx={{ p: 0, my: 0, textTransform: "none" }}
             onClick={onClickAction}
           >
-            <CardMedia sx={{ width: 180, height: 100 }}>
-              <LazyImage
-                src={entityPreviewURL(entity)}
-                width={180}
-                height={100}
-                alt="test"
-                disableBorder
-              />
-            </CardMedia>
+            <Card
+              raised
+              elevation={2}
+              sx={{
+                transition: "box-shadow 0.1s ease",
+                ":hover": {
+                  boxShadow: "0 0 0 2px rgba(200, 200, 200, 0.4)",
+                },
+                cursor: "pointer",
+              }}
+            >
+              <CardMedia sx={{ position: "relative", width: 180, height: 100 }}>
+                <LazyMedia
+                  src={entityURLAndExtension(entity)}
+                  width={180}
+                  height={100}
+                  alt={entity.name}
+                  disableBorder
+                />
+              </CardMedia>
 
-            <CardActions sx={{ py: 0, height: 40 }}>
-              <Typography component="div" sx={{ marginRight: "auto" }}>
-                {name}
-              </Typography>
+              <CardActions sx={{ py: 0, height: 40 }}>
+                <Typography component="div" sx={{ marginRight: "auto" }}>
+                  {name}
+                </Typography>
 
-              {entity.type === "Shot" && <ProgressBar shot={entity} />}
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseMoreActions}
+                >
+                  <MenuItem>Delete</MenuItem>
+                </Menu>
 
-              {entity.type === "Task" && (
-                <TaskStatusBadge taskStatus={entity.taskStatus} />
-              )}
-            </CardActions>
-          </Card>
-        </Button>
+                {entity.type === "Shot" && entity.tasks.length > 0 && (
+                  <ProgressBar shot={entity} />
+                )}
+
+                {entity.type === "Task" && (
+                  <TaskStatusBadge taskStatus={entity.taskStatus} />
+                )}
+              </CardActions>
+            </Card>
+          </Button>
+
+          <Fade in={mouseOver} timeout={100}>
+            <IconButton
+              sx={{ position: "absolute", top: 0, right: 0 }}
+              onClick={handleMoreActionsClick}
+            >
+              <InfoIcon color="disabled" />
+            </IconButton>
+          </Fade>
+        </div>
       )}
     </Fade>
   );

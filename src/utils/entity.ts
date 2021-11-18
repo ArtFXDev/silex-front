@@ -1,11 +1,12 @@
 import { Asset, Shot, Task } from "types/entities";
 
-import { pictureThumbnailURL } from "./zou";
+import { originalPreviewFileURL, pictureThumbnailURL } from "./zou";
 
-export const entityPreviewURL = (
+export const entityURLAndExtension = (
   entity: Shot | Task | Asset
-): string | undefined => {
-  let url;
+): { url: string; extension: string } | undefined => {
+  let url,
+    extension = "png";
 
   switch (entity.type) {
     case "Asset":
@@ -13,11 +14,27 @@ export const entityPreviewURL = (
       if (entity.preview_file_id) url = entity.preview_file_id;
       break;
     case "Task":
-      if (entity.previews.length >= 1) url = entity.previews[0].id;
+      if (entity.previews.length > 0) {
+        const lastIndex = entity.previews.length - 1;
+        url = entity.previews[lastIndex].id;
+        extension = entity.previews[lastIndex].extension;
+      }
       break;
   }
 
-  return url ? pictureThumbnailURL("preview-files", url) : undefined;
+  if (!url) return undefined;
+
+  return {
+    url:
+      extension && extension !== "png"
+        ? originalPreviewFileURL(
+            url,
+            extension === "mp4" ? "movies" : "pictures",
+            extension
+          )
+        : pictureThumbnailURL("preview-files", url, extension),
+    extension,
+  };
 };
 
 export const getEntityName = (entity: Shot | Task | Asset): string => {

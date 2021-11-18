@@ -47,12 +47,13 @@ const DCCIconButton = ({ dcc, taskId }: DCCIconButtonProps): JSX.Element => {
     );
   };
 
-  const onConform = () => {
+  const onConform = (dcc: string) => {
     uiSocket.emit(
       "launchAction",
       {
         action: "conform",
         taskId,
+        dcc,
         projectName: (getCurrentProject() as Project).name,
       },
       (response) => {
@@ -97,7 +98,7 @@ const DCCIconButton = ({ dcc, taskId }: DCCIconButtonProps): JSX.Element => {
 
         <MenuItem
           onClick={() => {
-            onConform();
+            onConform(dcc);
             handleClose();
           }}
         >

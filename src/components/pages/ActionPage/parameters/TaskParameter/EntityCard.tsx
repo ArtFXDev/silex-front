@@ -1,7 +1,7 @@
 import { Card, CardActions, CardMedia, Typography } from "@mui/material";
-import LazyImage from "components/utils/LazyImage/LazyImage";
+import LazyMedia from "components/utils/LazyMedia/LazyMedia";
 import { Asset, Shot, Task } from "types/entities";
-import { entityPreviewURL } from "utils/entity";
+import { entityURLAndExtension } from "utils/entity";
 
 interface EntityCardProps {
   /** The entity to display */
@@ -37,8 +37,8 @@ const EntityCard = ({
       }}
     >
       <CardMedia sx={{ width: 90, height: 50 }}>
-        <LazyImage
-          src={entityPreviewURL(entity)}
+        <LazyMedia
+          src={entityURLAndExtension(entity)}
           width={90}
           height={50}
           alt={entity.name}

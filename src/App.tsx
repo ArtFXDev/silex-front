@@ -13,6 +13,7 @@ import {
   ProvideGraphQLClient,
   ProvideSocket,
 } from "context";
+import { ProvideBlade } from "context/BladeContext";
 import { SnackbarProvider } from "notistack";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
@@ -27,43 +28,46 @@ const App = (): JSX.Element => {
       <SnackbarProvider maxSnack={3}>
         <ProvideGraphQLClient>
           <ProvideSocket>
-            <ProvideAuth>
-              <ProvideAction>
-                <Switch>
-                  <Route exact path="/login">
-                    <LoginPage />
-                  </Route>
+            <ProvideBlade>
+              <ProvideAuth>
+                <ProvideAction>
+                  <Switch>
+                    <Route exact path="/login">
+                      <LoginPage />
+                    </Route>
 
-                  <PrivateRoute exact path="/logs">
-                    <LogsPage />
-                  </PrivateRoute>
+                    <PrivateRoute exact path="/logs" allowNonAuth>
+                      <LogsPage />
+                    </PrivateRoute>
 
-                  <PrivateRoute exact path="/">
-                    <HomePage />
-                  </PrivateRoute>
+                    <PrivateRoute exact path="/actions" allowNonAuth>
+                      <ActionPage />
+                    </PrivateRoute>
 
-                  <PrivateRoute exact path="/profile">
-                    <ProfilePage />
-                  </PrivateRoute>
+                    <PrivateRoute exact path="/">
+                      <HomePage />
+                    </PrivateRoute>
 
-                  <PrivateRoute exact path="/dccs">
-                    <DCCClientsPage />
-                  </PrivateRoute>
+                    <PrivateRoute exact path="/profile">
+                      <ProfilePage />
+                    </PrivateRoute>
 
-                  <PrivateRoute exact path="/action">
-                    <ActionPage />
-                  </PrivateRoute>
+                    <PrivateRoute exact path="/dccs">
+                      <DCCClientsPage />
+                    </PrivateRoute>
 
-                  <PrivateRoute path="/explorer">
-                    <ExplorerPage />
-                  </PrivateRoute>
+                    <PrivateRoute path="/explorer">
+                      <ExplorerPage />
+                    </PrivateRoute>
 
-                  <Route path="/*">
-                    <NotFoundPage />
-                  </Route>
-                </Switch>
-              </ProvideAction>
-            </ProvideAuth>
+                    {/* 404 fallback page */}
+                    <Route path="/*">
+                      <NotFoundPage />
+                    </Route>
+                  </Switch>
+                </ProvideAction>
+              </ProvideAuth>
+            </ProvideBlade>
           </ProvideSocket>
         </ProvideGraphQLClient>
       </SnackbarProvider>

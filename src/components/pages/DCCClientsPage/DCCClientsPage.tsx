@@ -12,25 +12,32 @@ import {
   Typography,
 } from "@mui/material";
 import DCCLogo from "components/common/DCCLogo/DCCLogo";
-import { useSocket } from "context";
+import { useAction, useSocket } from "context";
 import { DCCContext } from "types/action/context";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 
-const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => (
-  <Fade in timeout={400}>
-    <TableRow>
-      <TableCell>
-        <DCCLogo name={dcc.dcc} sx={{ pl: 1 }} />
-      </TableCell>
-      <TableCell>{dcc.pid}</TableCell>
-      <TableCell>{dcc.project}</TableCell>
-      <TableCell>{dcc.sequence}</TableCell>
-      <TableCell>{dcc.shot}</TableCell>
-      <TableCell>{dcc.task}</TableCell>
-    </TableRow>
-  </Fade>
-);
+const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => {
+  const { action } = useAction();
+
+  return (
+    <Fade in timeout={400}>
+      <TableRow>
+        <TableCell>
+          <DCCLogo name={dcc.dcc || "python"} sx={{ pl: 1, float: "left" }} />
+        </TableCell>
+        <TableCell>{dcc.pid || "-"}</TableCell>
+        <TableCell>{dcc.project || "-"}</TableCell>
+        <TableCell>{dcc.sequence || "-"}</TableCell>
+        <TableCell>{dcc.shot || "-"}</TableCell>
+        <TableCell>{dcc.task || "-"}</TableCell>
+        <TableCell>
+          {dcc.pid === action?.context_metadata.pid ? "1 running..." : "-"}
+        </TableCell>
+      </TableRow>
+    </Fade>
+  );
+};
 
 const DCCClientsTable = ({
   dccClients,
@@ -42,12 +49,13 @@ const DCCClientsTable = ({
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell align="justify">DCC</TableCell>
+            <TableCell>DCC</TableCell>
             <TableCell>PID</TableCell>
             <TableCell>Project</TableCell>
             <TableCell>Sequence</TableCell>
             <TableCell>Shot</TableCell>
             <TableCell>Task</TableCell>
+            <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
 

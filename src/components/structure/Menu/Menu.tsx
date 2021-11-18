@@ -1,7 +1,7 @@
 import CloseIcon from "@mui/icons-material/Close";
-import DescriptionIcon from "@mui/icons-material/Description";
-import { Box, Drawer, Grid, IconButton, Link, Tooltip } from "@mui/material";
+import { Box, Drawer, Grid, IconButton, Link, Typography } from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
+import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
 import { useAuth } from "context";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
@@ -12,6 +12,7 @@ import { Link as RouterLink, useLocation } from "react-router-dom";
 const links = [
   { text: "Home", to: "/", exact: true, needProjectId: false },
   { text: "File explorer", to: "/explorer", exact: false, needProjectId: true },
+  { text: "Actions", to: "/actions", exact: true },
 ];
 
 interface MenuProps {
@@ -82,16 +83,22 @@ const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
         </Grid>
       </Box>
 
-      <Tooltip title="Logs" placement="top" arrow>
-        <IconButton
-          sx={{ position: "absolute", bottom: 0, right: 0, m: 1 }}
-          component={RouterLink}
-          to="/logs"
-          onClick={closeMenu}
-        >
-          <DescriptionIcon color="disabled" />
-        </IconButton>
-      </Tooltip>
+      <div
+        style={{
+          position: "absolute",
+          bottom: 0,
+          right: 0,
+          margin: "10px",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Typography sx={{ color: "rgba(150, 149, 149, 0.5)" }} fontSize={12}>
+          {process.env.REACT_APP_NAME} v{process.env.REACT_APP_VERSION}
+        </Typography>
+
+        <OpenLogsButton onClick={closeMenu} />
+      </div>
     </Drawer>
   );
 };

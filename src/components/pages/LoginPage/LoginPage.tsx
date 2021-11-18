@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
+import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
 import { useAuth, useSocket } from "context";
 import isElectron from "is-electron";
 import { useState } from "react";
@@ -17,6 +18,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import * as Zou from "utils/zou";
 
 import NimbyController from "../../common/NimbyController/NimbyController";
+import RenderController from "./RenderController";
 
 const SilexLogoAndText = (): JSX.Element => (
   <Grid
@@ -202,9 +204,31 @@ const LoginPage = (): JSX.Element => {
         </Box>
       </Fade>
 
-      {isElectron() && (
-        <NimbyController sx={{ position: "absolute", top: 20, right: 20 }} />
-      )}
+      <div
+        style={{
+          position: "absolute",
+          top: 20,
+          right: 20,
+          display: "flex",
+          alignItems: "flex-end",
+          gap: "10px",
+          flexDirection: "column",
+        }}
+      >
+        {isElectron() && <NimbyController />}
+
+        <RenderController />
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: 20,
+          right: 20,
+        }}
+      >
+        <OpenLogsButton />
+      </div>
     </div>
   );
 };

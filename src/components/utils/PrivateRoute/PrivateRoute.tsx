@@ -6,7 +6,16 @@ import { useEffect, useState } from "react";
 import { Redirect, Route, RouteProps } from "react-router-dom";
 import * as Zou from "utils/zou";
 
-const PrivateRoute = ({ children, ...rest }: RouteProps): JSX.Element => {
+type PrivateRouteProps = {
+  /** Allow the page to be accessible by a non auth user */
+  allowNonAuth?: boolean;
+} & RouteProps;
+
+const PrivateRoute = ({
+  children,
+  allowNonAuth,
+  ...rest
+}: PrivateRouteProps): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(true);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState<boolean>(false);
   const [fetching, setFetching] = useState<boolean>(false);
@@ -35,13 +44,13 @@ const PrivateRoute = ({ children, ...rest }: RouteProps): JSX.Element => {
       }
     };
 
-    if (auth.user) {
+    if (auth.user || allowNonAuth) {
       setIsUserLoggedIn(true);
       setLoading(false);
     } else {
       if (!isUserLoggedIn && !fetching) checkIfUserLoggedIn();
     }
-  }, [auth, isUserLoggedIn, loading, fetching, enqueueSnackbar]);
+  }, [auth, isUserLoggedIn, loading, fetching, enqueueSnackbar, allowNonAuth]);
 
   return (
     <Route
@@ -60,7 +69,10 @@ const PrivateRoute = ({ children, ...rest }: RouteProps): JSX.Element => {
           />
         ) : (
           <>
-            <Header />
+            {/* Only display header when the user is logged in */}
+            {auth.user && <Header />}
+
+            {/* Display content of the page */}
             {children}
           </>
         )

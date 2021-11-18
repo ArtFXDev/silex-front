@@ -1,9 +1,9 @@
 import { AccountCircle, Logout } from "@mui/icons-material";
-import { ListItemIcon, Menu, MenuItem } from "@mui/material";
+import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { PersonAvatar } from "components/common/avatar";
 import { useAuth } from "context";
 import { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, Link as RouterLink, useHistory } from "react-router-dom";
 import * as Zou from "utils/zou";
 
 /**
@@ -30,7 +30,12 @@ const AvatarMenu = (): JSX.Element => {
     });
   };
 
-  if (!auth.user) return <div>NO USER</div>;
+  if (!auth.user)
+    return (
+      <Button component={RouterLink} to="/login">
+        Log In
+      </Button>
+    );
 
   return (
     <div>
