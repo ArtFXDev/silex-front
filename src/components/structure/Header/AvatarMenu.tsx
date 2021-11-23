@@ -46,12 +46,7 @@ const AvatarMenu = (): JSX.Element => {
         clickable
       />
 
-      <Menu
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={handleClose} component={Link} to="/profile">
           <ListItemIcon>
             <AccountCircle fontSize="small" />
