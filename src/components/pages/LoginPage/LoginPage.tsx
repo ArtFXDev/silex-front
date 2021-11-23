@@ -65,6 +65,7 @@ const LoginPage = (): JSX.Element => {
     if (!email || !password) {
       setEmail("");
       setPassword("");
+      setIsLoading(false);
       setError("Some fields are required");
       return;
     }
@@ -80,6 +81,8 @@ const LoginPage = (): JSX.Element => {
         history.replace(from);
       })
       .catch((error) => {
+        setIsLoading(false);
+
         if (error.response) {
           setError(
             `User or password invalid\nError code: ${error.response.status} - ${error.response.statusText}`
