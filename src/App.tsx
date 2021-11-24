@@ -6,6 +6,7 @@ import LoginPage from "components/pages/LoginPage/LoginPage";
 import LogsPage from "components/pages/LogsPage/LogsPage";
 import NotFoundPage from "components/pages/NotFoundPage/NotFoundPage";
 import ProfilePage from "components/pages/ProfilePage/ProfilePage";
+import RunningJobsPage from "components/pages/RunningJobsPage/RunningJobsPage";
 import PrivateRoute from "components/utils/PrivateRoute/PrivateRoute";
 import {
   ProvideAction,
@@ -28,9 +29,9 @@ const App = (): JSX.Element => {
       <SnackbarProvider maxSnack={3}>
         <ProvideGraphQLClient>
           <ProvideSocket>
-            <ProvideBlade>
-              <ProvideAuth>
-                <ProvideAction>
+            <ProvideAction>
+              <ProvideBlade>
+                <ProvideAuth>
                   <Switch>
                     <Route exact path="/login">
                       <LoginPage />
@@ -40,8 +41,12 @@ const App = (): JSX.Element => {
                       <LogsPage />
                     </PrivateRoute>
 
-                    <PrivateRoute exact path="/actions" allowNonAuth>
+                    <PrivateRoute path="/action/:uuid?" allowNonAuth>
                       <ActionPage />
+                    </PrivateRoute>
+
+                    <PrivateRoute exact path="/running-jobs" allowNonAuth>
+                      <RunningJobsPage />
                     </PrivateRoute>
 
                     <PrivateRoute exact path="/">
@@ -65,9 +70,9 @@ const App = (): JSX.Element => {
                       <NotFoundPage />
                     </Route>
                   </Switch>
-                </ProvideAction>
-              </ProvideAuth>
-            </ProvideBlade>
+                </ProvideAuth>
+              </ProvideBlade>
+            </ProvideAction>
           </ProvideSocket>
         </ProvideGraphQLClient>
       </SnackbarProvider>

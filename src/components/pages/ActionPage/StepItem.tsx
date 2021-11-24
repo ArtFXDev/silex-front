@@ -71,14 +71,13 @@ const StepItem = ({ step, disabled }: StepItemProps): JSX.Element => {
 
       <Collapse in={step.status !== Status.INITIALIZED}>
         <List sx={{ pl: 4, py: 0 }}>
-          {commands.length > 0 &&
-            commands.map((command: Command) => (
-              <CommandItem
-                key={command.uuid}
-                command={command}
-                disabled={disabled}
-              />
-            ))}
+          {commands.map((command: Command) => (
+            <CommandItem
+              key={command.uuid}
+              command={command}
+              disabled={disabled}
+            />
+          ))}
         </List>
       </Collapse>
     </Box>

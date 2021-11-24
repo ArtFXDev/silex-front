@@ -44,7 +44,7 @@ const PrivateRoute = ({
       }
     };
 
-    if (auth.user || allowNonAuth) {
+    if (auth.user) {
       setIsUserLoggedIn(true);
       setLoading(false);
     } else {
@@ -60,7 +60,7 @@ const PrivateRoute = ({
           <Backdrop open={true}>
             <CircularProgress color="inherit" />
           </Backdrop>
-        ) : !isUserLoggedIn ? (
+        ) : !isUserLoggedIn && !allowNonAuth ? (
           <Redirect
             to={{
               pathname: "/login",

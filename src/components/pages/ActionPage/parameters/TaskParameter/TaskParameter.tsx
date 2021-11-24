@@ -3,7 +3,7 @@ import { Alert, IconButton, Typography } from "@mui/material";
 import SearchTextField from "components/common/SearchTextField/SearchTextField";
 import { useAction } from "context";
 import { useState } from "react";
-import { Action } from "types/action/action";
+import { useRouteMatch } from "react-router";
 import { Asset, Shot, TaskId } from "types/entities";
 
 import AssetsAndShotsView from "./AssetsAndShotsView";
@@ -19,8 +19,10 @@ const TaskParameter = ({ onTaskSelect }: TaskParameterProps): JSX.Element => {
   const [selectedEntity, setSelectedEntity] = useState<Shot | Asset>();
   const [selectedTaskId, setSelectedTaskId] = useState<TaskId>();
 
-  const actionContext = useAction();
-  const action = actionContext.action as Action;
+  const routeMatch = useRouteMatch<{ uuid: string }>();
+
+  const { actions } = useAction();
+  const action = actions[routeMatch.params.uuid];
 
   if (!action.context_metadata.project_id) {
     return (

@@ -1,5 +1,7 @@
 import AirlineSeatReclineExtraIcon from "@mui/icons-material/AirlineSeatReclineExtra";
+import CheckIcon from "@mui/icons-material/Check";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import PortableWifiOffIcon from "@mui/icons-material/PortableWifiOff";
 import {
@@ -17,6 +19,7 @@ import {
 import { styled } from "@mui/material/styles";
 import { useBlade } from "context/BladeContext";
 import { useState } from "react";
+import { useHistory } from "react-router";
 import { secondsToDhms } from "utils/date";
 
 import Separator from "../Separator/Separator";
@@ -53,26 +56,38 @@ const PopperWithArrow = styled(Popper)(() => ({
 }));
 
 const NimbyController = ({ sx }: BoxProps): JSX.Element => {
-  const { bladeStatus } = useBlade();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [open, setOpen] = useState(false);
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-    setOpen(!open);
-  };
+  const { bladeStatus } = useBlade();
+  const history = useHistory();
 
+  // Toggle the nimby ON or OFF
   const handleToggleNimby = () => {
     const newStatus = !(bladeStatus?.nimby !== "None");
     window.electron.send("setNimbyStatus", newStatus);
   };
 
+  // Toggle the nimby auto mode to auto
   const handleToggleAutoMode = () => {
     window.electron.send("setNimbyAutoMode", !bladeStatus?.nimbyAutoMode);
   };
 
+  // Called when the user open the Nimby menu
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+    setOpen(true);
+  };
+
+  // Called when going to /running-jobs
+  const handleClickOnRunningJobs = () => {
+    setOpen(false);
+    history.push("/running-jobs");
+  };
+
   const nimbyON = bladeStatus?.nimby !== "None";
   const color = bladeStatus ? (nimbyON ? "success" : "error") : "warning";
+  const noRunningProcesses = bladeStatus?.pids.length === 0;
 
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
@@ -81,8 +96,8 @@ const NimbyController = ({ sx }: BoxProps): JSX.Element => {
           label="Nimby"
           color={color}
           variant="outlined"
-          onClick={handleClick}
-          onDelete={handleClick}
+          onClick={handleOpenMenu}
+          onDelete={handleOpenMenu}
           deleteIcon={
             bladeStatus ? (
               nimbyON ? (
@@ -104,7 +119,7 @@ const NimbyController = ({ sx }: BoxProps): JSX.Element => {
           placement="bottom-end"
           modifiers={[
             {
-              name: "offset",
+              name: "offhandleOpenMenuset",
               options: {
                 offset: [0, 15],
               },
@@ -179,6 +194,28 @@ const NimbyController = ({ sx }: BoxProps): JSX.Element => {
                         {secondsToDhms(bladeStatus.uptime)}
                         <Separator />
                         Profile: {bladeStatus.profile}
+                        <Separator />
+                        <Chip
+                          label={`Running jobs: ${bladeStatus.pids.length}`}
+                          variant="outlined"
+                          color={noRunningProcesses ? "success" : "warning"}
+                          sx={{
+                            mt: 0.5,
+                          }}
+                          onClick={
+                            noRunningProcesses
+                              ? undefined
+                              : handleClickOnRunningJobs
+                          }
+                          onDelete={handleClickOnRunningJobs}
+                          deleteIcon={
+                            noRunningProcesses ? (
+                              <CheckIcon />
+                            ) : (
+                              <ExitToAppIcon />
+                            )
+                          }
+                        />
                       </>
                     ) : (
                       <Typography color="warning.main" fontSize="14px">

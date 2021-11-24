@@ -1,7 +1,7 @@
 export type ServerResponse = { status: number; msg: string };
 
 export type ServerResponseWithData<Data> = {
-  data?: Data;
+  data: Data;
   status: 200;
   msg: string;
 };

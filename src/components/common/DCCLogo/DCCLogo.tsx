@@ -1,4 +1,3 @@
-import HelpIcon from "@mui/icons-material/Help";
 import { Box, BoxProps } from "@mui/system";
 import BlenderLogo from "assets/images/logos/blender.svg";
 import HoudiniLogo from "assets/images/logos/houdini.svg";
@@ -19,38 +18,41 @@ const logos: Record<string, string> = {
 
 interface DCCLogoProps {
   /** The name of the icon file eg blender, houdini or maya */
-  name: string | null;
+  name: string | null | undefined;
 
   /** The size of the logo */
   size?: number;
+
+  /** Disable the color */
+  disabled?: boolean;
 }
 
 /**
  * DCC software logo component
  */
-const DCCLogo = ({ name, size, sx }: DCCLogoProps & BoxProps): JSX.Element => {
+const DCCLogo = ({
+  name,
+  size,
+  sx,
+  disabled,
+}: DCCLogoProps & BoxProps): JSX.Element => {
   return (
-    <>
-      {name && logos[name] ? (
-        <Box
-          sx={{
-            ...sx,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <img
-            src={name ? logos[name] : undefined}
-            alt={`${name} logo`}
-            width={size || 40}
-            height={size || 40}
-          />
-        </Box>
-      ) : (
-        <HelpIcon />
-      )}
-    </>
+    <Box
+      sx={{
+        ...sx,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <img
+        src={logos[name || "python"]}
+        alt={`${name} logo`}
+        width={size || 40}
+        height={size || 40}
+        style={{ filter: disabled ? "grayscale(100%)" : "none" }}
+      />
+    </Box>
   );
 };
 

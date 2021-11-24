@@ -31,7 +31,11 @@ const PageWrapper = ({
               <IconButton
                 sx={{ ml: "auto" }}
                 onClick={() => {
-                  history.goBack();
+                  if (history.length === 1) {
+                    history.push("/");
+                  } else {
+                    history.goBack();
+                  }
                 }}
               >
                 <KeyboardReturnIcon />

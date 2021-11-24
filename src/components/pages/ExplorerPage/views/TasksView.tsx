@@ -9,7 +9,7 @@ import EntitiesView from "./EntitiesView";
 import TaskModal from "./TaskModal/TaskModal";
 
 const TASK_FIELDS = gql`
-  fragment TaskFields on Task {
+  fragment TasksFields on Task {
     id
     type
 
@@ -48,7 +48,7 @@ const SHOT_TASKS = gql`
       }
 
       tasks {
-        ...TaskFields
+        ...TasksFields
       }
     }
   }

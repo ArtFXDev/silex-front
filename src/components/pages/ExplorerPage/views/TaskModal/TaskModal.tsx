@@ -70,7 +70,8 @@ const TASK = gql`
  */
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
-    children?: React.ReactElement;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    children: React.ReactElement<any, any>;
   },
   ref: React.Ref<unknown>
 ) {

@@ -18,7 +18,7 @@ import { DCCContext } from "types/action/context";
 import PageWrapper from "../PageWrapper/PageWrapper";
 
 const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => {
-  const { action } = useAction();
+  const { actions } = useAction();
 
   return (
     <Fade in timeout={400}>
@@ -32,7 +32,12 @@ const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => {
         <TableCell>{dcc.shot || "-"}</TableCell>
         <TableCell>{dcc.task || "-"}</TableCell>
         <TableCell>
-          {dcc.pid === action?.context_metadata.pid ? "1 running..." : "-"}
+          {
+            Object.values(actions).filter(
+              (action) => action.context_metadata.uuid === dcc.uuid
+            ).length
+          }{" "}
+          actions running...
         </TableCell>
       </TableRow>
     </Fade>

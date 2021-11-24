@@ -12,4 +12,7 @@ export interface DCCContext {
   task: string | null;
   user: string;
   uuid: string;
+
+  // Unique id for that socket connection
+  socketId: string;
 }
