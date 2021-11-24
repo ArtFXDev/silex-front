@@ -31,7 +31,7 @@ const PageWrapper = ({
               <IconButton
                 sx={{ ml: "auto" }}
                 onClick={() => {
-                  if (history.length === 0) {
+                  if (history.length === 1) {
                     history.push("/");
                   } else {
                     history.goBack();
