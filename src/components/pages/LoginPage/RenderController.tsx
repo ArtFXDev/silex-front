@@ -15,7 +15,7 @@ const RenderController = (): JSX.Element => {
     uiSocket.emit(
       "launchAction",
       {
-        action: "submit_vray",
+        action: "submit",
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       (_response) => {
