@@ -6,6 +6,7 @@ import LoginPage from "components/pages/LoginPage/LoginPage";
 import LogsPage from "components/pages/LogsPage/LogsPage";
 import NotFoundPage from "components/pages/NotFoundPage/NotFoundPage";
 import ProfilePage from "components/pages/ProfilePage/ProfilePage";
+import RunningJobsPage from "components/pages/RunningJobsPage/RunningJobsPage";
 import PrivateRoute from "components/utils/PrivateRoute/PrivateRoute";
 import {
   ProvideAction,
@@ -42,6 +43,10 @@ const App = (): JSX.Element => {
 
                     <PrivateRoute path="/action/:uuid?" allowNonAuth>
                       <ActionPage />
+                    </PrivateRoute>
+
+                    <PrivateRoute exact path="/running-jobs" allowNonAuth>
+                      <RunningJobsPage />
                     </PrivateRoute>
 
                     <PrivateRoute exact path="/">

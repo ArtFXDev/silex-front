@@ -2,6 +2,7 @@ import FlagIcon from "@mui/icons-material/Flag";
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { useAction } from "context";
+import { useEffect } from "react";
 import {
   Redirect,
   Route,
@@ -16,16 +17,19 @@ import ActionItem from "./ActionItem";
 const ActionsView = (): JSX.Element => {
   const routeMatch = useRouteMatch<{ uuid: string }>();
   const history = useHistory();
-  const { actions, actionStatuses } = useAction();
+  const { actions, actionStatuses, clearAction, cleanActions } = useAction();
 
-  // useEffect(() => {
-  //   // Listen to react router route change
-  //   const unlisten = history.listen((location) => {
-  //   });
+  useEffect(() => {
+    // Listen to react router route change
+    const unlisten = history.listen((location) => {
+      if (!location.pathname.startsWith("/action")) {
+        cleanActions();
+      }
+    });
 
-  //   // Clear the listener
-  //   return unlisten;
-  // }, [actionStatuses, history]);
+    // Clear the listener
+    return unlisten;
+  }, [actionStatuses, cleanActions, clearAction, history]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     history.push(`/action/${newValue}`);
@@ -34,7 +38,12 @@ const ActionsView = (): JSX.Element => {
   return (
     <Box sx={{ maxWidth: 800 }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
-        <Tabs value={routeMatch.params.uuid} onChange={handleTabChange}>
+        <Tabs
+          value={routeMatch.params.uuid}
+          onChange={handleTabChange}
+          variant="scrollable"
+          scrollButtons="auto"
+        >
           {Object.keys(actions).map((uuid) => (
             <Tab
               key={uuid}
@@ -62,10 +71,7 @@ const ActionsView = (): JSX.Element => {
         </Tabs>
       </Box>
 
-      <ActionItem
-        action={actions[routeMatch.params.uuid]}
-        finished={actionStatuses[routeMatch.params.uuid]}
-      />
+      <ActionItem uuid={routeMatch.params.uuid} />
     </Box>
   );
 };
@@ -77,7 +83,8 @@ const ActionPage = (): JSX.Element => {
   const currentAction = routeMatch.params.uuid;
 
   const firstAction =
-    Object.keys(actions).length > 0 && Object.keys(actions)[0];
+    Object.keys(actions).length > 0 &&
+    Object.keys(actions)[Object.keys(actions).length - 1];
 
   return (
     <Switch>
@@ -99,7 +106,7 @@ const ActionPage = (): JSX.Element => {
             <ActionsView />
           ) : (
             // Redirect to the first action when the url is invalid or to the action page
-            <Redirect to="/action" />
+            <Redirect to={firstAction ? `/action/${firstAction}` : "/action"} />
           )}
         </PageWrapper>
       </Route>

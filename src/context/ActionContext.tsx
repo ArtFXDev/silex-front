@@ -1,6 +1,6 @@
 import { useSocket } from "context";
 import merge from "deepmerge";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useReducer } from "react";
 import { useHistory } from "react-router";
 import { Action } from "types/action/action";
 import { UIOnServerEvents } from "types/socket";
@@ -15,6 +15,9 @@ export interface ActionContext {
 
   /** Used to clear an action given its uuid */
   clearAction: (uuid: Action["uuid"]) => void;
+
+  /** Clean all finished actions */
+  cleanActions: () => void;
 }
 
 export const ActionContext = React.createContext<ActionContext>(
@@ -25,18 +28,17 @@ interface ProvideActionProps {
   children: JSX.Element;
 }
 
+const actions: ActionContext["actions"] = {};
+const actionStatuses: ActionContext["actionStatuses"] = {};
+
 /**
  * The ProvideAction provides the current action context and handle action updates
  */
 export const ProvideAction = ({
   children,
 }: ProvideActionProps): JSX.Element => {
-  // These are the real running actions with potential parameter changes
-  const [actions, setActions] = useState<ActionContext["actions"]>({});
-
-  const [actionStatuses, setActionStatuses] = useState<
-    ActionContext["actionStatuses"]
-  >({});
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const history = useHistory();
   const { uiSocket } = useSocket();
@@ -45,20 +47,21 @@ export const ProvideAction = ({
    * Clears an action
    */
   const clearAction = (uuid: Action["uuid"]) => {
-    const actionsCopy = { ...actions };
-    delete actionsCopy[uuid];
-    setActions(actionsCopy);
-
-    const actionStatusesCopy = { ...actionStatuses };
-    delete actionStatusesCopy[uuid];
-    setActionStatuses(actionStatusesCopy);
+    delete actions[uuid];
+    delete actionStatuses[uuid];
+    forceUpdate();
   };
 
-  // /**
-  //  * Clean actions that are finished
-  //  */
-  // const cleanActions = () => {
-  // }
+  /**
+   * Clean actions that are finished
+   */
+  const cleanActions = () => {
+    // Filter actions that are finished
+    const toClean = Object.keys(actionStatuses).filter(
+      (uuid) => actionStatuses[uuid]
+    );
+    toClean.forEach((uuid) => clearAction(uuid));
+  };
 
   /**
    * Called on connection
@@ -66,16 +69,14 @@ export const ProvideAction = ({
    */
   const onConnect = useCallback(() => {
     uiSocket.emit("getRunningActions", (response) => {
-      const newActions: ActionContext["actions"] = {};
-
       Object.values(response.data).forEach((action) => {
-        newActions[action.uuid] = action;
+        actions[action.uuid] = action;
         actionStatuses[action.uuid] = false;
       });
 
-      setActions(newActions);
+      forceUpdate();
     });
-  }, [actionStatuses, uiSocket]);
+  }, [uiSocket]);
 
   /**
    * Called when receiving an action from a client
@@ -83,15 +84,17 @@ export const ProvideAction = ({
   const onActionQuery = useCallback<UIOnServerEvents["actionQuery"]>(
     (newAction) => {
       // Add a new action
-      setActions({ ...actions, [newAction.data.uuid]: newAction.data });
+      actions[newAction.data.uuid] = newAction.data;
 
       // Redirect to the specific action page
       history.push(`/action/${newAction.data.uuid}`);
 
       // Brings the dektop app on top
       runIfInElectron(() => window.electron.send("bringWindowToFront"));
+
+      forceUpdate();
     },
-    [actions, history]
+    [history]
   );
 
   /**
@@ -104,11 +107,8 @@ export const ProvideAction = ({
       // Merge the diff
       const mergedAction = merge(actions[uuid], actionDiff.data);
 
-      console.log("DIFF", actionDiff);
-      console.log("MERGED", mergedAction);
-
       // Update the state
-      setActions({ ...actions, [uuid]: mergedAction });
+      actions[uuid] = mergedAction;
 
       // Test if we scroll to the next command
       if (actions[uuid] && mergedAction) {
@@ -128,8 +128,10 @@ export const ProvideAction = ({
           block: "center",
         });
       }
+
+      forceUpdate();
     },
-    [actions]
+    []
   );
 
   /**
@@ -139,21 +141,17 @@ export const ProvideAction = ({
     (response) => {
       const { uuid } = response.data;
 
-      // Make a copy of statuses
-      const actionStatusesCopy = { ...actionStatuses };
-
       // Mark the action as finished
       Object.values(actions).forEach((action) => {
         // If the context uuid matches with that disconnected client
         if (action.context_metadata.uuid === uuid) {
-          actionStatusesCopy[action.uuid] = true;
+          actionStatuses[action.uuid] = true;
         }
       });
 
-      // Update the action status
-      setActionStatuses(actionStatusesCopy);
+      forceUpdate();
     },
-    [actionStatuses, actions]
+    []
   );
 
   /**
@@ -163,8 +161,10 @@ export const ProvideAction = ({
     (response) => {
       // Mark the action as finished
       actionStatuses[response.data.uuid] = true;
+
+      forceUpdate();
     },
-    [actionStatuses]
+    []
   );
 
   useEffect(() => {
@@ -200,6 +200,7 @@ export const ProvideAction = ({
         actions,
         actionStatuses,
         clearAction,
+        cleanActions,
       }}
     >
       {children}

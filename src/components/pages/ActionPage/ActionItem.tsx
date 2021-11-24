@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import { useAction, useSocket } from "context";
 import { useSnackbar } from "notistack";
-import { useHistory } from "react-router-dom";
 import { Action } from "types/action/action";
 import { Status } from "types/action/status";
 import { getStatusColor } from "utils/status";
@@ -29,15 +28,16 @@ const someStepsAreWaitingForInput = (action: Action) =>
   );
 
 interface ActionItemProps {
-  action: Action;
-  finished: boolean;
+  uuid: Action["uuid"];
 }
 
-const ActionItem = ({ action, finished }: ActionItemProps): JSX.Element => {
-  const { clearAction } = useAction();
+const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
+  const { clearAction, actions, actionStatuses } = useAction();
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
-  const history = useHistory();
+
+  const action = actions[uuid];
+  const finished = actionStatuses[uuid];
 
   // Called when clicking on the submit button
   const handleClickOnAction = () => {
@@ -69,7 +69,7 @@ const ActionItem = ({ action, finished }: ActionItemProps): JSX.Element => {
         });
       });
     } else {
-      history.goBack();
+      clearAction(action.uuid);
     }
   };
 
@@ -111,11 +111,7 @@ const ActionItem = ({ action, finished }: ActionItemProps): JSX.Element => {
           )}
         </div>
 
-        <Tooltip
-          title={finished ? "Exit" : "Cancel action"}
-          placement="top"
-          arrow
-        >
+        <Tooltip title={finished ? "Clean" : "Cancel"} placement="top" arrow>
           <IconButton sx={{ ml: "auto" }} onClick={handleClearAction}>
             {finished ? <DeleteSweepIcon /> : <CancelIcon fontSize="medium" />}
           </IconButton>

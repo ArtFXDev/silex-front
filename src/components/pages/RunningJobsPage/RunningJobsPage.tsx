@@ -91,7 +91,7 @@ const RunningJobsPage = (): JSX.Element => {
   const { bladeStatus } = useBlade();
 
   return (
-    <PageWrapper goBack title="Running jobs">
+    <PageWrapper goBack title="Jobs running on this machine">
       <div style={{ marginTop: "20px" }}>
         {bladeStatus && bladeStatus.pids.length > 0 ? (
           <TableContainer component={Paper}>
