@@ -1,5 +1,6 @@
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { Box, IconButton, Typography } from "@mui/material";
+import { SxProps } from "@mui/system";
 import { useSnackbar } from "notistack";
 import { BORDER_RADIUS_BOTTOM } from "style/constants";
 import { LogLine } from "types/action/action";
@@ -11,9 +12,19 @@ function colorFromLogStatus(message: LogLine["message"]): string {
   return "primary";
 }
 
+const logLineGlobalStyle: Partial<SxProps> = {
+  display: "inline-block",
+  fontFamily:
+    "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace",
+  fontSize: "12px",
+  wordWrap: "break-word",
+  whiteSpace: "initial",
+  lineHeight: "20px",
+};
+
 interface LogsProps {
   logs: LogLine[];
-  regexp: RegExp;
+  regexp?: RegExp;
 }
 
 const Logs = ({ logs, regexp }: LogsProps): JSX.Element => {
@@ -47,9 +58,13 @@ const Logs = ({ logs, regexp }: LogsProps): JSX.Element => {
       </IconButton>
 
       {logs.map((logLine, i) => {
-        // Manually reset the regexp
-        regexp.lastIndex = 0;
-        const splitLine = regexp.exec(logLine.message);
+        let splitLine;
+
+        if (regexp) {
+          // Manually reset the regexp
+          regexp.lastIndex = 0;
+          splitLine = regexp.exec(logLine.message);
+        }
 
         return (
           <Box
@@ -80,7 +95,7 @@ const Logs = ({ logs, regexp }: LogsProps): JSX.Element => {
                 overflowX: "auto",
               }}
             >
-              {splitLine ? (
+              {regexp && splitLine ? (
                 splitLine.splice(1).map((part, i) => (
                   <Typography
                     key={i}
@@ -91,14 +106,8 @@ const Logs = ({ logs, regexp }: LogsProps): JSX.Element => {
                         : "inherit"
                     }
                     sx={{
-                      display: "inline-block",
-                      fontFamily:
-                        "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace",
-                      fontSize: "12px",
+                      ...logLineGlobalStyle,
                       ml: i === 0 ? "15px" : "",
-                      wordWrap: "break-word",
-                      whiteSpace: "initial",
-                      lineHeight: "20px",
                     }}
                   >
                     {part}&nbsp;
@@ -110,14 +119,8 @@ const Logs = ({ logs, regexp }: LogsProps): JSX.Element => {
                   component="span"
                   color={"inherit"}
                   sx={{
-                    display: "inline-block",
-                    fontFamily:
-                      "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace",
-                    fontSize: "12px",
+                    ...logLineGlobalStyle,
                     ml: "15px",
-                    wordWrap: "break-word",
-                    whiteSpace: "initial",
-                    lineHeight: "20px",
                   }}
                 >
                   {logLine.message}

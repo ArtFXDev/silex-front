@@ -1,3 +1,36 @@
+export interface RunningJob {
+  uat: string;
+  login: string;
+  pid: number;
+  jid: number;
+  tid: number;
+  cid: number;
+  rev: number;
+  slots: number;
+  flags: number;
+  spoolhost: string;
+  elapsed: number;
+  secs: number;
+  tuser: number;
+  tsys: number;
+  maxRSS: number;
+  maxVSZ: number;
+  maxCPU: number;
+  id: string;
+  logref: string;
+  udir: string;
+  expands: number;
+  svckey: string;
+  envkey: string[];
+  dirmaps: string[];
+  yieldchkpt: number;
+  srv: string[];
+  rc: number;
+  exitcode: number;
+  state: string;
+  argv: string[];
+}
+
 export interface BladeStatus {
   status: string;
   nimby: string;
@@ -21,7 +54,7 @@ export interface BladeStatus {
   pyversion: string;
   invoc: string;
   bladeUser: string;
-  pids: number[];
+  pids: RunningJob[];
 
   // Added by silex-desktop
   nimbyAutoMode: boolean;

@@ -9,7 +9,7 @@ export interface SocketContext {
   /** socket.io socket object (with types) */
   uiSocket: UINamespaceSocket;
 
-  /** Array of dcc clients */
+  /** List of dcc clients */
   dccClients: DCCContext[];
 
   /** Wether the ui is connected to the ws server */
@@ -24,20 +24,34 @@ interface ProvideSocketProps {
   children: JSX.Element;
 }
 
+// Initialize a global socket instance
+const uiSocket: UINamespaceSocket = io(
+  `${process.env.REACT_APP_WS_SERVER}/ui`,
+  { reconnectionDelay: 2000 }
+);
+
 export const ProvideSocket = ({
   children,
 }: ProvideSocketProps): JSX.Element => {
-  const [uiSocket] = useState<UINamespaceSocket>(
-    io(`${process.env.REACT_APP_WS_SERVER}/ui`, { reconnectionDelay: 2000 })
-  );
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [dccClients, setDCCClients] = useState<DCCContext[]>([]);
 
   const { enqueueSnackbar } = useSnackbar();
 
+  /**
+   * Called when the UI is connected
+   */
   const onConnect = useCallback(() => {
+    // Initialize the UI itself
     uiSocket.emit("initialization", { uuid: uuidv4() }, (response) => {
+      // If we got a response we are connected
       setIsConnected(true);
+
+      // Then ask for the list of connected clients
+      uiSocket.emit("getConnectedDccs", (response) => {
+        setDCCClients(Object.values(response.data));
+      });
+
       enqueueSnackbar(
         `Connected to ${process.env.REACT_APP_WS_SERVER} (${response.msg})`,
         {
@@ -45,14 +59,11 @@ export const ProvideSocket = ({
         }
       );
     });
+  }, [enqueueSnackbar]);
 
-    uiSocket.emit("getClients", (response) => {
-      if (response.data) {
-        setDCCClients(Object.values(response.data));
-      }
-    });
-  }, [enqueueSnackbar, uiSocket]);
-
+  /**
+   * Called when the UI is disconnected from the WS server
+   */
   const onDisconnect = useCallback(() => {
     setIsConnected(false);
     setDCCClients([]);
@@ -65,42 +76,49 @@ export const ProvideSocket = ({
     );
   }, [enqueueSnackbar]);
 
+  /**
+   * Called when a new dcc client is connected
+   */
   const onDCCConnect = useCallback<UIOnServerEvents["dccConnect"]>(
     (response) => {
-      if (response.data) {
-        const { context } = response.data;
-        setDCCClients([...dccClients, context]);
+      const { context } = response.data;
+      setDCCClients([...dccClients, context]);
 
-        if (context.dcc) {
-          enqueueSnackbar(
-            `New dcc connected: ${context.dcc} - ${context.pid}`,
-            {
-              variant: "info",
-            }
-          );
-        }
+      // Only display a notif when it's a real dcc (not standalone)
+      if (context.dcc) {
+        enqueueSnackbar(`New dcc connected: ${context.dcc} - ${context.pid}`, {
+          variant: "info",
+        });
       }
     },
     [dccClients, enqueueSnackbar]
   );
 
+  /**
+   * Called when a dcc is disconnected
+   */
   const onDCCDisconnect = useCallback<UIOnServerEvents["dccDisconnect"]>(
     (response) => {
       if (response.data) {
         const { uuid } = response.data;
 
-        const disconnected = dccClients.find(
-          (e) => e.uuid === uuid
-        ) as DCCContext;
-        setDCCClients(dccClients.filter((e) => e.uuid !== uuid));
+        // Finds the disconnected client based on its uuid
+        const disconnected = dccClients.find((e) => e.uuid === uuid);
 
-        if (disconnected.dcc) {
-          enqueueSnackbar(
-            `dcc disconnected: ${disconnected.dcc} - ${disconnected.pid}`,
-            {
-              variant: "warning",
-            }
-          );
+        // If we found a missing client
+        if (disconnected) {
+          // Update the state to remove that client
+          setDCCClients(dccClients.filter((e) => e.uuid !== uuid));
+
+          // Only display a notif when it's a real dcc (not standalone)
+          if (disconnected.dcc) {
+            enqueueSnackbar(
+              `dcc disconnected: ${disconnected.dcc} - ${disconnected.pid}`,
+              {
+                variant: "warning",
+              }
+            );
+          }
         }
       }
     },
@@ -108,7 +126,7 @@ export const ProvideSocket = ({
   );
 
   useEffect(() => {
-    // Register on events
+    // Register "on" events
     uiSocket.on("connect", onConnect);
     uiSocket.on("disconnect", onDisconnect);
 
@@ -119,12 +137,12 @@ export const ProvideSocket = ({
       // Cleanup function remove the ws listeners
       uiSocket.off("connect", onConnect);
       uiSocket.off("disconnect", onDisconnect);
+
       uiSocket.off("dccConnect", onDCCConnect);
       uiSocket.off("dccDisconnect", onDCCDisconnect);
     };
   }, [
     dccClients,
-    uiSocket,
     enqueueSnackbar,
     onConnect,
     onDisconnect,

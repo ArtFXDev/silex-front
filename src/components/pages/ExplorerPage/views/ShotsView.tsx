@@ -49,36 +49,42 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
   return (
     <QueryWrapper query={query}>
       {data && data.project.sequences.length > 0 ? (
-        data.project.sequences.map((seq, i) => {
-          const filteredShots = seq.shots
-            .filter((sh) => fuzzyMatch(sh.name, search))
-            .sort((a, b) => a.name.localeCompare(b.name));
+        data.project.sequences
+          .slice()
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((seq, i) => {
+            const filteredShots = seq.shots
+              .filter((sh) => fuzzyMatch(sh.name, search))
+              .sort((a, b) => a.name.localeCompare(b.name));
 
-          const isLast = i === data.project.sequences.length - 1;
+            const isLast = i === data.project.sequences.length - 1;
 
-          return (
-            <div key={seq.id}>
-              {filteredShots.length !== 0 ? (
-                <>
-                  <h2 style={{ marginBottom: 0, marginTop: 0 }}>
-                    {seq.name}{" "}
-                    {seq.nb_frames && <h4>({seq.nb_frames} frames)</h4>}
-                  </h2>
-                  <EntitiesView entities={filteredShots} listView={listView} />
-                  {!isLast && <br />}
-                </>
-              ) : (
-                search.length === 0 &&
-                seq.shots.length !== 0 && (
+            return (
+              <div key={seq.id}>
+                {filteredShots.length !== 0 ? (
                   <>
-                    <Typography color="text.disabled">No shots...</Typography>
+                    <h2 style={{ marginBottom: 0, marginTop: 0 }}>
+                      {seq.name}{" "}
+                      {seq.nb_frames && <h4>({seq.nb_frames} frames)</h4>}
+                    </h2>
+                    <EntitiesView
+                      entities={filteredShots}
+                      listView={listView}
+                    />
                     {!isLast && <br />}
                   </>
-                )
-              )}
-            </div>
-          );
-        })
+                ) : (
+                  search.length === 0 &&
+                  seq.shots.length !== 0 && (
+                    <>
+                      <Typography color="text.disabled">No shots...</Typography>
+                      {!isLast && <br />}
+                    </>
+                  )
+                )}
+              </div>
+            );
+          })
       ) : (
         <Typography color="text.disabled">
           The project doesn{"'"}t contain any sequences or shots...

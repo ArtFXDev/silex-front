@@ -14,12 +14,13 @@ export interface UIClientEmitEvents {
   initialization: EmitWithCallback<{ uuid: string }>;
 
   /** Used to get the list of the connected dcc clients */
-  getClients: WithCallback<
+  getConnectedDccs: WithCallback<
     ServerResponseWithData<{ [uuid: string]: DCCContext }>
   >;
 
-  // Action related events
-  getCurrentAction: WithCallback<ServerResponseWithData<Action>>;
+  getRunningActions: WithCallback<
+    ServerResponseWithData<{ [uuid: string]: Action }>
+  >;
   actionUpdate: EmitWithCallback<Action>;
 
   getWorkingFilesForTask: EmitWithCallback<
@@ -52,7 +53,7 @@ export interface UIOnServerEvents {
   // Action related events
   clearAction: Listener<{ uuid: string }>;
   actionQuery: Listener<Action>;
-  actionUpdate: Listener<Action | undefined>;
+  actionUpdate: Listener<Partial<Action> & { uuid: string }>;
 }
 
 export type UINamespaceSocket = Socket<UIOnServerEvents, UIClientEmitEvents>;

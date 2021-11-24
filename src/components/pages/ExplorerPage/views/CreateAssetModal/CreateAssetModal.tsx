@@ -171,7 +171,7 @@ const CreateAssetModal = ({
                 in={isLoading}
                 orientation="horizontal"
                 sx={{
-                  "& .MuiCollapse-wrapperInner": {
+                  "&.MuiCollapse-wrapperInner": {
                     display: "flex",
                     justifyContent: "center",
                   },

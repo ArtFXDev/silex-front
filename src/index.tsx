@@ -16,7 +16,11 @@ ReactDOM.render(
     <ThemeProvider theme={theme}>
       {/* Does a CSS normalize */}
       <CssBaseline />
+
+      {/* Apply global styles */}
       <AppGlobalStyles />
+
+      {/* Render the whole app */}
       <App />
     </ThemeProvider>
   </React.StrictMode>,

@@ -28,9 +28,9 @@ const App = (): JSX.Element => {
       <SnackbarProvider maxSnack={3}>
         <ProvideGraphQLClient>
           <ProvideSocket>
-            <ProvideBlade>
-              <ProvideAuth>
-                <ProvideAction>
+            <ProvideAction>
+              <ProvideBlade>
+                <ProvideAuth>
                   <Switch>
                     <Route exact path="/login">
                       <LoginPage />
@@ -40,7 +40,7 @@ const App = (): JSX.Element => {
                       <LogsPage />
                     </PrivateRoute>
 
-                    <PrivateRoute exact path="/actions" allowNonAuth>
+                    <PrivateRoute path="/action/:uuid?" allowNonAuth>
                       <ActionPage />
                     </PrivateRoute>
 
@@ -65,9 +65,9 @@ const App = (): JSX.Element => {
                       <NotFoundPage />
                     </Route>
                   </Switch>
-                </ProvideAction>
-              </ProvideAuth>
-            </ProvideBlade>
+                </ProvideAuth>
+              </ProvideBlade>
+            </ProvideAction>
           </ProvideSocket>
         </ProvideGraphQLClient>
       </SnackbarProvider>
