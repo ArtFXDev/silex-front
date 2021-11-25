@@ -1,5 +1,13 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, Drawer, Grid, IconButton, Link, Typography } from "@mui/material";
+import {
+  Box,
+  Chip,
+  Drawer,
+  Grid,
+  IconButton,
+  Link,
+  Typography,
+} from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
 import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
 import { useAuth } from "context";
@@ -26,6 +34,9 @@ interface MenuProps {
 const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
   const location = useLocation();
   const auth = useAuth();
+
+  const isDev = window.location.host.includes("localhost");
+  const isProd = !window.location.host.includes("preprod");
 
   return (
     <Drawer anchor="left" elevation={2} open={open} onClose={closeMenu}>
@@ -96,6 +107,14 @@ const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
         <Typography sx={{ color: "rgba(150, 149, 149, 0.5)" }} fontSize={12}>
           {process.env.REACT_APP_NAME} v{process.env.REACT_APP_VERSION}
         </Typography>
+
+        <Chip
+          label={isDev ? "dev" : isProd ? "prod" : "preprod"}
+          variant="outlined"
+          size="small"
+          color={isDev ? "success" : isProd ? "info" : "warning"}
+          sx={{ ml: 1 }}
+        />
 
         <OpenLogsButton onClick={closeMenu} />
       </div>
