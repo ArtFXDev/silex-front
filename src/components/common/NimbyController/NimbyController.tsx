@@ -119,9 +119,9 @@ const NimbyController = ({ sx }: BoxProps): JSX.Element => {
           placement="bottom-end"
           modifiers={[
             {
-              name: "offhandleOpenMenuset",
+              name: "offset",
               options: {
-                offset: [0, 15],
+                offset: [0, 12],
               },
             },
           ]}
