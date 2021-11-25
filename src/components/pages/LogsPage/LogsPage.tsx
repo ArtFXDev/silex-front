@@ -1,7 +1,9 @@
-import { Typography } from "@mui/material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { Chip, IconButton, Tooltip, Typography } from "@mui/material";
 import axios from "axios";
 import Logs from "components/common/Logs/Logs";
 import Separator from "components/common/Separator/Separator";
+import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { LogLine } from "types/action/action";
 
@@ -12,31 +14,95 @@ interface LogFileProps {
   title: string;
 }
 
+type LogsResponse = { totalLines: number; lines: LogLine[] };
+
 const LogFile = ({ fileName, title }: LogFileProps) => {
-  const [logs, setLogs] = useState<LogLine[]>();
+  const [logs, setLogs] = useState<LogsResponse>();
+  const [lines, setLines] = useState<number>(50);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const getLog = () => {
       axios
-        .get<string[]>(
-          `${process.env.REACT_APP_WS_SERVER}/log/${fileName}?fromEnd=50`
+        .get<{ totalLines: number; lines: string[] }>(
+          `${process.env.REACT_APP_WS_SERVER}/log/${fileName}?fromEnd=${lines}`
         )
-        .then((response) =>
-          setLogs(response.data.map((l) => ({ message: l })))
-        );
+        .then((response) => {
+          setLogs({
+            ...response.data,
+            lines: response.data.lines.map((l) => ({ message: l })),
+          });
+        });
     };
 
     getLog();
-    const interval = setInterval(getLog, 1000);
+    const interval = setInterval(getLog, 2000);
     return () => clearInterval(interval);
-  }, [fileName]);
+  }, [fileName, lines]);
+
+  const handleClearLog = () => {
+    axios
+      .delete(`${process.env.REACT_APP_WS_SERVER}/log/${fileName}`)
+      .then(() => {
+        enqueueSnackbar(`Cleared logfile ${fileName}`, { variant: "success" });
+      })
+      .catch((err) =>
+        enqueueSnackbar(`Couldn't clear logfile ${fileName}: ${err}`, {
+          variant: "error",
+        })
+      );
+  };
 
   return (
     <div style={{ marginBottom: "50px" }}>
-      <Typography sx={{ my: 3 }} variant="h6">
-        {title}
-      </Typography>
-      {logs && <Logs logs={logs} regexp={/(\[.+\]) (.+) (\(.+\):) (.+)/g} />}
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Typography sx={{ my: 3 }} variant="h6">
+          {title}
+        </Typography>
+
+        {logs && logs.lines.length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginLeft: "auto",
+            }}
+          >
+            <div style={{ display: "flex", gap: "10px", marginRight: "10px" }}>
+              {[50, 100, 500].map((n) => (
+                <Chip
+                  key={n}
+                  label={n}
+                  variant={lines === n ? "filled" : "outlined"}
+                  color={lines === n ? "info" : "default"}
+                  onClick={() => setLines(n)}
+                />
+              ))}
+            </div>
+
+            <Tooltip title="Clear log file">
+              <IconButton onClick={handleClearLog}>
+                <DeleteOutlineIcon color="error" />
+              </IconButton>
+            </Tooltip>
+          </div>
+        )}
+      </div>
+
+      {logs && logs.lines.length > 0 ? (
+        <Logs
+          logs={logs.lines}
+          regexp={/(\[.+\]) (.+) (\(.+\):) (.+)/g}
+          scrollToBottom
+          linesOffset={
+            logs.totalLines -
+            (logs.lines.length === lines ? lines : logs.lines.length)
+          }
+        />
+      ) : (
+        <Typography color="text.disabled">Log file is empty...</Typography>
+      )}
     </div>
   );
 };

@@ -2,6 +2,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { Box, IconButton, Typography } from "@mui/material";
 import { SxProps } from "@mui/system";
 import { useSnackbar } from "notistack";
+import { useEffect, useRef } from "react";
 import { BORDER_RADIUS_BOTTOM } from "style/constants";
 import { LogLine } from "types/action/action";
 
@@ -25,13 +26,36 @@ const logLineGlobalStyle: Partial<SxProps> = {
 interface LogsProps {
   logs: LogLine[];
   regexp?: RegExp;
+
+  /** Line offset to add to the line numbers */
+  linesOffset?: number;
+
+  /** Scroll to bottom on mount */
+  scrollToBottom?: boolean;
 }
 
-const Logs = ({ logs, regexp }: LogsProps): JSX.Element => {
+const Logs = ({
+  logs,
+  regexp,
+  linesOffset,
+  scrollToBottom,
+}: LogsProps): JSX.Element => {
   const { enqueueSnackbar } = useSnackbar();
+  const scrollableViewRef = useRef<HTMLElement>();
+
+  const getLineNumber = (i: number) => (linesOffset ? i + linesOffset : i);
+
+  // Scroll on mount if in props
+  useEffect(() => {
+    if (scrollableViewRef.current) {
+      scrollableViewRef.current.scrollTop =
+        scrollableViewRef.current.scrollHeight;
+    }
+  }, [scrollToBottom]);
 
   return (
     <Box
+      ref={scrollableViewRef}
       sx={{
         backgroundColor: "#161b22",
         borderRadius: BORDER_RADIUS_BOTTOM,
@@ -47,9 +71,9 @@ const Logs = ({ logs, regexp }: LogsProps): JSX.Element => {
         sx={{ position: "sticky", top: 0, float: "right" }}
         onClick={() => {
           navigator.clipboard.writeText(
-            logs.map((l, i) => `${i}\t${l.message}`).join("\n")
+            logs.map((l, i) => `${getLineNumber(i)}\t${l.message}`).join("\n")
           );
-          enqueueSnackbar("Copied logs to clipboard", {
+          enqueueSnackbar(`Copied ${logs.length} lines to clipboard`, {
             variant: "success",
           });
         }}
@@ -85,7 +109,7 @@ const Logs = ({ logs, regexp }: LogsProps): JSX.Element => {
                 minWidth: "40px",
               }}
             >
-              {i}
+              {getLineNumber(i)}
             </span>
 
             <span
