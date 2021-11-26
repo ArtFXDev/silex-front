@@ -56,6 +56,9 @@ export interface BladeStatus {
   bladeUser: string;
   pids: RunningJob[];
 
+  // NimbyON is added on the desktop side
+  nimbyON: boolean;
+
   // Added by silex-desktop
   nimbyAutoMode: boolean;
 }
