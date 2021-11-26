@@ -36,9 +36,6 @@ const PrivateRoute = ({
         setIsUserLoggedIn(true);
       } catch (err: unknown) {
         setIsUserLoggedIn(false);
-        enqueueSnackbar(`You are not authenticated. ${err}`, {
-          variant: "error",
-        });
       } finally {
         setLoading(false);
       }
