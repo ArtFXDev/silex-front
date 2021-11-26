@@ -1,14 +1,7 @@
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  Box,
-  Chip,
-  Drawer,
-  Grid,
-  IconButton,
-  Link,
-  Typography,
-} from "@mui/material";
+import { Box, Drawer, Grid, IconButton, Link, Typography } from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
+import ProdBadge from "components/common/badges/ProdBadge";
 import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
 import { useAuth } from "context";
 import { Link as RouterLink, useLocation } from "react-router-dom";
@@ -34,9 +27,6 @@ interface MenuProps {
 const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
   const location = useLocation();
   const auth = useAuth();
-
-  const isDev = window.location.host.includes("localhost");
-  const isProd = !window.location.host.includes("preprod");
 
   return (
     <Drawer anchor="left" elevation={2} open={open} onClose={closeMenu}>
@@ -108,13 +98,9 @@ const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
           {process.env.REACT_APP_NAME} v{process.env.REACT_APP_VERSION}
         </Typography>
 
-        <Chip
-          label={isDev ? "dev" : isProd ? "prod" : "preprod"}
-          variant="outlined"
-          size="small"
-          color={isDev ? "success" : isProd ? "info" : "warning"}
-          sx={{ ml: 1 }}
-        />
+        <div style={{ marginLeft: "10px" }}>
+          <ProdBadge />
+        </div>
 
         <OpenLogsButton onClick={closeMenu} />
       </div>

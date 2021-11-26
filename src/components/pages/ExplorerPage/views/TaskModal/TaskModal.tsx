@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 import { PersonsAvatarGroup } from "components/common/avatar";
-import TaskStatusBadge from "components/common/TaskStatusBadge/TaskStatusBadge";
+import TaskStatusBadge from "components/common/badges/TaskStatusBadge";
 import LazyMedia from "components/utils/LazyMedia/LazyMedia";
 import { useAuth } from "context";
 import { forwardRef, useState } from "react";
