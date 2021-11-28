@@ -1,15 +1,15 @@
 import { Chip } from "@mui/material";
+import { getCurrentMode } from "utils/action";
 
 const ProdBadge = (): JSX.Element => {
-  const isDev = window.location.host.includes("localhost");
-  const isProd = !window.location.host.includes("preprod");
+  const mode = getCurrentMode();
 
   return (
     <Chip
-      label={isDev ? "dev" : isProd ? "prod" : "beta"}
+      label={mode}
       variant="outlined"
       size="small"
-      color={isDev ? "success" : isProd ? "info" : "warning"}
+      color={mode === "dev" ? "success" : mode === "prod" ? "info" : "warning"}
     />
   );
 };

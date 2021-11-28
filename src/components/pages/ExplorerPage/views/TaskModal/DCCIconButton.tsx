@@ -13,6 +13,7 @@ import { useAuth, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { Project } from "types/entities";
+import { launchAction, launchScene } from "utils/action";
 
 interface DCCIconButtonProps {
   taskId: string;
@@ -36,8 +37,7 @@ const DCCIconButton = ({ dcc, taskId }: DCCIconButtonProps): JSX.Element => {
   };
 
   const onCreateNewScene = (dcc: string) => {
-    uiSocket.emit(
-      "launchScene",
+    launchScene(
       { taskId, dcc, projectName: (getCurrentProject() as Project).name },
       (response) => {
         enqueueSnackbar(`Creating new scene with ${dcc} (${response.msg})`, {
@@ -48,8 +48,7 @@ const DCCIconButton = ({ dcc, taskId }: DCCIconButtonProps): JSX.Element => {
   };
 
   const onConform = (dcc: string) => {
-    uiSocket.emit(
-      "launchAction",
+    launchAction(
       {
         action: "conform",
         taskId,
