@@ -1,7 +1,9 @@
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import {
+  Button,
+  CircularProgress,
   Collapse,
   IconButton,
   Link,
@@ -15,8 +17,10 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
+import CollapseError from "components/common/CollapseError/CollapseError";
 import Logs from "components/common/Logs/Logs";
 import { useBlade } from "context/BladeContext";
+import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { LogLine } from "types/action/action";
 import { RunningJob } from "types/tractor/blade";
@@ -71,11 +75,6 @@ const ProcessRow = ({ p }: { p: RunningJob }): JSX.Element => {
         <TableCell>{secondsToDhms(p.elapsed)}</TableCell>
         <TableCell>{p.state}</TableCell>
         <TableCell>{p.argv.join(" ")}</TableCell>
-        <TableCell>
-          <IconButton>
-            <DeleteOutlineIcon color="error" />
-          </IconButton>
-        </TableCell>
       </TableRow>
 
       <TableRow sx={{ backgroundColor: "none" }}>
@@ -87,6 +86,87 @@ const ProcessRow = ({ p }: { p: RunningJob }): JSX.Element => {
   );
 };
 
+const KillJobsButton = ({
+  hnm,
+  nimbyON,
+}: {
+  hnm: string;
+  nimbyON: boolean;
+}): JSX.Element => {
+  const [isLoading, setIsLoading] = useState<boolean>();
+  const [error, setError] = useState<unknown>();
+  const [success, setSuccess] = useState<boolean>();
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    window.electron.receive<{ channel: string }>("operationSuccess", (data) => {
+      if (data.channel === "killAllActiveTasksOnBlade") {
+        setIsLoading(false);
+        setSuccess(true);
+        enqueueSnackbar("Kill active tasks on this blade successfully sent!", {
+          variant: "success",
+        });
+      }
+    });
+
+    window.electron.receive<{ channel: string; error: unknown }>(
+      "operationError",
+      (data) => {
+        if (data.channel === "killAllActiveTasksOnBlade") {
+          setError(data.error);
+        }
+      }
+    );
+  }, [enqueueSnackbar]);
+
+  const handleClick = () => {
+    if (!isLoading && !success) {
+      setIsLoading(true);
+      setSuccess(false);
+      window.electron.send("killAllActiveTasksOnBlade", hnm);
+    }
+  };
+
+  return (
+    <>
+      <Button
+        variant="outlined"
+        sx={{
+          mt: 3,
+          textTransform: "none",
+          display: "flex",
+          justifyContent: "center",
+        }}
+        onClick={handleClick}
+        disabled={!nimbyON}
+        color={success ? "success" : "error"}
+      >
+        <span>Kill all running tasks</span>
+        <Collapse in={isLoading || success} orientation="horizontal">
+          {isLoading && <CircularProgress size={20} sx={{ ml: 2 }} />}
+          {success && <CheckCircleOutlineIcon color="success" sx={{ ml: 2 }} />}
+        </Collapse>
+      </Button>
+
+      {!nimbyON && (
+        <Typography fontSize={15} color="error" sx={{ mt: 1 }}>
+          To kill tasks on this computer, set the nimby value to ON
+        </Typography>
+      )}
+
+      {error && (
+        <CollapseError
+          sx={{ mt: 3 }}
+          name="Error: Kill running tasks on this blade"
+          message="Check that tractor is accessible"
+          error={error}
+        />
+      )}
+    </>
+  );
+};
+
 const RunningJobsPage = (): JSX.Element => {
   const { bladeStatus } = useBlade();
 
@@ -94,29 +174,35 @@ const RunningJobsPage = (): JSX.Element => {
     <PageWrapper goBack title="Jobs running on this machine">
       <div style={{ marginTop: "20px" }}>
         {bladeStatus && bladeStatus.pids.length > 0 ? (
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Open Logs</TableCell>
-                  <TableCell>PID</TableCell>
-                  <TableCell>JID</TableCell>
-                  <TableCell>TID</TableCell>
-                  <TableCell>Owner</TableCell>
-                  <TableCell>Elapsed time</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Argv</TableCell>
-                  <TableCell>Kill job</TableCell>
-                </TableRow>
-              </TableHead>
+          <>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Open Logs</TableCell>
+                    <TableCell>PID</TableCell>
+                    <TableCell>JID</TableCell>
+                    <TableCell>TID</TableCell>
+                    <TableCell>Owner</TableCell>
+                    <TableCell>Elapsed time</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Argv</TableCell>
+                  </TableRow>
+                </TableHead>
 
-              <TableBody>
-                {bladeStatus.pids.map((p) => (
-                  <ProcessRow key={p.pid} p={p} />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                <TableBody>
+                  {bladeStatus.pids.map((p) => (
+                    <ProcessRow key={p.pid} p={p} />
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            <KillJobsButton
+              hnm={bladeStatus.hnm}
+              nimbyON={bladeStatus.nimbyON}
+            />
+          </>
         ) : (
           <Typography color="text.disabled">
             You don{"'"}t have any jobs running on your computer...

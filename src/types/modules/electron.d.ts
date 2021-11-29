@@ -2,9 +2,13 @@ type IPCSendChannel =
   | "bringWindowToFront"
   | "getBladeStatus"
   | "setNimbyStatus"
-  | "setNimbyAutoMode";
+  | "setNimbyAutoMode"
+  | "killAllActiveTasksOnBlade";
 
-type IPCReceiveChannel = "bladeStatusUpdate";
+type IPCReceiveChannel =
+  | "bladeStatusUpdate"
+  | "operationError"
+  | "operationSuccess";
 
 export declare global {
   interface Window {
