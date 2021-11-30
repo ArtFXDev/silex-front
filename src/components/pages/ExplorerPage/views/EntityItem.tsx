@@ -16,7 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import { PersonsAvatarGroup } from "components/common/avatar";
-import TaskStatusBadge from "components/common/TaskStatusBadge/TaskStatusBadge";
+import TaskStatusBadge from "components/common/badges/TaskStatusBadge";
 import LazyMedia from "components/utils/LazyMedia/LazyMedia";
 import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";

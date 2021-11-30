@@ -1,19 +1,16 @@
 import SendIcon from "@mui/icons-material/Send";
 import { Chip } from "@mui/material";
 import { CircularProgress } from "@mui/material";
-import { useSocket } from "context/SocketContext";
 import { useState } from "react";
+import { launchAction } from "utils/action";
 
 const RenderController = (): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { uiSocket } = useSocket();
-
   const onClick = () => {
     setLoading(true);
 
-    uiSocket.emit(
-      "launchAction",
+    launchAction(
       {
         action: "submit",
       },

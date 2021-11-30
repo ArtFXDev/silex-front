@@ -9,6 +9,22 @@ import {
   WithCallback,
 } from "./events";
 
+export interface SilexBaseParameters {
+  taskId?: string;
+  dcc?: string;
+  projectName?: string;
+  mode?: "prod" | "beta" | "dev";
+}
+
+export type LaunchActionParameters = SilexBaseParameters & {
+  action: string;
+};
+
+export type LaunchSceneParameters = SilexBaseParameters & {
+  scene?: string;
+  path?: string;
+};
+
 export interface UIClientEmitEvents {
   /** Emit this to register the UI as a client */
   initialization: EmitWithCallback<{ uuid: string }>;
@@ -28,20 +44,9 @@ export interface UIClientEmitEvents {
     ServerResponseWithData<{ path: string; files: string[] }>
   >;
 
-  launchScene: EmitWithCallback<{
-    taskId: string;
-    scene?: string;
-    dcc: string;
-    path?: string;
-    projectName: string;
-  }>;
+  launchScene: EmitWithCallback<LaunchSceneParameters>;
 
-  launchAction: EmitWithCallback<{
-    action: string;
-    taskId?: string;
-    dcc?: string;
-    projectName?: string;
-  }>;
+  launchAction: EmitWithCallback<LaunchActionParameters>;
 
   clearAction: EmitWithCallback<{ uuid: string }>;
 }

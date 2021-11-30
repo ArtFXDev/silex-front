@@ -66,7 +66,7 @@ const ASSET_TASKS = gql`
       }
 
       tasks {
-        ...TaskFields
+        ...TasksFields
       }
     }
   }

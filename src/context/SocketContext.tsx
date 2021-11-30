@@ -25,7 +25,7 @@ interface ProvideSocketProps {
 }
 
 // Initialize a global socket instance
-const uiSocket: UINamespaceSocket = io(
+export const uiSocket: UINamespaceSocket = io(
   `${process.env.REACT_APP_WS_SERVER}/ui`,
   { reconnectionDelay: 2000 }
 );

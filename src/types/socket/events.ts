@@ -9,7 +9,7 @@ export type ServerResponseWithData<Data> = {
 export type Listener<Request> = (response: { data: Request }) => void;
 
 /** Callback function */
-type Acknowledgement<Response> = (response: Response) => void;
+export type Acknowledgement<Response> = (response: Response) => void;
 
 /** Emit without a payload where you only need a response */
 export type WithCallback<Response = ServerResponse> = (

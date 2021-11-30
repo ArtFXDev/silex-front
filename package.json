@@ -2,6 +2,8 @@
   "name": "silex-front",
   "version": "0.1.1",
   "private": true,
+  "author": "ArtFX TDs",
+  "license": "MIT",
   "dependencies": {
     "@apollo/client": "^3.4.15",
     "@emotion/react": "^11.4.1",

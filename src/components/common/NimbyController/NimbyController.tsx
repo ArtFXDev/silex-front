@@ -64,8 +64,7 @@ const NimbyController = ({ sx }: BoxProps): JSX.Element => {
 
   // Toggle the nimby ON or OFF
   const handleToggleNimby = () => {
-    const newStatus = !(bladeStatus?.nimby !== "None");
-    window.electron.send("setNimbyStatus", newStatus);
+    window.electron.send("setNimbyStatus", bladeStatus && !bladeStatus.nimbyON);
   };
 
   // Toggle the nimby auto mode to auto
@@ -85,8 +84,11 @@ const NimbyController = ({ sx }: BoxProps): JSX.Element => {
     history.push("/running-jobs");
   };
 
-  const nimbyON = bladeStatus?.nimby !== "None";
-  const color = bladeStatus ? (nimbyON ? "success" : "error") : "warning";
+  const color = bladeStatus
+    ? bladeStatus.nimbyON
+      ? "success"
+      : "error"
+    : "warning";
   const noRunningProcesses = bladeStatus?.pids.length === 0;
 
   return (
@@ -100,7 +102,7 @@ const NimbyController = ({ sx }: BoxProps): JSX.Element => {
           onDelete={handleOpenMenu}
           deleteIcon={
             bladeStatus ? (
-              nimbyON ? (
+              bladeStatus.nimbyON ? (
                 <AirlineSeatReclineExtraIcon />
               ) : (
                 <DirectionsRunIcon />
@@ -166,7 +168,7 @@ const NimbyController = ({ sx }: BoxProps): JSX.Element => {
                           <div>
                             Status:
                             <Switch
-                              checked={nimbyON}
+                              checked={bladeStatus.nimbyON}
                               color={color}
                               onClick={handleToggleNimby}
                               disabled={bladeStatus.nimbyAutoMode}
@@ -177,12 +179,12 @@ const NimbyController = ({ sx }: BoxProps): JSX.Element => {
                               display="inline-block"
                               sx={{ ml: 1 }}
                             >
-                              {nimbyON ? "ON" : "OFF"}
+                              {bladeStatus.nimbyON ? "ON" : "OFF"}
                             </Typography>
                           </div>
 
                           <Typography color={`${color}.main`} fontSize="14px">
-                            {nimbyON
+                            {bladeStatus.nimbyON
                               ? "You are protected from render jobs"
                               : "Your computer can host jobs from the render farm"}
                           </Typography>
