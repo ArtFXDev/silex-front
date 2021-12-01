@@ -1,4 +1,5 @@
 import { Input } from "@mui/material";
+import { useState } from "react";
 import { ParameterInputType } from "types/action/parameters";
 
 /**
@@ -24,11 +25,16 @@ interface GenericInputParameterProps {
 const GenericInputParameter = ({
   parameter,
 }: GenericInputParameterProps): JSX.Element => {
+  const [value, setValue] = useState<ParameterInputType["value"]>(
+    parameter.value
+  );
+
   return (
     <Input
       type={pythonTypeToInputType(parameter.type.name)}
-      placeholder={parameter.value?.toString()}
+      value={value}
       onChange={(e) => {
+        setValue(e.target.value);
         parameter.value = e.target.value;
       }}
       color="info"

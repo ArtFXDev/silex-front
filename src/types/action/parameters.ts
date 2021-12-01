@@ -1,9 +1,10 @@
-type DataType = number | boolean | string;
+export type ParameterValueType = number | boolean | string;
+
 export interface BaseParameter {
   label: string;
   name: string;
   type: { name: string };
-  value: DataType | DataType[] | null;
+  value: ParameterValueType | ParameterValueType[] | null;
   hide: boolean;
 }
 
