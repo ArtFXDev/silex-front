@@ -68,6 +68,11 @@ export interface TextParameter extends BaseParameter {
   value: string | null;
 }
 
+export interface FrameSetParameter extends BaseParameter {
+  type: { name: "FrameSet" };
+  value: string | null;
+}
+
 export type ParameterInputType = IntegerParameter | StringParameter;
 
 export type Parameter =
@@ -80,4 +85,5 @@ export type Parameter =
   | TaskParameter
   | MultipleSelectParameter
   | ArrayParameter
-  | TextParameter;
+  | TextParameter
+  | FrameSetParameter;

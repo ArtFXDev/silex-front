@@ -2,6 +2,7 @@ import { Box, ListItem, Slider, Switch, Typography } from "@mui/material";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import {
   ArrayParameter as ArrayParameterType,
+  FrameSetParameter as FrameSetParameterType,
   MultipleSelectParameter as MultipleSelectParameterType,
   Parameter,
   ParameterInputType,
@@ -11,6 +12,7 @@ import {
 } from "types/action/parameters";
 
 import ArrayParameter from "./parameters/ArrayParameter";
+import FrameSetParameter from "./parameters/FrameSetParameter";
 import GenericInputParameter from "./parameters/GenericInputParameter";
 import MultipleSelectParameter from "./parameters/MultipleSelectParameter";
 import PathParameter from "./parameters/PathParameter";
@@ -91,6 +93,10 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
         );
       case "text":
         return <TextParameter parameter={parameter as TextParameterType} />;
+      case "FrameSet":
+        return (
+          <FrameSetParameter parameter={parameter as FrameSetParameterType} />
+        );
       default:
         return <div>Unknown parameter type</div>;
     }
