@@ -5,14 +5,18 @@ import {
   MultipleSelectParameter as MultipleSelectParameterType,
   Parameter,
   ParameterInputType,
+  PathParameter as PathParameterType,
   SelectParameter as SelectParameterType,
+  TextParameter as TextParameterType,
 } from "types/action/parameters";
 
 import ArrayParameter from "./parameters/ArrayParameter";
 import GenericInputParameter from "./parameters/GenericInputParameter";
 import MultipleSelectParameter from "./parameters/MultipleSelectParameter";
+import PathParameter from "./parameters/PathParameter";
 import SelectParameter from "./parameters/SelectParameter";
 import TaskParameter from "./parameters/TaskParameter/TaskParameter";
+import TextParameter from "./parameters/TextParameter";
 
 interface ParameterItemProps {
   parameter: Parameter;
@@ -29,10 +33,13 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
     switch (type.name) {
       case "int":
       case "str":
-      case "Path":
         return (
           <GenericInputParameter parameter={parameter as ParameterInputType} />
         );
+
+      case "Path":
+        return <PathParameter parameter={parameter as PathParameterType} />;
+
       case "bool":
         return (
           <Switch
@@ -82,6 +89,8 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
             onChange={(newValues) => (parameter.value = newValues)}
           />
         );
+      case "text":
+        return <TextParameter parameter={parameter as TextParameterType} />;
       default:
         return <div>Unknown parameter type</div>;
     }

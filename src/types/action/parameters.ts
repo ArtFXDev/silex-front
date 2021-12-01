@@ -22,8 +22,13 @@ export interface BooleanParameter extends BaseParameter {
 }
 
 export interface PathParameter extends BaseParameter {
-  type: { name: "Path" };
-  value: string | null;
+  type: {
+    name: "Path";
+    multiple: boolean | null;
+    extensions: string[] | null;
+    directory: boolean;
+  };
+  value: string | string[] | null;
 }
 
 export interface RangeParameter extends BaseParameter {
@@ -58,10 +63,12 @@ export interface ArrayParameter extends BaseParameter {
   value: number[] | null;
 }
 
-export type ParameterInputType =
-  | IntegerParameter
-  | StringParameter
-  | PathParameter;
+export interface TextParameter extends BaseParameter {
+  type: { name: "text"; color?: string };
+  value: string | null;
+}
+
+export type ParameterInputType = IntegerParameter | StringParameter;
 
 export type Parameter =
   | PathParameter
@@ -72,4 +79,5 @@ export type Parameter =
   | SelectParameter
   | TaskParameter
   | MultipleSelectParameter
-  | ArrayParameter;
+  | ArrayParameter
+  | TextParameter;

@@ -1,8 +1,11 @@
+import FlagIcon from "@mui/icons-material/Flag";
 import {
   Alert,
   AlertTitle,
+  Chip,
   Fade,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -13,12 +16,30 @@ import {
 } from "@mui/material";
 import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { useAction, useSocket } from "context";
+import { useSnackbar } from "notistack";
+import { useHistory } from "react-router";
+import { Action } from "types/action/action";
 import { DCCContext } from "types/action/context";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 
 const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => {
-  const { actions } = useAction();
+  const { actions, actionStatuses } = useAction();
+  const history = useHistory();
+  const { uiSocket } = useSocket();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const actionsForThisDcc = Object.values(actions).filter(
+    (action) => action.context_metadata.uuid === dcc.uuid
+  );
+
+  const handleClearAction = (action: Action) => {
+    uiSocket.emit("clearAction", { uuid: action.uuid }, () => {
+      enqueueSnackbar(`Cancelled action ${action.name}`, {
+        variant: "warning",
+      });
+    });
+  };
 
   return (
     <Fade in timeout={400}>
@@ -32,12 +53,25 @@ const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => {
         <TableCell>{dcc.shot || "-"}</TableCell>
         <TableCell>{dcc.task || "-"}</TableCell>
         <TableCell>
-          {
-            Object.values(actions).filter(
-              (action) => action.context_metadata.uuid === dcc.uuid
-            ).length
-          }{" "}
-          actions running...
+          {actionsForThisDcc.length > 0 ? (
+            <Stack direction="row" spacing={1}>
+              {actionsForThisDcc.map((action) => (
+                <Chip
+                  key={action.uuid}
+                  label={action.name}
+                  variant="outlined"
+                  color="success"
+                  onClick={() => history.push(`/action/${action.uuid}`)}
+                  onDelete={() => handleClearAction(action)}
+                  deleteIcon={
+                    actionStatuses[action.uuid] ? <FlagIcon /> : undefined
+                  }
+                />
+              ))}
+            </Stack>
+          ) : (
+            "-"
+          )}
         </TableCell>
       </TableRow>
     </Fade>
@@ -60,7 +94,7 @@ const DCCClientsTable = ({
             <TableCell>Sequence</TableCell>
             <TableCell>Shot</TableCell>
             <TableCell>Task</TableCell>
-            <TableCell>Actions</TableCell>
+            <TableCell>Running actions</TableCell>
           </TableRow>
         </TableHead>
 
