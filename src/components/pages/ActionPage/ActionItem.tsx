@@ -87,7 +87,7 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
           </Typography>
 
           <Typography variant="h4" display="inline-block" sx={{ mr: 3 }}>
-            {capitalize(action.name)}
+            {capitalize(action.label)}
           </Typography>
 
           {finished && (
@@ -134,7 +134,7 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
           onClick={handleClickOnAction}
           disabled={finished}
         >
-          {action.name}
+          Continue
         </Button>
       </Fade>
     </Box>

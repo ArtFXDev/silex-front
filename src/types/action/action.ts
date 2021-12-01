@@ -61,6 +61,7 @@ export interface ActionContext {
  */
 export interface Action {
   name: string;
+  label: string;
   context_metadata: ActionContext;
   steps: { [stepName: string]: Step };
   uuid: string;
