@@ -100,10 +100,10 @@ const CommandItem = ({ command, disabled }: CommandItemProps): JSX.Element => {
           <Paper elevation={2} sx={{ borderRadius: BORDER_RADIUS_BOTTOM }}>
             <List sx={{ px: 3 }}>
               {parameters.map((parameter, i) => (
-                <>
-                  <ParameterItem parameter={parameter} key={i} />
+                <div key={i}>
+                  <ParameterItem parameter={parameter} />
                   {i !== parameters.length - 1 && <Divider />}
-                </>
+                </div>
               ))}
             </List>
           </Paper>
