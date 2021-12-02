@@ -1,5 +1,5 @@
 import { TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FrameSetParameter as FrameSetParameterType } from "types/action/parameters";
 
 /**
@@ -16,7 +16,12 @@ interface FrameSetParameterProps {
 const FrameSetParameter = ({
   parameter,
 }: FrameSetParameterProps): JSX.Element => {
-  const [value, setValue] = useState<string>(parameter.value || "");
+  const [value, setValue] = useState<string>("");
+
+  // Update state when the parameter value from action changes
+  useEffect(() => {
+    setValue(parameter.value || "");
+  }, [parameter]);
 
   const tokens = value.split(",");
   const matches = tokens.map((token) => token.match(FRANGE_PATTERN));

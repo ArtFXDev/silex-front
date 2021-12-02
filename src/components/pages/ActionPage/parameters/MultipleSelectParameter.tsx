@@ -1,5 +1,5 @@
 import { Box, Chip, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MultipleSelectParameter as MultipleSelectParameterType } from "types/action/parameters";
 
 // Used for styling the Select input
@@ -26,7 +26,12 @@ const MultipleSelectParameter = ({
   parameter,
   onChange,
 }: MultipleSelectParameterProps): JSX.Element => {
-  const [values, setValues] = useState<string[]>(parameter.value || []);
+  const [values, setValues] = useState<string[]>([]);
+
+  // Update state when the parameter value from action changes
+  useEffect(() => {
+    setValues(parameter.value || []);
+  }, [parameter]);
 
   const handleSelect = (e: SelectChangeEvent<typeof values>) => {
     const value = e.target.value;

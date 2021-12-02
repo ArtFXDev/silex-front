@@ -1,5 +1,5 @@
 import { Input } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ParameterInputType } from "types/action/parameters";
 
 /**
@@ -28,6 +28,11 @@ const GenericInputParameter = ({
   const [value, setValue] = useState<ParameterInputType["value"]>(
     parameter.value
   );
+
+  // Update state when the parameter value from action changes
+  useEffect(() => {
+    setValue(parameter.value);
+  }, [parameter]);
 
   return (
     <Input
