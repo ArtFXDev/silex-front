@@ -1,4 +1,11 @@
-import { Box, Chip, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { MultipleSelectParameter as MultipleSelectParameterType } from "types/action/parameters";
 
@@ -70,6 +77,35 @@ const MultipleSelectParameter = ({
           </MenuItem>
         ))}
       </Select>
+
+      <Button
+        variant="outlined"
+        color="secondary"
+        size="small"
+        disabled={values.length === Object.keys(parameter.type.options).length}
+        sx={{ ml: 2, p: 0, minWidth: 40, textTransform: "none" }}
+        onClick={() => {
+          const allValues = Object.values(parameter.type.options);
+          setValues(allValues);
+          onChange(allValues);
+        }}
+      >
+        All
+      </Button>
+
+      <Button
+        variant="outlined"
+        color="secondary"
+        size="small"
+        disabled={values.length === 0}
+        sx={{ ml: 1, p: 0, minWidth: 50, textTransform: "none" }}
+        onClick={() => {
+          setValues([]);
+          onChange([]);
+        }}
+      >
+        Clear
+      </Button>
     </div>
   );
 };
