@@ -14,6 +14,7 @@ const links = [
   { text: "Home", to: "/", exact: true, needProjectId: false },
   { text: "File explorer", to: "/explorer", exact: false, needProjectId: true },
   { text: "Actions", to: "/action", exact: true },
+  { text: "Tractor", to: "/tractor", exact: true },
 ];
 
 interface MenuProps {
