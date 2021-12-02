@@ -18,9 +18,14 @@ import { launchAction, launchScene } from "utils/action";
 interface DCCIconButtonProps {
   taskId: string;
   dcc: string;
+  disabled?: boolean;
 }
 
-const DCCIconButton = ({ dcc, taskId }: DCCIconButtonProps): JSX.Element => {
+const DCCIconButton = ({
+  dcc,
+  taskId,
+  disabled,
+}: DCCIconButtonProps): JSX.Element => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -66,8 +71,13 @@ const DCCIconButton = ({ dcc, taskId }: DCCIconButtonProps): JSX.Element => {
   return (
     <>
       <Tooltip title={dcc} arrow placement="top">
-        <IconButton key={dcc} onClick={handleClick} sx={{ mx: 0.5 }}>
-          <DCCLogo name={dcc} size={30} />
+        <IconButton
+          key={dcc}
+          onClick={handleClick}
+          sx={{ mx: 0.5 }}
+          disabled={disabled}
+        >
+          <DCCLogo name={dcc} size={30} disabled={disabled} />
           {loading && (
             <CircularProgress
               size={15}

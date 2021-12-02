@@ -42,6 +42,13 @@ interface SceneListProps {
   taskId: string;
 }
 
+const dccButtonsData: { dcc: string; disabled?: boolean }[] = [
+  { dcc: "blender", disabled: true },
+  { dcc: "houdini" },
+  { dcc: "nuke" },
+  { dcc: "maya" },
+];
+
 const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
   const [path, setPath] = useState<string>();
   const [scenes, setScenes] = useState<string[]>();
@@ -103,8 +110,13 @@ const SceneList = ({ taskId }: SceneListProps): JSX.Element => {
           }}
         >
           <Box sx={{ mr: 3 }}>
-            {["blender", "houdini", "nuke", "maya"].map((dcc) => (
-              <DCCIconButton key={dcc} taskId={taskId} dcc={dcc} />
+            {dccButtonsData.map((d) => (
+              <DCCIconButton
+                key={d.dcc}
+                taskId={taskId}
+                dcc={d.dcc}
+                disabled={d.disabled}
+              />
             ))}
           </Box>
         </div>
