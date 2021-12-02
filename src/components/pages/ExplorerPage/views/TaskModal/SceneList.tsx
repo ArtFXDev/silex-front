@@ -47,6 +47,7 @@ const dccButtonsData: { dcc: string; disabled?: boolean }[] = [
   { dcc: "houdini" },
   { dcc: "nuke" },
   { dcc: "maya" },
+  { dcc: "standalone" },
 ];
 
 const SceneList = ({ taskId }: SceneListProps): JSX.Element => {

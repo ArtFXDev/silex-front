@@ -1,5 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import {
   CircularProgress,
   IconButton,
@@ -41,7 +42,7 @@ const DCCIconButton = ({
     setAnchorEl(null);
   };
 
-  const onCreateNewScene = (dcc: string) => {
+  const onCreateNewScene = (dcc: string | undefined) => {
     launchScene(
       { taskId, dcc, projectName: (getCurrentProject() as Project).name },
       (response) => {
@@ -52,7 +53,7 @@ const DCCIconButton = ({
     );
   };
 
-  const onConform = (dcc: string) => {
+  const onConform = (dcc: string | undefined) => {
     launchAction(
       {
         action: "conform",
@@ -68,54 +69,64 @@ const DCCIconButton = ({
     );
   };
 
+  const menuActions = [
+    {
+      label: "New Scene",
+      icon: <AddIcon />,
+      onClick: () => {
+        if (!loading) {
+          setLoading(true);
+          onCreateNewScene(dcc);
+          uiSocket.once("dccConnect", () => setLoading(false));
+        }
+        handleClose();
+      },
+      notStandalone: true,
+    },
+    {
+      label: "Conform",
+      icon: <FileUploadIcon />,
+      onClick: () => {
+        onConform(dcc === "standalone" ? undefined : dcc);
+        handleClose();
+      },
+    },
+  ];
+
   return (
     <>
-      <Tooltip title={dcc} arrow placement="top">
-        <IconButton
-          key={dcc}
-          onClick={handleClick}
-          sx={{ mx: 0.5 }}
-          disabled={disabled}
-        >
-          <DCCLogo name={dcc} size={30} disabled={disabled} />
-          {loading && (
-            <CircularProgress
-              size={15}
-              color="info"
-              sx={{ position: "absolute", top: 0, right: 0 }}
-            />
-          )}
-        </IconButton>
+      <Tooltip title={disabled ? `coming soon...` : dcc} arrow placement="top">
+        <span>
+          <IconButton
+            onClick={handleClick}
+            sx={{ mx: 0.5 }}
+            disabled={disabled}
+          >
+            {dcc === "standalone" ? (
+              <MoreHorizIcon />
+            ) : (
+              <DCCLogo name={dcc} size={30} disabled={disabled} />
+            )}
+            {loading && (
+              <CircularProgress
+                size={15}
+                color="info"
+                sx={{ position: "absolute", top: 0, right: 0 }}
+              />
+            )}
+          </IconButton>
+        </span>
       </Tooltip>
 
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-        <MenuItem
-          onClick={() => {
-            if (!loading) {
-              setLoading(true);
-              onCreateNewScene(dcc);
-              uiSocket.once("dccConnect", () => setLoading(false));
-            }
-            handleClose();
-          }}
-        >
-          <ListItemIcon>
-            <AddIcon />
-          </ListItemIcon>
-          New scene
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            onConform(dcc);
-            handleClose();
-          }}
-        >
-          <ListItemIcon>
-            <FileUploadIcon />
-          </ListItemIcon>
-          Conform
-        </MenuItem>
+        {menuActions
+          .filter((a) => (dcc === "standalone" ? !a.notStandalone : true))
+          .map((menuAction, i) => (
+            <MenuItem key={i} onClick={menuAction.onClick}>
+              <ListItemIcon>{menuAction.icon}</ListItemIcon>
+              {menuAction.label}
+            </MenuItem>
+          ))}
       </Menu>
     </>
   );
