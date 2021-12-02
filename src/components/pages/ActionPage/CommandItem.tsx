@@ -85,7 +85,7 @@ const CommandItem = ({ command, disabled }: CommandItemProps): JSX.Element => {
       </Paper>
 
       {command.logs.length > 0 && (
-        <Collapse in={openLogs || openLogsBasedOnStatus}>
+        <Collapse in={openLogs}>
           <Logs
             logs={command.logs}
             regexp={
