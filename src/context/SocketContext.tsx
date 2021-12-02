@@ -82,7 +82,10 @@ export const ProvideSocket = ({
   const onDCCConnect = useCallback<UIOnServerEvents["dccConnect"]>(
     (response) => {
       const { context } = response.data;
-      setDCCClients([...dccClients, context]);
+
+      if (!dccClients.some((c) => c.pid === context.pid)) {
+        setDCCClients([...dccClients, context]);
+      }
 
       // Only display a notif when it's a real dcc (not standalone)
       if (context.dcc) {

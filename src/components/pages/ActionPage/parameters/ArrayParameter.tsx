@@ -1,5 +1,5 @@
 import { Box, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrayParameter as ArrayParameterType } from "types/action/parameters";
 
 interface ArrayParameterProps {
@@ -15,9 +15,12 @@ const ArrayParameter = ({
   parameter,
   onChange,
 }: ArrayParameterProps): JSX.Element => {
-  const [values, setValues] = useState<number[]>(
-    parameter.value || new Array(parameter.type.size).fill(0)
-  );
+  const [values, setValues] = useState<number[]>([]);
+
+  // Update state when the parameter value from action changes
+  useEffect(() => {
+    setValues(parameter.value || new Array(parameter.type.size).fill(0));
+  }, [parameter]);
 
   return (
     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.8 }}>

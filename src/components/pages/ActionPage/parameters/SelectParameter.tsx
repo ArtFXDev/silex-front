@@ -5,7 +5,7 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SelectParameter as SelectParameterType } from "types/action/parameters";
 
 interface SelectParameterProps {
@@ -18,6 +18,12 @@ const SelectParameter = ({
   onChange,
 }: SelectParameterProps): JSX.Element => {
   const [value, setValue] = useState<string | null>(parameter.value);
+
+  // Update state when the parameter value from action changes
+  useEffect(() => {
+    setValue(parameter.value);
+  }, [parameter]);
+
   const error = parameter.value === null;
 
   return (

@@ -3,7 +3,7 @@ import { Box, Drawer, Grid, IconButton, Link, Typography } from "@mui/material";
 import SilexLogo from "assets/images/silex_logo.png";
 import ProdBadge from "components/common/badges/ProdBadge";
 import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
-import { useAuth } from "context";
+import { useAction, useAuth } from "context";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
 /**
@@ -27,6 +27,7 @@ interface MenuProps {
 const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
   const location = useLocation();
   const auth = useAuth();
+  const { actions } = useAction();
 
   return (
     <Drawer anchor="left" elevation={2} open={open} onClose={closeMenu}>
@@ -77,7 +78,9 @@ const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
                   }
                   onClick={closeMenu}
                 >
-                  {link.text}
+                  {link.text === "Actions"
+                    ? `Actions (${Object.keys(actions).length})`
+                    : link.text}
                 </Link>
               </Grid>
             ))}

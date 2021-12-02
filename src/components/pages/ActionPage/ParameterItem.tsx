@@ -2,17 +2,25 @@ import { Box, ListItem, Slider, Switch, Typography } from "@mui/material";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import {
   ArrayParameter as ArrayParameterType,
+  FrameSetParameter as FrameSetParameterType,
   MultipleSelectParameter as MultipleSelectParameterType,
   Parameter,
   ParameterInputType,
+  PathParameter as PathParameterType,
+  RadioSelectParameter as RadioSelectParameterType,
   SelectParameter as SelectParameterType,
+  TextParameter as TextParameterType,
 } from "types/action/parameters";
 
 import ArrayParameter from "./parameters/ArrayParameter";
+import FrameSetParameter from "./parameters/FrameSetParameter";
 import GenericInputParameter from "./parameters/GenericInputParameter";
 import MultipleSelectParameter from "./parameters/MultipleSelectParameter";
+import PathParameter from "./parameters/PathParameter";
+import MultipleRadioSelectParameter from "./parameters/RadioSelectParameter";
 import SelectParameter from "./parameters/SelectParameter";
 import TaskParameter from "./parameters/TaskParameter/TaskParameter";
+import TextParameter from "./parameters/TextParameter";
 
 interface ParameterItemProps {
   parameter: Parameter;
@@ -29,10 +37,13 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
     switch (type.name) {
       case "int":
       case "str":
-      case "Path":
         return (
           <GenericInputParameter parameter={parameter as ParameterInputType} />
         );
+
+      case "Path":
+        return <PathParameter parameter={parameter as PathParameterType} />;
+
       case "bool":
         return (
           <Switch
@@ -75,6 +86,12 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
             onChange={(newValues) => (parameter.value = newValues)}
           />
         );
+      case "radio_select":
+        return (
+          <MultipleRadioSelectParameter
+            parameter={parameter as RadioSelectParameterType}
+          />
+        );
       case "int_array":
         return (
           <ArrayParameter
@@ -82,8 +99,14 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
             onChange={(newValues) => (parameter.value = newValues)}
           />
         );
+      case "text":
+        return <TextParameter parameter={parameter as TextParameterType} />;
+      case "FrameSet":
+        return (
+          <FrameSetParameter parameter={parameter as FrameSetParameterType} />
+        );
       default:
-        return <div>Unknown parameter type</div>;
+        return <div>Unknown parameter type: {JSON.stringify(type)}</div>;
     }
   };
 

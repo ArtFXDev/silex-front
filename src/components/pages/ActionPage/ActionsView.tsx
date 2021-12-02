@@ -4,6 +4,7 @@ import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { useAction } from "context";
 import { useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
+import { getLastStepStatusColor } from "utils/action";
 
 import ActionItem from "./ActionItem";
 
@@ -37,30 +38,36 @@ const ActionsView = (): JSX.Element => {
           variant="scrollable"
           scrollButtons="auto"
         >
-          {Object.keys(actions).map((uuid) => (
-            <Tab
-              key={uuid}
-              label={actions[uuid].name}
-              value={uuid}
-              icon={
-                actionStatuses[uuid] ? (
-                  <FlagIcon />
-                ) : (
-                  <div style={{ marginLeft: "10px" }}>
-                    <DCCLogo
-                      name={actions[uuid].context_metadata.dcc}
-                      size={20}
-                      disabled={!(uuid === routeMatch.params.uuid)}
-                    />
-                  </div>
-                )
-              }
-              iconPosition="end"
-              sx={{
-                "&.MuiTab-root": { minHeight: "0px !important" },
-              }}
-            />
-          ))}
+          {Object.keys(actions).map((uuid) => {
+            const actionColor = getLastStepStatusColor(actions[uuid]);
+
+            return (
+              <Tab
+                key={uuid}
+                label={actions[uuid].name}
+                value={uuid}
+                icon={
+                  actionStatuses[uuid] ? (
+                    <FlagIcon sx={{ color: actionColor }} />
+                  ) : (
+                    <div style={{ marginLeft: "10px" }}>
+                      <DCCLogo
+                        name={actions[uuid].context_metadata.dcc}
+                        size={20}
+                        disabled={!(uuid === routeMatch.params.uuid)}
+                      />
+                    </div>
+                  )
+                }
+                iconPosition="end"
+                sx={{
+                  "&.MuiTab-root": {
+                    minHeight: "0px !important",
+                  },
+                }}
+              />
+            );
+          })}
         </Tabs>
       </Box>
 
