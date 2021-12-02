@@ -7,6 +7,7 @@ import {
   Parameter,
   ParameterInputType,
   PathParameter as PathParameterType,
+  RadioSelectParameter as RadioSelectParameterType,
   SelectParameter as SelectParameterType,
   TextParameter as TextParameterType,
 } from "types/action/parameters";
@@ -16,6 +17,7 @@ import FrameSetParameter from "./parameters/FrameSetParameter";
 import GenericInputParameter from "./parameters/GenericInputParameter";
 import MultipleSelectParameter from "./parameters/MultipleSelectParameter";
 import PathParameter from "./parameters/PathParameter";
+import MultipleRadioSelectParameter from "./parameters/RadioSelectParameter";
 import SelectParameter from "./parameters/SelectParameter";
 import TaskParameter from "./parameters/TaskParameter/TaskParameter";
 import TextParameter from "./parameters/TextParameter";
@@ -84,6 +86,12 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
             onChange={(newValues) => (parameter.value = newValues)}
           />
         );
+      case "radio_select":
+        return (
+          <MultipleRadioSelectParameter
+            parameter={parameter as RadioSelectParameterType}
+          />
+        );
       case "int_array":
         return (
           <ArrayParameter
@@ -98,7 +106,7 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
           <FrameSetParameter parameter={parameter as FrameSetParameterType} />
         );
       default:
-        return <div>Unknown parameter type</div>;
+        return <div>Unknown parameter type: {JSON.stringify(type)}</div>;
     }
   };
 

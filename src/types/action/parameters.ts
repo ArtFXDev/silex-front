@@ -55,8 +55,19 @@ export interface TaskParameter extends BaseParameter {
 }
 
 export interface MultipleSelectParameter extends BaseParameter {
-  type: { name: "multiple_select"; options: { [label: string]: string } };
+  type: {
+    name: "multiple_select";
+    options: { [label: string]: string };
+  };
   value: string[] | null;
+}
+
+export interface RadioSelectParameter extends BaseParameter {
+  type: {
+    name: "radio_select";
+    options: { [label: string]: string };
+  };
+  value: string | null;
 }
 
 export interface ArrayParameter extends BaseParameter {
@@ -87,4 +98,5 @@ export type Parameter =
   | MultipleSelectParameter
   | ArrayParameter
   | TextParameter
-  | FrameSetParameter;
+  | FrameSetParameter
+  | RadioSelectParameter;
