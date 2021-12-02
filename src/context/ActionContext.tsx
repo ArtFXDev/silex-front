@@ -106,6 +106,7 @@ export const ProvideAction = ({
 
       // Merge the diff
       const mergedAction = merge(actions[uuid], actionDiff.data, {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         arrayMerge: (destinationArray, sourceArray, options) => sourceArray,
       });
 
