@@ -18,6 +18,10 @@ export declare global {
         channel: IPCReceiveChannel,
         callback: (data: T) => void
       ) => void;
+      removeListener: (
+        channel: IPCReceiveChannel,
+        fun: (data: any) => void
+      ) => void;
     };
   }
 }

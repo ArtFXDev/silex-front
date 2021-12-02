@@ -21,7 +21,7 @@ import CollapseError from "components/common/CollapseError/CollapseError";
 import Logs from "components/common/Logs/Logs";
 import { useBlade } from "context/BladeContext";
 import { useSnackbar } from "notistack";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { LogLine } from "types/action/action";
 import { RunningJob } from "types/tractor/blade";
 import { secondsToDhms } from "utils/date";
@@ -99,8 +99,8 @@ const KillJobsButton = ({
 
   const { enqueueSnackbar } = useSnackbar();
 
-  useEffect(() => {
-    window.electron.receive<{ channel: string }>("operationSuccess", (data) => {
+  const onOperationSuccess = useCallback(
+    (data: { channel: string }) => {
       if (data.channel === "killAllActiveTasksOnBlade") {
         setIsLoading(false);
         setSuccess(true);
@@ -108,17 +108,35 @@ const KillJobsButton = ({
           variant: "success",
         });
       }
-    });
+    },
+    [enqueueSnackbar]
+  );
+
+  const onOperationError = useCallback(
+    (data: { channel: string; error: unknown }) => {
+      if (data.channel === "killAllActiveTasksOnBlade") {
+        setError(data.error);
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    window.electron.receive<{ channel: string }>(
+      "operationSuccess",
+      onOperationSuccess
+    );
 
     window.electron.receive<{ channel: string; error: unknown }>(
       "operationError",
-      (data) => {
-        if (data.channel === "killAllActiveTasksOnBlade") {
-          setError(data.error);
-        }
-      }
+      onOperationError
     );
-  }, [enqueueSnackbar]);
+
+    return () => {
+      window.electron.removeListener("operationSuccess", onOperationSuccess);
+      window.electron.removeListener("operationError", onOperationError);
+    };
+  }, [enqueueSnackbar, onOperationError, onOperationSuccess]);
 
   const handleClick = () => {
     if (!isLoading && !success) {

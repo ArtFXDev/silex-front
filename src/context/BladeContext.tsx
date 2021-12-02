@@ -1,5 +1,5 @@
 import isElectron from "is-electron";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { BladeStatus } from "types/tractor/blade";
 
 export interface BladeContext {
@@ -20,13 +20,21 @@ interface ProvideBladeProps {
 export const ProvideBlade = ({ children }: ProvideBladeProps): JSX.Element => {
   const [bladeStatus, setBladeStatus] = useState<BladeStatus>();
 
+  const onBladeStatus = useCallback(
+    (data: BladeStatus) => setBladeStatus(data),
+    []
+  );
+
   useEffect(() => {
     if (isElectron()) {
-      window.electron.receive<BladeStatus>("bladeStatusUpdate", (data) => {
-        setBladeStatus(data);
-      });
+      window.electron.receive<BladeStatus>("bladeStatusUpdate", onBladeStatus);
     }
-  }, []);
+
+    return () => {
+      if (isElectron())
+        window.electron.removeListener("bladeStatusUpdate", onBladeStatus);
+    };
+  }, [onBladeStatus]);
 
   return (
     <BladeContext.Provider
