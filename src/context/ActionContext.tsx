@@ -105,7 +105,9 @@ export const ProvideAction = ({
       const { uuid } = actionDiff.data;
 
       // Merge the diff
-      const mergedAction = merge(actions[uuid], actionDiff.data);
+      const mergedAction = merge(actions[uuid], actionDiff.data, {
+        arrayMerge: (destinationArray, sourceArray, options) => sourceArray,
+      });
 
       // Update the state
       actions[uuid] = mergedAction;
