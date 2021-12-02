@@ -13,7 +13,10 @@ import { useAction, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { Action } from "types/action/action";
 import { Status } from "types/action/status";
-import { someStepsAreWaitingForInput } from "utils/action";
+import {
+  formatContextToString,
+  someStepsAreWaitingForInput,
+} from "utils/action";
 import { capitalize } from "utils/string";
 
 import StepItem from "./StepItem";
@@ -66,27 +69,39 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
 
   return (
     <Box sx={{ maxWidth: 800 }}>
-      <Box sx={{ mb: 3, display: "flex", alignItems: "center" }}>
-        <div>
-          <Typography
-            color="text.disabled"
-            variant="h5"
-            sx={{ display: "inline-block", mr: 2 }}
-            display="inline-block"
-          >
-            Action:
-          </Typography>
+      <Box sx={{ mb: 3 }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <div>
+            <Typography
+              color="text.disabled"
+              variant="h5"
+              sx={{ display: "inline-block", mr: 2 }}
+              display="inline-block"
+            >
+              Action:
+            </Typography>
 
-          <Typography variant="h4" display="inline-block" sx={{ mr: 3 }}>
-            {capitalize(action.label)}
-          </Typography>
-        </div>
+            <Typography variant="h4" display="inline-block" sx={{ mr: 3 }}>
+              {capitalize(action.label)}
+            </Typography>
+          </div>
 
-        <Tooltip title={finished ? "Clean" : "Cancel"} placement="top" arrow>
-          <IconButton sx={{ ml: "auto" }} onClick={handleClearAction}>
-            {finished ? <DeleteSweepIcon /> : <CancelIcon fontSize="medium" />}
-          </IconButton>
-        </Tooltip>
+          <Tooltip title={finished ? "Clean" : "Cancel"} placement="top" arrow>
+            <IconButton sx={{ ml: "auto" }} onClick={handleClearAction}>
+              {finished ? (
+                <DeleteSweepIcon />
+              ) : (
+                <CancelIcon fontSize="medium" />
+              )}
+            </IconButton>
+          </Tooltip>
+        </Box>
+
+        <Box sx={{ mt: 1 }}>
+          <Typography color="text.disabled" fontSize={14} sx={{ opacity: 0.4 }}>
+            ⤷ {formatContextToString(action.context_metadata)}
+          </Typography>
+        </Box>
       </Box>
 
       <List>

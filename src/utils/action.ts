@@ -1,4 +1,5 @@
 import { uiSocket } from "context/SocketContext";
+import { ActionContext } from "types/action/action";
 import { Action } from "types/action/action";
 import { Status } from "types/action/status";
 import {
@@ -57,4 +58,16 @@ export function getLastStepStatusColor(action: Action): string {
       .reverse()
       .find((a) => a.status !== Status.INITIALIZED)?.status
   );
+}
+
+export function formatContextToString(ctx: ActionContext): string {
+  const inContextValues = [
+    ctx.project,
+    ctx.sequence,
+    ctx.shot,
+    ctx.task_type,
+    ctx.task,
+  ].filter((v) => v);
+
+  return inContextValues.join("  /  ");
 }
