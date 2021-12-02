@@ -1,6 +1,5 @@
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
-import FlagIcon from "@mui/icons-material/Flag";
 import {
   Box,
   Button,
@@ -14,18 +13,10 @@ import { useAction, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { Action } from "types/action/action";
 import { Status } from "types/action/status";
-import { getStatusColor } from "utils/status";
+import { someStepsAreWaitingForInput } from "utils/action";
 import { capitalize } from "utils/string";
 
 import StepItem from "./StepItem";
-
-/**
- * Returns true if any of the steps of the action is waiting for user input
- */
-const someStepsAreWaitingForInput = (action: Action) =>
-  Object.values(action.steps).some(
-    (step) => step.status === Status.WAITING_FOR_RESPONSE
-  );
 
 interface ActionItemProps {
   uuid: Action["uuid"];
@@ -89,26 +80,6 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
           <Typography variant="h4" display="inline-block" sx={{ mr: 3 }}>
             {capitalize(action.label)}
           </Typography>
-
-          {finished && (
-            <Tooltip title="The action is finished" placement="top" arrow>
-              <Typography
-                fontSize={30}
-                sx={{ cursor: "default", display: "inline-block" }}
-              >
-                <FlagIcon
-                  sx={{
-                    // Get the color of the last step
-                    color: getStatusColor(
-                      Object.values(action.steps)
-                        .reverse()
-                        .find((a) => a.status !== Status.INITIALIZED)?.status
-                    ),
-                  }}
-                />
-              </Typography>
-            </Tooltip>
-          )}
         </div>
 
         <Tooltip title={finished ? "Clean" : "Cancel"} placement="top" arrow>
