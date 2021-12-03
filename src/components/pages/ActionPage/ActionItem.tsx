@@ -68,6 +68,8 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
     }
   };
 
+  const actionToSring = formatContextToString(action.context_metadata);
+
   return (
     <Box sx={{ maxWidth: 800 }}>
       <Box sx={{ mb: simplify ? 1 : 3 }}>
@@ -98,14 +100,14 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
           </Tooltip>
         </Box>
 
-        {!simplify && (
+        {!simplify && actionToSring && (
           <Box sx={{ mt: 1 }}>
             <Typography
               color="text.disabled"
               fontSize={14}
               sx={{ opacity: 0.4 }}
             >
-              ⤷ {formatContextToString(action.context_metadata)}
+              ⤷ {actionToSring}
             </Typography>
           </Box>
         )}

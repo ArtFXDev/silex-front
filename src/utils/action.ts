@@ -60,7 +60,7 @@ export function getLastStepStatusColor(action: Action): string {
   );
 }
 
-export function formatContextToString(ctx: ActionContext): string {
+export function formatContextToString(ctx: ActionContext): string | undefined {
   const inContextValues = [
     ctx.project,
     ctx.sequence,
@@ -69,5 +69,5 @@ export function formatContextToString(ctx: ActionContext): string {
     ctx.task,
   ].filter((v) => v);
 
-  return inContextValues.join("  /  ");
+  return inContextValues.length > 0 ? inContextValues.join("  /  ") : undefined;
 }
