@@ -11,11 +11,15 @@ const TextParameter = ({ parameter }: TextParameterProps): JSX.Element => {
       color={parameter.type.color ? `${parameter.type.color}.main` : ""}
     >
       {parameter.value &&
-        parameter.value
-          .split(/(\n)/g)
-          .map((token, i) =>
-            token === "\n" ? <br key={i} /> : <span key={i}>{token}</span>
-          )}
+        parameter.value.split(/(\n)/g).map((token, i) =>
+          token === "\n" ? (
+            <br key={i} />
+          ) : (
+            <span key={i} style={{ wordBreak: "break-all" }}>
+              {token}
+            </span>
+          )
+        )}
     </Typography>
   );
 };
