@@ -1,14 +1,18 @@
 import FlagIcon from "@mui/icons-material/Flag";
-import { Box, Tab, Tabs } from "@mui/material";
+import { Box, FormControlLabel, Switch, Tab, Tabs } from "@mui/material";
 import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { useAction } from "context";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { getLastStepStatusColor } from "utils/action";
 
 import ActionItem from "./ActionItem";
 
 const ActionsView = (): JSX.Element => {
+  const [simpleMode, setSimpleMode] = useState<boolean>(
+    window.localStorage.getItem("action-simple-mode") === "true"
+  );
+
   const routeMatch = useRouteMatch<{ uuid: string }>();
   const history = useHistory();
   const { actions, actionStatuses, clearAction, cleanActions } = useAction();
@@ -31,7 +35,9 @@ const ActionsView = (): JSX.Element => {
 
   return (
     <Box sx={{ maxWidth: 800 }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
+      <Box
+        sx={{ display: "flex", borderBottom: 1, borderColor: "divider", mb: 3 }}
+      >
         <Tabs
           value={routeMatch.params.uuid}
           onChange={handleTabChange}
@@ -63,15 +69,38 @@ const ActionsView = (): JSX.Element => {
                 sx={{
                   "&.MuiTab-root": {
                     minHeight: "0px !important",
+                    color:
+                      uuid === routeMatch.params.uuid
+                        ? actionColor
+                        : "text.disabled",
                   },
                 }}
               />
             );
           })}
         </Tabs>
+
+        <FormControlLabel
+          sx={{ ml: "auto", color: "text.disabled" }}
+          control={
+            <Switch
+              color="info"
+              size="small"
+              checked={simpleMode}
+              onChange={(e) => {
+                window.localStorage.setItem(
+                  "action-simple-mode",
+                  e.target.checked.toString()
+                );
+                setSimpleMode(e.target.checked);
+              }}
+            />
+          }
+          label="Simple mode"
+        />
       </Box>
 
-      <ActionItem uuid={routeMatch.params.uuid} />
+      <ActionItem uuid={routeMatch.params.uuid} simplify={simpleMode} />
     </Box>
   );
 };

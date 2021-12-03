@@ -24,9 +24,13 @@ import TextParameter from "./parameters/TextParameter";
 
 interface ParameterItemProps {
   parameter: Parameter;
+  simplify?: boolean;
 }
 
-const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
+const ParameterItem = ({
+  parameter,
+  simplify,
+}: ParameterItemProps): JSX.Element => {
   /**
    * Returns the apprioriate parameter component based on the type
    * For now the state handling part is not ideal since we modify the object directly
@@ -116,11 +120,16 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
         width: "100%",
         display: "flex",
         justifyContent: "space-between",
-        my: 2,
+        my: simplify ? 1 : 2,
         borderRadius: LIST_ITEM_BORDER_RADIUS,
       }}
     >
-      <Typography sx={{ width: "30%", mr: 4 }}>{parameter.label}</Typography>
+      <Typography
+        variant={simplify ? "subtitle2" : "body1"}
+        sx={{ width: "30%", mr: 4 }}
+      >
+        {parameter.label}
+      </Typography>
 
       <Box sx={{ width: "70%" }}>{inputComponent()}</Box>
     </ListItem>

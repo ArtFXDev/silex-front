@@ -20,6 +20,7 @@ import CommandItem from "./CommandItem";
 interface StepItemProps {
   step: Step;
   disabled?: boolean;
+  simplify?: boolean;
 }
 
 /**
@@ -34,7 +35,7 @@ const computeStepProgress = (step: Step) => {
   );
 };
 
-const StepItem = ({ step, disabled }: StepItemProps): JSX.Element => {
+const StepItem = ({ step, disabled, simplify }: StepItemProps): JSX.Element => {
   const [open, setOpen] = useState<boolean>(true);
 
   const stepProgress = computeStepProgress(step);
@@ -43,13 +44,22 @@ const StepItem = ({ step, disabled }: StepItemProps): JSX.Element => {
   const commands = Object.values(step.commands).filter((cmd) => !cmd.hide);
 
   return (
-    <Box sx={{ mb: 2 }}>
+    <Box sx={{ mb: simplify ? 0.1 : 0.5 }}>
       <Paper elevation={3}>
-        <ListItem onClick={() => setOpen(!open)} disabled={disabled}>
-          <ListItemIcon>{getStatusIcon(step.status, true)}</ListItemIcon>
+        <ListItem
+          sx={{ py: simplify ? 0.5 : 1 }}
+          onClick={() => setOpen(!open)}
+          disabled={disabled}
+        >
+          {!simplify && (
+            <ListItemIcon>{getStatusIcon(step.status, true)}</ListItemIcon>
+          )}
 
           <ListItemText>
-            <Typography variant="h6" sx={{ wordBreak: "break-word" }}>
+            <Typography
+              variant={simplify ? "subtitle2" : "h6"}
+              sx={{ wordBreak: "break-word" }}
+            >
               {step.label}
             </Typography>
           </ListItemText>
@@ -76,6 +86,7 @@ const StepItem = ({ step, disabled }: StepItemProps): JSX.Element => {
               key={command.uuid}
               command={command}
               disabled={disabled}
+              simplify={simplify}
             />
           ))}
         </List>

@@ -23,9 +23,10 @@ import StepItem from "./StepItem";
 
 interface ActionItemProps {
   uuid: Action["uuid"];
+  simplify?: boolean;
 }
 
-const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
+const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
   const { clearAction, actions, actionStatuses } = useAction();
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
@@ -69,7 +70,7 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
 
   return (
     <Box sx={{ maxWidth: 800 }}>
-      <Box sx={{ mb: 3 }}>
+      <Box sx={{ mb: simplify ? 1 : 3 }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <div>
             <Typography
@@ -97,19 +98,25 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
           </Tooltip>
         </Box>
 
-        <Box sx={{ mt: 1 }}>
-          <Typography color="text.disabled" fontSize={14} sx={{ opacity: 0.4 }}>
-            ⤷ {formatContextToString(action.context_metadata)}
-          </Typography>
-        </Box>
+        {!simplify && (
+          <Box sx={{ mt: 1 }}>
+            <Typography
+              color="text.disabled"
+              fontSize={14}
+              sx={{ opacity: 0.4 }}
+            >
+              ⤷ {formatContextToString(action.context_metadata)}
+            </Typography>
+          </Box>
+        )}
       </Box>
 
-      <List>
+      <List sx={{ mb: 2 }}>
         {Object.values(action.steps)
           .filter((s) => !s.hide)
           .sort((a, b) => a.index - b.index)
           .map((step) => (
-            <StepItem key={step.uuid} step={step} />
+            <StepItem key={step.uuid} step={step} simplify={simplify} />
           ))}
       </List>
 
