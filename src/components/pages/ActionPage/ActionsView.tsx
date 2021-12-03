@@ -96,7 +96,7 @@ const ActionsView = (): JSX.Element => {
               }}
             />
           }
-          label="Simple mode"
+          label="Simplify"
         />
       </Box>
 
