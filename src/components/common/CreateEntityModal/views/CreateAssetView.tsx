@@ -38,11 +38,13 @@ const ASSET_TASK_TYPES = gql`
 interface CreateAssetViewProps {
   defaultCategory?: string;
   onClose: () => void;
+  projectIdOverride?: string;
 }
 
 const CreateAssetView = ({
   defaultCategory,
   onClose,
+  projectIdOverride,
 }: CreateAssetViewProps): JSX.Element => {
   const [assetTypeId, setAssetTypeId] = useState<string>(defaultCategory || "");
   const [name, setName] = useState<string>("");
@@ -51,7 +53,9 @@ const CreateAssetView = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [autoCreateTasks, setAutoCreateTasks] = useState<boolean>(true);
 
-  const { projectId } = useRouteMatch<{ projectId: string }>().params;
+  const projectIdFromURL =
+    useRouteMatch<{ projectId: string }>().params.projectId;
+  const projectId = projectIdOverride || projectIdFromURL;
   const client = useApolloClient();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -105,7 +109,7 @@ const CreateAssetView = ({
           });
 
           // Refresh GraphQL cache to refetch assets
-          client.refetchQueries({ include: ["Assets"] });
+          client.refetchQueries({ include: "active" });
 
           // Close the window
           onClose();

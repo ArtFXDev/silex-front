@@ -14,15 +14,20 @@ import * as Zou from "utils/zou";
 
 interface CreateSequenceViewProps {
   onClose: () => void;
+  projectIdOverride?: string;
 }
 
 const CreateSequenceView = ({
   onClose,
+  projectIdOverride,
 }: CreateSequenceViewProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [newSequenceName, setNewSequenceName] = useState<string>("");
 
-  const { projectId } = useRouteMatch<{ projectId: string }>().params;
+  const projectIdFromURL =
+    useRouteMatch<{ projectId: string }>().params.projectId;
+  const projectId = projectIdOverride || projectIdFromURL;
+
   const { enqueueSnackbar } = useSnackbar();
   const client = useApolloClient();
 
@@ -34,7 +39,7 @@ const CreateSequenceView = ({
         });
 
         // Refresh GraphQL cache to refetch assets
-        client.refetchQueries({ include: ["SequencesAndShots"] });
+        client.refetchQueries({ include: "active" });
 
         // Close the window
         onClose();

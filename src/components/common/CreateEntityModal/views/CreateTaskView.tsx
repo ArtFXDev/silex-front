@@ -45,16 +45,20 @@ const ASSET_TASK_TYPES = gql`
 interface CreateTaskViewProps {
   targetEntity: Shot | Asset | Sequence;
   onClose: () => void;
+  projectIdOverride?: string;
 }
 
 const CreateTaskView = ({
   targetEntity,
   onClose,
+  projectIdOverride,
 }: CreateTaskViewProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedTaskIds, setSelectedTaskIds] = useState<string[]>([]);
 
-  const { projectId } = useRouteMatch<{ projectId: string }>().params;
+  const projectIdFromURL =
+    useRouteMatch<{ projectId: string }>().params.projectId;
+  const projectId = projectIdOverride || projectIdFromURL;
   const { enqueueSnackbar } = useSnackbar();
   const client = useApolloClient();
 
@@ -93,7 +97,7 @@ const CreateTaskView = ({
         );
 
         // Refresh GraphQL queries
-        client.refetchQueries({ include: ["AssetTasks", "ShotTasks"] });
+        client.refetchQueries({ include: "active" });
 
         onClose();
       })

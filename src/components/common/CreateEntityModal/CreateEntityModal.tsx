@@ -32,24 +32,33 @@ interface CreateEntityModalProps {
 
   /** Called when closing the modal */
   onClose: () => void;
+
+  /** Optional project id */
+  projectId?: string;
 }
 
 const getEntityCreationView = (
   entityType: PossibleEntity["type"],
   targetEntity: TargetEntity | undefined,
   defaultCategory: string | undefined,
-  onClose: () => void
+  onClose: () => void,
+  projectId: string | undefined
 ) => {
   switch (entityType) {
     case "Asset":
       return (
-        <CreateAssetView onClose={onClose} defaultCategory={defaultCategory} />
+        <CreateAssetView
+          onClose={onClose}
+          defaultCategory={defaultCategory}
+          projectIdOverride={projectId}
+        />
       );
     case "Task":
       return (
         <CreateTaskView
           onClose={onClose}
           targetEntity={targetEntity as TargetEntity}
+          projectIdOverride={projectId}
         />
       );
     case "Shot":
@@ -57,10 +66,13 @@ const getEntityCreationView = (
         <CreateShotView
           onClose={onClose}
           targetSequence={targetEntity as Sequence}
+          projectIdOverride={projectId}
         />
       );
     case "Sequence":
-      return <CreateSequenceView onClose={onClose} />;
+      return (
+        <CreateSequenceView onClose={onClose} projectIdOverride={projectId} />
+      );
     default:
       return null;
   }
@@ -71,6 +83,7 @@ const CreateEntityModal = ({
   entityType,
   defaultCategory,
   onClose,
+  projectId,
 }: CreateEntityModalProps): JSX.Element => {
   const [choosenEntityType, setChoosenEntityType] =
     useState<PossibleEntity["type"]>(entityType);
@@ -129,7 +142,8 @@ const CreateEntityModal = ({
             choosenEntityType,
             targetEntity,
             defaultCategory,
-            onClose
+            onClose,
+            projectId
           )}
         </Box>
       </DialogContent>

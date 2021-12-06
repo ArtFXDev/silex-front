@@ -16,8 +16,8 @@ const SEQUENCES_AND_SHOTS = gql`
       id
 
       sequences {
-        name
         id
+        name
 
         shots {
           id

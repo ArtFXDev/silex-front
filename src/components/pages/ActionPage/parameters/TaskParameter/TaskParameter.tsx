@@ -1,5 +1,7 @@
+import AddIcon from "@mui/icons-material/Add";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 import { Alert, IconButton, Typography } from "@mui/material";
+import CreateEntityModal from "components/common/CreateEntityModal/CreateEntityModal";
 import SearchTextField from "components/common/SearchTextField/SearchTextField";
 import { useAction } from "context";
 import { useState } from "react";
@@ -18,6 +20,7 @@ const TaskParameter = ({ onTaskSelect }: TaskParameterProps): JSX.Element => {
   const [taskView, setTaskView] = useState<boolean>();
   const [selectedEntity, setSelectedEntity] = useState<Shot | Asset>();
   const [selectedTaskId, setSelectedTaskId] = useState<TaskId>();
+  const [createEntityModal, setCreateEntityModal] = useState<boolean>(false);
 
   const routeMatch = useRouteMatch<{ uuid: string }>();
 
@@ -44,10 +47,22 @@ const TaskParameter = ({ onTaskSelect }: TaskParameterProps): JSX.Element => {
         sx={{ mr: 3, mb: 3 }}
       />
 
+      <IconButton
+        onClick={() => {
+          setCreateEntityModal(true);
+        }}
+      >
+        <AddIcon />
+      </IconButton>
+
       {taskView && selectedEntity ? (
         <div>
-          <div style={{ display: "flex" }}>
-            <Typography>{selectedEntity.name}</Typography>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Typography>
+              {selectedEntity.type === "Shot"
+                ? `${selectedEntity.sequence.name} - ${selectedEntity.name}`
+                : selectedEntity.name}
+            </Typography>
 
             <IconButton sx={{ ml: "auto" }} onClick={() => setTaskView(false)}>
               <KeyboardReturnIcon />
@@ -72,6 +87,15 @@ const TaskParameter = ({ onTaskSelect }: TaskParameterProps): JSX.Element => {
             setSelectedEntity(entity);
             setTaskView(true);
           }}
+        />
+      )}
+
+      {createEntityModal && (
+        <CreateEntityModal
+          onClose={() => setCreateEntityModal(false)}
+          entityType={taskView && selectedEntity ? "Task" : "Shot"}
+          projectId={action.context_metadata.project_id}
+          targetEntity={selectedEntity}
         />
       )}
     </div>

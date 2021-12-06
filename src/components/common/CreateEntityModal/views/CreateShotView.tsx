@@ -50,10 +50,12 @@ const SEQUENCES_SHOTS = gql`
 interface CreateShotViewProps {
   targetSequence: Sequence | undefined;
   onClose: () => void;
+  projectIdOverride?: string;
 }
 
 const CreateShotView = ({
   targetSequence,
+  projectIdOverride,
 }: CreateShotViewProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [newShotName, setNewShotName] = useState<string>();
@@ -62,7 +64,9 @@ const CreateShotView = ({
     targetSequence ? targetSequence.id : ""
   );
 
-  const { projectId } = useRouteMatch<{ projectId: string }>().params;
+  const projectIdFromURL =
+    useRouteMatch<{ projectId: string }>().params.projectId;
+  const projectId = projectIdOverride || projectIdFromURL;
   const { enqueueSnackbar } = useSnackbar();
   const client = useApolloClient();
 
@@ -124,7 +128,7 @@ const CreateShotView = ({
           if (autoCreateTasks) {
             return Promise.all(
               data.project.task_types
-                .filter((t) => !t.for_shots)
+                .filter((t) => t.for_shots)
                 .map((taskType) =>
                   Zou.createTask(
                     projectId,
@@ -143,7 +147,7 @@ const CreateShotView = ({
 
           // Refresh GraphQL cache to refetch assets
           client.refetchQueries({
-            include: ["SequencesAndShotsForProject", "SequencesAndShots"],
+            include: "active",
           });
         })
         .catch((err) => {

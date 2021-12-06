@@ -48,6 +48,7 @@ const TASK = gql`
       }
 
       taskType {
+        id
         name
         priority
       }
@@ -145,7 +146,9 @@ const TaskModal = (): JSX.Element => {
                       (!currentUserAssignedToTask
                         ? assignUserToTask(user?.id as string, data.task.id)
                         : clearAssignation(user?.id as string, data.task.id)
-                      ).then(() => client.refetchQueries({ include: [TASK] }));
+                      ).then(() =>
+                        client.refetchQueries({ include: "active" })
+                      );
                     }}
                   >
                     {!currentUserAssignedToTask ? (

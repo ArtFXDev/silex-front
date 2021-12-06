@@ -128,7 +128,7 @@ const EntityItem = ({
                   <div
                     style={{
                       display: "flex",
-                      justifyContent: "end",
+                      justifyContent: "flex-end",
                       alignItems: "center",
                       width: "60px",
                     }}
@@ -211,13 +211,9 @@ const EntityItem = ({
             Zou.deleteEntity(entity.type, entity.id, true)
               .then(() => {
                 client.refetchQueries({
-                  include: [
-                    "Assets",
-                    "SequencesAndShots",
-                    "ShotTasks",
-                    "AssetTasks",
-                  ],
+                  include: "active",
                 });
+
                 enqueueSnackbar(
                   `Deleted ${entity.type.toLowerCase()} ${getEntityName(
                     entity

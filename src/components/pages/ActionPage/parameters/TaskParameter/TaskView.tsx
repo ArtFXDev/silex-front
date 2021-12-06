@@ -17,6 +17,7 @@ const TASK_FIELDS = gql`
     type
 
     taskType {
+      id
       name
       priority
     }
@@ -25,7 +26,7 @@ const TASK_FIELDS = gql`
 
 const SHOT_TASKS = gql`
   ${TASK_FIELDS}
-  query ShotTasks($id: ID!) {
+  query Tasks($id: ID!) {
     shot(id: $id) {
       tasks {
         ...TaskFields
@@ -36,7 +37,7 @@ const SHOT_TASKS = gql`
 
 const ASSET_TASKS = gql`
   ${TASK_FIELDS}
-  query AssetTasks($id: ID!) {
+  query Tasks($id: ID!) {
     asset(id: $id) {
       tasks {
         ...TaskFields
@@ -81,7 +82,7 @@ const TasksView = ({
             .slice() // Copy list since sort mutates
             .sort((a, b) => a.taskType.priority - b.taskType.priority)
             .map((task, i) => (
-              <Fade key={task.id} in timeout={i * 200}>
+              <Fade key={task.id} in timeout={{ appear: 2000 * i, enter: 800 }}>
                 <Paper
                   elevation={4}
                   sx={{ my: 1, borderRadius: LIST_ITEM_BORDER_RADIUS }}
