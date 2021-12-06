@@ -7,14 +7,32 @@ import { fuzzyMatch } from "utils/string";
 
 import EntityCard from "./EntityCard";
 
+const TASK_FIELDS = gql`
+  fragment TaskFields on Task {
+    id
+    type
+
+    taskType {
+      id
+      name
+      priority
+    }
+  }
+`;
+
 const ASSETS_AND_SHOTS = gql`
-  query GetAssetsAndShots($id: ID!) {
+  ${TASK_FIELDS}
+  query AssetsAndShots($id: ID!) {
     project(id: $id) {
       assets {
         id
         name
         type
         preview_file_id
+
+        tasks {
+          ...TaskFields
+        }
       }
 
       sequences {
@@ -26,6 +44,14 @@ const ASSETS_AND_SHOTS = gql`
           name
           type
           preview_file_id
+
+          sequence {
+            name
+          }
+
+          tasks {
+            ...TaskFields
+          }
         }
       }
     }

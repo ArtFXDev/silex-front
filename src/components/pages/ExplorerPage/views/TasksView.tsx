@@ -1,6 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
-import { Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { IconButton, Typography } from "@mui/material";
+import CreateEntityModal from "components/common/CreateEntityModal/CreateEntityModal";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
+import { useState } from "react";
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import { Asset, Shot } from "types/entities";
 import { fuzzyMatch } from "utils/string";
@@ -11,6 +14,7 @@ import TaskModal from "./TaskModal/TaskModal";
 const TASK_FIELDS = gql`
   fragment TasksFields on Task {
     id
+    name
     type
 
     assignees {
@@ -20,6 +24,7 @@ const TASK_FIELDS = gql`
     }
 
     taskType {
+      id
       name
       priority
     }
@@ -38,8 +43,9 @@ const TASK_FIELDS = gql`
 
 const SHOT_TASKS = gql`
   ${TASK_FIELDS}
-  query getShotTasks($id: ID!) {
+  query TasksForAssetOrShot($id: ID!) {
     shot(id: $id) {
+      id
       name
       type
 
@@ -56,8 +62,9 @@ const SHOT_TASKS = gql`
 
 const ASSET_TASKS = gql`
   ${TASK_FIELDS}
-  query getAssetTasks($id: ID!) {
+  query TasksForAssetOrShot($id: ID!) {
     asset(id: $id) {
+      id
       name
       type
 
@@ -78,6 +85,8 @@ interface TasksViewProps {
 }
 
 const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
+  const [createTaskModal, setCreateTaskModal] = useState<boolean>(false);
+
   const routeMatch = useRouteMatch<{ category: string; entityId: string }>();
   const history = useHistory();
 
@@ -96,43 +105,54 @@ const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
     <QueryWrapper query={query}>
       {data && (
         <div>
-          <>
-            <Typography
-              variant="h6"
-              color="text.disabled"
-              display="inline-block"
-              sx={{
-                mr: 1,
-                transition: "all 0.2s ease",
-                cursor: "pointer",
-                ":hover": { color: "rgba(255, 255, 255, 0.8)" },
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div>
+              <Typography
+                variant="h6"
+                color="text.disabled"
+                display="inline-block"
+                sx={{
+                  verticalAlign: "text-top",
+                  mr: 1,
+                  transition: "all 0.2s ease",
+                  cursor: "pointer",
+                  ":hover": { color: "rgba(255, 255, 255, 0.8)" },
+                }}
+                onClick={() => history.goBack()}
+              >
+                {entity.type === "Shot"
+                  ? entity.sequence.name
+                  : entity.entity_type.name}
+              </Typography>
+
+              <Typography
+                variant="h6"
+                display="inline-block"
+                color="text.disabled"
+                mr={1}
+                style={{ verticalAlign: "text-top" }}
+              >
+                /
+              </Typography>
+            </div>
+
+            <h2
+              style={{
+                display: "inline-block",
+                marginBottom: 0,
+                marginTop: 0,
               }}
-              onClick={() => history.goBack()}
             >
-              {entity.type === "Shot"
-                ? entity.sequence.name
-                : entity.entity_type.name}
-            </Typography>
+              {entity.name}
+            </h2>
 
-            <Typography
-              variant="h6"
-              display="inline-block"
-              color="text.disabled"
-              mr={1}
+            <IconButton
+              sx={{ ml: 1.5 }}
+              onClick={() => setCreateTaskModal(true)}
             >
-              /
-            </Typography>
-          </>
-
-          <h2
-            style={{
-              marginBottom: 0,
-              marginTop: 0,
-              display: "inline-block",
-            }}
-          >
-            {entity.name}
-          </h2>
+              <AddIcon />
+            </IconButton>
+          </div>
 
           {entity.tasks.length > 0 ? (
             <EntitiesView
@@ -147,6 +167,14 @@ const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
             </Typography>
           )}
         </div>
+      )}
+
+      {createTaskModal && (
+        <CreateEntityModal
+          targetEntity={entity}
+          onClose={() => setCreateTaskModal(false)}
+          entityType="Task"
+        />
       )}
 
       <Switch>

@@ -26,7 +26,7 @@ const PageWrapper = ({
 
   return (
     <Fade in timeout={200}>
-      <Box p={6} sx={{ height: fullHeight ? "100%" : "" }}>
+      <Box p={6} sx={{ height: fullHeight ? "100vh" : "" }}>
         <div style={{ display: "flex", alignItems: "center" }}>
           {title && <Typography variant="h4">{title}</Typography>}
 
