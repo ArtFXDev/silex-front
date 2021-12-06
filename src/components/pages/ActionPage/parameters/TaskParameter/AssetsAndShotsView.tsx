@@ -8,7 +8,7 @@ import { fuzzyMatch } from "utils/string";
 import EntityCard from "./EntityCard";
 
 const ASSETS_AND_SHOTS = gql`
-  query GetAssetsAndShots($id: ID!) {
+  query AssetsAndShots($id: ID!) {
     project(id: $id) {
       assets {
         id

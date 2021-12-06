@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { ProjectId } from "types/entities";
+import { ProjectId, Task } from "types/entities";
 
 import { BaseEntity } from "./BaseEntity";
 import { Shot } from "./Shot";
@@ -15,5 +15,6 @@ export interface Sequence extends BaseEntity {
   project_id: ProjectId;
   type: "Sequence";
 
+  tasks: Task[];
   shots: Shot[];
 }

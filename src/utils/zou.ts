@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { Asset, Person, Project, Task } from "types/entities";
+import { Asset, Person, Project, Sequence, Shot, Task } from "types/entities";
 
 /**
  * Type of an axios response that returns a promise
@@ -181,6 +181,42 @@ export function createAsset(
   );
 }
 
-/*export function deleteAsset(assetId: string) {
-  
-}*/
+export function createShot(
+  projectId: string,
+  sequenceId: string,
+  name: string
+): PromiseResponse<Shot> {
+  return axios.post(
+    zouAPIURL(`data/projects/${projectId}/shots`),
+    { name, sequence_id: sequenceId },
+    { withCredentials: true }
+  );
+}
+
+export function createTask(
+  projectId: string,
+  taskTypeId: string,
+  category: (Shot | Asset | Sequence)["type"],
+  entityId: string
+): PromiseResponse<Task> {
+  return axios.post(
+    zouAPIURL(
+      `actions/projects/${projectId}/task-types/${taskTypeId}/${category.toLowerCase()}s/create-tasks?id=${entityId}`
+    ),
+    undefined,
+    { withCredentials: true }
+  );
+}
+
+export function deleteEntity(
+  category: (Shot | Task | Asset)["type"],
+  entityId: string,
+  force: boolean
+): Promise<Record<string, never>> {
+  return axios.delete(
+    zouAPIURL(
+      `data/${category.toLowerCase()}s/${entityId}?force=${force.toString()}`
+    ),
+    { withCredentials: true }
+  );
+}

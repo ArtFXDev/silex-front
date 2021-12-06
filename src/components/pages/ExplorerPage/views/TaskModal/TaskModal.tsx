@@ -33,7 +33,7 @@ import {
 import SceneList from "./SceneList";
 
 const TASK = gql`
-  query getTask($id: ID!) {
+  query Task($id: ID!) {
     task(id: $id) {
       id
       created_at
