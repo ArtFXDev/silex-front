@@ -13,6 +13,7 @@ import { useState } from "react";
 import { Asset, Sequence, Shot, Task } from "types/entities";
 
 import CreateAssetView from "./views/CreateAssetView";
+import CreateSequenceView from "./views/CreateSequenceView";
 import CreateShotView from "./views/CreateShotView";
 import CreateTaskView from "./views/CreateTaskView";
 
@@ -58,6 +59,8 @@ const getEntityCreationView = (
           targetSequence={targetEntity as Sequence}
         />
       );
+    case "Sequence":
+      return <CreateSequenceView onClose={onClose} />;
     default:
       return null;
   }

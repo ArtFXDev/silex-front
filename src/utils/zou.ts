@@ -193,6 +193,18 @@ export function createShot(
   );
 }
 
+export function createSequence(
+  projectId: string,
+  episodeId: string | null,
+  name: string
+): PromiseResponse<Sequence> {
+  return axios.post(
+    zouAPIURL(`data/projects/${projectId}/sequences`),
+    { name, episode_id: episodeId },
+    { withCredentials: true }
+  );
+}
+
 export function createTask(
   projectId: string,
   taskTypeId: string,
@@ -201,9 +213,9 @@ export function createTask(
 ): PromiseResponse<Task> {
   return axios.post(
     zouAPIURL(
-      `actions/projects/${projectId}/task-types/${taskTypeId}/${category.toLowerCase()}s/create-tasks?id=${entityId}`
+      `actions/projects/${projectId}/task-types/${taskTypeId}/${category.toLowerCase()}s/create-tasks`
     ),
-    undefined,
+    { shot: entityId, name: "toto" },
     { withCredentials: true }
   );
 }

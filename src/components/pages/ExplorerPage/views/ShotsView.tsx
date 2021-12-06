@@ -66,7 +66,7 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
 
             return (
               <div key={seq.id}>
-                {filteredShots.length !== 0 ? (
+                {(search.length === 0 ? true : filteredShots.length !== 0) ? (
                   <>
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <h2
@@ -91,15 +91,21 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
                       </IconButton>
                     </div>
 
-                    <EntitiesView
-                      entities={filteredShots}
-                      listView={listView}
-                    />
+                    {seq.shots.length > 0 ? (
+                      <EntitiesView
+                        entities={filteredShots}
+                        listView={listView}
+                      />
+                    ) : (
+                      <Typography color="text.disabled" mt={2}>
+                        No shots...
+                      </Typography>
+                    )}
+
                     {!isLast && <br />}
                   </>
                 ) : (
-                  search.length === 0 &&
-                  seq.shots.length !== 0 && (
+                  search.length === 0 && (
                     <>
                       <Typography color="text.disabled">No shots...</Typography>
                       {!isLast && <br />}

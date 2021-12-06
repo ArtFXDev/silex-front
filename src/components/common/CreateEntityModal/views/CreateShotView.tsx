@@ -26,6 +26,8 @@ import * as Zou from "utils/zou";
 const SEQUENCES_SHOTS = gql`
   query SequencesAndShotsForProject($id: ID!) {
     project(id: $id) {
+      id
+
       sequences {
         id
         name
@@ -96,11 +98,13 @@ const CreateShotView = ({
         .slice()
         .sort((a, b) => a.name.localeCompare(b.name));
 
-      const lastShotName = shots[shots.length - 1].name;
-      return (
-        lastShotName[0] +
-        (parseInt(lastShotName.slice(1)) + 10).toString().padStart(3, "0")
-      );
+      if (shots.length > 0) {
+        const lastShotName = shots[shots.length - 1].name;
+        return (
+          lastShotName[0] +
+          (parseInt(lastShotName.slice(1)) + 10).toString().padStart(3, "0")
+        );
+      }
     }
 
     return undefined;
@@ -151,6 +155,10 @@ const CreateShotView = ({
     }
   };
 
+  const currentSequence = data?.project.sequences.find(
+    (seq) => seq.id === selectedSequenceId
+  );
+
   return (
     <QueryWrapper query={query}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -177,27 +185,32 @@ const CreateShotView = ({
           </Grid>
 
           <Grid item xs={7}>
-            <Typography>Shots:</Typography>
-            <Stack
-              sx={{ maxHeight: 300, overflowX: "hidden", flexWrap: "wrap" }}
-              direction={{ xs: "column", sm: "row" }}
-            >
-              {data?.project.sequences
-                .find((seq) => seq.id === selectedSequenceId)
-                ?.shots.slice()
-                .sort((a, b) => a.name.localeCompare(b.name))
-                .map((shot) => (
-                  <Paper
-                    key={shot.id}
-                    elevation={2}
-                    sx={{ fontSize: 13, m: 0.4 }}
-                  >
-                    <ListItemButton sx={{ py: 0.5 }}>
-                      {shot.name}
-                    </ListItemButton>
-                  </Paper>
-                ))}
-            </Stack>
+            {currentSequence && currentSequence.shots.length > 0 ? (
+              <>
+                <Typography>Shots:</Typography>
+                <Stack
+                  sx={{ maxHeight: 300, overflowX: "hidden", flexWrap: "wrap" }}
+                  direction={{ xs: "column", sm: "row" }}
+                >
+                  {currentSequence?.shots
+                    .slice()
+                    .sort((a, b) => a.name.localeCompare(b.name))
+                    .map((shot) => (
+                      <Paper
+                        key={shot.id}
+                        elevation={2}
+                        sx={{ fontSize: 13, m: 0.4 }}
+                      >
+                        <ListItemButton sx={{ py: 0.5 }}>
+                          {shot.name}
+                        </ListItemButton>
+                      </Paper>
+                    ))}
+                </Stack>{" "}
+              </>
+            ) : (
+              <Typography color="text.disabled">No shots...</Typography>
+            )}
           </Grid>
         </Grid>
 
@@ -205,7 +218,7 @@ const CreateShotView = ({
           <Typography sx={{ mb: 1.5 }}>New shot name: </Typography>
           <TextField
             fullWidth
-            value={newShotName}
+            value={newShotName || ""}
             onChange={(e) => setNewShotName(e.target.value)}
           />
         </div>
