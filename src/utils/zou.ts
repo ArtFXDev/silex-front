@@ -44,7 +44,7 @@ export function getWithCredentials<T>(
  * @param id id of that preview
  */
 export function pictureThumbnailURL(
-  category: "preview-files" | "persons",
+  category: "preview-files" | "persons" | "projects",
   id: string,
   extension?: string
 ): string {
@@ -209,13 +209,14 @@ export function createTask(
   projectId: string,
   taskTypeId: string,
   category: (Shot | Asset | Sequence)["type"],
-  entityId: string
+  entityId: string,
+  name = "main"
 ): PromiseResponse<Task> {
   return axios.post(
     zouAPIURL(
-      `actions/projects/${projectId}/task-types/${taskTypeId}/${category.toLowerCase()}s/create-tasks`
+      `actions/projects/${projectId}/task-types/${taskTypeId}/${category.toLowerCase()}s/create-task`
     ),
-    { shot: entityId, name: "toto" },
+    { shot: entityId, name },
     { withCredentials: true }
   );
 }

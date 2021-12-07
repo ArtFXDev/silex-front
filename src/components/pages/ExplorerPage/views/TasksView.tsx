@@ -27,6 +27,7 @@ const TASK_FIELDS = gql`
       id
       name
       priority
+      color
     }
 
     taskStatus {

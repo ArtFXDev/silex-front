@@ -5,6 +5,8 @@ import { TaskStatus } from "types/entities";
 interface TaskStatusBadgeProps {
   taskStatus: TaskStatus;
   fontSize?: number;
+  small?: boolean;
+
   /** sx props passed to Typography */
   sx?: SxProps<Theme>;
 }
@@ -15,21 +17,24 @@ interface TaskStatusBadgeProps {
 const TaskStatusBadge = ({
   fontSize,
   taskStatus,
+  small,
   sx,
 }: TaskStatusBadgeProps): JSX.Element => {
+  const name = taskStatus.short_name.toUpperCase();
+
   return (
     <Typography
       fontSize={fontSize || 10}
       sx={{
         backgroundColor:
           taskStatus.color === "#f5f5f5" ? "text.disabled" : taskStatus.color,
-        borderRadius: 5,
+        borderRadius: small ? "50%" : 5,
         px: 1,
-        py: 0.5,
+        py: small ? 0.3 : 0.5,
         ...sx,
       }}
     >
-      {taskStatus.short_name.toUpperCase()}
+      {small ? name[0] : name}
     </Typography>
   );
 };
