@@ -71,3 +71,20 @@ export function formatContextToString(ctx: ActionContext): string | undefined {
 
   return inContextValues.length > 0 ? inContextValues.join("  /  ") : undefined;
 }
+
+/**
+ * Used to group calls to a certain function when for example modifying an input in the interface
+ * See: https://www.freecodecamp.org/news/javascript-debounce-example/
+ */
+export function debounce<Params extends unknown[]>(
+  func: (...args: Params) => unknown,
+  timeout: number
+): (...args: Params) => void {
+  let timer: NodeJS.Timeout;
+  return (...args: Params) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func(...args);
+    }, timeout);
+  };
+}
