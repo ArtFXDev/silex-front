@@ -3,12 +3,11 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
   Box,
   Button,
-  Chip,
   CircularProgress,
   Collapse,
   MenuItem,
   Select,
-  SelectChangeEvent,
+  TextField,
   Typography,
 } from "@mui/material";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
@@ -17,18 +16,6 @@ import { useState } from "react";
 import { useRouteMatch } from "react-router-dom";
 import { Asset, Sequence, Shot } from "types/entities";
 import * as Zou from "utils/zou";
-
-// Used for styling the Select input
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
 
 const ASSET_TASK_TYPES = gql`
   query TaskTypesForProject($id: ID!) {
@@ -54,7 +41,8 @@ const CreateTaskView = ({
   projectIdOverride,
 }: CreateTaskViewProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [selectedTaskIds, setSelectedTaskIds] = useState<string[]>([]);
+  const [selectedTaskTypeId, setSelectedTaskTypeId] = useState<string>("");
+  const [taskName, setTaskName] = useState<string>("main");
 
   const projectIdFromURL =
     useRouteMatch<{ projectId: string }>().params.projectId;
@@ -71,30 +59,28 @@ const CreateTaskView = ({
   });
   const { data } = query;
 
-  const handleSelect = (e: SelectChangeEvent<typeof selectedTaskIds>) => {
-    const value = e.target.value;
-    const newValues = typeof value === "string" ? value.split(",") : value;
-    setSelectedTaskIds(newValues);
-  };
+  const filteredTaskTypes = data?.project.task_types.filter((t) =>
+    targetEntity.type === "Shot" ? t.for_shots : !t.for_shots
+  );
+
+  if (data && filteredTaskTypes && selectedTaskTypeId.length === 0) {
+    setSelectedTaskTypeId(filteredTaskTypes[0].id);
+  }
 
   const onCreateTasks = () => {
     setIsLoading(true);
 
-    Promise.all(
-      selectedTaskIds.map((taskId) =>
-        Zou.createTask(projectId, taskId, targetEntity.type, targetEntity.id)
-      )
+    Zou.createTask(
+      projectId,
+      selectedTaskTypeId,
+      targetEntity.type,
+      targetEntity.id,
+      taskName
     )
       .then(() => {
-        enqueueSnackbar(
-          `Created tasks: ${data?.project.task_types
-            .filter((t) => selectedTaskIds.includes(t.id))
-            .map((t) => t.name)
-            .join(", ")}`,
-          {
-            variant: "success",
-          }
-        );
+        enqueueSnackbar(`Created task: ${selectedTaskTypeId}`, {
+          variant: "success",
+        });
 
         // Refresh GraphQL queries
         client.refetchQueries({ include: "active" });
@@ -109,47 +95,24 @@ const CreateTaskView = ({
       .finally(() => setIsLoading(false));
   };
 
-  const filteredTaskTypes = data?.project.task_types.filter(
-    (t) =>
-      (targetEntity.type === "Shot" ? t.for_shots : !t.for_shots) &&
-      !targetEntity.tasks.map((task) => task.taskType.id).includes(t.id)
-  );
-
   return (
     <QueryWrapper query={query}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         <div>
-          <Typography variant="h6" color="text.disabled" sx={{ mb: 1.5 }}>
-            {targetEntity.type}: {targetEntity.name}
-          </Typography>
-
-          {filteredTaskTypes && filteredTaskTypes.length > 0 ? (
+          {filteredTaskTypes && (
             <>
-              <Typography sx={{ mb: 1.5 }}>Select task(s): </Typography>
+              <Typography sx={{ mb: 1.5 }}>Select task type: </Typography>
 
               <Select
                 sx={{
-                  width: "100%",
+                  width: 150,
+                  height: 40,
                   borderRadius: 3,
-                  paddingTop: 0,
-                  fontSize: 15,
                 }}
-                color="info"
+                value={selectedTaskTypeId}
+                onChange={(e) => setSelectedTaskTypeId(e.target.value)}
+                color="success"
                 variant="outlined"
-                value={selectedTaskIds}
-                multiple
-                onChange={handleSelect}
-                MenuProps={MenuProps}
-                renderValue={(selected) => (
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((taskTypeId) => {
-                      const taskType = data?.project.task_types.find(
-                        (t) => t.id === taskTypeId
-                      ) as { id: string; name: string };
-                      return <Chip key={taskType.id} label={taskType.name} />;
-                    })}
-                  </Box>
-                )}
               >
                 {filteredTaskTypes.map((taskType) => (
                   <MenuItem key={taskType.id} value={taskType.id}>
@@ -158,11 +121,16 @@ const CreateTaskView = ({
                 ))}
               </Select>
             </>
-          ) : (
-            <Typography color="text.disabled">
-              No more tasks to add...
-            </Typography>
           )}
+        </div>
+
+        <div>
+          <Typography sx={{ mb: 1.5 }}>Subtask name: </Typography>
+          <TextField
+            fullWidth
+            value={taskName}
+            onChange={(e) => setTaskName(e.target.value)}
+          />
         </div>
 
         <Button

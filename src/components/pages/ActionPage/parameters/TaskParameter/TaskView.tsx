@@ -6,6 +6,7 @@ import {
   ListItemButton,
   ListItemText,
   Paper,
+  Typography,
 } from "@mui/material";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
@@ -15,6 +16,7 @@ const TASK_FIELDS = gql`
   fragment TaskFields on Task {
     id
     type
+    name
 
     taskType {
       id
@@ -93,10 +95,21 @@ const TasksView = ({
                       selected={task.id === selectedTaskId}
                       onClick={() => setSelectedTaskId(task.id)}
                     >
-                      <ListItemText
-                        primaryTypographyProps={{ fontSize: 15 }}
-                        primary={task.taskType.name}
-                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "baseline",
+                          marginRight: "auto",
+                        }}
+                      >
+                        <ListItemText
+                          primaryTypographyProps={{ fontSize: 15 }}
+                          primary={task.taskType.name}
+                        />
+                        <Typography color="text.disabled" fontSize={14} ml={1}>
+                          {task.name}
+                        </Typography>
+                      </div>
                     </ListItemButton>
                   </ListItem>
                 </Paper>
