@@ -1,4 +1,6 @@
 import { Box, ListItem, Slider, Switch, Typography } from "@mui/material";
+import { useAction } from "context";
+import { useRouteMatch } from "react-router-dom";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import {
   ArrayParameter as ArrayParameterType,
@@ -31,6 +33,9 @@ const ParameterItem = ({
   parameter,
   simplify,
 }: ParameterItemProps): JSX.Element => {
+  const actionUUID = useRouteMatch<{ uuid: string }>().params.uuid;
+  const { sendActionUpdate } = useAction();
+
   /**
    * Returns the apprioriate parameter component based on the type
    * For now the state handling part is not ideal since we modify the object directly
@@ -53,7 +58,10 @@ const ParameterItem = ({
           <Switch
             defaultChecked={parameter.value === true}
             color="info"
-            onChange={(e) => (parameter.value = e.target.checked)}
+            onChange={(e) => {
+              parameter.value = e.target.checked;
+              sendActionUpdate(actionUUID);
+            }}
           />
         );
       case "select":
