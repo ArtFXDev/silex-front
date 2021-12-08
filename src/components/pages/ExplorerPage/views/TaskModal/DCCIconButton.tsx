@@ -81,7 +81,7 @@ const DCCIconButton = ({
         }
         handleClose();
       },
-      notStandalone: true,
+      standalone: false,
     },
     {
       label: "Conform",
@@ -90,6 +90,7 @@ const DCCIconButton = ({
         onConform(dcc === "standalone" ? undefined : dcc);
         handleClose();
       },
+      standalone: true,
     },
   ];
 
@@ -120,7 +121,7 @@ const DCCIconButton = ({
 
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         {menuActions
-          .filter((a) => (dcc === "standalone" ? !a.notStandalone : true))
+          .filter((a) => (dcc === "standalone" ? a.standalone : !a.standalone))
           .map((menuAction, i) => (
             <MenuItem key={i} onClick={menuAction.onClick}>
               <ListItemIcon>{menuAction.icon}</ListItemIcon>
