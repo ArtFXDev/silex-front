@@ -202,7 +202,7 @@ const EntityItem = ({
                   <div
                     style={{
                       display: "flex",
-                      alignItems: "end",
+                      alignItems: "baseline",
                       marginRight: "auto",
                     }}
                   >
