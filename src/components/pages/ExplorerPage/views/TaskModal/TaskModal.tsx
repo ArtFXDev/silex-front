@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 import { PersonsAvatarGroup } from "components/common/avatar";
-import TaskStatusBadge from "components/common/badges/TaskStatusBadge";
+import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
 import LazyMedia from "components/utils/LazyMedia/LazyMedia";
 import { useAuth } from "context";
 import { forwardRef, useState } from "react";
@@ -36,6 +36,7 @@ const TASK = gql`
   query Task($id: ID!) {
     task(id: $id) {
       id
+      name
       created_at
       updated_at
       description
@@ -51,6 +52,7 @@ const TASK = gql`
         id
         name
         priority
+        color
       }
 
       taskStatus {
@@ -121,12 +123,28 @@ const TaskModal = (): JSX.Element => {
                 justifyContent: "space-between",
               }}
             >
-              <div>
-                <Typography color="text.disabled" component="span">
-                  Task:
-                </Typography>{" "}
-                <Typography variant="h6" component="span">
-                  {data.task.taskType.name}
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ display: "flex", alignItems: "baseline" }}>
+                  <Typography color="text.disabled">Task:</Typography>
+
+                  <Typography variant="h6" ml={1}>
+                    {data.task.taskType.name}
+                  </Typography>
+                </div>
+
+                <ColoredCircle
+                  size={22}
+                  color={data.task.taskType.color}
+                  marginLeft={10}
+                />
+
+                <Typography
+                  variant="h6"
+                  ml={1.5}
+                  component="span"
+                  color="text.disabled"
+                >
+                  {data.task.name}
                 </Typography>
               </div>
 
@@ -165,12 +183,6 @@ const TaskModal = (): JSX.Element => {
                   fontSize={20}
                   sx={{ mr: 2 }}
                   fallbackMessage="No assignees yet..."
-                />
-
-                <TaskStatusBadge
-                  taskStatus={data.task.taskStatus}
-                  sx={{ mr: 2 }}
-                  fontSize={15}
                 />
 
                 <IconButton onClick={onClose}>

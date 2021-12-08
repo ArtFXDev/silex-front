@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import { IconButton } from "@mui/material";
 import { PersonsAvatarGroup } from "components/common/avatar";
-import TaskStatusBadge from "components/common/badges/TaskStatusBadge";
+import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
 import LazyMedia from "components/utils/LazyMedia/LazyMedia";
 import { useSnackbar } from "notistack";
 import { useRef, useState } from "react";
@@ -52,12 +52,11 @@ const EntityItem = ({
   const client = useApolloClient();
   const { enqueueSnackbar } = useSnackbar();
 
-  const name = getEntityName(entity);
+  const entityName = getEntityName(entity);
 
   const handleActionMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     // Stop propagation of onClick event because buttons are overlaping
     event.stopPropagation();
-
     setAnchorEl(event.currentTarget);
   };
 
@@ -113,7 +112,21 @@ const EntityItem = ({
                 sx={{ borderRadius: LIST_ITEM_BORDER_RADIUS }}
                 disableRipple
               >
-                <ListItemText primary={name} />
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "baseline",
+                    marginRight: "auto",
+                  }}
+                >
+                  <ListItemText primary={entityName} />
+
+                  {entity.type === "Task" && (
+                    <Typography color="text.disabled" fontSize={14} ml={1}>
+                      {entity.name}
+                    </Typography>
+                  )}
+                </div>
 
                 {entity.type === "Task" && (
                   <PersonsAvatarGroup
@@ -130,13 +143,10 @@ const EntityItem = ({
                       display: "flex",
                       justifyContent: "flex-end",
                       alignItems: "center",
-                      width: "60px",
+                      width: "30px",
                     }}
                   >
-                    <TaskStatusBadge
-                      taskStatus={entity.taskStatus}
-                      sx={{ display: "inline-block" }}
-                    />
+                    <ColoredCircle size={18} color={entity.taskType.color} />
                   </div>
                 )}
 
@@ -179,17 +189,34 @@ const EntityItem = ({
                   />
                 </CardMedia>
 
-                <CardActions sx={{ py: 0, height: 40 }}>
-                  <Typography component="div" sx={{ marginRight: "auto" }}>
-                    {name}
-                  </Typography>
+                <CardActions
+                  sx={{
+                    py: 0,
+                    height: 40,
+                    borderTop:
+                      entity.type === "Task"
+                        ? `3px solid ${entity.taskType.color}`
+                        : "",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "baseline",
+                      marginRight: "auto",
+                    }}
+                  >
+                    <Typography component="div">{entityName}</Typography>
+
+                    {entity.type === "Task" && (
+                      <Typography color="text.disabled" fontSize={14} ml={1}>
+                        {entity.name}
+                      </Typography>
+                    )}
+                  </div>
 
                   {entity.type === "Shot" && entity.tasks.length > 0 && (
                     <ShotProgressBar shot={entity} />
-                  )}
-
-                  {entity.type === "Task" && (
-                    <TaskStatusBadge taskStatus={entity.taskStatus} />
                   )}
                 </CardActions>
               </Card>
