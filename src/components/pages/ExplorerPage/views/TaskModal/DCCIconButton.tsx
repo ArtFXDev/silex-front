@@ -1,8 +1,10 @@
-import AddIcon from "@mui/icons-material/Add";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import InputIcon from "@mui/icons-material/Input";
+import LaunchIcon from "@mui/icons-material/Launch";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import {
   CircularProgress,
+  Fade,
   IconButton,
   ListItemIcon,
   Menu,
@@ -29,6 +31,7 @@ const DCCIconButton = ({
 }: DCCIconButtonProps): JSX.Element => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [launchSceneSuccess, setLaunchSceneSuccess] = useState<boolean>(false);
 
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
@@ -71,13 +74,18 @@ const DCCIconButton = ({
 
   const menuActions = [
     {
-      label: "New Scene",
-      icon: <AddIcon />,
+      label: "Open",
+      icon: <LaunchIcon />,
       onClick: () => {
-        if (!loading) {
+        if (!loading && !launchSceneSuccess) {
           setLoading(true);
           onCreateNewScene(dcc);
-          uiSocket.once("dccConnect", () => setLoading(false));
+
+          uiSocket.once("dccConnect", () => {
+            setLoading(false);
+            setLaunchSceneSuccess(true);
+            setTimeout(() => setLaunchSceneSuccess(false), 8000);
+          });
         }
         handleClose();
       },
@@ -85,7 +93,7 @@ const DCCIconButton = ({
     },
     {
       label: "Conform",
-      icon: <FileUploadIcon />,
+      icon: <InputIcon />,
       onClick: () => {
         onConform(dcc === "standalone" ? undefined : dcc);
         handleClose();
@@ -108,13 +116,22 @@ const DCCIconButton = ({
             ) : (
               <DCCLogo name={dcc} size={30} disabled={disabled} />
             )}
-            {loading && (
+
+            <Fade in={loading}>
               <CircularProgress
                 size={15}
                 color="info"
                 sx={{ position: "absolute", top: 0, right: 0 }}
               />
-            )}
+            </Fade>
+
+            <Fade in={launchSceneSuccess}>
+              <CheckCircleIcon
+                fontSize="small"
+                color="success"
+                sx={{ position: "absolute", top: 0, right: 0 }}
+              />
+            </Fade>
           </IconButton>
         </span>
       </Tooltip>

@@ -1,9 +1,7 @@
-export type ServerResponse = { status: number; msg: string };
-
-export type ServerResponseWithData<Data> = {
-  data: Data;
-  status: 200;
+export type ServerResponse<Data = undefined> = {
   msg: string;
+  data: Data;
+  status: number;
 };
 
 export type Listener<Request> = (response: { data: Request }) => void;

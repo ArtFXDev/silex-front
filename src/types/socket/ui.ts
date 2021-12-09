@@ -5,7 +5,7 @@ import { DCCContext } from "types/action/context";
 import {
   EmitWithCallback,
   Listener,
-  ServerResponseWithData,
+  ServerResponse,
   WithCallback,
 } from "./events";
 
@@ -22,8 +22,28 @@ export type LaunchActionParameters = SilexBaseParameters & {
 
 export type LaunchSceneParameters = SilexBaseParameters & {
   scene?: string;
-  path?: string;
 };
+
+export type FileOrFolder = {
+  path: string;
+} & (
+  | {
+      isDirectory: true;
+      children: FileOrFolder[];
+    }
+  | { isDirectory: false }
+);
+
+export type FileData = {
+  name: string;
+  path: string;
+  mtime: string;
+};
+
+export type GetWorkingFilesForTaskResponse = ServerResponse<{
+  path: string;
+  files: FileData[];
+}>;
 
 export interface UIClientEmitEvents {
   /** Emit this to register the UI as a client */
@@ -31,17 +51,20 @@ export interface UIClientEmitEvents {
 
   /** Used to get the list of the connected dcc clients */
   getConnectedDccs: WithCallback<
-    ServerResponseWithData<{ [uuid: string]: DCCContext }>
+    ServerResponse<{ [uuid: string]: DCCContext }>
   >;
 
-  getRunningActions: WithCallback<
-    ServerResponseWithData<{ [uuid: string]: Action }>
-  >;
+  getRunningActions: WithCallback<ServerResponse<{ [uuid: string]: Action }>>;
   actionUpdate: EmitWithCallback<Action>;
 
   getWorkingFilesForTask: EmitWithCallback<
+    { taskId: string; searchExtensions: string[] },
+    GetWorkingFilesForTaskResponse
+  >;
+
+  getPublishedFilesForTask: EmitWithCallback<
     { taskId: string },
-    ServerResponseWithData<{ path: string; files: string[] }>
+    ServerResponse<{ publishStructure: FileOrFolder }>
   >;
 
   launchScene: EmitWithCallback<LaunchSceneParameters>;

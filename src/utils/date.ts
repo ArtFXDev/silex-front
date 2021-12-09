@@ -2,8 +2,10 @@
  * Format a datetime into a more human readable format
  * @param date parsable date string
  */
-export function formatDateTime(date: string): string {
-  return new Date(Date.parse(date)).toLocaleDateString("en-US", {
+export function formatDateTime(date: string | number): string {
+  return new Date(
+    typeof date === "string" ? Date.parse(date) : date
+  ).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     hour: "numeric",

@@ -31,6 +31,7 @@ const TASK_FIELDS = gql`
     }
 
     taskStatus {
+      id
       short_name
       color
     }
@@ -51,6 +52,7 @@ const SHOT_TASKS = gql`
       type
 
       sequence {
+        id
         name
       }
 
@@ -70,6 +72,7 @@ const ASSET_TASKS = gql`
       type
 
       entity_type {
+        id
         name
       }
 

@@ -30,6 +30,8 @@ const SHOT_TASKS = gql`
   ${TASK_FIELDS}
   query Tasks($id: ID!) {
     shot(id: $id) {
+      id
+
       tasks {
         ...TaskFields
       }
@@ -41,6 +43,8 @@ const ASSET_TASKS = gql`
   ${TASK_FIELDS}
   query Tasks($id: ID!) {
     asset(id: $id) {
+      id
+
       tasks {
         ...TaskFields
       }
