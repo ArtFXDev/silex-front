@@ -63,6 +63,7 @@ export function getLastStepStatusColor(action: Action): string {
 export function formatContextToString(ctx: ActionContext): string | undefined {
   const inContextValues = [
     ctx.project,
+    ctx.asset,
     ctx.sequence,
     ctx.shot,
     ctx.task_type,
