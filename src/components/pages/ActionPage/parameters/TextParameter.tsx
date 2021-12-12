@@ -15,7 +15,7 @@ const TextParameter = ({ parameter }: TextParameterProps): JSX.Element => {
           token === "\n" ? (
             <br key={i} />
           ) : (
-            <span key={i} style={{ wordBreak: "break-all" }}>
+            <span key={i} style={{ wordBreak: "normal" }}>
               {token}
             </span>
           )
