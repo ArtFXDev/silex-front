@@ -1,7 +1,5 @@
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import InputIcon from "@mui/icons-material/Input";
 import LaunchIcon from "@mui/icons-material/Launch";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import {
   CircularProgress,
   Fade,
@@ -16,7 +14,6 @@ import { useAuth, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { Project } from "types/entities";
-import { launchAction, launchScene } from "utils/action";
 
 interface DCCIconButtonProps {
   taskId: string;
@@ -46,26 +43,11 @@ const DCCIconButton = ({
   };
 
   const onCreateNewScene = (dcc: string | undefined) => {
-    launchScene(
+    uiSocket.emit(
+      "launchScene",
       { taskId, dcc, projectName: (getCurrentProject() as Project).name },
       (response) => {
-        enqueueSnackbar(`Creating new scene with ${dcc} (${response.msg})`, {
-          variant: "info",
-        });
-      }
-    );
-  };
-
-  const onConform = (dcc: string | undefined) => {
-    launchAction(
-      {
-        action: "conform",
-        taskId,
-        dcc,
-        projectName: (getCurrentProject() as Project).name,
-      },
-      (response) => {
-        enqueueSnackbar(`Launched conform action ${response.msg}`, {
+        enqueueSnackbar(`Opening a new scene with ${dcc} (${response.msg})`, {
           variant: "info",
         });
       }
@@ -91,15 +73,6 @@ const DCCIconButton = ({
       },
       standalone: false,
     },
-    {
-      label: "Conform",
-      icon: <InputIcon />,
-      onClick: () => {
-        onConform(dcc === "standalone" ? undefined : dcc);
-        handleClose();
-      },
-      standalone: true,
-    },
   ];
 
   return (
@@ -111,11 +84,7 @@ const DCCIconButton = ({
             sx={{ mx: 0.5 }}
             disabled={disabled}
           >
-            {dcc === "standalone" ? (
-              <MoreHorizIcon />
-            ) : (
-              <DCCLogo name={dcc} size={30} disabled={disabled} />
-            )}
+            <DCCLogo name={dcc} size={30} disabled={disabled} />
 
             <Fade in={loading}>
               <CircularProgress

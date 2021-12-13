@@ -49,7 +49,9 @@ export const ProvideSocket = ({
 
       // Then ask for the list of connected clients
       uiSocket.emit("getConnectedDccs", (response) => {
-        setDCCClients(Object.values(response.data));
+        if (response.data) {
+          setDCCClients(Object.values(response.data));
+        }
       });
 
       enqueueSnackbar(

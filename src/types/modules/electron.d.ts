@@ -3,7 +3,8 @@ type IPCSendChannel =
   | "getBladeStatus"
   | "setNimbyStatus"
   | "setNimbyAutoMode"
-  | "killAllActiveTasksOnBlade";
+  | "killAllActiveTasksOnBlade"
+  | "openFolderOrFile";
 
 type IPCReceiveChannel =
   | "bladeStatusUpdate"

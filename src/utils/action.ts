@@ -1,13 +1,6 @@
-import { uiSocket } from "context/SocketContext";
 import { ActionContext } from "types/action/action";
 import { Action } from "types/action/action";
 import { Status } from "types/action/status";
-import {
-  Acknowledgement,
-  LaunchActionParameters,
-  LaunchSceneParameters,
-  ServerResponse,
-} from "types/socket";
 
 import { getStatusColor } from "./status";
 
@@ -19,28 +12,6 @@ export function getCurrentMode(): "prod" | "beta" | "dev" {
   const isProd = !window.location.host.includes("preprod");
 
   return isDev ? "dev" : isProd ? "prod" : "beta";
-}
-
-/**
- * Launches an action by emiting the message to the socket server
- */
-export function launchAction(
-  data: LaunchActionParameters,
-  callback: Acknowledgement<ServerResponse>
-): void {
-  // We add the current mode for package resolving
-  uiSocket.emit("launchAction", { ...data, mode: getCurrentMode() }, callback);
-}
-
-/**
- * Launches a scene with a DCC
- */
-export function launchScene(
-  data: LaunchSceneParameters,
-  callback: Acknowledgement<ServerResponse>
-): void {
-  // We add the current mode for package resolving
-  uiSocket.emit("launchScene", { ...data, mode: getCurrentMode() }, callback);
 }
 
 /**

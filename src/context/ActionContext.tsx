@@ -74,12 +74,14 @@ export const ProvideAction = ({
    */
   const onConnect = useCallback(() => {
     uiSocket.emit("getRunningActions", (response) => {
-      Object.values(response.data).forEach((action) => {
-        actions[action.uuid] = action;
-        actionStatuses[action.uuid] = false;
-      });
+      if (response.data) {
+        Object.values(response.data).forEach((action) => {
+          actions[action.uuid] = action;
+          actionStatuses[action.uuid] = false;
+        });
 
-      forceUpdate();
+        forceUpdate();
+      }
     });
   }, [uiSocket]);
 

@@ -1,6 +1,6 @@
 export type ServerResponse<Data = undefined> = {
   msg: string;
-  data: Data;
+  data?: Data;
   status: number;
 };
 
