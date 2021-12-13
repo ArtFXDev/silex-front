@@ -233,3 +233,17 @@ export function deleteEntity(
     { withCredentials: true }
   );
 }
+
+export function buildWorkingFilePath(
+  taskId: string
+): PromiseResponse<{ path: string; name: string }> {
+  return axios.post(
+    zouAPIURL(`data/tasks/${taskId}/working-file-path`),
+    {
+      mode: "working",
+      name: "name",
+      revision: 0,
+    },
+    { withCredentials: true }
+  );
+}
