@@ -1,9 +1,8 @@
-import { Box, ListItem, Slider, Switch, Typography } from "@mui/material";
-import { useAction } from "context";
-import { useRouteMatch } from "react-router-dom";
+import { Box, ListItem, Slider, Typography } from "@mui/material";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import {
   ArrayParameter as ArrayParameterType,
+  BooleanParameter,
   FrameSetParameter as FrameSetParameterType,
   MultipleSelectParameter as MultipleSelectParameterType,
   Parameter,
@@ -21,6 +20,7 @@ import MultipleSelectParameter from "./parameters/MultipleSelectParameter";
 import PathParameter from "./parameters/PathParameter";
 import MultipleRadioSelectParameter from "./parameters/RadioSelectParameter";
 import SelectParameter from "./parameters/SelectParameter";
+import SwitchParameter from "./parameters/SwitchParameter";
 import TaskParameter from "./parameters/TaskParameter/TaskParameter";
 import TextParameter from "./parameters/TextParameter";
 
@@ -33,9 +33,6 @@ const ParameterItem = ({
   parameter,
   simplify,
 }: ParameterItemProps): JSX.Element => {
-  const actionUUID = useRouteMatch<{ uuid: string }>().params.uuid;
-  const { sendActionUpdate } = useAction();
-
   /**
    * Returns the apprioriate parameter component based on the type
    * For now the state handling part is not ideal since we modify the object directly
@@ -54,16 +51,8 @@ const ParameterItem = ({
         return <PathParameter parameter={parameter as PathParameterType} />;
 
       case "bool":
-        return (
-          <Switch
-            defaultChecked={parameter.value === true}
-            color="info"
-            onChange={(e) => {
-              parameter.value = e.target.checked;
-              sendActionUpdate(actionUUID);
-            }}
-          />
-        );
+        return <SwitchParameter parameter={parameter as BooleanParameter} />;
+
       case "select":
         return (
           <SelectParameter

@@ -10,6 +10,7 @@ export interface BaseParameter {
 
 export interface StringParameter extends BaseParameter {
   type: { name: "str" };
+  value: string | null;
 }
 
 export interface IntegerParameter extends BaseParameter {
