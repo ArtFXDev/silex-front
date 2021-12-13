@@ -38,5 +38,5 @@ export const entityURLAndExtension = (
 };
 
 export const getEntityName = (entity: Shot | Task | Asset): string => {
-  return entity.type === "Task" ? entity.taskType.name : entity.name;
+  return entity.type === "Task" ? `${entity.taskType.name}` : entity.name;
 };

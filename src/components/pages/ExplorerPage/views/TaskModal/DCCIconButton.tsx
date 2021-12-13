@@ -1,7 +1,8 @@
-import AddIcon from "@mui/icons-material/Add";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import LaunchIcon from "@mui/icons-material/Launch";
 import {
   CircularProgress,
+  Fade,
   IconButton,
   ListItemIcon,
   Menu,
@@ -13,16 +14,21 @@ import { useAuth, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { Project } from "types/entities";
-import { launchAction, launchScene } from "utils/action";
 
 interface DCCIconButtonProps {
   taskId: string;
   dcc: string;
+  disabled?: boolean;
 }
 
-const DCCIconButton = ({ dcc, taskId }: DCCIconButtonProps): JSX.Element => {
+const DCCIconButton = ({
+  dcc,
+  taskId,
+  disabled,
+}: DCCIconButtonProps): JSX.Element => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [launchSceneSuccess, setLaunchSceneSuccess] = useState<boolean>(false);
 
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
@@ -36,76 +42,78 @@ const DCCIconButton = ({ dcc, taskId }: DCCIconButtonProps): JSX.Element => {
     setAnchorEl(null);
   };
 
-  const onCreateNewScene = (dcc: string) => {
-    launchScene(
+  const onCreateNewScene = (dcc: string | undefined) => {
+    uiSocket.emit(
+      "launchScene",
       { taskId, dcc, projectName: (getCurrentProject() as Project).name },
       (response) => {
-        enqueueSnackbar(`Creating new scene with ${dcc} (${response.msg})`, {
+        enqueueSnackbar(`Opening a new scene with ${dcc} (${response.msg})`, {
           variant: "info",
         });
       }
     );
   };
 
-  const onConform = (dcc: string) => {
-    launchAction(
-      {
-        action: "conform",
-        taskId,
-        dcc,
-        projectName: (getCurrentProject() as Project).name,
+  const menuActions = [
+    {
+      label: "Open",
+      icon: <LaunchIcon />,
+      onClick: () => {
+        if (!loading && !launchSceneSuccess) {
+          setLoading(true);
+          onCreateNewScene(dcc);
+
+          uiSocket.once("dccConnect", () => {
+            setLoading(false);
+            setLaunchSceneSuccess(true);
+            setTimeout(() => setLaunchSceneSuccess(false), 8000);
+          });
+        }
+        handleClose();
       },
-      (response) => {
-        enqueueSnackbar(`Launched conform action ${response.msg}`, {
-          variant: "info",
-        });
-      }
-    );
-  };
+      standalone: false,
+    },
+  ];
 
   return (
     <>
-      <Tooltip title={dcc} arrow placement="top">
-        <IconButton key={dcc} onClick={handleClick} sx={{ mx: 0.5 }}>
-          <DCCLogo name={dcc} size={30} />
-          {loading && (
-            <CircularProgress
-              size={15}
-              color="info"
-              sx={{ position: "absolute", top: 0, right: 0 }}
-            />
-          )}
-        </IconButton>
+      <Tooltip title={disabled ? `coming soon...` : dcc} arrow placement="top">
+        <span>
+          <IconButton
+            onClick={handleClick}
+            sx={{ mx: 0.5 }}
+            disabled={disabled}
+          >
+            <DCCLogo name={dcc} size={30} disabled={disabled} />
+
+            <Fade in={loading}>
+              <CircularProgress
+                size={15}
+                color="info"
+                sx={{ position: "absolute", top: 0, right: 0 }}
+              />
+            </Fade>
+
+            <Fade in={launchSceneSuccess}>
+              <CheckCircleIcon
+                fontSize="small"
+                color="success"
+                sx={{ position: "absolute", top: 0, right: 0 }}
+              />
+            </Fade>
+          </IconButton>
+        </span>
       </Tooltip>
 
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-        <MenuItem
-          onClick={() => {
-            if (!loading) {
-              setLoading(true);
-              onCreateNewScene(dcc);
-              uiSocket.once("dccConnect", () => setLoading(false));
-            }
-            handleClose();
-          }}
-        >
-          <ListItemIcon>
-            <AddIcon />
-          </ListItemIcon>
-          New scene
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            onConform(dcc);
-            handleClose();
-          }}
-        >
-          <ListItemIcon>
-            <FileUploadIcon />
-          </ListItemIcon>
-          Conform
-        </MenuItem>
+        {menuActions
+          .filter((a) => (dcc === "standalone" ? a.standalone : !a.standalone))
+          .map((menuAction, i) => (
+            <MenuItem key={i} onClick={menuAction.onClick}>
+              <ListItemIcon>{menuAction.icon}</ListItemIcon>
+              {menuAction.label}
+            </MenuItem>
+          ))}
       </Menu>
     </>
   );

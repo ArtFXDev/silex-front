@@ -46,6 +46,7 @@ const LazyMedia = (props: LazyMediaProps): JSX.Element => {
           alt={props.alt}
           loading="lazy"
           style={{
+            display: "block",
             width: width,
             height: height,
           }}

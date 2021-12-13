@@ -1,6 +1,5 @@
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
-import FlagIcon from "@mui/icons-material/Flag";
 import {
   Box,
   Button,
@@ -14,24 +13,20 @@ import { useAction, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { Action } from "types/action/action";
 import { Status } from "types/action/status";
-import { getStatusColor } from "utils/status";
+import {
+  formatContextToString,
+  someStepsAreWaitingForInput,
+} from "utils/action";
 import { capitalize } from "utils/string";
 
 import StepItem from "./StepItem";
 
-/**
- * Returns true if any of the steps of the action is waiting for user input
- */
-const someStepsAreWaitingForInput = (action: Action) =>
-  Object.values(action.steps).some(
-    (step) => step.status === Status.WAITING_FOR_RESPONSE
-  );
-
 interface ActionItemProps {
   uuid: Action["uuid"];
+  simplify?: boolean;
 }
 
-const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
+const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
   const { clearAction, actions, actionStatuses } = useAction();
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
@@ -73,57 +68,57 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
     }
   };
 
+  const actionToSring = formatContextToString(action.context_metadata);
+
   return (
     <Box sx={{ maxWidth: 800 }}>
-      <Box sx={{ mb: 3, display: "flex", alignItems: "center" }}>
-        <div>
-          <Typography
-            color="text.disabled"
-            variant="h5"
-            sx={{ display: "inline-block", mr: 2 }}
-            display="inline-block"
-          >
-            Action:
-          </Typography>
+      <Box sx={{ mb: simplify ? 1 : 3 }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <div>
+            <Typography
+              color="text.disabled"
+              variant="h5"
+              sx={{ display: "inline-block", mr: 2 }}
+              display="inline-block"
+            >
+              Action:
+            </Typography>
 
-          <Typography variant="h4" display="inline-block" sx={{ mr: 3 }}>
-            {capitalize(action.name)}
-          </Typography>
+            <Typography variant="h4" display="inline-block" sx={{ mr: 3 }}>
+              {capitalize(action.label)}
+            </Typography>
+          </div>
 
-          {finished && (
-            <Tooltip title="The action is finished" placement="top" arrow>
-              <Typography
-                fontSize={30}
-                sx={{ cursor: "default", display: "inline-block" }}
-              >
-                <FlagIcon
-                  sx={{
-                    // Get the color of the last step
-                    color: getStatusColor(
-                      Object.values(action.steps)
-                        .reverse()
-                        .find((a) => a.status !== Status.INITIALIZED)?.status
-                    ),
-                  }}
-                />
-              </Typography>
-            </Tooltip>
-          )}
-        </div>
+          <Tooltip title={finished ? "Clean" : "Cancel"} placement="top" arrow>
+            <IconButton sx={{ ml: "auto" }} onClick={handleClearAction}>
+              {finished ? (
+                <DeleteSweepIcon />
+              ) : (
+                <CancelIcon fontSize="medium" />
+              )}
+            </IconButton>
+          </Tooltip>
+        </Box>
 
-        <Tooltip title={finished ? "Clean" : "Cancel"} placement="top" arrow>
-          <IconButton sx={{ ml: "auto" }} onClick={handleClearAction}>
-            {finished ? <DeleteSweepIcon /> : <CancelIcon fontSize="medium" />}
-          </IconButton>
-        </Tooltip>
+        {!simplify && actionToSring && (
+          <Box sx={{ mt: 1 }}>
+            <Typography
+              color="text.disabled"
+              fontSize={14}
+              sx={{ opacity: 0.4 }}
+            >
+              ⤷ {actionToSring}
+            </Typography>
+          </Box>
+        )}
       </Box>
 
-      <List>
+      <List sx={{ mb: 2 }}>
         {Object.values(action.steps)
           .filter((s) => !s.hide)
           .sort((a, b) => a.index - b.index)
           .map((step) => (
-            <StepItem key={step.uuid} step={step} />
+            <StepItem key={step.uuid} step={step} simplify={simplify} />
           ))}
       </List>
 
@@ -134,7 +129,7 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
           onClick={handleClickOnAction}
           disabled={finished}
         >
-          {action.name}
+          Continue
         </Button>
       </Fade>
     </Box>

@@ -3,7 +3,8 @@ type IPCSendChannel =
   | "getBladeStatus"
   | "setNimbyStatus"
   | "setNimbyAutoMode"
-  | "killAllActiveTasksOnBlade";
+  | "killAllActiveTasksOnBlade"
+  | "openFolderOrFile";
 
 type IPCReceiveChannel =
   | "bladeStatusUpdate"
@@ -17,6 +18,10 @@ export declare global {
       receive: <T>(
         channel: IPCReceiveChannel,
         callback: (data: T) => void
+      ) => void;
+      removeListener: (
+        channel: IPCReceiveChannel,
+        fun: (data: any) => void
       ) => void;
     };
   }

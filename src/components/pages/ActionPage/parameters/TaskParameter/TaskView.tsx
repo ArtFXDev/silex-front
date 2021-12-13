@@ -6,6 +6,7 @@ import {
   ListItemButton,
   ListItemText,
   Paper,
+  Typography,
 } from "@mui/material";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
@@ -15,8 +16,10 @@ const TASK_FIELDS = gql`
   fragment TaskFields on Task {
     id
     type
+    name
 
     taskType {
+      id
       name
       priority
     }
@@ -25,8 +28,10 @@ const TASK_FIELDS = gql`
 
 const SHOT_TASKS = gql`
   ${TASK_FIELDS}
-  query getShotTasks($id: ID!) {
+  query Tasks($id: ID!) {
     shot(id: $id) {
+      id
+
       tasks {
         ...TaskFields
       }
@@ -36,8 +41,10 @@ const SHOT_TASKS = gql`
 
 const ASSET_TASKS = gql`
   ${TASK_FIELDS}
-  query getAssetTasks($id: ID!) {
+  query Tasks($id: ID!) {
     asset(id: $id) {
+      id
+
       tasks {
         ...TaskFields
       }
@@ -81,7 +88,7 @@ const TasksView = ({
             .slice() // Copy list since sort mutates
             .sort((a, b) => a.taskType.priority - b.taskType.priority)
             .map((task, i) => (
-              <Fade key={task.id} in timeout={i * 200}>
+              <Fade key={task.id} in timeout={{ appear: 2000 * i, enter: 800 }}>
                 <Paper
                   elevation={4}
                   sx={{ my: 1, borderRadius: LIST_ITEM_BORDER_RADIUS }}
@@ -92,10 +99,21 @@ const TasksView = ({
                       selected={task.id === selectedTaskId}
                       onClick={() => setSelectedTaskId(task.id)}
                     >
-                      <ListItemText
-                        primaryTypographyProps={{ fontSize: 15 }}
-                        primary={task.taskType.name}
-                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "baseline",
+                          marginRight: "auto",
+                        }}
+                      >
+                        <ListItemText
+                          primaryTypographyProps={{ fontSize: 15 }}
+                          primary={task.taskType.name}
+                        />
+                        <Typography color="text.disabled" fontSize={14} ml={1}>
+                          {task.name}
+                        </Typography>
+                      </div>
                     </ListItemButton>
                   </ListItem>
                 </Paper>

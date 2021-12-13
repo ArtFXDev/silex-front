@@ -3,6 +3,7 @@ import merge from "deepmerge";
 import React, { useCallback, useContext, useEffect, useReducer } from "react";
 import { useHistory } from "react-router";
 import { Action } from "types/action/action";
+import { Status } from "types/action/status";
 import { UIOnServerEvents } from "types/socket";
 import { runIfInElectron } from "utils/electron";
 
@@ -18,6 +19,9 @@ export interface ActionContext {
 
   /** Clean all finished actions */
   cleanActions: () => void;
+
+  /** Send an action update when modifying a parameter */
+  sendActionUpdate: (uuid: string) => void;
 }
 
 export const ActionContext = React.createContext<ActionContext>(
@@ -37,6 +41,7 @@ const actionStatuses: ActionContext["actionStatuses"] = {};
 export const ProvideAction = ({
   children,
 }: ProvideActionProps): JSX.Element => {
+  // Hack to force the update when the actions change because the state is outside the component
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
 
@@ -69,12 +74,14 @@ export const ProvideAction = ({
    */
   const onConnect = useCallback(() => {
     uiSocket.emit("getRunningActions", (response) => {
-      Object.values(response.data).forEach((action) => {
-        actions[action.uuid] = action;
-        actionStatuses[action.uuid] = false;
-      });
+      if (response.data) {
+        Object.values(response.data).forEach((action) => {
+          actions[action.uuid] = action;
+          actionStatuses[action.uuid] = false;
+        });
 
-      forceUpdate();
+        forceUpdate();
+      }
     });
   }, [uiSocket]);
 
@@ -105,7 +112,10 @@ export const ProvideAction = ({
       const { uuid } = actionDiff.data;
 
       // Merge the diff
-      const mergedAction = merge(actions[uuid], actionDiff.data);
+      const mergedAction = merge(actions[uuid], actionDiff.data, {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        arrayMerge: (destinationArray, sourceArray, options) => sourceArray,
+      });
 
       // Update the state
       actions[uuid] = mergedAction;
@@ -118,15 +128,21 @@ export const ProvideAction = ({
           .flat()
           .sort((a, b) => a.status - b.status);
 
+        const allCommandsAreWaitingForResponse = !sortedCommands.some(
+          (cmd) => cmd.status !== Status.WAITING_FOR_RESPONSE
+        );
+
         // Get the last one
         const lastCommand = sortedCommands[sortedCommands.length - 1];
 
-        // Scroll to that specific id element
-        document.getElementById(`cmd-${lastCommand.uuid}`)?.scrollIntoView({
-          behavior: "smooth",
-          inline: "center",
-          block: "center",
-        });
+        if (!allCommandsAreWaitingForResponse) {
+          // Scroll to that specific id element
+          document.getElementById(`cmd-${lastCommand.uuid}`)?.scrollIntoView({
+            behavior: "smooth",
+            inline: "start",
+            block: "start",
+          });
+        }
       }
 
       forceUpdate();
@@ -167,6 +183,15 @@ export const ProvideAction = ({
     []
   );
 
+  const sendActionUpdate = (uuid: string) => {
+    if (actions[uuid]) {
+      // Send the whole action object to the socket server
+      uiSocket.emit("actionUpdate", actions[uuid], (data) => {
+        return data;
+      });
+    }
+  };
+
   useEffect(() => {
     uiSocket.on("connect", onConnect);
 
@@ -201,6 +226,7 @@ export const ProvideAction = ({
         actionStatuses,
         clearAction,
         cleanActions,
+        sendActionUpdate,
       }}
     >
       {children}

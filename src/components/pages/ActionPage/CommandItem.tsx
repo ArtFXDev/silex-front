@@ -24,21 +24,26 @@ import ParameterItem from "./ParameterItem";
 interface CommandItemProps {
   command: Command;
   disabled?: boolean;
+  simplify?: boolean;
 }
 
-const CommandItem = ({ command, disabled }: CommandItemProps): JSX.Element => {
+const CommandItem = ({
+  command,
+  disabled,
+  simplify,
+}: CommandItemProps): JSX.Element => {
   const [openLogs, setOpenLogs] = useState<boolean>();
 
   // Get parameters and delete hidden ones
   const parameters = Object.values(command.parameters).filter((p) => !p.hide);
 
-  // The logs are only opened when processing, error or invalid state
-  const openLogsBasedOnStatus =
-    openLogs === undefined &&
-    [Status.PROCESSING, Status.ERROR, Status.INVALID].includes(command.status);
+  const shouldOpenLogs =
+    openLogs ||
+    (openLogs === undefined &&
+      (command.status === Status.ERROR || command.status === Status.INVALID));
 
   return (
-    <Box sx={{ my: 2 }}>
+    <Box sx={{ my: simplify ? 1 : 2 }}>
       <Paper
         elevation={2}
         key={command.uuid}
@@ -50,15 +55,22 @@ const CommandItem = ({ command, disabled }: CommandItemProps): JSX.Element => {
           sx={{
             borderRadius: BORDER_RADIUS_TOP,
             backgroundColor: getStatusColor(command.status),
+            py: simplify ? 0.5 : 1,
           }}
           disabled={disabled}
           id={`cmd-${command.uuid}`}
         >
-          <ListItemIcon>{getStatusIcon(command.status)}</ListItemIcon>
+          {!simplify && (
+            <ListItemIcon>{getStatusIcon(command.status)}</ListItemIcon>
+          )}
 
-          <ListItemText>{command.label}</ListItemText>
+          <ListItemText
+            primaryTypographyProps={{ fontSize: simplify ? 13 : 16 }}
+          >
+            {command.label}
+          </ListItemText>
 
-          {command.tooltip && (
+          {!simplify && command.tooltip && (
             <Tooltip title={command.tooltip} arrow>
               <HelpOutlineIcon color="disabled" />
             </Tooltip>
@@ -69,15 +81,13 @@ const CommandItem = ({ command, disabled }: CommandItemProps): JSX.Element => {
               <IconButton
                 sx={{
                   transition: "all 0.2s ease",
-                  transform: `rotate(${
-                    openLogs || openLogsBasedOnStatus ? -90 : 0
-                  }deg)`,
+                  transform: `rotate(${shouldOpenLogs ? -90 : 0}deg)`,
+                  fontSize: "50px",
                 }}
-                onClick={() =>
-                  setOpenLogs(openLogsBasedOnStatus ? false : !openLogs)
-                }
+                onClick={() => setOpenLogs(!shouldOpenLogs)}
+                // size={simplify ? "small" : "medium"}
               >
-                <BugReportIcon />
+                <BugReportIcon style={{ fontSize: simplify ? 15 : 25 }} />
               </IconButton>
             </Tooltip>
           )}
@@ -85,7 +95,7 @@ const CommandItem = ({ command, disabled }: CommandItemProps): JSX.Element => {
       </Paper>
 
       {command.logs.length > 0 && (
-        <Collapse in={openLogs || openLogsBasedOnStatus}>
+        <Collapse in={shouldOpenLogs}>
           <Logs
             logs={command.logs}
             regexp={
@@ -100,10 +110,10 @@ const CommandItem = ({ command, disabled }: CommandItemProps): JSX.Element => {
           <Paper elevation={2} sx={{ borderRadius: BORDER_RADIUS_BOTTOM }}>
             <List sx={{ px: 3 }}>
               {parameters.map((parameter, i) => (
-                <>
-                  <ParameterItem parameter={parameter} key={i} />
+                <div key={i}>
+                  <ParameterItem parameter={parameter} simplify={simplify} />
                   {i !== parameters.length - 1 && <Divider />}
-                </>
+                </div>
               ))}
             </List>
           </Paper>

@@ -1,7 +1,7 @@
 import { Box, List } from "@mui/material";
 import { Asset, Shot, Task } from "types/entities";
 
-import EntityItem from "./EntityItem";
+import EntityItem from "./EntityItem/EntityItem";
 
 interface EntitiesViewProps {
   entities: (Shot | Task | Asset)[];
@@ -26,7 +26,7 @@ const EntitiesView = ({
       {listView ? (
         <List>{entitiesItems}</List>
       ) : (
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mt: 1 }}>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mt: 1.5 }}>
           {entitiesItems}
         </Box>
       )}

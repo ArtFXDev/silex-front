@@ -1,24 +1,41 @@
 import { Box, ListItem, Slider, Switch, Typography } from "@mui/material";
+import { useAction } from "context";
+import { useRouteMatch } from "react-router-dom";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import {
   ArrayParameter as ArrayParameterType,
+  FrameSetParameter as FrameSetParameterType,
   MultipleSelectParameter as MultipleSelectParameterType,
   Parameter,
   ParameterInputType,
+  PathParameter as PathParameterType,
+  RadioSelectParameter as RadioSelectParameterType,
   SelectParameter as SelectParameterType,
+  TextParameter as TextParameterType,
 } from "types/action/parameters";
 
 import ArrayParameter from "./parameters/ArrayParameter";
+import FrameSetParameter from "./parameters/FrameSetParameter";
 import GenericInputParameter from "./parameters/GenericInputParameter";
 import MultipleSelectParameter from "./parameters/MultipleSelectParameter";
+import PathParameter from "./parameters/PathParameter";
+import MultipleRadioSelectParameter from "./parameters/RadioSelectParameter";
 import SelectParameter from "./parameters/SelectParameter";
 import TaskParameter from "./parameters/TaskParameter/TaskParameter";
+import TextParameter from "./parameters/TextParameter";
 
 interface ParameterItemProps {
   parameter: Parameter;
+  simplify?: boolean;
 }
 
-const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
+const ParameterItem = ({
+  parameter,
+  simplify,
+}: ParameterItemProps): JSX.Element => {
+  const actionUUID = useRouteMatch<{ uuid: string }>().params.uuid;
+  const { sendActionUpdate } = useAction();
+
   /**
    * Returns the apprioriate parameter component based on the type
    * For now the state handling part is not ideal since we modify the object directly
@@ -29,16 +46,22 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
     switch (type.name) {
       case "int":
       case "str":
-      case "Path":
         return (
           <GenericInputParameter parameter={parameter as ParameterInputType} />
         );
+
+      case "Path":
+        return <PathParameter parameter={parameter as PathParameterType} />;
+
       case "bool":
         return (
           <Switch
             defaultChecked={parameter.value === true}
             color="info"
-            onChange={(e) => (parameter.value = e.target.checked)}
+            onChange={(e) => {
+              parameter.value = e.target.checked;
+              sendActionUpdate(actionUUID);
+            }}
           />
         );
       case "select":
@@ -75,6 +98,12 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
             onChange={(newValues) => (parameter.value = newValues)}
           />
         );
+      case "radio_select":
+        return (
+          <MultipleRadioSelectParameter
+            parameter={parameter as RadioSelectParameterType}
+          />
+        );
       case "int_array":
         return (
           <ArrayParameter
@@ -82,8 +111,14 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
             onChange={(newValues) => (parameter.value = newValues)}
           />
         );
+      case "text":
+        return <TextParameter parameter={parameter as TextParameterType} />;
+      case "FrameSet":
+        return (
+          <FrameSetParameter parameter={parameter as FrameSetParameterType} />
+        );
       default:
-        return <div>Unknown parameter type</div>;
+        return <div>Unknown parameter type: {JSON.stringify(type)}</div>;
     }
   };
 
@@ -93,13 +128,22 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
         width: "100%",
         display: "flex",
         justifyContent: "space-between",
-        my: 2,
+        my: simplify ? 1 : 2,
         borderRadius: LIST_ITEM_BORDER_RADIUS,
       }}
     >
-      <Typography sx={{ width: "30%", mr: 4 }}>{parameter.label}</Typography>
+      {!(parameter.type.name === "text") && (
+        <Typography
+          variant={simplify ? "subtitle2" : "body1"}
+          sx={{ width: "30%", mr: 4 }}
+        >
+          {parameter.label}
+        </Typography>
+      )}
 
-      <Box sx={{ width: "70%" }}>{inputComponent()}</Box>
+      <Box sx={{ width: parameter.type.name === "text" ? "100%" : "70%" }}>
+        {inputComponent()}
+      </Box>
     </ListItem>
   );
 };

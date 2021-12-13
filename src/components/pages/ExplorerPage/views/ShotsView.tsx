@@ -1,20 +1,23 @@
 import { gql, useQuery } from "@apollo/client";
-import { Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { IconButton, Typography } from "@mui/material";
+import CreateEntityModal from "components/common/CreateEntityModal/CreateEntityModal";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
+import { useState } from "react";
 import { useRouteMatch } from "react-router";
-import { Project } from "types/entities";
+import { Project, Sequence } from "types/entities";
 import { fuzzyMatch } from "utils/string";
 
 import EntitiesView from "./EntitiesView";
 
 const SEQUENCES_AND_SHOTS = gql`
-  query GetSequencesAndShots($id: ID!) {
+  query SequencesAndShots($id: ID!) {
     project(id: $id) {
       id
 
       sequences {
-        name
         id
+        name
 
         shots {
           id
@@ -23,7 +26,10 @@ const SEQUENCES_AND_SHOTS = gql`
           preview_file_id
 
           tasks {
+            id
+
             taskStatus {
+              id
               is_done
             }
           }
@@ -39,6 +45,8 @@ interface ShotsViewProps {
 }
 
 const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
+  const [createShotModal, setCreateShotModal] = useState<boolean>(false);
+  const [choosenSequence, setChoosenSequence] = useState<Sequence>();
   const routeMatch = useRouteMatch<{ projectId: string }>();
 
   const query = useQuery<{ project: Project }>(SEQUENCES_AND_SHOTS, {
@@ -61,21 +69,46 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
 
             return (
               <div key={seq.id}>
-                {filteredShots.length !== 0 ? (
+                {(search.length === 0 ? true : filteredShots.length !== 0) ? (
                   <>
-                    <h2 style={{ marginBottom: 0, marginTop: 0 }}>
-                      {seq.name}{" "}
-                      {seq.nb_frames && <h4>({seq.nb_frames} frames)</h4>}
-                    </h2>
-                    <EntitiesView
-                      entities={filteredShots}
-                      listView={listView}
-                    />
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <h2
+                        style={{
+                          display: "inline-block",
+                          marginBottom: 0,
+                          marginTop: 0,
+                        }}
+                      >
+                        {seq.name}{" "}
+                        {seq.nb_frames && <h4>({seq.nb_frames} frames)</h4>}
+                      </h2>
+
+                      <IconButton
+                        sx={{ ml: 1.5 }}
+                        onClick={() => {
+                          setCreateShotModal(true);
+                          setChoosenSequence(seq);
+                        }}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    </div>
+
+                    {seq.shots.length > 0 ? (
+                      <EntitiesView
+                        entities={filteredShots}
+                        listView={listView}
+                      />
+                    ) : (
+                      <Typography color="text.disabled" mt={2}>
+                        No shots...
+                      </Typography>
+                    )}
+
                     {!isLast && <br />}
                   </>
                 ) : (
-                  search.length === 0 &&
-                  seq.shots.length !== 0 && (
+                  search.length === 0 && (
                     <>
                       <Typography color="text.disabled">No shots...</Typography>
                       {!isLast && <br />}
@@ -89,6 +122,14 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
         <Typography color="text.disabled">
           The project doesn{"'"}t contain any sequences or shots...
         </Typography>
+      )}
+
+      {createShotModal && (
+        <CreateEntityModal
+          onClose={() => setCreateShotModal(false)}
+          targetEntity={choosenSequence}
+          entityType="Shot"
+        />
       )}
     </QueryWrapper>
   );

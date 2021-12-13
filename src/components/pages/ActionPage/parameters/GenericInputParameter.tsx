@@ -1,14 +1,6 @@
-import { Alert, Input } from "@mui/material";
-import isElectron from "is-electron";
+import { Input } from "@mui/material";
+import { useEffect, useState } from "react";
 import { ParameterInputType } from "types/action/parameters";
-
-/**
- * Extends the interface in case we are in Electron
- * and the path attribute is given
- */
-interface FileWithPath extends File {
-  readonly path: string;
-}
 
 /**
  * Maps python type to input type
@@ -21,8 +13,6 @@ const pythonTypeToInputType = (
       return "number";
     case "str":
       return "text";
-    case "Path":
-      return "file";
     default:
       return "text";
   }
@@ -35,31 +25,22 @@ interface GenericInputParameterProps {
 const GenericInputParameter = ({
   parameter,
 }: GenericInputParameterProps): JSX.Element => {
-  if (!isElectron() && parameter.type.name === "Path") {
-    return (
-      <Alert variant="outlined" color="warning">
-        You are not viewing this inside Electron, the Path input is not going to
-        work
-      </Alert>
-    );
-  }
+  const [value, setValue] = useState<ParameterInputType["value"]>(
+    parameter.value
+  );
+
+  // Update state when the parameter value from action changes
+  useEffect(() => {
+    setValue(parameter.value);
+  }, [parameter]);
 
   return (
     <Input
       type={pythonTypeToInputType(parameter.type.name)}
-      placeholder={parameter.value?.toString()}
+      value={value}
       onChange={(e) => {
-        const targetAsInput = e.target as HTMLInputElement;
-
-        if (parameter.type.name === "Path" && targetAsInput.files) {
-          const files = targetAsInput.files;
-
-          if (files.length > 0) {
-            parameter.value = (files[0] as FileWithPath).path;
-          }
-        } else {
-          parameter.value = e.target.value;
-        }
+        setValue(e.target.value);
+        parameter.value = e.target.value;
       }}
       color="info"
     />

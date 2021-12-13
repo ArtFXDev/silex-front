@@ -39,6 +39,7 @@ export type Step = CommonFields & {
 };
 
 export interface ActionContext {
+  asset?: string;
   dcc?: string;
   name?: string;
   pid: number;
@@ -61,6 +62,7 @@ export interface ActionContext {
  */
 export interface Action {
   name: string;
+  label: string;
   context_metadata: ActionContext;
   steps: { [stepName: string]: Step };
   uuid: string;

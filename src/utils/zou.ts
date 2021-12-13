@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { Asset, Person, Project, Task } from "types/entities";
+import { Asset, Person, Project, Sequence, Shot, Task } from "types/entities";
 
 /**
  * Type of an axios response that returns a promise
@@ -44,7 +44,7 @@ export function getWithCredentials<T>(
  * @param id id of that preview
  */
 export function pictureThumbnailURL(
-  category: "preview-files" | "persons",
+  category: "preview-files" | "persons" | "projects",
   id: string,
   extension?: string
 ): string {
@@ -181,6 +181,69 @@ export function createAsset(
   );
 }
 
-/*export function deleteAsset(assetId: string) {
-  
-}*/
+export function createShot(
+  projectId: string,
+  sequenceId: string,
+  name: string
+): PromiseResponse<Shot> {
+  return axios.post(
+    zouAPIURL(`data/projects/${projectId}/shots`),
+    { name, sequence_id: sequenceId },
+    { withCredentials: true }
+  );
+}
+
+export function createSequence(
+  projectId: string,
+  episodeId: string | null,
+  name: string
+): PromiseResponse<Sequence> {
+  return axios.post(
+    zouAPIURL(`data/projects/${projectId}/sequences`),
+    { name, episode_id: episodeId },
+    { withCredentials: true }
+  );
+}
+
+export function createTask(
+  projectId: string,
+  taskTypeId: string,
+  category: (Shot | Asset | Sequence)["type"],
+  entityId: string,
+  name = "main"
+): PromiseResponse<Task> {
+  return axios.post(
+    zouAPIURL(
+      `actions/projects/${projectId}/task-types/${taskTypeId}/${category.toLowerCase()}s/create-task`
+    ),
+    { shot: entityId, name },
+    { withCredentials: true }
+  );
+}
+
+export function deleteEntity(
+  category: (Shot | Task | Asset)["type"],
+  entityId: string,
+  force: boolean
+): Promise<Record<string, never>> {
+  return axios.delete(
+    zouAPIURL(
+      `data/${category.toLowerCase()}s/${entityId}?force=${force.toString()}`
+    ),
+    { withCredentials: true }
+  );
+}
+
+export function buildWorkingFilePath(
+  taskId: string
+): PromiseResponse<{ path: string; name: string }> {
+  return axios.post(
+    zouAPIURL(`data/tasks/${taskId}/working-file-path`),
+    {
+      mode: "working",
+      name: "name",
+      revision: 0,
+    },
+    { withCredentials: true }
+  );
+}
