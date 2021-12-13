@@ -26,7 +26,7 @@ const GenericInputParameter = ({
   parameter,
 }: GenericInputParameterProps): JSX.Element => {
   const [value, setValue] = useState<ParameterInputType["value"]>(
-    parameter.value
+    parameter.value || (parameter.type.name === "int" ? 0 : "")
   );
 
   // Update state when the parameter value from action changes
