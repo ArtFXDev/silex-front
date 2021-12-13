@@ -15,21 +15,19 @@ import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { uiSocket, useAuth } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
+import { useRouteMatch } from "react-router-dom";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Project } from "types/entities";
-import { FileData } from "types/socket";
-import { launchScene } from "utils/action";
+import { FileOrFolder } from "types/socket";
 import { formatDateTime } from "utils/date";
 import { extensionToDCCName } from "utils/files";
 
 interface WorkFileItemProps {
-  taskId: string;
-  file: FileData;
-  moreDetails?: boolean;
+  file: FileOrFolder;
+  moreDetails: boolean;
 }
 
 const WorkFileItem = ({
-  taskId,
   file,
   moreDetails,
 }: WorkFileItemProps): JSX.Element => {
@@ -38,13 +36,15 @@ const WorkFileItem = ({
 
   const { enqueueSnackbar } = useSnackbar();
   const { getCurrentProject } = useAuth();
+  const { taskId } = useRouteMatch<{ taskId: string }>().params;
 
   const dcc = extensionToDCCName(file.name.split(".")[1]);
 
   const openScene = (dcc: string, scene: string) => {
     setIsLoading(true);
 
-    launchScene(
+    uiSocket.emit(
+      "launchScene",
       {
         taskId,
         scene,
@@ -80,7 +80,6 @@ const WorkFileItem = ({
         </ListItemIcon>
 
         <ListItemText
-          secondary={moreDetails && file.path}
           primaryTypographyProps={{
             fontSize: 14,
           }}
@@ -92,8 +91,8 @@ const WorkFileItem = ({
         </ListItemText>
 
         {moreDetails && (
-          <Typography color="text.disabled" fontSize={14}>
-            Last modified: {formatDateTime(file.mtime)}
+          <Typography color="text.disabled" fontSize={13} mr={1}>
+            Last modif: {formatDateTime(file.mtime)}
           </Typography>
         )}
 

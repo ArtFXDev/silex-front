@@ -13,7 +13,6 @@ export interface SilexBaseParameters {
   taskId?: string;
   dcc?: string;
   projectName?: string;
-  mode?: "prod" | "beta" | "dev";
 }
 
 export type LaunchActionParameters = SilexBaseParameters & {
@@ -26,24 +25,10 @@ export type LaunchSceneParameters = SilexBaseParameters & {
 
 export type FileOrFolder = {
   path: string;
-} & (
-  | {
-      isDirectory: true;
-      children: FileOrFolder[];
-    }
-  | { isDirectory: false }
-);
-
-export type FileData = {
   name: string;
-  path: string;
+  isDirectory: boolean;
   mtime: string;
 };
-
-export type GetWorkingFilesForTaskResponse = ServerResponse<{
-  path: string;
-  files: FileData[];
-}>;
 
 export interface UIClientEmitEvents {
   /** Emit this to register the UI as a client */
@@ -57,14 +42,19 @@ export interface UIClientEmitEvents {
   getRunningActions: WithCallback<ServerResponse<{ [uuid: string]: Action }>>;
   actionUpdate: EmitWithCallback<Action>;
 
-  getWorkingFilesForTask: EmitWithCallback<
-    { taskId: string; searchExtensions: string[] },
-    GetWorkingFilesForTaskResponse
+  searchDirRecursive: EmitWithCallback<
+    { path: string; extensions: string[]; ignore?: string[] },
+    ServerResponse<{ files: FileOrFolder[] }>
   >;
 
-  getPublishedFilesForTask: EmitWithCallback<
-    { taskId: string },
-    ServerResponse<{ publishStructure: FileOrFolder }>
+  readDir: EmitWithCallback<
+    { path: string },
+    ServerResponse<{ entries: FileOrFolder[] }>
+  >;
+
+  pullPublishedScene: EmitWithCallback<
+    { taskId: string; publishedFilePath: string },
+    ServerResponse<unknown>
   >;
 
   launchScene: EmitWithCallback<LaunchSceneParameters>;

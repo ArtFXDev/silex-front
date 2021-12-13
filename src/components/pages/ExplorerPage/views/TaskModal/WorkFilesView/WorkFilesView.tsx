@@ -1,40 +1,37 @@
-import { Alert, Fade, LinearProgress, List } from "@mui/material";
-import { useSocket } from "context";
+import { Alert, Fade, List } from "@mui/material";
+import { uiSocket } from "context";
 import { useEffect, useState } from "react";
-import { GetWorkingFilesForTaskResponse } from "types/socket";
+import { FileOrFolder, ServerResponse } from "types/socket";
 
 import WorkFileItem from "./WorkFileItem";
 
 interface WorkFilesViewProps {
-  taskId: string;
-  moreDetails?: boolean;
-  sortByModificationDate?: boolean;
+  path: string;
+  moreDetails: boolean;
+  sortByModificationDate: boolean;
 }
 
 const WorkFilesView = ({
-  taskId,
+  path,
   moreDetails,
   sortByModificationDate,
 }: WorkFilesViewProps): JSX.Element => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [response, setResponse] = useState<GetWorkingFilesForTaskResponse>();
-
-  const { uiSocket } = useSocket();
+  const [response, setResponse] =
+    useState<ServerResponse<{ files: FileOrFolder[] }>>();
 
   useEffect(() => {
     uiSocket.emit(
-      "getWorkingFilesForTask",
-      { taskId, searchExtensions: ["ma", "mb", "hip", "hipnc", "blend", "nk"] },
+      "searchDirRecursive",
+      {
+        path,
+        extensions: ["ma", "mb", "hip", "hipnc", "blend", "nk"],
+        ignore: ["**/backup/**"],
+      },
       (response) => {
         setResponse(response);
-        setLoading(false);
       }
     );
-  }, [taskId, uiSocket]);
-
-  if (loading) {
-    return <LinearProgress color="success" />;
-  }
+  }, [path]);
 
   if (response && response.status !== 200) {
     return (
@@ -42,24 +39,24 @@ const WorkFilesView = ({
         variant="outlined"
         severity={response.status === 404 ? "info" : "error"}
       >
-        {response.msg}
+        The work folder doesn{"'"}t exist yet...
       </Alert>
     );
   }
 
-  if (response && response.data.files.length === 0) {
+  if (response && response.data && response.data.files.length === 0) {
     return (
       <Alert variant="outlined" severity="info">
-        You don{"'"}t have any work files...
+        The work folder is empty...
       </Alert>
     );
   }
 
   return (
-    <Fade in={!loading} timeout={400}>
+    <Fade in timeout={400}>
       <List>
         {response &&
-          response.data.files &&
+          response.data &&
           response.data.files
             .sort((a, b) =>
               sortByModificationDate
@@ -69,7 +66,6 @@ const WorkFilesView = ({
             .map((file) => (
               <WorkFileItem
                 key={file.path}
-                taskId={taskId}
                 file={file}
                 moreDetails={moreDetails}
               />

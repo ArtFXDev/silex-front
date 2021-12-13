@@ -1,34 +1,39 @@
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import SortByAlphaIcon from "@mui/icons-material/SortByAlpha";
 import {
   Box,
   Chip,
+  Collapse,
   FormControlLabel,
   FormGroup,
   IconButton,
   Switch,
   Tooltip,
+  Typography,
 } from "@mui/material";
-import { useState } from "react";
+import isElectron from "is-electron";
+import { useEffect, useState } from "react";
+import * as Zou from "utils/zou";
 
 import DCCIconButton from "./DCCIconButton";
-import PublishFilesView from "./PublishFilesView/PublishFilesView";
+import FileOrFolderItem from "./FileOrFolderItem";
 import WorkFilesView from "./WorkFilesView/WorkFilesView";
 
 interface FileExplorerProps {
   taskId: string;
 }
 
-const dccButtonsData: { dcc: string; disabled?: boolean }[] = [
+const dccButtonsData = [
   { dcc: "blender", disabled: true },
   { dcc: "houdini" },
   { dcc: "nuke" },
   { dcc: "maya" },
-  { dcc: "standalone" },
 ];
 
 const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
   const [view, setView] = useState<"work" | "publish">("work");
+  const [path, setPath] = useState<string>();
   const [moreDetails, setMoreDetails] = useState<boolean>(
     window.localStorage.getItem("file-explorer-more-details") === "true"
   );
@@ -36,6 +41,16 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
     window.localStorage.getItem("file-explorer-sort-modification-date") ===
       "true"
   );
+
+  useEffect(() => {
+    Zou.buildWorkingFilePath(taskId).then((response) => {
+      setPath(response.data.path);
+    });
+  }, [taskId]);
+
+  const changeView = (newView: "work" | "publish") => {
+    setView(newView);
+  };
 
   return (
     <>
@@ -60,13 +75,13 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
               color={view === "work" ? "success" : "secondary"}
               variant={view === "work" ? "filled" : "outlined"}
               sx={{ mr: 1 }}
-              onClick={() => setView("work")}
+              onClick={() => changeView("work")}
             />
             <Chip
               label="Publish"
               color={view === "publish" ? "success" : "secondary"}
               variant={view === "publish" ? "filled" : "outlined"}
-              onClick={() => setView("publish")}
+              onClick={() => changeView("publish")}
             />
           </Box>
 
@@ -141,16 +156,53 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
         </Box>
       </Box>
 
-      <Box sx={{ borderRadius: 3, mt: 2.5 }}>
-        {view === "work" ? (
-          <WorkFilesView
-            taskId={taskId}
-            moreDetails={moreDetails}
-            sortByModificationDate={sortByModificationDate}
-          />
-        ) : (
-          <PublishFilesView taskId={taskId} />
-        )}
+      <Collapse in={moreDetails}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginTop: "5px",
+          }}
+        >
+          <Typography color="text.disabled" fontSize={14} mt={0.7}>
+            ⤷{" "}
+            {path && (view === "work" ? path : path.replace("work", "publish"))}
+          </Typography>
+
+          {isElectron() && (
+            <Tooltip title="Open in explorer" placement="top" arrow>
+              <IconButton
+                sx={{ ml: 1 }}
+                onClick={() => window.electron.send("openFolderOrFile", path)}
+              >
+                <DriveFolderUploadIcon color="disabled" />
+              </IconButton>
+            </Tooltip>
+          )}
+        </div>
+      </Collapse>
+
+      <Box sx={{ borderRadius: 3, mt: 1.5 }}>
+        {path &&
+          (view === "work" ? (
+            <WorkFilesView
+              path={path}
+              sortByModificationDate={sortByModificationDate}
+              moreDetails={moreDetails}
+            />
+          ) : (
+            <FileOrFolderItem
+              moreDetails={moreDetails}
+              item={{
+                path: path.replace("work", "publish"),
+                name: "",
+                mtime: "",
+                isDirectory: true,
+              }}
+              root
+              depth={0}
+            />
+          ))}
       </Box>
     </>
   );
