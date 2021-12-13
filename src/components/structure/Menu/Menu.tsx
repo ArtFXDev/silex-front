@@ -1,8 +1,8 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Drawer, Grid, IconButton, Link, Typography } from "@mui/material";
-import SilexLogo from "assets/images/silex_logo.png";
 import ProdBadge from "components/common/badges/ProdBadge";
 import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
+import SilexLogo from "components/common/SilexLogo/SilexLogo";
 import { useAction, useAuth } from "context";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
@@ -62,7 +62,7 @@ const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
           }}
         >
           <Grid item sx={{ mb: 2 }}>
-            <img src={SilexLogo} alt="Silex Logo" width={100} height={100} />
+            <SilexLogo size={100} />
           </Grid>
 
           {links

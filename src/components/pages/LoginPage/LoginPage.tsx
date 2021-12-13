@@ -8,10 +8,10 @@ import {
   Grid,
   TextField,
 } from "@mui/material";
-import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
 import ProdBadge from "components/common/badges/ProdBadge";
 import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
+import SilexLogo from "components/common/SilexLogo/SilexLogo";
 import { useAuth, useSocket } from "context";
 import isElectron from "is-electron";
 import { useState } from "react";
@@ -30,13 +30,7 @@ const SilexLogoAndText = (): JSX.Element => (
       flexDirection: "column",
     }}
   >
-    <img
-      src={SilexLogo}
-      alt="silex logo"
-      width={150}
-      height={150}
-      style={{ marginBottom: "15px" }}
-    />
+    <SilexLogo size={150} sx={{ marginBottom: "15px" }} />
     <img
       src={SilexText}
       alt="silex text"
