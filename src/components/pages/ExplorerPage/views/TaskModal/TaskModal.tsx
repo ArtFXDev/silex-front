@@ -19,9 +19,10 @@ import { PersonsAvatarGroup } from "components/common/avatar";
 import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
 import LazyMedia from "components/utils/LazyMedia/LazyMedia";
 import { useAuth } from "context";
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { Task } from "types/entities";
+import { RecentTasks } from "types/storage/task";
 import { formatDateTime } from "utils/date";
 import { entityURLAndExtension } from "utils/entity";
 import {
@@ -30,7 +31,7 @@ import {
   originalPreviewFileURL,
 } from "utils/zou";
 
-import SceneList from "./SceneList";
+import FileExplorer from "./FileExplorer";
 
 const TASK = gql`
   query Task($id: ID!) {
@@ -56,6 +57,7 @@ const TASK = gql`
       }
 
       taskStatus {
+        id
         short_name
         color
       }
@@ -90,7 +92,7 @@ const TaskModal = (): JSX.Element => {
   const client = useApolloClient();
 
   const onClose = () => {
-    history.goBack();
+    history.push(window.location.pathname.split("/").slice(0, -1).join("/"));
   };
 
   const query = useQuery<{ task: Task }>(TASK, {
@@ -100,6 +102,43 @@ const TaskModal = (): JSX.Element => {
 
   const currentUserAssignedToTask =
     data && data.task.assignees.some((p) => p.id === user?.id);
+
+  // Store the current task in the local storage to have an history of recent tasks
+  useEffect(() => {
+    if (data) {
+      const storedRecentTasks = window.localStorage.getItem("recent-tasks");
+      const newTask = {
+        pathname: window.location.pathname,
+        lastAccess: Date.now(),
+        task: data.task,
+      };
+      let recentTasks: RecentTasks = {};
+
+      if (storedRecentTasks) {
+        recentTasks = JSON.parse(storedRecentTasks);
+
+        // Limit the number of recent tasks to 5
+        if (
+          Object.keys(recentTasks).length >= 5 &&
+          !recentTasks[data.task.id]
+        ) {
+          // Sort them by last access time
+          const sortedTasks = Object.keys(recentTasks).sort(
+            (a, b) => recentTasks[b].lastAccess - recentTasks[a].lastAccess
+          );
+
+          // Remove the oldest one
+          delete recentTasks[sortedTasks[sortedTasks.length - 1]];
+        }
+      }
+
+      // Add the current task
+      recentTasks[data.task.id] = newTask;
+
+      // Save it to local storage
+      window.localStorage.setItem("recent-tasks", JSON.stringify(recentTasks));
+    }
+  }, [data]);
 
   return (
     <Dialog
@@ -239,7 +278,7 @@ const TaskModal = (): JSX.Element => {
               </Grid>
 
               <Grid item xs={12}>
-                <SceneList taskId={data.task.id} />
+                <FileExplorer taskId={data.task.id} />
               </Grid>
             </Grid>
           </DialogContent>

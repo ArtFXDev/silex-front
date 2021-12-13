@@ -49,7 +49,9 @@ export const ProvideSocket = ({
 
       // Then ask for the list of connected clients
       uiSocket.emit("getConnectedDccs", (response) => {
-        setDCCClients(Object.values(response.data));
+        if (response.data) {
+          setDCCClients(Object.values(response.data));
+        }
       });
 
       enqueueSnackbar(
@@ -83,15 +85,19 @@ export const ProvideSocket = ({
     (response) => {
       const { context } = response.data;
 
+      // If the dcc is not new
       if (!dccClients.some((c) => c.pid === context.pid)) {
         setDCCClients([...dccClients, context]);
-      }
 
-      // Only display a notif when it's a real dcc (not standalone)
-      if (context.dcc) {
-        enqueueSnackbar(`New dcc connected: ${context.dcc} - ${context.pid}`, {
-          variant: "info",
-        });
+        // Only display a notif when it's a real dcc (not standalone)
+        if (context.dcc) {
+          enqueueSnackbar(
+            `New dcc connected: ${context.dcc} - ${context.pid}`,
+            {
+              variant: "info",
+            }
+          );
+        }
       }
     },
     [dccClients, enqueueSnackbar]

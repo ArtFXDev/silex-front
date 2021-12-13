@@ -1,8 +1,8 @@
-import AddIcon from "@mui/icons-material/Add";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import LaunchIcon from "@mui/icons-material/Launch";
 import {
   CircularProgress,
+  Fade,
   IconButton,
   ListItemIcon,
   Menu,
@@ -14,7 +14,6 @@ import { useAuth, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { Project } from "types/entities";
-import { launchAction, launchScene } from "utils/action";
 
 interface DCCIconButtonProps {
   taskId: string;
@@ -29,6 +28,7 @@ const DCCIconButton = ({
 }: DCCIconButtonProps): JSX.Element => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [launchSceneSuccess, setLaunchSceneSuccess] = useState<boolean>(false);
 
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
@@ -43,26 +43,11 @@ const DCCIconButton = ({
   };
 
   const onCreateNewScene = (dcc: string | undefined) => {
-    launchScene(
+    uiSocket.emit(
+      "launchScene",
       { taskId, dcc, projectName: (getCurrentProject() as Project).name },
       (response) => {
-        enqueueSnackbar(`Creating new scene with ${dcc} (${response.msg})`, {
-          variant: "info",
-        });
-      }
-    );
-  };
-
-  const onConform = (dcc: string | undefined) => {
-    launchAction(
-      {
-        action: "conform",
-        taskId,
-        dcc,
-        projectName: (getCurrentProject() as Project).name,
-      },
-      (response) => {
-        enqueueSnackbar(`Launched conform action ${response.msg}`, {
+        enqueueSnackbar(`Opening a new scene with ${dcc} (${response.msg})`, {
           variant: "info",
         });
       }
@@ -71,26 +56,22 @@ const DCCIconButton = ({
 
   const menuActions = [
     {
-      label: "New Scene",
-      icon: <AddIcon />,
+      label: "Open",
+      icon: <LaunchIcon />,
       onClick: () => {
-        if (!loading) {
+        if (!loading && !launchSceneSuccess) {
           setLoading(true);
           onCreateNewScene(dcc);
-          uiSocket.once("dccConnect", () => setLoading(false));
+
+          uiSocket.once("dccConnect", () => {
+            setLoading(false);
+            setLaunchSceneSuccess(true);
+            setTimeout(() => setLaunchSceneSuccess(false), 8000);
+          });
         }
         handleClose();
       },
       standalone: false,
-    },
-    {
-      label: "Conform",
-      icon: <FileUploadIcon />,
-      onClick: () => {
-        onConform(dcc === "standalone" ? undefined : dcc);
-        handleClose();
-      },
-      standalone: true,
     },
   ];
 
@@ -103,18 +84,23 @@ const DCCIconButton = ({
             sx={{ mx: 0.5 }}
             disabled={disabled}
           >
-            {dcc === "standalone" ? (
-              <MoreHorizIcon />
-            ) : (
-              <DCCLogo name={dcc} size={30} disabled={disabled} />
-            )}
-            {loading && (
+            <DCCLogo name={dcc} size={30} disabled={disabled} />
+
+            <Fade in={loading}>
               <CircularProgress
                 size={15}
                 color="info"
                 sx={{ position: "absolute", top: 0, right: 0 }}
               />
-            )}
+            </Fade>
+
+            <Fade in={launchSceneSuccess}>
+              <CheckCircleIcon
+                fontSize="small"
+                color="success"
+                sx={{ position: "absolute", top: 0, right: 0 }}
+              />
+            </Fade>
           </IconButton>
         </span>
       </Tooltip>

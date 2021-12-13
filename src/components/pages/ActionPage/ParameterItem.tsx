@@ -132,14 +132,18 @@ const ParameterItem = ({
         borderRadius: LIST_ITEM_BORDER_RADIUS,
       }}
     >
-      <Typography
-        variant={simplify ? "subtitle2" : "body1"}
-        sx={{ width: "30%", mr: 4 }}
-      >
-        {parameter.label}
-      </Typography>
+      {!(parameter.type.name === "text") && (
+        <Typography
+          variant={simplify ? "subtitle2" : "body1"}
+          sx={{ width: "30%", mr: 4 }}
+        >
+          {parameter.label}
+        </Typography>
+      )}
 
-      <Box sx={{ width: "70%" }}>{inputComponent()}</Box>
+      <Box sx={{ width: parameter.type.name === "text" ? "100%" : "70%" }}>
+        {inputComponent()}
+      </Box>
     </ListItem>
   );
 };

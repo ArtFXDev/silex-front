@@ -31,6 +31,7 @@ const TASK_FIELDS = gql`
     }
 
     taskStatus {
+      id
       short_name
       color
     }
@@ -51,6 +52,7 @@ const SHOT_TASKS = gql`
       type
 
       sequence {
+        id
         name
       }
 
@@ -70,6 +72,7 @@ const ASSET_TASKS = gql`
       type
 
       entity_type {
+        id
         name
       }
 
@@ -119,7 +122,11 @@ const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
                   cursor: "pointer",
                   ":hover": { color: "rgba(255, 255, 255, 0.8)" },
                 }}
-                onClick={() => history.goBack()}
+                onClick={() =>
+                  history.push(
+                    window.location.pathname.split("/").slice(0, -2).join("/")
+                  )
+                }
               >
                 {entity.type === "Shot"
                   ? entity.sequence.name

@@ -5,7 +5,7 @@ import { DCCContext } from "types/action/context";
 import {
   EmitWithCallback,
   Listener,
-  ServerResponseWithData,
+  ServerResponse,
   WithCallback,
 } from "./events";
 
@@ -13,7 +13,6 @@ export interface SilexBaseParameters {
   taskId?: string;
   dcc?: string;
   projectName?: string;
-  mode?: "prod" | "beta" | "dev";
 }
 
 export type LaunchActionParameters = SilexBaseParameters & {
@@ -22,7 +21,13 @@ export type LaunchActionParameters = SilexBaseParameters & {
 
 export type LaunchSceneParameters = SilexBaseParameters & {
   scene?: string;
-  path?: string;
+};
+
+export type FileOrFolder = {
+  path: string;
+  name: string;
+  isDirectory: boolean;
+  mtime: string;
 };
 
 export interface UIClientEmitEvents {
@@ -31,17 +36,25 @@ export interface UIClientEmitEvents {
 
   /** Used to get the list of the connected dcc clients */
   getConnectedDccs: WithCallback<
-    ServerResponseWithData<{ [uuid: string]: DCCContext }>
+    ServerResponse<{ [uuid: string]: DCCContext }>
   >;
 
-  getRunningActions: WithCallback<
-    ServerResponseWithData<{ [uuid: string]: Action }>
-  >;
+  getRunningActions: WithCallback<ServerResponse<{ [uuid: string]: Action }>>;
   actionUpdate: EmitWithCallback<Action>;
 
-  getWorkingFilesForTask: EmitWithCallback<
-    { taskId: string },
-    ServerResponseWithData<{ path: string; files: string[] }>
+  searchDirRecursive: EmitWithCallback<
+    { path: string; extensions: string[]; ignore?: string[] },
+    ServerResponse<{ files: FileOrFolder[] }>
+  >;
+
+  readDir: EmitWithCallback<
+    { path: string },
+    ServerResponse<{ entries: FileOrFolder[] }>
+  >;
+
+  pullPublishedScene: EmitWithCallback<
+    { taskId: string; publishedFilePath: string },
+    ServerResponse<unknown>
   >;
 
   launchScene: EmitWithCallback<LaunchSceneParameters>;

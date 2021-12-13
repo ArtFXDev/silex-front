@@ -13,6 +13,8 @@ import EntitiesView from "./EntitiesView";
 const ASSETS = gql`
   query Assets($id: ID!) {
     project(id: $id) {
+      id
+
       assets {
         id
         name

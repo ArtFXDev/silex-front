@@ -1,8 +1,8 @@
 import SendIcon from "@mui/icons-material/Send";
 import { Chip } from "@mui/material";
 import { CircularProgress } from "@mui/material";
+import { uiSocket } from "context";
 import { useState } from "react";
-import { launchAction } from "utils/action";
 
 const RenderController = (): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -10,7 +10,8 @@ const RenderController = (): JSX.Element => {
   const onClick = () => {
     setLoading(true);
 
-    launchAction(
+    uiSocket.emit(
+      "launchAction",
       {
         action: "submit",
       },

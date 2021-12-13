@@ -26,7 +26,10 @@ const SEQUENCES_AND_SHOTS = gql`
           preview_file_id
 
           tasks {
+            id
+
             taskStatus {
+              id
               is_done
             }
           }

@@ -7,23 +7,6 @@ import { Status } from "types/action/status";
 import { UIOnServerEvents } from "types/socket";
 import { runIfInElectron } from "utils/electron";
 
-/**
- * Used to group calls to a certain function when for example modifying an input in the interface
- * See: https://www.freecodecamp.org/news/javascript-debounce-example/
- */
-function debounce<Params extends unknown[]>(
-  func: (...args: Params) => unknown,
-  timeout: number
-): (...args: Params) => void {
-  let timer: NodeJS.Timeout;
-  return (...args: Params) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      func(...args);
-    }, timeout);
-  };
-}
-
 export interface ActionContext {
   /** The dict of running actions */
   actions: { [uuid: Action["uuid"]]: Action };
@@ -91,12 +74,14 @@ export const ProvideAction = ({
    */
   const onConnect = useCallback(() => {
     uiSocket.emit("getRunningActions", (response) => {
-      Object.values(response.data).forEach((action) => {
-        actions[action.uuid] = action;
-        actionStatuses[action.uuid] = false;
-      });
+      if (response.data) {
+        Object.values(response.data).forEach((action) => {
+          actions[action.uuid] = action;
+          actionStatuses[action.uuid] = false;
+        });
 
-      forceUpdate();
+        forceUpdate();
+      }
     });
   }, [uiSocket]);
 

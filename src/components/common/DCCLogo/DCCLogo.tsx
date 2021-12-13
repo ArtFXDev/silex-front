@@ -1,3 +1,4 @@
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { Box, BoxProps } from "@mui/system";
 import BlenderLogo from "assets/images/logos/blender.svg";
 import HoudiniLogo from "assets/images/logos/houdini.svg";
@@ -25,6 +26,9 @@ interface DCCLogoProps {
 
   /** Disable the color */
   disabled?: boolean;
+
+  /** Opacity from 0 to 1 */
+  opacity?: number;
 }
 
 /**
@@ -35,6 +39,7 @@ const DCCLogo = ({
   size,
   sx,
   disabled,
+  opacity,
 }: DCCLogoProps & BoxProps): JSX.Element => {
   return (
     <Box
@@ -45,13 +50,20 @@ const DCCLogo = ({
         justifyContent: "center",
       }}
     >
-      <img
-        src={logos[name || "python"]}
-        alt={`${name} logo`}
-        width={size || 40}
-        height={size || 40}
-        style={{ filter: disabled ? "grayscale(100%)" : "none" }}
-      />
+      {name && logos[name] ? (
+        <img
+          src={logos[name || "python"]}
+          alt={`${name} logo`}
+          width={size || 40}
+          height={size || 40}
+          style={{
+            filter: disabled ? "grayscale(100%)" : "none",
+            opacity: opacity || 1,
+          }}
+        />
+      ) : (
+        <InsertDriveFileIcon color="disabled" />
+      )}
     </Box>
   );
 };

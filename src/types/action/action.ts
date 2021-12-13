@@ -39,6 +39,7 @@ export type Step = CommonFields & {
 };
 
 export interface ActionContext {
+  asset?: string;
   dcc?: string;
   name?: string;
   pid: number;

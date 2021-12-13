@@ -24,6 +24,8 @@ const ASSETS_AND_SHOTS = gql`
   ${TASK_FIELDS}
   query AssetsAndShots($id: ID!) {
     project(id: $id) {
+      id
+
       assets {
         id
         name
@@ -36,8 +38,8 @@ const ASSETS_AND_SHOTS = gql`
       }
 
       sequences {
-        name
         id
+        name
 
         shots {
           id
@@ -46,6 +48,7 @@ const ASSETS_AND_SHOTS = gql`
           preview_file_id
 
           sequence {
+            id
             name
           }
 

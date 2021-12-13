@@ -21,6 +21,8 @@ import * as Zou from "utils/zou";
 const ASSET_TASK_TYPES = gql`
   query AssetAndTaskTypesForProject($id: ID!) {
     project(id: $id) {
+      id
+
       asset_types {
         id
         name
