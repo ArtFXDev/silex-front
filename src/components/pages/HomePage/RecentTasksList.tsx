@@ -16,7 +16,7 @@ const RecentTasksList = (): JSX.Element => {
   const recentTasks: RecentTasks = JSON.parse(storedRecentTasks);
 
   return (
-    <div style={{ width: "30%" }}>
+    <div>
       <Typography sx={{ mb: 2 }}>Recent tasks:</Typography>
 
       <List sx={{ p: 0 }}>
