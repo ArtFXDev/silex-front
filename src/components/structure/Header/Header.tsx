@@ -1,9 +1,9 @@
 import { Menu as MenuIcon } from "@mui/icons-material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { AppBar, Box, IconButton, Toolbar, Tooltip } from "@mui/material";
-import SilexLogo from "assets/images/silex_logo.png";
 import SilexText from "assets/images/silex_text.png";
 import NimbyController from "components/common/NimbyController/NimbyController";
+import SilexLogo from "components/common/SilexLogo/SilexLogo";
 import Menu from "components/structure/Menu/Menu";
 import isElectron from "is-electron";
 import { useState } from "react";
@@ -26,8 +26,10 @@ const SilexLogoAndText = (): JSX.Element => {
         marginLeft: "10px",
       }}
     >
-      <Box
+      <SilexLogo
+        size={50}
         sx={{
+          marginRight: "10px",
           display: "flex",
           cursor: "pointer",
           alignItems: "center",
@@ -36,16 +38,8 @@ const SilexLogoAndText = (): JSX.Element => {
             transform: "scale(1.1)",
           },
         }}
-      >
-        <img
-          src={SilexLogo}
-          alt="silex logo"
-          width={50}
-          height={50}
-          style={{ marginRight: "10px" }}
-          onClick={() => history.push("/")}
-        />
-      </Box>
+        onClick={() => history.push("/")}
+      />
       <img src={SilexText} alt="silex text" width={70} />
     </Box>
   );
