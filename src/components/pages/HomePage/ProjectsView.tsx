@@ -28,6 +28,7 @@ const ProjectsView = (): JSX.Element => {
             .map((project) => (
               <Grid key={project.id} item>
                 <Card
+                  sx={{ width: 120 }}
                   onClick={() => history.push(`/explorer/${project.id}/shots`)}
                 >
                   <CardActionArea>
@@ -58,8 +59,8 @@ const ProjectsView = (): JSX.Element => {
                     </CardMedia>
 
                     <CardContent>
-                      <Typography>
-                        {capitalize(project.name.replace("_", " "))}
+                      <Typography noWrap>
+                        {capitalize(project.name.replaceAll("_", " "))}
                       </Typography>
                     </CardContent>
                   </CardActionArea>
