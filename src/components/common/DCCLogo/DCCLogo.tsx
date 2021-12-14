@@ -29,6 +29,9 @@ interface DCCLogoProps {
 
   /** Opacity from 0 to 1 */
   opacity?: number;
+
+  /** Wether it's an action or not */
+  action?: boolean;
 }
 
 /**
@@ -39,6 +42,7 @@ const DCCLogo = ({
   size,
   sx,
   disabled,
+  action,
   opacity,
 }: DCCLogoProps & BoxProps): JSX.Element => {
   return (
@@ -50,7 +54,7 @@ const DCCLogo = ({
         justifyContent: "center",
       }}
     >
-      {name && logos[name] ? (
+      {action || (name && logos[name]) ? (
         <img
           src={logos[name || "python"]}
           alt={`${name} logo`}

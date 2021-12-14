@@ -58,6 +58,7 @@ const ActionsView = (): JSX.Element => {
                   ) : (
                     <div style={{ marginLeft: "10px" }}>
                       <DCCLogo
+                        action
                         name={actions[uuid].context_metadata.dcc}
                         size={20}
                         disabled={!(uuid === routeMatch.params.uuid)}
