@@ -7,8 +7,10 @@ import { getColorFromString } from "./color";
  * @param person
  */
 export function firstTwoLetters(person: Person): string {
-  return person.full_name
-    .split(" ")
+  const tokens = person.full_name.split(" ");
+
+  return tokens
+    .filter((s) => s.length > 0)
     .map((n) => n[0].toUpperCase())
     .join("");
 }
