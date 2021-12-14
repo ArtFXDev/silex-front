@@ -170,6 +170,7 @@ const EntityItem = ({
                 raised
                 elevation={2}
                 sx={{
+                  width: 180,
                   transition: "box-shadow 0.1s ease",
                   ":hover": {
                     boxShadow: "0 0 0 2px rgba(200, 200, 200, 0.4)",
@@ -201,12 +202,16 @@ const EntityItem = ({
                 >
                   <div
                     style={{
+                      width: "100%",
                       display: "flex",
                       alignItems: "baseline",
                       marginRight: "auto",
+                      textOverflow: "ellipsis",
                     }}
                   >
-                    <Typography component="div">{entityName}</Typography>
+                    <Typography component="div" noWrap>
+                      {entityName}
+                    </Typography>
 
                     {entity.type === "Task" && (
                       <Typography color="text.disabled" fontSize={14} ml={1}>
