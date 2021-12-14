@@ -85,7 +85,7 @@ const FileOrFolderItem = ({
       {!root && (
         <Paper
           elevation={1}
-          sx={{ my: 1, borderRadius: LIST_ITEM_BORDER_RADIUS }}
+          sx={{ mt: 2, borderRadius: LIST_ITEM_BORDER_RADIUS }}
         >
           <ListItemButton
             sx={{
@@ -131,28 +131,33 @@ const FileOrFolderItem = ({
         </Paper>
       )}
 
-      <Fade in={open && response && !response.data} timeout={200}>
-        <LinearProgress color="success" />
-      </Fade>
-
-      {response && response.data && item.isDirectory && (
+      {item.isDirectory && (
         <Collapse
           in={open}
           sx={{
             ml: !root ? 3 : 0,
             pl: !root ? 3 : 0,
             borderLeft: !root ? "2px dashed rgba(255, 255, 255, 0.1)" : "",
-            outlineOffset: !root ? "10px" : "",
           }}
         >
-          {response.data.entries.map((entry) => (
-            <FileOrFolderItem
-              moreDetails={moreDetails}
-              key={entry.path}
-              item={entry}
-              depth={depth + 1}
-            />
-          ))}
+          {!root && (
+            <Collapse in={!response}>
+              <Fade in timeout={200}>
+                <LinearProgress color="success" />
+              </Fade>
+            </Collapse>
+          )}
+
+          {response &&
+            response.data &&
+            response.data.entries.map((entry) => (
+              <FileOrFolderItem
+                moreDetails={moreDetails}
+                key={entry.path}
+                item={entry}
+                depth={depth + 1}
+              />
+            ))}
         </Collapse>
       )}
     </>

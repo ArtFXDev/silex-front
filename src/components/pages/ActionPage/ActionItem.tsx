@@ -35,7 +35,7 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
   const finished = actionStatuses[uuid];
 
   // Called when clicking on the submit button
-  const handleClickOnAction = () => {
+  const handleClickOnContinue = () => {
     // TODO: heck because we need to manually set the ask_user status to false
     for (const step of Object.values(action.steps)) {
       for (const cmd of Object.values(step.commands)) {
@@ -54,6 +54,7 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
     });
   };
 
+  // Cancel or clear the action
   const handleClearAction = () => {
     if (!finished) {
       uiSocket.emit("clearAction", { uuid: action.uuid }, () => {
@@ -100,6 +101,7 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
           </Tooltip>
         </Box>
 
+        {/* Context subtitle */}
         {!simplify && actionToSring && (
           <Box sx={{ mt: 1 }}>
             <Typography
@@ -113,6 +115,7 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
         )}
       </Box>
 
+      {/* List of steps */}
       <List sx={{ mb: 2 }}>
         {Object.values(action.steps)
           .filter((s) => !s.hide)
@@ -122,11 +125,12 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
           ))}
       </List>
 
+      {/* Continue button */}
       <Fade in={someStepsAreWaitingForInput(action)}>
         <Button
           variant="contained"
           sx={{ position: "sticky", bottom: 30, left: 800 }}
-          onClick={handleClickOnAction}
+          onClick={handleClickOnContinue}
           disabled={finished}
         >
           Continue
