@@ -91,7 +91,8 @@ const LoginPage = (): JSX.Element => {
   };
 
   // TODO: better regexp?
-  const validateEmail = (s: string): boolean => /[a-z]+@[a-z]+\.[a-z]+/.test(s);
+  const validateEmail = (s: string): boolean =>
+    /[a-z0-9]+@[a-z0-9]+\.[a-z]+/.test(s);
   const isEmailError = email !== undefined && !validateEmail(email);
   const isPasswordError = password !== undefined && password.length === 0;
 
