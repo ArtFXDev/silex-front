@@ -46,9 +46,7 @@ const StepItem = ({ step, disabled, simplify }: StepItemProps): JSX.Element => {
     <Box sx={{ mb: simplify ? 0.1 : 0.5 }}>
       <Paper elevation={3}>
         <ListItem sx={{ py: simplify ? 0.5 : 1 }} disabled={disabled}>
-          {!simplify && (
-            <ListItemIcon>{getStatusIcon(step.status, true)}</ListItemIcon>
-          )}
+          <ListItemIcon>{getStatusIcon(step.status, true)}</ListItemIcon>
 
           <ListItemText>
             <Typography

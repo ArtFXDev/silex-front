@@ -60,9 +60,7 @@ const CommandItem = ({
           disabled={disabled}
           id={`cmd-${command.uuid}`}
         >
-          {!simplify && (
-            <ListItemIcon>{getStatusIcon(command.status)}</ListItemIcon>
-          )}
+          <ListItemIcon>{getStatusIcon(command.status)}</ListItemIcon>
 
           <ListItemText
             primaryTypographyProps={{ fontSize: simplify ? 13 : 16 }}
