@@ -164,7 +164,7 @@ const DCCClientsPage = (): JSX.Element => {
   };
 
   return (
-    <PageWrapper title="Connected softwares" goBack>
+    <PageWrapper title="Connected software" goBack>
       <div style={{ marginTop: "20px" }}>{content()}</div>
     </PageWrapper>
   );
