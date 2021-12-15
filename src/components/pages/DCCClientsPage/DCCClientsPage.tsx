@@ -30,7 +30,7 @@ import PageWrapper from "../PageWrapper/PageWrapper";
 const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => {
   const [killLoading, setKillLoading] = useState<boolean>();
 
-  const { actions, isActionFinished } = useAction();
+  const { actions, isActionFinished, clearAction } = useAction();
   const history = useHistory();
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
@@ -41,6 +41,7 @@ const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => {
 
   const handleClearAction = (action: Action) => {
     uiSocket.emit("clearAction", { uuid: action.uuid }, () => {
+      clearAction(action.uuid);
       enqueueSnackbar(`Cancelled action ${action.name}`, {
         variant: "warning",
       });

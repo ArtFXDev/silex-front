@@ -61,6 +61,7 @@ const TaskParameter = ({ onTaskSelect }: TaskParameterProps): JSX.Element => {
       <Grid container sx={{ mb: 3, mr: 5 }} spacing={1}>
         <Grid item xs>
           <Select
+            disabled={action.context_metadata.project_id !== undefined}
             sx={{
               width: "auto",
               height: 40,
