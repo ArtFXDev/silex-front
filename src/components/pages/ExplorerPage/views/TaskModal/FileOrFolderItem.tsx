@@ -41,11 +41,15 @@ const FileOrFolderItem = ({
 
   useEffect(() => {
     if (item.isDirectory && open) {
-      uiSocket.emit("readDir", { path: item.path }, (response) => {
-        setResponse(response);
-      });
+      uiSocket.emit(
+        "readDir",
+        { path: item.path, includeHiddenFiles: moreDetails },
+        (response) => {
+          setResponse(response);
+        }
+      );
     }
-  }, [item.isDirectory, item.path, open]);
+  }, [item.isDirectory, item.path, moreDetails, open]);
 
   if (response && response.status !== 200) {
     return (
@@ -59,8 +63,13 @@ const FileOrFolderItem = ({
     );
   }
 
-  const extension = item.name.split(".")[1];
+  const tokens = item.name.split(".");
+  const extension = tokens[tokens.length - 1];
   const dcc = extensionToDCCName(extension);
+
+  if (extension && ["png", "jpg"].includes(extension.toLowerCase())) {
+    return <img src={`local://${item.path}`} width={200} />;
+  }
 
   /*  const pullSceneIntoWork = () => {
     uiSocket.emit(

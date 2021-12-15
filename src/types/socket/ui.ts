@@ -48,7 +48,7 @@ export interface UIClientEmitEvents {
   >;
 
   readDir: EmitWithCallback<
-    { path: string },
+    { path: string; includeHiddenFiles?: boolean },
     ServerResponse<{ entries: FileOrFolder[] }>
   >;
 
