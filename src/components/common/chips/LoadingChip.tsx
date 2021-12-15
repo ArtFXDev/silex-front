@@ -2,19 +2,19 @@ import { Box, CircularProgress, Collapse } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { useState } from "react";
 
-interface CustomChipProps {
+interface LoadingChipProps {
   label: string;
   color: string;
   icon: JSX.Element;
   onClick: (done: () => void) => void;
 }
 
-const CustomChip = ({
+const LoadingChip = ({
   label,
   color,
   icon,
   onClick,
-}: CustomChipProps): JSX.Element => {
+}: LoadingChipProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>();
 
   return (
@@ -57,4 +57,4 @@ const CustomChip = ({
   );
 };
 
-export default CustomChip;
+export default LoadingChip;

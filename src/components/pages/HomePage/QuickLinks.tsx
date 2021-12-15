@@ -2,7 +2,8 @@ import AgricultureIcon from "@mui/icons-material/Agriculture";
 import InputIcon from "@mui/icons-material/Input";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import { Box, Chip } from "@mui/material";
-import CustomChip from "components/common/CustomChip/CustomChip";
+import LoadingChip from "components/common/chips/LoadingChip";
+import SubmitButton from "components/common/chips/SubmitButton";
 import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { uiSocket } from "context";
 import { useHistory } from "react-router-dom";
@@ -29,58 +30,69 @@ const QuickLinks = (): JSX.Element => {
         onClick={() => history.push("/tractor")}
       />
 
-      <Box
-        sx={{
+      <div
+        style={{
+          marginLeft: "auto",
           display: "flex",
           alignItems: "center",
-          backgroundColor: "rgba(255, 255, 255, 0.05)",
-          borderRadius: 10,
-          gap: 1.2,
-          px: 1.8,
-          py: 1.5,
+          gap: 10,
         }}
       >
-        <CustomChip
-          label="Conform"
-          color={theme.palette.success.main}
-          icon={<InputIcon sx={{ color: theme.palette.success.main }} />}
-          onClick={(done) => {
-            uiSocket.emit("launchAction", { action: "conform" }, () => {
-              done();
-            });
-          }}
-        />
+        <SubmitButton />
 
-        <CustomChip
-          label="Conform"
-          color="#ff6600"
-          icon={<DCCLogo name="houdini" size={18} />}
-          onClick={(done) => {
-            uiSocket.emit(
-              "launchAction",
-              { action: "conform", dcc: "houdini" },
-              () => {
-                done();
-              }
-            );
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: "rgba(255, 255, 255, 0.05)",
+            borderRadius: 10,
+            gap: 1.2,
+            px: 1.8,
+            py: 1.5,
           }}
-        />
+        >
+          <LoadingChip
+            label="Conform"
+            color={theme.palette.success.main}
+            icon={<InputIcon sx={{ color: theme.palette.success.main }} />}
+            onClick={(done) => {
+              uiSocket.emit("launchAction", { action: "conform" }, () => {
+                done();
+              });
+            }}
+          />
 
-        <CustomChip
-          label="Conform"
-          color="#2fb6b9"
-          icon={<DCCLogo name="maya" size={18} />}
-          onClick={(done) => {
-            uiSocket.emit(
-              "launchAction",
-              { action: "conform", dcc: "maya" },
-              () => {
-                done();
-              }
-            );
-          }}
-        />
-      </Box>
+          <LoadingChip
+            label="Conform"
+            color="#ff6600"
+            icon={<DCCLogo name="houdini" size={18} />}
+            onClick={(done) => {
+              uiSocket.emit(
+                "launchAction",
+                { action: "conform", dcc: "houdini" },
+                () => {
+                  done();
+                }
+              );
+            }}
+          />
+
+          <LoadingChip
+            label="Conform"
+            color="#2fb6b9"
+            icon={<DCCLogo name="maya" size={18} />}
+            onClick={(done) => {
+              uiSocket.emit(
+                "launchAction",
+                { action: "conform", dcc: "maya" },
+                () => {
+                  done();
+                }
+              );
+            }}
+          />
+        </Box>
+      </div>
     </div>
   );
 };

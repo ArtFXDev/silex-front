@@ -1,6 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Drawer, Grid, IconButton, Link, Typography } from "@mui/material";
-import ProdBadge from "components/common/badges/ProdBadge";
+import ProdBadge from "components/common/chips/ProdBetaDevChip";
 import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
 import SilexLogo from "components/common/SilexLogo/SilexLogo";
 import { useAction, useAuth } from "context";

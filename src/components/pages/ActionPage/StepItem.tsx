@@ -10,7 +10,6 @@ import {
   Typography,
 } from "@mui/material";
 import { linearProgressClasses } from "@mui/material/LinearProgress";
-import { useState } from "react";
 import { Command, Step } from "types/action/action";
 import { Status } from "types/action/status";
 import { getStatusColor, getStatusIcon } from "utils/status";
@@ -28,16 +27,16 @@ interface StepItemProps {
  */
 const computeStepProgress = (step: Step) => {
   const cmds = Object.values(step.commands);
-  return (
-    (cmds.filter((cmd) => cmd.status === Status.COMPLETED).length /
-      cmds.length) *
-    100
-  );
+  if (cmds.length === 0) return 0;
+
+  const stepsCompleted = cmds.filter(
+    (cmd) => cmd.status === Status.COMPLETED
+  ).length;
+
+  return (stepsCompleted / cmds.length) * 100;
 };
 
 const StepItem = ({ step, disabled, simplify }: StepItemProps): JSX.Element => {
-  const [open, setOpen] = useState<boolean>(true);
-
   const stepProgress = computeStepProgress(step);
   const statusColor = getStatusColor(step.status);
 
@@ -46,11 +45,7 @@ const StepItem = ({ step, disabled, simplify }: StepItemProps): JSX.Element => {
   return (
     <Box sx={{ mb: simplify ? 0.1 : 0.5 }}>
       <Paper elevation={3}>
-        <ListItem
-          sx={{ py: simplify ? 0.5 : 1 }}
-          onClick={() => setOpen(!open)}
-          disabled={disabled}
-        >
+        <ListItem sx={{ py: simplify ? 0.5 : 1 }} disabled={disabled}>
           {!simplify && (
             <ListItemIcon>{getStatusIcon(step.status, true)}</ListItemIcon>
           )}
