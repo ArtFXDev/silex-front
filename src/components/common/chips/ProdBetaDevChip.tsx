@@ -1,7 +1,7 @@
 import { Chip } from "@mui/material";
 import { getCurrentMode } from "utils/action";
 
-const ProdBadge = (): JSX.Element => {
+const ProdBetaDevChip = (): JSX.Element => {
   const mode = getCurrentMode();
 
   return (
@@ -14,4 +14,4 @@ const ProdBadge = (): JSX.Element => {
   );
 };
 
-export default ProdBadge;
+export default ProdBetaDevChip;
