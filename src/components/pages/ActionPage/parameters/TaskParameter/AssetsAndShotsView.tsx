@@ -1,7 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { Grid } from "@mui/material";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
-import { Action } from "types/action/action";
 import { Asset, Project, Shot } from "types/entities";
 import { fuzzyMatch } from "utils/string";
 
@@ -62,11 +61,10 @@ const ASSETS_AND_SHOTS = gql`
 `;
 
 interface AssetsAndShotsViewProps {
+  projectId: string;
+
   /** Search input */
   search: string | undefined;
-
-  /** The current action */
-  action: Action;
 
   /** The previous selected entity is highlighted */
   selectedEntity: Shot | Asset | undefined;
@@ -76,14 +74,14 @@ interface AssetsAndShotsViewProps {
 }
 
 const AssetsAndShotsView = ({
+  projectId,
   search,
-  action,
   onEntityClick,
   selectedEntity,
 }: AssetsAndShotsViewProps): JSX.Element => {
   const query = useQuery<{ project: Project }>(ASSETS_AND_SHOTS, {
     variables: {
-      id: action.context_metadata.project_id,
+      id: projectId,
     },
   });
   const { data } = query;
@@ -94,7 +92,7 @@ const AssetsAndShotsView = ({
         <Grid
           container
           spacing={1.5}
-          sx={{ maxHeight: 300, overflow: "scroll", overflowX: "hidden" }}
+          sx={{ maxHeight: 320, overflow: "scroll", overflowX: "hidden" }}
         >
           {data.project.sequences.map((sq) =>
             sq.shots
