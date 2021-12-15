@@ -38,7 +38,7 @@ const WorkFileItem = ({
   const { getCurrentProject } = useAuth();
   const { taskId } = useRouteMatch<{ taskId: string }>().params;
 
-  const tokens = file.name.split(".")[1];
+  const tokens = file.name.split(".");
   const dcc = extensionToDCCName(tokens[tokens.length - 1]);
 
   const openScene = (dcc: string, scene: string) => {
