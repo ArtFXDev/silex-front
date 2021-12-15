@@ -161,7 +161,13 @@ export const ProvideAction = ({
       Object.values(actions).forEach((action) => {
         // If the context uuid matches with that disconnected client
         if (action.context_metadata.uuid === uuid) {
-          actionStatuses[action.uuid] = true;
+          // Clean actions when not on the page
+          if (!window.location.pathname.startsWith("/action")) {
+            delete actions[action.uuid];
+            delete actionStatuses[action.uuid];
+          } else {
+            actionStatuses[action.uuid] = true;
+          }
         }
       });
 
