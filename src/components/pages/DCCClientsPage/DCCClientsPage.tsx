@@ -30,7 +30,7 @@ import PageWrapper from "../PageWrapper/PageWrapper";
 const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => {
   const [killLoading, setKillLoading] = useState<boolean>();
 
-  const { actions, actionStatuses } = useAction();
+  const { actions, isActionFinished } = useAction();
   const history = useHistory();
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
@@ -70,7 +70,7 @@ const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => {
                   onClick={() => history.push(`/action/${action.uuid}`)}
                   onDelete={() => handleClearAction(action)}
                   deleteIcon={
-                    actionStatuses[action.uuid] ? <FlagIcon /> : undefined
+                    isActionFinished[action.uuid] ? <FlagIcon /> : undefined
                   }
                 />
               ))}

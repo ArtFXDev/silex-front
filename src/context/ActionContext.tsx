@@ -12,7 +12,7 @@ export interface ActionContext {
   actions: { [uuid: Action["uuid"]]: Action };
 
   /** Wether or not an action is finished */
-  actionStatuses: { [uuid: Action["uuid"]]: boolean };
+  isActionFinished: { [uuid: Action["uuid"]]: boolean };
 
   /** Used to clear an action given its uuid */
   clearAction: (uuid: Action["uuid"]) => void;
@@ -33,7 +33,7 @@ interface ProvideActionProps {
 }
 
 const actions: ActionContext["actions"] = {};
-const actionStatuses: ActionContext["actionStatuses"] = {};
+const isActionFinished: ActionContext["isActionFinished"] = {};
 
 /**
  * The ProvideAction provides the current action context and handle action updates
@@ -53,7 +53,7 @@ export const ProvideAction = ({
    */
   const clearAction = (uuid: Action["uuid"]) => {
     delete actions[uuid];
-    delete actionStatuses[uuid];
+    delete isActionFinished[uuid];
     forceUpdate();
   };
 
@@ -62,8 +62,8 @@ export const ProvideAction = ({
    */
   const cleanActions = () => {
     // Filter actions that are finished
-    const toClean = Object.keys(actionStatuses).filter(
-      (uuid) => actionStatuses[uuid]
+    const toClean = Object.keys(isActionFinished).filter(
+      (uuid) => isActionFinished[uuid]
     );
     toClean.forEach((uuid) => clearAction(uuid));
   };
@@ -77,7 +77,7 @@ export const ProvideAction = ({
       if (response.data) {
         Object.values(response.data).forEach((action) => {
           actions[action.uuid] = action;
-          actionStatuses[action.uuid] = false;
+          isActionFinished[action.uuid] = false;
         });
 
         forceUpdate();
@@ -164,9 +164,9 @@ export const ProvideAction = ({
           // Clean actions when not on the page
           if (!window.location.pathname.startsWith("/action")) {
             delete actions[action.uuid];
-            delete actionStatuses[action.uuid];
+            delete isActionFinished[action.uuid];
           } else {
-            actionStatuses[action.uuid] = true;
+            isActionFinished[action.uuid] = true;
           }
         }
       });
@@ -182,7 +182,7 @@ export const ProvideAction = ({
   const onClearAction = useCallback<UIOnServerEvents["clearAction"]>(
     (response) => {
       // Mark the action as finished
-      actionStatuses[response.data.uuid] = true;
+      isActionFinished[response.data.uuid] = true;
 
       forceUpdate();
     },
@@ -229,7 +229,7 @@ export const ProvideAction = ({
     <ActionContext.Provider
       value={{
         actions,
-        actionStatuses,
+        isActionFinished,
         clearAction,
         cleanActions,
         sendActionUpdate,
