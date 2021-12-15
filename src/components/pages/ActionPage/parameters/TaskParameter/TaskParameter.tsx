@@ -1,6 +1,7 @@
+/* eslint-disable camelcase */
+import { gql, useQuery } from "@apollo/client";
 import AddIcon from "@mui/icons-material/Add";
 import AirIcon from "@mui/icons-material/Air";
-import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 import {
   Alert,
   Box,
@@ -10,13 +11,13 @@ import {
   MenuItem,
   Select,
   Tooltip,
-  Typography,
 } from "@mui/material";
 import CreateEntityModal from "components/common/CreateEntityModal/CreateEntityModal";
 import SearchTextField from "components/common/SearchTextField/SearchTextField";
 import { useAction, useAuth } from "context";
 import { useState } from "react";
 import { useRouteMatch } from "react-router";
+import { TaskParameter as TaskParameterType } from "types/action/parameters";
 import { Asset, Shot, TaskId } from "types/entities";
 import { getColorFromString } from "utils/color";
 import { formatUnderScoreStringWithSpaces } from "utils/string";
@@ -24,17 +25,59 @@ import { formatUnderScoreStringWithSpaces } from "utils/string";
 import AssetsAndShotsView from "./AssetsAndShotsView";
 import TasksView from "./TaskView";
 
+const TASK = gql`
+  query task($id: ID!) {
+    task(id: $id) {
+      entity_id
+      project_id
+
+      taskType {
+        for_shots
+      }
+    }
+  }
+`;
+
 interface TaskParameterProps {
+  parameter: TaskParameterType;
   onTaskSelect: (newTaskId: string) => void;
 }
 
-const TaskParameter = ({ onTaskSelect }: TaskParameterProps): JSX.Element => {
+const TaskParameter = ({
+  parameter,
+  onTaskSelect,
+}: TaskParameterProps): JSX.Element => {
   const [search, setSearch] = useState<string>();
   const [taskView, setTaskView] = useState<boolean>();
-  const [selectedEntity, setSelectedEntity] = useState<Shot | Asset>();
+  const [selectedEntity, setSelectedEntity] =
+    useState<{ id: string; forShots: boolean }>();
+  const [selectedEntityObject, setSelectedEntityObject] = useState<
+    Asset | Shot
+  >();
   const [selectedTaskId, setSelectedTaskId] = useState<TaskId>();
   const [createEntityModal, setCreateEntityModal] = useState<boolean>(false);
   const [selectedProjectId, setSelectedProjectId] = useState<string>();
+
+  useQuery<{
+    task: {
+      entity_id: string;
+      project_id: string;
+      taskType: { for_shots: boolean };
+    };
+  }>(TASK, {
+    variables: {
+      id: parameter.value,
+    },
+    skip: parameter.value === null,
+    onCompleted: (data) => {
+      setSelectedEntity({
+        id: data.task.entity_id,
+        forShots: data.task.taskType.for_shots,
+      });
+      setTaskView(true);
+      setSelectedTaskId(parameter.value as string);
+    },
+  });
 
   const routeMatch = useRouteMatch<{ uuid: string }>();
   const auth = useAuth();
@@ -117,48 +160,41 @@ const TaskParameter = ({ onTaskSelect }: TaskParameterProps): JSX.Element => {
         </Grid>
 
         <Grid item xs>
-          <Tooltip title="Add" placement="top" arrow>
-            <IconButton
-              onClick={() => {
-                setCreateEntityModal(true);
-              }}
-            >
-              <AddIcon />
-            </IconButton>
-          </Tooltip>
+          {selectedEntityObject && (
+            <Tooltip title="Add" placement="top" arrow>
+              <IconButton
+                onClick={() => {
+                  setCreateEntityModal(true);
+                }}
+              >
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         </Grid>
       </Grid>
 
       {taskView && selectedEntity ? (
-        <div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Typography>
-              {selectedEntity.type === "Shot"
-                ? `${selectedEntity.sequence.name} - ${selectedEntity.name}`
-                : selectedEntity.name}
-            </Typography>
-
-            <IconButton sx={{ ml: "auto" }} onClick={() => setTaskView(false)}>
-              <KeyboardReturnIcon />
-            </IconButton>
-          </div>
-
-          <TasksView
-            entity={selectedEntity}
-            selectedTaskId={selectedTaskId}
-            setSelectedTaskId={(newTaskId) => {
-              onTaskSelect(newTaskId);
-              setSelectedTaskId(newTaskId);
-            }}
-          />
-        </div>
+        <TasksView
+          entity={selectedEntity}
+          onExit={() => setTaskView(false)}
+          selectedTaskId={selectedTaskId}
+          setSelectedTaskId={(newTaskId) => {
+            onTaskSelect(newTaskId);
+            setSelectedTaskId(newTaskId);
+          }}
+        />
       ) : (
         <AssetsAndShotsView
           projectId={projectId}
           search={search}
-          selectedEntity={selectedTaskId ? selectedEntity : undefined}
+          selectedEntityId={selectedTaskId ? selectedEntity?.id : undefined}
           onEntityClick={(entity) => {
-            setSelectedEntity(entity);
+            setSelectedEntity({
+              id: entity.id,
+              forShots: entity.type === "Shot",
+            });
+            setSelectedEntityObject(entity);
             setTaskView(true);
           }}
         />
@@ -166,10 +202,10 @@ const TaskParameter = ({ onTaskSelect }: TaskParameterProps): JSX.Element => {
 
       {createEntityModal && (
         <CreateEntityModal
+          targetEntity={selectedEntityObject}
           onClose={() => setCreateEntityModal(false)}
           entityType={taskView && selectedEntity ? "Task" : "Shot"}
           projectId={action.context_metadata.project_id}
-          targetEntity={selectedEntity}
         />
       )}
     </div>

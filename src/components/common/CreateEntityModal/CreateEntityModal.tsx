@@ -18,7 +18,10 @@ import CreateShotView from "./views/CreateShotView";
 import CreateTaskView from "./views/CreateTaskView";
 
 type PossibleEntity = Sequence | Shot | Task | Asset;
-type TargetEntity = Asset | Sequence | Shot;
+export type TargetEntity = Pick<
+  Asset | Sequence | Shot,
+  "id" | "type" | "name"
+>;
 
 interface CreateEntityModalProps {
   /** Entity on which we want to create things (eg create Tasks on an asset) */
@@ -65,7 +68,7 @@ const getEntityCreationView = (
       return (
         <CreateShotView
           onClose={onClose}
-          targetSequence={targetEntity as Sequence}
+          targetEntity={targetEntity as TargetEntity}
           projectIdOverride={projectId}
         />
       );

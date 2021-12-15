@@ -14,8 +14,9 @@ import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useRouteMatch } from "react-router-dom";
-import { Asset, Sequence, Shot } from "types/entities";
 import * as Zou from "utils/zou";
+
+import { TargetEntity } from "../CreateEntityModal";
 
 const ASSET_TASK_TYPES = gql`
   query TaskTypesForProject($id: ID!) {
@@ -32,7 +33,7 @@ const ASSET_TASK_TYPES = gql`
 `;
 
 interface CreateTaskViewProps {
-  targetEntity: Shot | Asset | Sequence;
+  targetEntity: TargetEntity;
   onClose: () => void;
   projectIdOverride?: string;
 }

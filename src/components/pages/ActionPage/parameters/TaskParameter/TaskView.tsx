@@ -1,6 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
+import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 import {
   Fade,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -31,6 +33,12 @@ const SHOT_TASKS = gql`
   query Tasks($id: ID!) {
     shot(id: $id) {
       id
+      name
+
+      sequence {
+        id
+        name
+      }
 
       tasks {
         ...TaskFields
@@ -44,6 +52,7 @@ const ASSET_TASKS = gql`
   query Tasks($id: ID!) {
     asset(id: $id) {
       id
+      name
 
       tasks {
         ...TaskFields
@@ -54,22 +63,25 @@ const ASSET_TASKS = gql`
 
 interface TaskViewProps {
   /** Entity for which we want to see the tasks */
-  entity: Shot | Asset;
+  entity: { id: string; forShots: boolean };
 
   /** Id of the entity that is selected */
   selectedTaskId: TaskId | undefined;
 
   /** Setter for the task id (managed by the parent component) */
   setSelectedTaskId: (newId: TaskId) => void;
+
+  onExit: () => void;
 }
 
 const TasksView = ({
   entity,
   selectedTaskId,
+  onExit,
   setSelectedTaskId,
 }: TaskViewProps): JSX.Element => {
   const query = useQuery<{ shot?: Shot; asset?: Asset }>(
-    entity.type === "Shot" ? SHOT_TASKS : ASSET_TASKS,
+    entity.forShots ? SHOT_TASKS : ASSET_TASKS,
     {
       variables: {
         id: entity.id,
@@ -83,43 +95,65 @@ const TasksView = ({
   return (
     <QueryWrapper query={query}>
       {entityFetch && (
-        <List>
-          {entityFetch.tasks
-            .slice() // Copy list since sort mutates
-            .sort((a, b) => a.taskType.priority - b.taskType.priority)
-            .map((task, i) => (
-              <Fade key={task.id} in timeout={{ appear: 2000 * i, enter: 800 }}>
-                <Paper
-                  elevation={4}
-                  sx={{ my: 1, borderRadius: LIST_ITEM_BORDER_RADIUS }}
+        <>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Typography>
+              {entityFetch.type === "Shot"
+                ? `${entityFetch.sequence.name} - ${entityFetch.name}`
+                : entityFetch.name}
+            </Typography>
+
+            <IconButton sx={{ ml: "auto" }} onClick={onExit}>
+              <KeyboardReturnIcon />
+            </IconButton>
+          </div>
+
+          <List>
+            {entityFetch.tasks
+              .slice() // Copy list since sort mutates
+              .sort((a, b) => a.taskType.priority - b.taskType.priority)
+              .map((task, i) => (
+                <Fade
+                  key={task.id}
+                  in
+                  timeout={{ appear: 2000 * i, enter: 800 }}
                 >
-                  <ListItem disablePadding>
-                    <ListItemButton
-                      sx={{ borderRadius: LIST_ITEM_BORDER_RADIUS, py: 0.5 }}
-                      selected={task.id === selectedTaskId}
-                      onClick={() => setSelectedTaskId(task.id)}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "baseline",
-                          marginRight: "auto",
-                        }}
+                  <Paper
+                    elevation={4}
+                    sx={{ my: 1, borderRadius: LIST_ITEM_BORDER_RADIUS }}
+                  >
+                    <ListItem disablePadding>
+                      <ListItemButton
+                        sx={{ borderRadius: LIST_ITEM_BORDER_RADIUS, py: 0.5 }}
+                        selected={task.id === selectedTaskId}
+                        onClick={() => setSelectedTaskId(task.id)}
                       >
-                        <ListItemText
-                          primaryTypographyProps={{ fontSize: 15 }}
-                          primary={task.taskType.name}
-                        />
-                        <Typography color="text.disabled" fontSize={14} ml={1}>
-                          {task.name}
-                        </Typography>
-                      </div>
-                    </ListItemButton>
-                  </ListItem>
-                </Paper>
-              </Fade>
-            ))}
-        </List>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "baseline",
+                            marginRight: "auto",
+                          }}
+                        >
+                          <ListItemText
+                            primaryTypographyProps={{ fontSize: 15 }}
+                            primary={task.taskType.name}
+                          />
+                          <Typography
+                            color="text.disabled"
+                            fontSize={14}
+                            ml={1}
+                          >
+                            {task.name}
+                          </Typography>
+                        </div>
+                      </ListItemButton>
+                    </ListItem>
+                  </Paper>
+                </Fade>
+              ))}
+          </List>
+        </>
       )}
     </QueryWrapper>
   );
