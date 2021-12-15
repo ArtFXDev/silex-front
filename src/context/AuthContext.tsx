@@ -66,6 +66,10 @@ export const ProvideAuth = ({ children }: ProvideAuthProps): JSX.Element => {
   const signout = () => {
     setUser(undefined);
 
+    // Clean local storage keys
+    window.localStorage.removeItem("last-project-id");
+    window.localStorage.removeItem("recent-tasks");
+
     // Clear the GraphQL store
     // See: https://www.apollographql.com/docs/react/networking/authentication/#reset-store-on-logout
     client.clearStore();

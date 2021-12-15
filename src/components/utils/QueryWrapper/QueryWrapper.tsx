@@ -9,7 +9,7 @@ interface QueryWrapperProps {
 
 const QueryWrapper = ({ query, children }: QueryWrapperProps): JSX.Element => {
   if (query.loading) {
-    return <CircularProgress />;
+    return <CircularProgress size={30} />;
   }
 
   if (query.error) {

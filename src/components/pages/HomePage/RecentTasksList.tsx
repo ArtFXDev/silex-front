@@ -9,39 +9,42 @@ const RecentTasksList = (): JSX.Element => {
 
   const history = useHistory();
 
-  if (!storedRecentTasks) {
-    return <Typography color="text.disabled">No recent tasks...</Typography>;
-  }
-
-  const recentTasks: RecentTasks = JSON.parse(storedRecentTasks);
+  const recentTasks: RecentTasks =
+    storedRecentTasks && JSON.parse(storedRecentTasks);
 
   return (
     <div>
       <Typography sx={{ mb: 2 }}>Recent tasks:</Typography>
 
-      <List sx={{ p: 0 }}>
-        {Object.keys(recentTasks)
-          .sort((a, b) => recentTasks[b].lastAccess - recentTasks[a].lastAccess)
-          .map((id) => {
-            const task = recentTasks[id];
+      {storedRecentTasks ? (
+        <List sx={{ p: 0 }}>
+          {Object.keys(recentTasks)
+            .sort(
+              (a, b) => recentTasks[b].lastAccess - recentTasks[a].lastAccess
+            )
+            .map((id) => {
+              const task = recentTasks[id];
 
-            return (
-              <Paper key={id} sx={{ mb: 1 }}>
-                <ListItemButton onClick={() => history.push(task.pathname)}>
-                  <ColoredCircle color={task.task.taskType.color} size={20} />
-                  <Typography ml={1.5}>{task.task.taskType.name}</Typography>
-                  <Typography ml={2} color="text.disabled">
-                    {task.task.name}
-                  </Typography>
+              return (
+                <Paper key={id} sx={{ mb: 1 }}>
+                  <ListItemButton onClick={() => history.push(task.pathname)}>
+                    <ColoredCircle color={task.task.taskType.color} size={20} />
+                    <Typography ml={1.5}>{task.task.taskType.name}</Typography>
+                    <Typography ml={2} color="text.disabled">
+                      {task.task.name}
+                    </Typography>
 
-                  <Typography fontSize={12} sx={{ ml: "auto" }}>
-                    {formatDateTime(task.lastAccess)}
-                  </Typography>
-                </ListItemButton>
-              </Paper>
-            );
-          })}
-      </List>
+                    <Typography fontSize={12} sx={{ ml: "auto" }}>
+                      {formatDateTime(task.lastAccess)}
+                    </Typography>
+                  </ListItemButton>
+                </Paper>
+              );
+            })}
+        </List>
+      ) : (
+        <Typography color="text.disabled">No recent tasks...</Typography>
+      )}
     </div>
   );
 };

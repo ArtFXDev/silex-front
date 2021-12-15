@@ -27,12 +27,12 @@ interface ActionItemProps {
 }
 
 const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
-  const { clearAction, actions, actionStatuses } = useAction();
+  const { clearAction, actions, isActionFinished } = useAction();
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
 
   const action = actions[uuid];
-  const finished = actionStatuses[uuid];
+  const finished = isActionFinished[uuid];
 
   // Called when clicking on the submit button
   const handleClickOnContinue = () => {

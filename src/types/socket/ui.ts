@@ -48,7 +48,7 @@ export interface UIClientEmitEvents {
   >;
 
   readDir: EmitWithCallback<
-    { path: string },
+    { path: string; includeHiddenFiles?: boolean },
     ServerResponse<{ entries: FileOrFolder[] }>
   >;
 
@@ -62,6 +62,8 @@ export interface UIClientEmitEvents {
   launchAction: EmitWithCallback<LaunchActionParameters>;
 
   clearAction: EmitWithCallback<{ uuid: string }>;
+
+  killProcess: EmitWithCallback<{ pid: number }>;
 }
 
 export interface UIOnServerEvents {

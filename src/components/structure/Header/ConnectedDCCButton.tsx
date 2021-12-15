@@ -11,7 +11,7 @@ const ConnectedDCCButton = (props: IconButtonProps): JSX.Element => {
   const socket = useSocket();
 
   return (
-    <Tooltip title="Softwares connected" placement="bottom" arrow>
+    <Tooltip title="Software connected" placement="bottom" arrow>
       <IconButton component={RouterLink} to="/dccs" sx={props.sx}>
         <Badge
           badgeContent={socket.isConnected ? socket.dccClients.length : "!"}

@@ -15,7 +15,7 @@ const ActionsView = (): JSX.Element => {
 
   const routeMatch = useRouteMatch<{ uuid: string }>();
   const history = useHistory();
-  const { actions, actionStatuses, clearAction, cleanActions } = useAction();
+  const { actions, isActionFinished, clearAction, cleanActions } = useAction();
 
   useEffect(() => {
     // Listen to react router route change
@@ -27,7 +27,7 @@ const ActionsView = (): JSX.Element => {
 
     // Clear the listener
     return unlisten;
-  }, [actionStatuses, cleanActions, clearAction, history]);
+  }, [isActionFinished, cleanActions, clearAction, history]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     history.push(`/action/${newValue}`);
@@ -53,7 +53,7 @@ const ActionsView = (): JSX.Element => {
                 label={actions[uuid].name}
                 value={uuid}
                 icon={
-                  actionStatuses[uuid] ? (
+                  isActionFinished[uuid] ? (
                     <FlagIcon sx={{ color: actionColor }} />
                   ) : (
                     <div style={{ marginLeft: "10px" }}>

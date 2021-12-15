@@ -27,8 +27,7 @@ const AvatarMenu = (): JSX.Element => {
 
   const onLogout = () => {
     Zou.logout()
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .then((_response) => {
+      .then(() => {
         auth.signout();
         history.push("/login");
       })

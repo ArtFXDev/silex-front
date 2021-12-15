@@ -1,9 +1,12 @@
+import DangerousIcon from "@mui/icons-material/Dangerous";
 import FlagIcon from "@mui/icons-material/Flag";
 import {
   Alert,
   AlertTitle,
   Chip,
+  CircularProgress,
   Fade,
+  IconButton,
   Paper,
   Stack,
   Table,
@@ -17,6 +20,7 @@ import {
 import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { useAction, useSocket } from "context";
 import { useSnackbar } from "notistack";
+import { useState } from "react";
 import { useHistory } from "react-router";
 import { Action } from "types/action/action";
 import { DCCContext } from "types/action/context";
@@ -24,7 +28,9 @@ import { DCCContext } from "types/action/context";
 import PageWrapper from "../PageWrapper/PageWrapper";
 
 const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => {
-  const { actions, actionStatuses } = useAction();
+  const [killLoading, setKillLoading] = useState<boolean>();
+
+  const { actions, isActionFinished } = useAction();
   const history = useHistory();
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
@@ -64,13 +70,41 @@ const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => {
                   onClick={() => history.push(`/action/${action.uuid}`)}
                   onDelete={() => handleClearAction(action)}
                   deleteIcon={
-                    actionStatuses[action.uuid] ? <FlagIcon /> : undefined
+                    isActionFinished[action.uuid] ? <FlagIcon /> : undefined
                   }
                 />
               ))}
             </Stack>
           ) : (
             "-"
+          )}
+        </TableCell>
+        <TableCell align="center">
+          {killLoading ? (
+            <CircularProgress color="error" size={20} sx={{ m: "7px" }} />
+          ) : (
+            <IconButton
+              onClick={() => {
+                setKillLoading(true);
+
+                uiSocket.emit("killProcess", { pid: dcc.pid }, (response) => {
+                  if (response.status === 200) {
+                    enqueueSnackbar(response.msg, { variant: "success" });
+                  } else {
+                    enqueueSnackbar(
+                      `Error ${response.status} when killing process: ${response.msg}`,
+                      {
+                        variant: "error",
+                      }
+                    );
+                  }
+
+                  setTimeout(() => setKillLoading(false), 500);
+                });
+              }}
+            >
+              <DangerousIcon color="error" />
+            </IconButton>
           )}
         </TableCell>
       </TableRow>
@@ -95,6 +129,7 @@ const DCCClientsTable = ({
             <TableCell>Shot</TableCell>
             <TableCell>Task</TableCell>
             <TableCell>Running actions</TableCell>
+            <TableCell align="center">Kill</TableCell>
           </TableRow>
         </TableHead>
 
@@ -129,7 +164,7 @@ const DCCClientsPage = (): JSX.Element => {
   };
 
   return (
-    <PageWrapper title="Connected softwares" goBack>
+    <PageWrapper title="Connected software" goBack>
       <div style={{ marginTop: "20px" }}>{content()}</div>
     </PageWrapper>
   );

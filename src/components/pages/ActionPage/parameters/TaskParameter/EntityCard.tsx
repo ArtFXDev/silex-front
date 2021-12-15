@@ -27,6 +27,7 @@ const EntityCard = ({
       raised
       elevation={2}
       sx={{
+        width: 90,
         position: "relative",
         transition: "box-shadow 0.1s ease",
         ":hover": {
@@ -47,7 +48,12 @@ const EntityCard = ({
       </CardMedia>
 
       <CardActions sx={{ py: 0, height: 20 }}>
-        <Typography component="div" variant="caption">
+        <Typography
+          sx={{ textOverflow: "ellipsis" }}
+          component="div"
+          variant="caption"
+          noWrap
+        >
           {name || entity.name}
         </Typography>
       </CardActions>
