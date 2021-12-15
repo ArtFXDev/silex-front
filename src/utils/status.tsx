@@ -22,7 +22,7 @@ export const getStatusColor = (status: Status | undefined): string => {
     case Status.INVALID:
       return "warning.dark";
     case Status.INITIALIZED:
-      return "background.paper";
+      return "";
     case Status.WAITING_FOR_RESPONSE:
       return "info.main";
     default:
