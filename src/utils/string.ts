@@ -22,3 +22,7 @@ export function humanFileSize(size: number): string {
     ["B", "kB", "MB", "GB", "TB"][i]
   );
 }
+
+export function formatUnderScoreStringWithSpaces(str: string): string {
+  return capitalize(str.replaceAll("_", " "));
+}
