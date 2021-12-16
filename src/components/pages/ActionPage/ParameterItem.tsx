@@ -10,6 +10,7 @@ import {
   PathParameter as PathParameterType,
   RadioSelectParameter as RadioSelectParameterType,
   SelectParameter as SelectParameterType,
+  TaskParameter as TaskParameterType,
   TextParameter as TextParameterType,
 } from "types/action/parameters";
 
@@ -77,6 +78,7 @@ const ParameterItem = ({
       case "task":
         return (
           <TaskParameter
+            parameter={parameter as TaskParameterType}
             onTaskSelect={(newTaskId) => (parameter.value = newTaskId)}
           />
         );

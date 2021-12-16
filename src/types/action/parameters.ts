@@ -53,6 +53,7 @@ export interface SelectParameter extends BaseParameter {
 
 export interface TaskParameter extends BaseParameter {
   type: { name: "task" };
+  value: string | null;
 }
 
 export interface MultipleSelectParameter extends BaseParameter {

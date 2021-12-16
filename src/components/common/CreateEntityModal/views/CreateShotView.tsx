@@ -23,6 +23,8 @@ import { useRouteMatch } from "react-router-dom";
 import { Sequence } from "types/entities";
 import * as Zou from "utils/zou";
 
+import { TargetEntity } from "../CreateEntityModal";
+
 const SEQUENCES_SHOTS = gql`
   query SequencesAndShotsForProject($id: ID!) {
     project(id: $id) {
@@ -48,20 +50,20 @@ const SEQUENCES_SHOTS = gql`
 `;
 
 interface CreateShotViewProps {
-  targetSequence: Sequence | undefined;
+  targetEntity: TargetEntity;
   onClose: () => void;
   projectIdOverride?: string;
 }
 
 const CreateShotView = ({
-  targetSequence,
+  targetEntity,
   projectIdOverride,
 }: CreateShotViewProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [newShotName, setNewShotName] = useState<string>();
   const [autoCreateTasks, setAutoCreateTasks] = useState<boolean>(true);
   const [selectedSequenceId, setSelectedSequenceId] = useState<string>(
-    targetSequence ? targetSequence.id : ""
+    targetEntity ? targetEntity.id : ""
   );
 
   const projectIdFromURL =

@@ -67,7 +67,7 @@ interface AssetsAndShotsViewProps {
   search: string | undefined;
 
   /** The previous selected entity is highlighted */
-  selectedEntity: Shot | Asset | undefined;
+  selectedEntityId: string | undefined;
 
   /** Called when clicking on an entity */
   onEntityClick: (entity: Shot | Asset) => void;
@@ -77,7 +77,7 @@ const AssetsAndShotsView = ({
   projectId,
   search,
   onEntityClick,
-  selectedEntity,
+  selectedEntityId,
 }: AssetsAndShotsViewProps): JSX.Element => {
   const query = useQuery<{ project: Project }>(ASSETS_AND_SHOTS, {
     variables: {
@@ -106,7 +106,9 @@ const AssetsAndShotsView = ({
                   <EntityCard
                     entity={shot}
                     name={`${sq.name} - ${shot.name}`}
-                    selected={selectedEntity && shot.id === selectedEntity.id}
+                    selected={
+                      selectedEntityId ? shot.id === selectedEntityId : false
+                    }
                   />
                 </Grid>
               ))
@@ -118,7 +120,9 @@ const AssetsAndShotsView = ({
               <Grid item key={asset.id} onClick={() => onEntityClick(asset)}>
                 <EntityCard
                   entity={asset}
-                  selected={selectedEntity && asset.id === selectedEntity.id}
+                  selected={
+                    selectedEntityId ? asset.id === selectedEntityId : false
+                  }
                 />
               </Grid>
             ))}

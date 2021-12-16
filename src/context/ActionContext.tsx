@@ -123,25 +123,30 @@ export const ProvideAction = ({
       // Test if we scroll to the next command
       if (actions[uuid] && mergedAction) {
         // Sort the commands by status code
-        const sortedCommands = Object.values(mergedAction.steps)
+        const allCommands = Object.values(mergedAction.steps)
           .map((s) => Object.values(s.commands))
-          .flat()
-          .sort((a, b) => a.status - b.status);
+          .flat();
 
-        const allCommandsAreWaitingForResponse = !sortedCommands.some(
-          (cmd) => cmd.status !== Status.WAITING_FOR_RESPONSE
-        );
+        if (allCommands.length > 0) {
+          const sortedCommands = allCommands.sort(
+            (a, b) => a.status - b.status
+          );
 
-        // Get the last one
-        const lastCommand = sortedCommands[sortedCommands.length - 1];
+          const allCommandsAreWaitingForResponse = !sortedCommands.some(
+            (cmd) => cmd.status !== Status.WAITING_FOR_RESPONSE
+          );
 
-        if (!allCommandsAreWaitingForResponse) {
-          // Scroll to that specific id element
-          document.getElementById(`cmd-${lastCommand.uuid}`)?.scrollIntoView({
-            behavior: "smooth",
-            inline: "start",
-            block: "start",
-          });
+          if (!allCommandsAreWaitingForResponse) {
+            // Get the last one
+            const lastCommand = sortedCommands[sortedCommands.length - 1];
+
+            // Scroll to that specific id element
+            document.getElementById(`cmd-${lastCommand.uuid}`)?.scrollIntoView({
+              behavior: "smooth",
+              inline: "start",
+              block: "start",
+            });
+          }
         }
       }
 
