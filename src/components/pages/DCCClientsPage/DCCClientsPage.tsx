@@ -30,13 +30,13 @@ import PageWrapper from "../PageWrapper/PageWrapper";
 const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => {
   const [killLoading, setKillLoading] = useState<boolean>();
 
-  const { actions, isActionFinished, clearAction } = useAction();
+  const { actions, clearAction } = useAction();
   const history = useHistory();
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
 
   const actionsForThisDcc = Object.values(actions).filter(
-    (action) => action.context_metadata.uuid === dcc.uuid
+    (action) => action.action.context_metadata.pid === dcc.pid
   );
 
   const handleClearAction = (action: Action) => {
@@ -62,19 +62,20 @@ const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => {
         <TableCell>
           {actionsForThisDcc.length > 0 ? (
             <Stack direction="row" spacing={1}>
-              {actionsForThisDcc.map((action) => (
-                <Chip
-                  key={action.uuid}
-                  label={action.name}
-                  variant="outlined"
-                  color="success"
-                  onClick={() => history.push(`/action/${action.uuid}`)}
-                  onDelete={() => handleClearAction(action)}
-                  deleteIcon={
-                    isActionFinished[action.uuid] ? <FlagIcon /> : undefined
-                  }
-                />
-              ))}
+              {actionsForThisDcc.map((actionObject) => {
+                const { action, finished } = actionObject;
+                return (
+                  <Chip
+                    key={action.uuid}
+                    label={action.name}
+                    variant="outlined"
+                    color="success"
+                    onClick={() => history.push(`/action/${action.uuid}`)}
+                    onDelete={() => handleClearAction(action)}
+                    deleteIcon={finished ? <FlagIcon /> : undefined}
+                  />
+                );
+              })}
             </Stack>
           ) : (
             "-"

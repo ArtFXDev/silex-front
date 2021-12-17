@@ -4,15 +4,19 @@ import React, { useCallback, useContext, useEffect, useReducer } from "react";
 import { useHistory } from "react-router";
 import { Action } from "types/action/action";
 import { Status } from "types/action/status";
-import { UIOnServerEvents } from "types/socket";
+import { ServerResponse, UIOnServerEvents } from "types/socket";
+import { diff } from "utils/diff";
 import { runIfInElectron } from "utils/electron";
 
 export interface ActionContext {
   /** The dict of running actions */
-  actions: { [uuid: Action["uuid"]]: Action };
-
-  /** Wether or not an action is finished */
-  isActionFinished: { [uuid: Action["uuid"]]: boolean };
+  actions: {
+    [uuid: Action["uuid"]]: {
+      action: Action;
+      finished: boolean;
+      oldAction: Action;
+    };
+  };
 
   /** Used to clear an action given its uuid */
   clearAction: (uuid: Action["uuid"]) => void;
@@ -21,19 +25,28 @@ export interface ActionContext {
   cleanActions: () => void;
 
   /** Send an action update when modifying a parameter */
-  sendActionUpdate: (uuid: string) => void;
+  sendActionUpdate: (
+    uuid: string,
+    callback?: (data: ServerResponse) => void
+  ) => void;
 }
 
 export const ActionContext = React.createContext<ActionContext>(
   {} as ActionContext
 );
 
+// The global dict of actions
+// It's stored outside the component but normally it shouldn't
+const actions: ActionContext["actions"] = {};
+
+function addNewAction(action: Action) {
+  const deepActionCopy = JSON.parse(JSON.stringify(action));
+  actions[action.uuid] = { action, oldAction: deepActionCopy, finished: false };
+}
+
 interface ProvideActionProps {
   children: JSX.Element;
 }
-
-const actions: ActionContext["actions"] = {};
-const isActionFinished: ActionContext["isActionFinished"] = {};
 
 /**
  * The ProvideAction provides the current action context and handle action updates
@@ -43,7 +56,7 @@ export const ProvideAction = ({
 }: ProvideActionProps): JSX.Element => {
   // Hack to force the update when the actions change because the state is outside the component
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
+  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const history = useHistory();
   const { uiSocket } = useSocket();
@@ -53,7 +66,6 @@ export const ProvideAction = ({
    */
   const clearAction = (uuid: Action["uuid"]) => {
     delete actions[uuid];
-    delete isActionFinished[uuid];
     forceUpdate();
   };
 
@@ -62,24 +74,20 @@ export const ProvideAction = ({
    */
   const cleanActions = () => {
     // Filter actions that are finished
-    const toClean = Object.keys(isActionFinished).filter(
-      (uuid) => isActionFinished[uuid]
+    const toClean = Object.keys(actions).filter(
+      (uuid) => actions[uuid].finished
     );
     toClean.forEach((uuid) => clearAction(uuid));
   };
 
   /**
-   * Called on connection
-   * Gets all the running actions
+   * Called on connection with the socket server
+   * It gets all the running actions
    */
   const onConnect = useCallback(() => {
     uiSocket.emit("getRunningActions", (response) => {
       if (response.data) {
-        Object.values(response.data).forEach((action) => {
-          actions[action.uuid] = action;
-          isActionFinished[action.uuid] = false;
-        });
-
+        Object.values(response.data).forEach(addNewAction);
         forceUpdate();
       }
     });
@@ -90,8 +98,8 @@ export const ProvideAction = ({
    */
   const onActionQuery = useCallback<UIOnServerEvents["actionQuery"]>(
     (newAction) => {
-      // Add a new action
-      actions[newAction.data.uuid] = newAction.data;
+      // Store this new action
+      addNewAction(newAction.data);
 
       // Redirect to the specific action page
       history.push(`/action/${newAction.data.uuid}`);
@@ -105,25 +113,34 @@ export const ProvideAction = ({
   );
 
   /**
-   * Called when receiving updates on the current action from the server
+   * Called when receiving updates on an action from the server
    */
   const onActionUpdate = useCallback<UIOnServerEvents["actionUpdate"]>(
     (actionDiff) => {
       const { uuid } = actionDiff.data;
 
+      // Only keep the last version when merging arrays
+      const arrayMerge: merge.Options["arrayMerge"] = (
+        destinationArray,
+        sourceArray
+      ) => sourceArray;
+
       // Merge the diff
-      const mergedAction = merge(actions[uuid], actionDiff.data, {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        arrayMerge: (destinationArray, sourceArray, options) => sourceArray,
+      actions[uuid].action = merge(actions[uuid].action, actionDiff.data, {
+        arrayMerge,
       });
 
-      // Update the state
-      actions[uuid] = mergedAction;
+      // Also update the second version
+      actions[uuid].oldAction = merge(
+        actions[uuid].oldAction,
+        actionDiff.data,
+        { arrayMerge }
+      );
 
       // Test if we scroll to the next command
-      if (actions[uuid] && mergedAction) {
+      if (actions[uuid] && actions[uuid].action) {
         // Sort the commands by status code
-        const allCommands = Object.values(mergedAction.steps)
+        const allCommands = Object.values(actions[uuid].action.steps)
           .map((s) => Object.values(s.commands))
           .flat();
 
@@ -165,13 +182,12 @@ export const ProvideAction = ({
       // Mark the action as finished
       Object.values(actions).forEach((action) => {
         // If the context uuid matches with that disconnected client
-        if (action.context_metadata.uuid === uuid) {
+        if (action.action.context_metadata.uuid === uuid) {
           // Clean actions when not on the page
           if (!window.location.pathname.startsWith("/action")) {
-            delete actions[action.uuid];
-            delete isActionFinished[action.uuid];
+            delete actions[action.action.uuid];
           } else {
-            isActionFinished[action.uuid] = true;
+            actions[action.action.uuid].finished = true;
           }
         }
       });
@@ -182,24 +198,27 @@ export const ProvideAction = ({
   );
 
   /**
-   * Called when a user
+   * Called when when we receive the information that an action was finished
    */
   const onClearAction = useCallback<UIOnServerEvents["clearAction"]>(
     (response) => {
       // Mark the action as finished
-      isActionFinished[response.data.uuid] = true;
+      actions[response.data.uuid].finished = true;
 
       forceUpdate();
     },
     []
   );
 
-  const sendActionUpdate = (uuid: string) => {
-    if (actions[uuid]) {
+  const sendActionUpdate = (
+    uuid: string,
+    callback?: (data: ServerResponse) => void
+  ) => {
+    if (actions[uuid] !== undefined) {
+      const actionDiff = diff(actions[uuid].action, actions[uuid].oldAction);
+
       // Send the whole action object to the socket server
-      uiSocket.emit("actionUpdate", actions[uuid], (data) => {
-        return data;
-      });
+      uiSocket.emit("actionUpdate", actionDiff, callback || (() => undefined));
     }
   };
 
@@ -234,7 +253,6 @@ export const ProvideAction = ({
     <ActionContext.Provider
       value={{
         actions,
-        isActionFinished,
         clearAction,
         cleanActions,
         sendActionUpdate,

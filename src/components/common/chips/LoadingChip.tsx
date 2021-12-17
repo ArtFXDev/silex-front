@@ -48,7 +48,7 @@ const LoadingChip = ({
       >
         {icon}
       </Box>
-      <span style={{ color, fontSize: 13 }}>{label}</span>
+      <span style={{ color, fontSize: 13, marginRight: 4 }}>{label}</span>
 
       <Collapse in={isLoading} orientation="horizontal" unmountOnExit>
         <CircularProgress size={18} sx={{ ml: 1, mt: 0.5, color }} />

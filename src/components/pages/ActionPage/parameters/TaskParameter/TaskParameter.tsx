@@ -83,7 +83,7 @@ const TaskParameter = ({
   const auth = useAuth();
 
   const { actions } = useAction();
-  const action = actions[routeMatch.params.uuid];
+  const action = actions[routeMatch.params.uuid].action;
 
   // If not set choose the action context project id or the current project
   const projectId =

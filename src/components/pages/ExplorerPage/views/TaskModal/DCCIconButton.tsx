@@ -13,6 +13,7 @@ import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { useAuth, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
+import { useRouteMatch } from "react-router-dom";
 import { Project } from "types/entities";
 
 interface DCCIconButtonProps {
@@ -30,9 +31,10 @@ const DCCIconButton = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [launchSceneSuccess, setLaunchSceneSuccess] = useState<boolean>(false);
 
+  const projectId = useRouteMatch<{ projectId: string }>().params.projectId;
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
-  const { getCurrentProject } = useAuth();
+  const { projects } = useAuth();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -43,15 +45,18 @@ const DCCIconButton = ({
   };
 
   const onCreateNewScene = (dcc: string | undefined) => {
-    uiSocket.emit(
-      "launchScene",
-      { taskId, dcc, projectName: (getCurrentProject() as Project).name },
-      (response) => {
+    if (projects === undefined) return;
+
+    const projectName = (projects.find((p) => p.id === projectId) as Project)
+      .name;
+
+    if (projectName) {
+      uiSocket.emit("launchScene", { taskId, dcc, projectName }, (response) => {
         enqueueSnackbar(`Opening a new scene with ${dcc} (${response.msg})`, {
           variant: "info",
         });
-      }
-    );
+      });
+    }
   };
 
   const menuActions = [

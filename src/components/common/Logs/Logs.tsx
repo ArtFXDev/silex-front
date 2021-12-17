@@ -7,7 +7,7 @@ import { BORDER_RADIUS_BOTTOM } from "style/constants";
 import { LogLine } from "types/action/action";
 
 function colorFromLogStatus(message: LogLine["message"]): string {
-  const match = /(INFO|ERROR|WARNING)/.exec(message);
+  const match = /(INFO|ERROR|WARNING|DEBUG)/.exec(message);
 
   if (match && match.length > 0) return `${match[1].toLowerCase()}.main`;
   return "primary";
@@ -125,8 +125,10 @@ const Logs = ({
                     key={i}
                     component="span"
                     color={
-                      i === 1 || i === 3
+                      i === 1
                         ? colorFromLogStatus(logLine.message)
+                        : i === 3
+                        ? "info"
                         : "inherit"
                     }
                     sx={{

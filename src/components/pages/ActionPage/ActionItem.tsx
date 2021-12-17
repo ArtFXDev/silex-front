@@ -27,12 +27,12 @@ interface ActionItemProps {
 }
 
 const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
-  const { clearAction, actions, isActionFinished } = useAction();
+  const { clearAction, actions, sendActionUpdate } = useAction();
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
 
-  const action = actions[uuid];
-  const finished = isActionFinished[uuid];
+  // Get the action
+  const { action, finished } = actions[uuid];
 
   // Called when clicking on the submit button
   const handleClickOnContinue = () => {
@@ -46,8 +46,7 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
       }
     }
 
-    // Send the whole action object to the socket server
-    uiSocket.emit("actionUpdate", action, (data) => {
+    sendActionUpdate(uuid, (data) => {
       enqueueSnackbar(`Action ${action.name} sent (${data.status})`, {
         variant: "success",
       });

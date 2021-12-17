@@ -173,7 +173,12 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
             <Tooltip title="Open in explorer" placement="top" arrow>
               <IconButton
                 sx={{ ml: 1 }}
-                onClick={() => window.electron.send("openFolderOrFile", path)}
+                onClick={() =>
+                  window.electron.send(
+                    "openFolderOrFile",
+                    path?.replace("work", "publish")
+                  )
+                }
               >
                 <DriveFolderUploadIcon color="disabled" />
               </IconButton>

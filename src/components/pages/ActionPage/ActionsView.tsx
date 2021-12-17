@@ -15,7 +15,7 @@ const ActionsView = (): JSX.Element => {
 
   const routeMatch = useRouteMatch<{ uuid: string }>();
   const history = useHistory();
-  const { actions, isActionFinished, clearAction, cleanActions } = useAction();
+  const { actions, clearAction, cleanActions } = useAction();
 
   useEffect(() => {
     // Listen to react router route change
@@ -27,7 +27,7 @@ const ActionsView = (): JSX.Element => {
 
     // Clear the listener
     return unlisten;
-  }, [isActionFinished, cleanActions, clearAction, history]);
+  }, [cleanActions, clearAction, history]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     history.push(`/action/${newValue}`);
@@ -45,21 +45,22 @@ const ActionsView = (): JSX.Element => {
           scrollButtons="auto"
         >
           {Object.keys(actions).map((uuid) => {
-            const actionColor = getLastStepStatusColor(actions[uuid]);
+            const { action, finished } = actions[uuid];
+            const actionColor = getLastStepStatusColor(action);
 
             return (
               <Tab
                 key={uuid}
-                label={actions[uuid].name}
+                label={action.name}
                 value={uuid}
                 icon={
-                  isActionFinished[uuid] ? (
+                  finished ? (
                     <FlagIcon sx={{ color: actionColor }} />
                   ) : (
                     <div style={{ marginLeft: "10px" }}>
                       <DCCLogo
                         action
-                        name={actions[uuid].context_metadata.dcc}
+                        name={actions[uuid].action.context_metadata.dcc}
                         size={20}
                         disabled={!(uuid === routeMatch.params.uuid)}
                       />
