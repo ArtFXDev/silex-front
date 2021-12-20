@@ -131,10 +131,6 @@ const CreateEntityModal = ({
                 </MenuItem>
               ))}
             </Select>
-
-            <Typography ml={2} color="text.disabled">
-              on {targetEntity?.type} {targetEntity?.name}
-            </Typography>
           </div>
 
           <IconButton onClick={onClose}>
