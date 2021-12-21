@@ -30,7 +30,7 @@ function isObject(o: unknown): boolean {
 }
 
 /**
- * Diffs two objects, only return the keys that were modified
+ * Diffs two objects, only return the keys that were modified in b that are in a
  */
 export function diff(a: any, b: any): any {
   const result: any = {};
