@@ -12,7 +12,6 @@ import {
 import { useAction, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { Action } from "types/action/action";
-import { Status } from "types/action/status";
 import {
   formatContextToString,
   someStepsAreWaitingForInput,
@@ -36,19 +35,9 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
 
   // Called when clicking on the submit button
   const handleClickOnContinue = () => {
-    // TODO: heck because we need to manually set the ask_user status to false
-    for (const step of Object.values(action.steps)) {
-      for (const cmd of Object.values(step.commands)) {
-        if (cmd.status === Status.WAITING_FOR_RESPONSE) {
-          // eslint-disable-next-line camelcase
-          cmd.ask_user = false;
-        }
-      }
-    }
-
-    sendActionUpdate(uuid, (data) => {
+    sendActionUpdate(uuid, true, (data) => {
       enqueueSnackbar(`Action ${action.name} sent (${data.status})`, {
-        variant: "success",
+        variant: data.status === 200 ? "success" : "error",
       });
     });
   };

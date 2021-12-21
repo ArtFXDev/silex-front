@@ -12,9 +12,9 @@ export interface ActionContext {
   /** The dict of running actions */
   actions: {
     [uuid: Action["uuid"]]: {
-      action: Action;
-      finished: boolean;
-      oldAction: Action;
+      action: Action; // The action object
+      finished: boolean; // Either the action is finished or not
+      oldAction: Action; // Action backup in order to diff it with the updated state
     };
   };
 
@@ -27,6 +27,7 @@ export interface ActionContext {
   /** Send an action update when modifying a parameter */
   sendActionUpdate: (
     uuid: string,
+    removeAskUser: boolean,
     callback?: (data: ServerResponse) => void
   ) => void;
 }
@@ -212,12 +213,30 @@ export const ProvideAction = ({
 
   const sendActionUpdate = (
     uuid: string,
+    removeAskUser: boolean,
     callback?: (data: ServerResponse) => void
   ) => {
     if (actions[uuid] !== undefined) {
-      const actionDiff = diff(actions[uuid].action, actions[uuid].oldAction);
+      if (removeAskUser) {
+        // Manually set the ask_user fields to false
+        for (const step of Object.values(actions[uuid].action.steps)) {
+          for (const cmd of Object.values(step.commands)) {
+            if (cmd.status === Status.WAITING_FOR_RESPONSE) {
+              // eslint-disable-next-line camelcase
+              cmd.ask_user = false;
+            }
+          }
+        }
+      }
 
-      // Send the whole action object to the socket server
+      // Compute the diff
+      const actionDiff = diff(actions[uuid].oldAction, actions[uuid].action);
+
+      // Manually add the action uuid to the diff
+      // so we can apply the diff to the correct action
+      actionDiff.uuid = uuid;
+
+      // Send the diff to the socket server
       uiSocket.emit("actionUpdate", actionDiff, callback || (() => undefined));
     }
   };
