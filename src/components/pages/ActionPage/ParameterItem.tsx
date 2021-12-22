@@ -79,12 +79,7 @@ const ParameterItem = ({
           />
         );
       case "task":
-        return (
-          <TaskParameter
-            parameter={parameter as TaskParameterType}
-            onTaskSelect={(newTaskId) => (parameter.value = newTaskId)}
-          />
-        );
+        return <TaskParameter parameter={parameter as TaskParameterType} />;
       case "multiple_select":
         return (
           <MultipleSelectParameter

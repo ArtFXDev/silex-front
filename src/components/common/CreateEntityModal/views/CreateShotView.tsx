@@ -123,7 +123,7 @@ const CreateShotView = ({
   }, [offsetShotNumber, selectedSequenceId]);
 
   const handleClickCreateShot = () => {
-    if (data && newShotName) {
+    if (!isLoading && data && newShotName) {
       setIsLoading(true);
 
       Zou.createShot(projectId, selectedSequenceId, newShotName)

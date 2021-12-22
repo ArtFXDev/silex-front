@@ -6,8 +6,18 @@ export function capitalize(str: string): string {
   return str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-export function fuzzyMatch(input: string, search: string): boolean {
-  return input.toLowerCase().includes(search.toLowerCase());
+/**
+ * Fuzzy matches a string or a list of strings with a search string
+ * This function just tests if the search string is contained within the inputs
+ */
+export function fuzzyMatch(
+  input: string | string[],
+  search: string | undefined
+): boolean {
+  if (!search) return true;
+  return (Array.isArray(input) ? input : [input]).some((s) =>
+    s.toLowerCase().includes(search.toLowerCase())
+  );
 }
 
 /**

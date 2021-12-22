@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import AddIcon from "@mui/icons-material/Add";
-import { IconButton, Typography } from "@mui/material";
+import { Button, IconButton, Tooltip, Typography } from "@mui/material";
 import CreateEntityModal from "components/common/CreateEntityModal/CreateEntityModal";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useState } from "react";
@@ -45,8 +45,9 @@ interface ShotsViewProps {
 }
 
 const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
-  const [createShotModal, setCreateShotModal] = useState<boolean>(false);
-  const [choosenSequence, setChoosenSequence] = useState<Sequence>();
+  const [createEntityModal, setCreateEntityModal] =
+    useState<{ type: "Shot" | "Sequence"; target?: Sequence }>();
+
   const routeMatch = useRouteMatch<{ projectId: string }>();
 
   const query = useQuery<{ project: Project }>(SEQUENCES_AND_SHOTS, {
@@ -57,10 +58,12 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
   return (
     <QueryWrapper query={query}>
       {data && data.project.sequences.length > 0 ? (
+        // Sort sequences by name
         data.project.sequences
           .slice()
           .sort((a, b) => a.name.localeCompare(b.name))
           .map((seq, i) => {
+            // Filter shots by search and sort them
             const filteredShots = seq.shots
               .filter((sh) => fuzzyMatch(sh.name, search))
               .sort((a, b) => a.name.localeCompare(b.name));
@@ -72,6 +75,7 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
                 {(search.length === 0 ? true : filteredShots.length !== 0) ? (
                   <>
                     <div style={{ display: "flex", alignItems: "center" }}>
+                      {/* Sequence name */}
                       <h2
                         style={{
                           display: "inline-block",
@@ -83,15 +87,20 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
                         {seq.nb_frames && <h4>({seq.nb_frames} frames)</h4>}
                       </h2>
 
-                      <IconButton
-                        sx={{ ml: 1.5 }}
-                        onClick={() => {
-                          setCreateShotModal(true);
-                          setChoosenSequence(seq);
-                        }}
-                      >
-                        <AddIcon />
-                      </IconButton>
+                      {/* Add new shot + button */}
+                      <Tooltip title="New shot" placement="top" arrow>
+                        <IconButton
+                          sx={{ ml: 1.5 }}
+                          onClick={() => {
+                            setCreateEntityModal({
+                              type: "Shot",
+                              target: seq,
+                            });
+                          }}
+                        >
+                          <AddIcon />
+                        </IconButton>
+                      </Tooltip>
                     </div>
 
                     {seq.shots.length > 0 ? (
@@ -124,11 +133,25 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
         </Typography>
       )}
 
-      {createShotModal && (
+      <Button
+        variant="outlined"
+        color="secondary"
+        sx={{ textTransform: "none", mt: 3 }}
+        startIcon={<AddIcon />}
+        onClick={() => {
+          setCreateEntityModal({ type: "Sequence" });
+        }}
+      >
+        New sequence...
+      </Button>
+
+      {createEntityModal && (
         <CreateEntityModal
-          onClose={() => setCreateShotModal(false)}
-          targetEntity={choosenSequence}
-          entityType="Shot"
+          onClose={() => {
+            setCreateEntityModal(undefined);
+          }}
+          targetEntity={createEntityModal.target}
+          entityType={createEntityModal.type}
         />
       )}
     </QueryWrapper>

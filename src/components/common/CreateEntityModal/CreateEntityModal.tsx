@@ -27,63 +27,26 @@ interface CreateEntityModalProps {
   /** Entity on which we want to create things (eg create Tasks on an asset) */
   targetEntity?: TargetEntity;
 
-  /** The type of entity we want to create */
+  /** The default entity view */
   entityType: PossibleEntity["type"];
 
-  /** A possible default category (useful for assets) */
-  defaultCategory?: string;
+  /** Array of possible entity types we want to create */
+  entityTypes?: PossibleEntity["type"][];
 
   /** Called when closing the modal */
   onClose: () => void;
+
+  /** An optional default category (useful for assets) */
+  defaultCategory?: string;
 
   /** Optional project id */
   projectId?: string;
 }
 
-const getEntityCreationView = (
-  entityType: PossibleEntity["type"],
-  targetEntity: TargetEntity | undefined,
-  defaultCategory: string | undefined,
-  onClose: () => void,
-  projectId: string | undefined
-) => {
-  switch (entityType) {
-    case "Asset":
-      return (
-        <CreateAssetView
-          onClose={onClose}
-          defaultCategory={defaultCategory}
-          projectIdOverride={projectId}
-        />
-      );
-    case "Task":
-      return (
-        <CreateTaskView
-          onClose={onClose}
-          targetEntity={targetEntity as TargetEntity}
-          projectIdOverride={projectId}
-        />
-      );
-    case "Shot":
-      return (
-        <CreateShotView
-          onClose={onClose}
-          targetEntity={targetEntity as TargetEntity}
-          projectIdOverride={projectId}
-        />
-      );
-    case "Sequence":
-      return (
-        <CreateSequenceView onClose={onClose} projectIdOverride={projectId} />
-      );
-    default:
-      return null;
-  }
-};
-
 const CreateEntityModal = ({
   targetEntity,
   entityType,
+  entityTypes,
   defaultCategory,
   onClose,
   projectId,
@@ -91,10 +54,40 @@ const CreateEntityModal = ({
   const [choosenEntityType, setChoosenEntityType] =
     useState<PossibleEntity["type"]>(entityType);
 
-  const possibleCreationWindows = ["Asset", "Sequence", "Shot"];
-
-  // We can only create a task when in an asset/shot or sequence context
-  if (targetEntity) possibleCreationWindows.push("Task");
+  const getEntityCreationView = () => {
+    switch (choosenEntityType) {
+      case "Asset":
+        return (
+          <CreateAssetView
+            onClose={onClose}
+            defaultCategory={defaultCategory}
+            projectIdOverride={projectId}
+          />
+        );
+      case "Task":
+        return (
+          <CreateTaskView
+            onClose={onClose}
+            targetEntity={targetEntity as TargetEntity}
+            projectIdOverride={projectId}
+          />
+        );
+      case "Shot":
+        return (
+          <CreateShotView
+            onClose={onClose}
+            targetEntity={targetEntity as TargetEntity}
+            projectIdOverride={projectId}
+          />
+        );
+      case "Sequence":
+        return (
+          <CreateSequenceView onClose={onClose} projectIdOverride={projectId} />
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <Dialog open onClose={onClose} fullWidth>
@@ -120,16 +113,21 @@ const CreateEntityModal = ({
               color="success"
               value={choosenEntityType}
               autoFocus
+              disabled={!entityTypes}
               variant="outlined"
               onChange={(e) =>
                 setChoosenEntityType(e.target.value as PossibleEntity["type"])
               }
             >
-              {possibleCreationWindows.map((type) => (
-                <MenuItem key={type} value={type}>
-                  {type}
-                </MenuItem>
-              ))}
+              {entityTypes ? (
+                entityTypes.map((type) => (
+                  <MenuItem key={type} value={type}>
+                    {type}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value={entityType}>{entityType}</MenuItem>
+              )}
             </Select>
           </div>
 
@@ -141,13 +139,7 @@ const CreateEntityModal = ({
 
       <DialogContent dividers sx={{ height: "100%" }}>
         <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 3 }}>
-          {getEntityCreationView(
-            choosenEntityType,
-            targetEntity,
-            defaultCategory,
-            onClose,
-            projectId
-          )}
+          {getEntityCreationView()}
         </Box>
       </DialogContent>
     </Dialog>

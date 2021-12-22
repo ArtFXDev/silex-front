@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import AddIcon from "@mui/icons-material/Add";
-import { IconButton, Typography } from "@mui/material";
+import { Button, IconButton, Tooltip, Typography } from "@mui/material";
 import CreateEntityModal from "components/common/CreateEntityModal/CreateEntityModal";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useState } from "react";
@@ -37,7 +37,6 @@ interface AssetsViewProps {
 
 const AssetsView = ({ listView, search }: AssetsViewProps): JSX.Element => {
   const [choosenAssetCategory, setChoosenAssetCategory] = useState<string>();
-  const [createAssetModal, setCreateAssetModal] = useState<boolean>(false);
 
   const routeMatch = useRouteMatch<{ projectId: string }>();
 
@@ -46,9 +45,10 @@ const AssetsView = ({ listView, search }: AssetsViewProps): JSX.Element => {
   });
   const { data } = query;
 
-  // Process assets to put organize them by categories
+  // Organize assets by categories
   const assetByTypes: { [assetType: EntityType["id"]]: Asset[] } = {};
   const assetTypes: { [id: EntityType["id"]]: EntityType["name"] } = {};
+
   if (data) {
     for (const asset of data.project.assets) {
       if (!assetByTypes[asset.entity_type.id]) {
@@ -61,7 +61,6 @@ const AssetsView = ({ listView, search }: AssetsViewProps): JSX.Element => {
 
   const openCreateAssetModalWithType = (assetTypeId: string) => {
     setChoosenAssetCategory(assetTypeId);
-    setCreateAssetModal(true);
   };
 
   return (
@@ -88,12 +87,17 @@ const AssetsView = ({ listView, search }: AssetsViewProps): JSX.Element => {
                       {assetTypes[assetTypeId]}
                     </h2>
 
-                    <IconButton
-                      sx={{ ml: 1.5 }}
-                      onClick={() => openCreateAssetModalWithType(assetTypeId)}
-                    >
-                      <AddIcon />
-                    </IconButton>
+                    {/* Add a new asset + button */}
+                    <Tooltip title="New asset" placement="top" arrow>
+                      <IconButton
+                        sx={{ ml: 1.5 }}
+                        onClick={() =>
+                          openCreateAssetModalWithType(assetTypeId)
+                        }
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    </Tooltip>
                   </div>
 
                   <EntitiesView entities={filteredAssets} listView={listView} />
@@ -110,9 +114,19 @@ const AssetsView = ({ listView, search }: AssetsViewProps): JSX.Element => {
         )}
       </QueryWrapper>
 
-      {createAssetModal && (
+      <Button
+        variant="outlined"
+        color="secondary"
+        sx={{ textTransform: "none", mt: 3 }}
+        startIcon={<AddIcon />}
+        onClick={() => setChoosenAssetCategory("")}
+      >
+        New asset...
+      </Button>
+
+      {choosenAssetCategory !== undefined && (
         <CreateEntityModal
-          onClose={() => setCreateAssetModal(false)}
+          onClose={() => setChoosenAssetCategory(undefined)}
           entityType="Asset"
           defaultCategory={choosenAssetCategory}
         />
