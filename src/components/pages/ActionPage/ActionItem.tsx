@@ -25,6 +25,9 @@ interface ActionItemProps {
   simplify?: boolean;
 }
 
+/**
+ * Represents a single action, an action has steps
+ */
 const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
   const { clearAction, actions, sendActionUpdate } = useAction();
   const { uiSocket } = useSocket();
@@ -61,6 +64,7 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
 
   return (
     <Box sx={{ maxWidth: 800 }}>
+      {/* Header */}
       <Box sx={{ mb: simplify ? 1 : 3 }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <div>

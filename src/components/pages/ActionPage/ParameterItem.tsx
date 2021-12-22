@@ -30,6 +30,9 @@ interface ParameterItemProps {
   simplify?: boolean;
 }
 
+/**
+ * A parameter has a type and renders a different component based on that
+ */
 const ParameterItem = ({
   parameter,
   simplify,
@@ -123,6 +126,7 @@ const ParameterItem = ({
         borderRadius: LIST_ITEM_BORDER_RADIUS,
       }}
     >
+      {/* Label */}
       {!(parameter.type.name === "text") && (
         <Typography
           variant={simplify ? "subtitle2" : "body1"}
@@ -132,6 +136,7 @@ const ParameterItem = ({
         </Typography>
       )}
 
+      {/* Specific parameter component */}
       <Box sx={{ width: parameter.type.name === "text" ? "100%" : "70%" }}>
         {inputComponent()}
       </Box>

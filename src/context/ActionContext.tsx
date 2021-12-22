@@ -24,7 +24,7 @@ export interface ActionContext {
   /** Clean all finished actions */
   cleanActions: () => void;
 
-  /** Send an action update when modifying a parameter */
+  /** Sends an action update diff to the server */
   sendActionUpdate: (
     uuid: string,
     removeAskUser: boolean,
@@ -40,7 +40,11 @@ export const ActionContext = React.createContext<ActionContext>(
 // It's stored outside the component but normally it shouldn't
 const actions: ActionContext["actions"] = {};
 
+/**
+ * Adds a new action to the store
+ */
 function addNewAction(action: Action) {
+  // Deep copy to have an action clone for diffs
   const deepActionCopy = JSON.parse(JSON.stringify(action));
   actions[action.uuid] = { action, oldAction: deepActionCopy, finished: false };
 }
@@ -50,7 +54,7 @@ interface ProvideActionProps {
 }
 
 /**
- * The ProvideAction provides the current action context and handle action updates
+ * Context that handles action updates and queries
  */
 export const ProvideAction = ({
   children,
@@ -75,10 +79,10 @@ export const ProvideAction = ({
    */
   const cleanActions = () => {
     // Filter actions that are finished
-    const toClean = Object.keys(actions).filter(
-      (uuid) => actions[uuid].finished
-    );
-    toClean.forEach((uuid) => clearAction(uuid));
+    Object.keys(actions)
+      .filter((uuid) => actions[uuid].finished)
+      .forEach((uuid) => delete actions[uuid]);
+    forceUpdate();
   };
 
   /**

@@ -8,6 +8,9 @@ import { getLastStepStatusColor } from "utils/action";
 
 import ActionItem from "./ActionItem";
 
+/**
+ * Actions are displayed as tabs so the user can navigate between them
+ */
 const ActionsView = (): JSX.Element => {
   const [simpleMode, setSimpleMode] = useState<boolean>(
     window.localStorage.getItem("action-simple-mode") === "true"

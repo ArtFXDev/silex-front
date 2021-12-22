@@ -1,4 +1,4 @@
-import ActionPage from "components/pages/ActionPage/ActionPage";
+import ActionsPage from "components/pages/ActionPage/ActionsPage";
 import DCCClientsPage from "components/pages/DCCClientsPage/DCCClientsPage";
 import ExplorerPage from "components/pages/ExplorerPage/ExplorerPage";
 import HomePage from "components/pages/HomePage/HomePage";
@@ -43,7 +43,7 @@ const App = (): JSX.Element => {
                     </PrivateRoute>
 
                     <PrivateRoute path="/action/:uuid?" allowNonAuth>
-                      <ActionPage />
+                      <ActionsPage />
                     </PrivateRoute>
 
                     <PrivateRoute exact path="/running-jobs" allowNonAuth>

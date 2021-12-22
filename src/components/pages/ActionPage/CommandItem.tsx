@@ -27,6 +27,9 @@ interface CommandItemProps {
   simplify?: boolean;
 }
 
+/**
+ * Represents a command, a command has parameters
+ */
 const CommandItem = ({
   command,
   disabled,
@@ -44,6 +47,7 @@ const CommandItem = ({
 
   return (
     <Box sx={{ my: simplify ? 1 : 2 }}>
+      {/* Header */}
       <Paper
         elevation={2}
         key={command.uuid}
@@ -92,6 +96,7 @@ const CommandItem = ({
         </ListItem>
       </Paper>
 
+      {/* Logs */}
       {command.logs.length > 0 && (
         <Collapse in={shouldOpenLogs}>
           <Logs
@@ -103,6 +108,7 @@ const CommandItem = ({
         </Collapse>
       )}
 
+      {/* Parameters */}
       <Collapse in={command.status === Status.WAITING_FOR_RESPONSE}>
         {parameters.length > 0 && (
           <Paper elevation={2} sx={{ borderRadius: BORDER_RADIUS_BOTTOM }}>
