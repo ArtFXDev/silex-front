@@ -22,6 +22,9 @@ export const extensions: FileExtension[] = [
   { name: "vrscene", software: "vray", tags: ["submit"] },
   { name: "vrmesh", software: "vray" },
 
+  // Arnold
+  { name: "ass", software: "arnold", tags: ["submit"] },
+
   // Image formats
   { name: "jpg", tags: ["image"] },
   { name: "jpeg", tags: ["image"] },
