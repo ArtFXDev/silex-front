@@ -1,55 +1,58 @@
-import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import FolderIcon from "@mui/icons-material/Folder";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import {
   Alert,
   Collapse,
   Fade,
-  IconButton,
   LinearProgress,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   Paper,
-  Tooltip,
-  Typography,
 } from "@mui/material";
 import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { uiSocket } from "context";
 import { useEffect, useState } from "react";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { FileOrFolder, ServerResponse } from "types/socket";
-import { formatDateTime } from "utils/date";
-import { extensionToDCCName } from "utils/files";
+import { getExtensionFromName } from "utils/files";
+
+import ActionButton from "./ActionButton";
 
 interface FileOrFolderItem {
   item: FileOrFolder;
   depth: number;
   root?: boolean;
   moreDetails?: boolean;
+  refresh?: boolean;
 }
 
 const FileOrFolderItem = ({
+  refresh,
   root,
   item,
   depth,
   moreDetails,
 }: FileOrFolderItem): JSX.Element => {
   const [open, setOpen] = useState<boolean>(depth < 2);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [response, setResponse] =
     useState<ServerResponse<{ entries: FileOrFolder[] }>>();
 
   useEffect(() => {
     if (item.isDirectory && open) {
+      setIsLoading(true);
+
       uiSocket.emit(
         "readDir",
         { path: item.path, includeHiddenFiles: moreDetails },
         (response) => {
           setResponse(response);
+          setIsLoading(false);
         }
       );
     }
-  }, [item.isDirectory, item.path, moreDetails, open]);
+  }, [item.isDirectory, item.path, moreDetails, open, refresh]);
 
   if (response && response.status !== 200) {
     return (
@@ -64,30 +67,24 @@ const FileOrFolderItem = ({
   }
 
   const tokens = item.name.split(".");
-  const extension = tokens[tokens.length - 1];
-  const dcc = extensionToDCCName(extension);
+  const hasExtension = tokens.length > 1;
+  const extension = getExtensionFromName(tokens[tokens.length - 1]);
 
-  if (extension && ["png", "jpg"].includes(extension.toLowerCase())) {
-    return <img src={`local://${item.path}`} width={200} />;
-  }
-
-  /*  const pullSceneIntoWork = () => {
-    uiSocket.emit(
-      "pullPublishedScene",
-      { taskId, publishedFilePath: item.path },
-      (response) => {
-        if (response.status === 200) {
-          enqueueSnackbar(`Copied publish file ${filename} into work!`, {
-            variant: "success",
-          });
-        } else {
-          enqueueSnackbar(`Pull ${filename} failed: ${response.msg}`, {
-            variant: "error",
-          });
-        }
-      }
+  if (
+    tokens.length > 1 &&
+    extension &&
+    extension.tags &&
+    extension.tags.includes("image")
+  ) {
+    return (
+      <div style={{ width: "200px", height: "200px" }}>
+        <img
+          src={`local://${item.path}`}
+          style={{ maxWidth: "100%", maxHeight: "100%" }}
+        />
+      </div>
     );
-  }; */
+  }
 
   return (
     <>
@@ -103,38 +100,41 @@ const FileOrFolderItem = ({
             }}
             onClick={() => setOpen(!open)}
           >
+            {/* File icon */}
             <ListItemIcon>
-              {item.isDirectory ? (
-                open ? (
-                  <FolderOpenIcon color="success" />
-                ) : (
-                  <FolderIcon color="disabled" />
-                )
-              ) : (
-                <DCCLogo
-                  name={extensionToDCCName(extension)}
-                  size={25}
-                  opacity={0.8}
-                />
-              )}
+              <>
+                {item.isDirectory ? (
+                  open ? (
+                    <FolderOpenIcon color="success" />
+                  ) : (
+                    <FolderIcon color="disabled" />
+                  )
+                ) : hasExtension ? (
+                  <DCCLogo
+                    name={extension ? extension.software : undefined}
+                    size={25}
+                    opacity={0.8}
+                  />
+                ) : null}
+              </>
             </ListItemIcon>
 
-            <ListItemText>{item.name}</ListItemText>
+            {/* File name */}
+            <ListItemText
+              primaryTypographyProps={{
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+              }}
+            >
+              {item.name}
+            </ListItemText>
 
-            {moreDetails && (
-              <Typography color="text.disabled" fontSize={13}>
-                Last modif: {formatDateTime(item.mtime)}
-              </Typography>
-            )}
-
-            {dcc && (
-              <ListItemIcon>
-                <Tooltip title="pull in work" placement="top" arrow>
-                  <IconButton>
-                    <CloudDownloadIcon color="info" />
-                  </IconButton>
-                </Tooltip>
-              </ListItemIcon>
+            {/* Action buttons */}
+            {hasExtension && extension && (
+              <ActionButton
+                data={{ name: item.name, path: item.path, extension }}
+              />
             )}
           </ListItemButton>
         </Paper>
@@ -150,7 +150,7 @@ const FileOrFolderItem = ({
           }}
         >
           {!root && (
-            <Collapse in={!response}>
+            <Collapse in={isLoading}>
               <Fade in timeout={200}>
                 <LinearProgress color="success" />
               </Fade>
@@ -161,12 +161,19 @@ const FileOrFolderItem = ({
             response.data &&
             response.data.entries.map((entry) => (
               <FileOrFolderItem
+                refresh={refresh}
                 moreDetails={moreDetails}
                 key={entry.path}
                 item={entry}
                 depth={depth + 1}
               />
             ))}
+
+          {response && response.data && response.data.entries.length === 0 && (
+            <Alert variant="outlined" severity={"info"} sx={{ mt: 2 }}>
+              Folder is empty
+            </Alert>
+          )}
         </Collapse>
       )}
     </>

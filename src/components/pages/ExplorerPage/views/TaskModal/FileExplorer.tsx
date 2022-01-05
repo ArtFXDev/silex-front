@@ -1,4 +1,6 @@
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CachedIcon from "@mui/icons-material/Cached";
+import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import SortByAlphaIcon from "@mui/icons-material/SortByAlpha";
 import {
@@ -13,11 +15,12 @@ import {
   Typography,
 } from "@mui/material";
 import isElectron from "is-electron";
-import { useEffect, useState } from "react";
+import { useSnackbar } from "notistack";
+import { useCallback, useEffect, useState } from "react";
 import * as Zou from "utils/zou";
 
 import DCCIconButton from "./DCCIconButton";
-import FileOrFolderItem from "./FileOrFolderItem";
+import FileOrFolderItem from "./FileOrFolderItem/FileOrFolderItem";
 import WorkFilesView from "./WorkFilesView/WorkFilesView";
 
 interface FileExplorerProps {
@@ -33,7 +36,9 @@ const dccButtonsData = [
 
 const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
   const [view, setView] = useState<"work" | "publish">("work");
-  const [path, setPath] = useState<string>();
+  const [path, setPath] = useState<string>("");
+  const [pathExists, setPathExists] = useState<boolean>();
+  const [refreshView, setRefreshView] = useState<boolean>(false);
   const [moreDetails, setMoreDetails] = useState<boolean>(
     window.localStorage.getItem("file-explorer-more-details") === "true"
   );
@@ -42,15 +47,33 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
       "true"
   );
 
-  useEffect(() => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  // Returns the work of publish folder depending on the view
+  const getFolderFromView = useCallback(
+    () => (view === "work" ? path : path.replace("work", "publish")),
+    [path, view]
+  );
+
+  const updateData = () => {
+    // Uses Zou to fetch the working directory for that task
     Zou.buildWorkingFilePath(taskId).then((response) => {
       setPath(response.data.path);
-    });
-  }, [taskId]);
 
-  const changeView = (newView: "work" | "publish") => {
-    setView(newView);
+      if (isElectron() && moreDetails) {
+        const exists = window.electron.sendSync(
+          "pathExists",
+          getFolderFromView()
+        ) as boolean;
+
+        setPathExists(exists);
+      }
+    });
+
+    setRefreshView((refreshView) => !refreshView);
   };
+
+  useEffect(updateData, [getFolderFromView, moreDetails, taskId]);
 
   return (
     <>
@@ -75,13 +98,13 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
               color={view === "work" ? "success" : "secondary"}
               variant={view === "work" ? "filled" : "outlined"}
               sx={{ mr: 1 }}
-              onClick={() => changeView("work")}
+              onClick={() => setView("work")}
             />
             <Chip
               label="Publish"
               color={view === "publish" ? "success" : "secondary"}
               variant={view === "publish" ? "filled" : "outlined"}
-              onClick={() => changeView("publish")}
+              onClick={() => setView("publish")}
             />
           </Box>
 
@@ -110,6 +133,18 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
               ) : (
                 <SortByAlphaIcon />
               )}
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="refresh" placement="top" arrow>
+            <IconButton
+              onClick={() => setRefreshView((refresh) => !refresh)}
+              sx={{
+                transition: "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+                ":hover": { transform: "rotate(180deg)" },
+              }}
+            >
+              <CachedIcon />
             </IconButton>
           </Tooltip>
 
@@ -156,6 +191,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
         </Box>
       </Box>
 
+      {/*More details toggle*/}
       <Collapse in={moreDetails}>
         <div
           style={{
@@ -164,23 +200,39 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
             marginTop: "5px",
           }}
         >
-          <Typography color="text.disabled" fontSize={14} mt={0.7}>
-            ⤷{" "}
-            {path && (view === "work" ? path : path.replace("work", "publish"))}
+          {/* Folder path */}
+          <Typography color="text.disabled" fontSize={14}>
+            ⤷ {getFolderFromView()}
           </Typography>
 
+          {/*Action button to open folder or create hierarchy */}
           {isElectron() && (
-            <Tooltip title="Open in explorer" placement="top" arrow>
+            <Tooltip
+              title={pathExists ? "Open in explorer" : "Create folders"}
+              placement="top"
+              arrow
+            >
               <IconButton
                 sx={{ ml: 1 }}
-                onClick={() =>
-                  window.electron.send(
-                    "openFolderOrFile",
-                    path?.replace("work", "publish")
-                  )
-                }
+                onClick={() => {
+                  const folder = getFolderFromView();
+
+                  if (pathExists) {
+                    window.electron.send("openPath", folder);
+                  } else {
+                    window.electron.send("mkdir", folder);
+                    enqueueSnackbar(`Created nested folders: ${folder}`, {
+                      variant: "success",
+                    });
+                    updateData();
+                  }
+                }}
               >
-                <DriveFolderUploadIcon color="disabled" />
+                {pathExists ? (
+                  <DriveFolderUploadIcon color="disabled" />
+                ) : (
+                  <CreateNewFolderIcon color="disabled" />
+                )}
               </IconButton>
             </Tooltip>
           )}
@@ -191,12 +243,14 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
         {path &&
           (view === "work" ? (
             <WorkFilesView
+              refresh={refreshView}
               path={path}
               sortByModificationDate={sortByModificationDate}
               moreDetails={moreDetails}
             />
           ) : (
             <FileOrFolderItem
+              refresh={refreshView}
               moreDetails={moreDetails}
               item={{
                 path: path.replace("work", "publish"),

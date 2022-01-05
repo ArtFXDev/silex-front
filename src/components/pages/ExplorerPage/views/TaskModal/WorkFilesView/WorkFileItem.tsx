@@ -20,7 +20,7 @@ import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Project } from "types/entities";
 import { FileOrFolder } from "types/socket";
 import { formatDateTime } from "utils/date";
-import { extensionToDCCName } from "utils/files";
+import { getExtensionFromName } from "utils/files";
 
 interface WorkFileItemProps {
   file: FileOrFolder;
@@ -39,7 +39,7 @@ const WorkFileItem = ({
   const { taskId } = useRouteMatch<{ taskId: string }>().params;
 
   const tokens = file.name.split(".");
-  const dcc = extensionToDCCName(tokens[tokens.length - 1]);
+  const extension = getExtensionFromName(tokens[tokens.length - 1]);
 
   const openScene = (dcc: string, scene: string) => {
     setIsLoading(true);
@@ -77,7 +77,7 @@ const WorkFileItem = ({
         }}
       >
         <ListItemIcon>
-          <DCCLogo name={dcc} size={30} sx={{ mr: 2 }} />
+          <DCCLogo name={extension?.software} size={30} sx={{ mr: 2 }} />
         </ListItemIcon>
 
         <ListItemText
@@ -97,7 +97,7 @@ const WorkFileItem = ({
           </Typography>
         )}
 
-        {dcc && (
+        {extension && (
           <ListItemIcon>
             <Tooltip
               title={
@@ -110,7 +110,9 @@ const WorkFileItem = ({
               placement="left"
             >
               <IconButton
-                onClick={() => openScene(dcc, file.path)}
+                onClick={() =>
+                  openScene(extension.software as string, file.path)
+                }
                 disabled={isLoading || launchSuccess}
               >
                 {isLoading && (

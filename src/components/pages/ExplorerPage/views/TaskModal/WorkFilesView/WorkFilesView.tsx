@@ -9,9 +9,11 @@ interface WorkFilesViewProps {
   path: string;
   moreDetails: boolean;
   sortByModificationDate: boolean;
+  refresh?: boolean;
 }
 
 const WorkFilesView = ({
+  refresh,
   path,
   moreDetails,
   sortByModificationDate,
@@ -31,7 +33,7 @@ const WorkFilesView = ({
         setResponse(response);
       }
     );
-  }, [path]);
+  }, [path, refresh]);
 
   if (response && response.status !== 200) {
     return (

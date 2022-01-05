@@ -1,19 +1,27 @@
+import {
+  extensions,
+  FileExtension,
+  FileExtensionTag,
+} from "types/files/extensions";
+
+export const sceneFileExtensions = (): FileExtension[] =>
+  extensions.filter((e) => e.tags && e.tags?.includes("sceneFile"));
+
 /**
- * Returns the dcc name associated with the given file extension
+ * Returns the name associated with the given file extension
+ * It is mostly used for logos
  */
-export const extensionToDCCName = (ext: string): string | null => {
-  switch (ext) {
-    case "ma":
-    case "mb":
-      return "maya";
-    case "blend":
-      return "blender";
-    case "nk":
-      return "nuke";
-    case "hip":
-    case "hipnc":
-      return "houdini";
-    default:
-      return null;
-  }
+export const getExtensionFromName = (
+  name: string,
+  tag?: FileExtensionTag
+): FileExtension | undefined => {
+  return extensions.find(
+    (e) => e.name === name && (!tag || (e.tags && e.tags.includes(tag)))
+  );
+};
+
+export const getFolderPath = (path: string): string => {
+  const tokens = path.replaceAll("\\", "/").split("/");
+  if (tokens.length <= 2) return tokens[0];
+  return tokens.slice(0, -1).join("/");
 };

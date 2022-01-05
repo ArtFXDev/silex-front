@@ -101,12 +101,14 @@ const Logs = ({
               py: 0.2,
             }}
           >
+            {/* Line number */}
             <span
               style={{
                 color: "#8b949e",
                 fontSize: "12px",
                 textAlign: "right",
                 minWidth: "40px",
+                marginTop: "4px",
               }}
             >
               {getLineNumber(i)}
@@ -117,6 +119,7 @@ const Logs = ({
                 whiteSpace: "pre-wrap",
                 padding: "0",
                 overflowX: "auto",
+                marginLeft: "15px",
               }}
             >
               {regexp && splitLine ? (
@@ -131,10 +134,7 @@ const Logs = ({
                         ? "info"
                         : "inherit"
                     }
-                    sx={{
-                      ...logLineGlobalStyle,
-                      ml: i === 0 ? "15px" : "",
-                    }}
+                    sx={{ ...logLineGlobalStyle }}
                   >
                     {part}&nbsp;
                   </Typography>
@@ -144,10 +144,7 @@ const Logs = ({
                   key={i}
                   component="span"
                   color={"inherit"}
-                  sx={{
-                    ...logLineGlobalStyle,
-                    ml: "15px",
-                  }}
+                  sx={logLineGlobalStyle}
                 >
                   {logLine.message}
                 </Typography>

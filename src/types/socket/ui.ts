@@ -53,8 +53,13 @@ export interface UIClientEmitEvents {
   >;
 
   pullPublishedScene: EmitWithCallback<
-    { taskId: string; publishedFilePath: string },
+    { publishedFilePath: string },
     ServerResponse<unknown>
+  >;
+
+  copyFile: EmitWithCallback<
+    { source: string; destination: string },
+    ServerResponse<{ destination: string }>
   >;
 
   launchScene: EmitWithCallback<LaunchSceneParameters>;
