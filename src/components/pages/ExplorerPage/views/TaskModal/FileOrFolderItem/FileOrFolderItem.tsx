@@ -142,7 +142,7 @@ const FileOrFolderItem = ({
 
       {item.isDirectory && (
         <Collapse
-          in={open}
+          in={!isLoading && open}
           sx={{
             ml: !root ? 3 : 0,
             pl: !root ? 3 : 0,
