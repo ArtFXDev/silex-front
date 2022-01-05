@@ -73,6 +73,7 @@ const Logs = ({
           navigator.clipboard.writeText(
             logs.map((l, i) => `${getLineNumber(i)}\t${l.message}`).join("\n")
           );
+
           enqueueSnackbar(`Copied ${logs.length} lines to clipboard`, {
             variant: "success",
           });
@@ -122,24 +123,26 @@ const Logs = ({
                 marginLeft: "15px",
               }}
             >
+              {/* If the line was splitted we color some parts */}
               {regexp && splitLine ? (
-                splitLine.splice(1).map((part, i) => (
-                  <Typography
-                    key={i}
-                    component="span"
-                    color={
-                      i === 1
-                        ? colorFromLogStatus(logLine.message)
-                        : i === 3
-                        ? "info"
-                        : "inherit"
-                    }
-                    sx={{ ...logLineGlobalStyle }}
-                  >
-                    {part}&nbsp;
-                  </Typography>
-                ))
+                splitLine.splice(1).map((part, i) => {
+                  return (
+                    <Typography
+                      key={i}
+                      component="span"
+                      sx={{ ...logLineGlobalStyle }}
+                      color={
+                        i === 1 || i === 3
+                          ? colorFromLogStatus(logLine.message)
+                          : "inherit"
+                      }
+                    >
+                      {part}&nbsp;
+                    </Typography>
+                  );
+                })
               ) : (
+                // Regular line
                 <Typography
                   key={i}
                   component="span"

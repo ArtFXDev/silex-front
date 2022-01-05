@@ -93,7 +93,7 @@ const LogFile = ({ fileName, title }: LogFileProps) => {
       {logs && logs.lines.length > 0 ? (
         <Logs
           logs={logs.lines}
-          regexp={/(\[.+\]) (.+:) (.*)/g}
+          regexp={/(\[.*\]) (.+:) (\[.*\]) (.*)/g}
           scrollToBottom
           linesOffset={
             logs.totalLines -
