@@ -132,7 +132,6 @@ const TasksView = ({
                   if (isSelected) {
                     listItemProps = {
                       ...listItemProps,
-                      outline: `1px solid ${task.taskType.color}`,
                       backgroundColor: alpha(task.taskType.color, 0.2),
                       "&:hover": {
                         backgroundColor: alpha(task.taskType.color, 0.4),
@@ -148,7 +147,16 @@ const TasksView = ({
                     >
                       <Paper
                         elevation={4}
-                        sx={{ my: 1, borderRadius: LIST_ITEM_BORDER_RADIUS }}
+                        sx={{
+                          my: 1,
+                          borderRadius: LIST_ITEM_BORDER_RADIUS,
+                          boxShadow: isSelected
+                            ? `inset 0 0 0 1.5px ${alpha(
+                                task.taskType.color,
+                                0.5
+                              )}`
+                            : "",
+                        }}
                       >
                         <ListItem disablePadding>
                           <ListItemButton
