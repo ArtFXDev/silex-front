@@ -58,7 +58,7 @@ export interface UIClientEmitEvents {
   >;
 
   copyFile: EmitWithCallback<
-    { source: string; destination: string },
+    { source: string; destination: string; errorOnDestExist?: boolean },
     ServerResponse<{ destination: string }>
   >;
 
