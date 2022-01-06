@@ -4,9 +4,6 @@ import {
   FileExtensionTag,
 } from "types/files/extensions";
 
-export const sceneFileExtensions = (): FileExtension[] =>
-  extensions.filter((e) => e.tags && e.tags?.includes("sceneFile"));
-
 /**
  * Returns the name associated with the given file extension
  * It is mostly used for logos

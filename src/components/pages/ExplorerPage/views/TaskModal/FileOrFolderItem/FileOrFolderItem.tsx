@@ -71,18 +71,16 @@ const FileOrFolderItem = ({
   const extension = getExtensionFromName(tokens[tokens.length - 1]);
 
   if (
-    tokens.length > 1 &&
+    hasExtension &&
     extension &&
     extension.tags &&
     extension.tags.includes("image")
   ) {
     return (
-      <div style={{ width: "200px", height: "200px" }}>
-        <img
-          src={`local://${item.path}`}
-          style={{ maxWidth: "100%", maxHeight: "100%" }}
-        />
-      </div>
+      <img
+        src={`local://${item.path}`}
+        style={{ width: "200px", height: "200px", objectFit: "contain" }}
+      />
     );
   }
 
