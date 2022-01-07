@@ -12,5 +12,11 @@ declare namespace NodeJS {
 
     /** Url of the Tractor blade api */
     REACT_APP_TRACTOR_BLADE: string;
+
+    /** Url of the tractor TV */
+    REACT_APP_TRACTOR_URL: string;
+
+    /** Url of your ticket system */
+    REACT_APP_TICKET_URL: string;
   }
 }
