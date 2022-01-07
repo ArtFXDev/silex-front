@@ -7,7 +7,7 @@ const TractorPage = (): JSX.Element => {
         title="Tractor"
         width="100%"
         height="100%"
-        src="http://tractor"
+        src={process.env.REACT_APP_TRACTOR_URL}
       ></iframe>
     </PageWrapper>
   );

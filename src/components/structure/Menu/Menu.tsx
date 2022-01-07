@@ -1,9 +1,19 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, Drawer, Grid, IconButton, Link, Typography } from "@mui/material";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import {
+  Box,
+  Drawer,
+  Grid,
+  IconButton,
+  Link,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import ProdBadge from "components/common/chips/ProdBetaDevChip";
 import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
 import SilexLogo from "components/common/SilexLogo/SilexLogo";
 import { useAction, useAuth } from "context";
+import isElectron from "is-electron";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
 /**
@@ -19,7 +29,20 @@ const links = [
     needProjectId: true,
   },
   { text: "Actions", to: "/action", exact: true },
-  { text: "Tractor", to: "/tractor", exact: true },
+  {
+    text: "Tractor",
+    to: "/tractor",
+    exact: true,
+    openInNewWindow: true,
+    openTo: process.env.REACT_APP_TRACTOR_URL,
+  },
+  {
+    text: "Ticket",
+    to: "/ticket",
+    exact: true,
+    openInNewWindow: true,
+    openTo: process.env.REACT_APP_TICKET_URL,
+  },
 ];
 
 interface MenuProps {
@@ -65,31 +88,64 @@ const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
             <SilexLogo size={100} />
           </Grid>
 
-          {links
-            .filter((link) => !(!auth.currentProjectId && link.needProjectId))
-            .map((link, i) => (
-              <Grid item key={i}>
-                <Link
-                  component={RouterLink}
-                  to={link.to}
-                  underline="hover"
-                  color={
-                    (
-                      link.exact
-                        ? location.pathname === link.to
-                        : location.pathname.startsWith(link.to)
-                    )
-                      ? "primary"
-                      : "text.disabled"
-                  }
-                  onClick={closeMenu}
+          <Grid
+            item
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            {links
+              .filter((link) => !(!auth.currentProjectId && link.needProjectId))
+              .map((link, i) => (
+                <div
+                  style={{
+                    padding: "15px 0",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                  key={i}
                 >
-                  {link.text === "Actions"
-                    ? `Actions (${Object.keys(actions).length})`
-                    : link.text}
-                </Link>
-              </Grid>
-            ))}
+                  <Link
+                    component={RouterLink}
+                    to={link.to}
+                    underline="hover"
+                    color={
+                      (
+                        link.exact
+                          ? location.pathname === link.to
+                          : location.pathname.startsWith(link.to)
+                      )
+                        ? "primary"
+                        : "text.disabled"
+                    }
+                    onClick={closeMenu}
+                  >
+                    {link.text === "Actions"
+                      ? `Actions (${Object.keys(actions).length})`
+                      : link.text}
+                  </Link>
+
+                  {/* Open in new window button */}
+                  {link.openInNewWindow && isElectron() && (
+                    <Tooltip title="New window" placement="top" arrow>
+                      <OpenInNewIcon
+                        onClick={() => window.open(link.openTo)}
+                        sx={{
+                          ml: 1.5,
+                          transition: "all 0.2s ease",
+                          cursor: "pointer",
+                          "&:hover": { color: "rgb(166, 166, 166)" },
+                        }}
+                        color="disabled"
+                        fontSize="small"
+                      />
+                    </Tooltip>
+                  )}
+                </div>
+              ))}
+          </Grid>
         </Grid>
       </Box>
 

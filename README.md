@@ -42,6 +42,10 @@ They are:
 
 - `REACT_APP_TRACTOR_BLADE` - the url of the Pixar Tractor Blade service running on the computer.
 
+- `REACT_APP_TRACTOR_URL` - url of the Tractor interface
+
+- `REACT_APP_TICKET_URL` - url of the Ticket system (we currently use [Zammad](https://zammad.com/))
+
 ### Available scripts
 
 - 🚀 `yarn start` -> runs the [Webpack](https://webpack.js.org/configuration/dev-server/) development server with HMR (hot module replacement).
