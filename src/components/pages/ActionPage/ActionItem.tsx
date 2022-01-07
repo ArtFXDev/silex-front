@@ -1,6 +1,5 @@
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
-import FirstPageIcon from "@mui/icons-material/FirstPage";
 import {
   Box,
   Button,
@@ -141,7 +140,7 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
           <div
             style={{ display: "inline-flex", alignItems: "center", gap: 10 }}
           >
-            <Tooltip title="Undo last command" placement="top" arrow>
+            {/* <Tooltip title="Undo last command" placement="top" arrow>
               <IconButton onClick={handleUndoLastCommand}>
                 <FirstPageIcon
                   color="disabled"
@@ -151,7 +150,7 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
                   }}
                 />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
 
             <Button
               variant="contained"
