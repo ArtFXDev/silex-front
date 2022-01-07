@@ -1,5 +1,6 @@
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
+import FirstPageIcon from "@mui/icons-material/FirstPage";
 import {
   Box,
   Button,
@@ -57,6 +58,16 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
       });
     } else {
       clearAction(action.uuid);
+    }
+  };
+
+  const handleUndoLastCommand = () => {
+    if (!finished) {
+      uiSocket.emit("undoLastCommand", { uuid: action.uuid }, (response) => {
+        enqueueSnackbar(`Undo last command`, {
+          variant: response.status === 200 ? "success" : "error",
+        });
+      });
     }
   };
 
@@ -119,14 +130,38 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
 
       {/* Continue button */}
       <Fade in={someStepsAreWaitingForInput(action)}>
-        <Button
-          variant="contained"
-          sx={{ position: "sticky", bottom: 30, left: 800 }}
-          onClick={handleClickOnContinue}
-          disabled={finished}
+        <div
+          style={{
+            display: "initial",
+            position: "sticky",
+            bottom: 30,
+            left: 800,
+          }}
         >
-          Continue
-        </Button>
+          <div
+            style={{ display: "inline-flex", alignItems: "center", gap: 10 }}
+          >
+            <Tooltip title="Undo last command" placement="top" arrow>
+              <IconButton onClick={handleUndoLastCommand}>
+                <FirstPageIcon
+                  color="disabled"
+                  sx={{
+                    transition: "all 0.2s ease",
+                    "&:hover": { color: "rgb(180, 180, 180)" },
+                  }}
+                />
+              </IconButton>
+            </Tooltip>
+
+            <Button
+              variant="contained"
+              onClick={handleClickOnContinue}
+              disabled={finished}
+            >
+              Continue
+            </Button>
+          </div>
+        </div>
       </Fade>
     </Box>
   );

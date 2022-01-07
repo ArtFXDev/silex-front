@@ -67,6 +67,7 @@ export interface UIClientEmitEvents {
   launchAction: EmitWithCallback<LaunchActionParameters>;
 
   clearAction: EmitWithCallback<{ uuid: string }>;
+  undoLastCommand: EmitWithCallback<{ uuid: string }>;
 
   killProcess: EmitWithCallback<{ pid: number }>;
 }
