@@ -10,6 +10,7 @@ const SubmitButton = (): JSX.Element => (
     label="Submit"
     color={color}
     icon={<SendIcon sx={{ color }} />}
+    notif={{ message: "Launched submit", variant: "success" }}
     onClick={(done) => {
       uiSocket.emit("launchAction", { action: "submit" }, () => done());
     }}
