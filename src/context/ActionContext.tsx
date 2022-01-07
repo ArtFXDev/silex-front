@@ -236,6 +236,9 @@ export const ProvideAction = ({
       // Compute the diff
       const actionDiff = diff(actions[uuid].oldAction, actions[uuid].action);
 
+      // Replace back the old action by the new one
+      actions[uuid].oldAction = actions[uuid].action;
+
       // Manually add the action uuid to the diff
       // so we can apply the diff to the correct action
       actionDiff.uuid = uuid;
