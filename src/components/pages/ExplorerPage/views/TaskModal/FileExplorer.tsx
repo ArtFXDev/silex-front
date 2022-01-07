@@ -85,6 +85,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
         }}
       >
         <div style={{ display: "flex", alignItems: "center" }}>
+          {/* Work / Publish button */}
           <Box
             sx={{
               backgroundColor: "rgba(255, 255, 255, 0.05)",
@@ -108,6 +109,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
             />
           </Box>
 
+          {/* Sort alphabetically / by modification date */}
           <Tooltip
             title={
               sortByModificationDate
@@ -136,6 +138,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
             </IconButton>
           </Tooltip>
 
+          {/* Refresh button */}
           <Tooltip title="refresh" placement="top" arrow>
             <IconButton
               onClick={() => setRefreshView((refresh) => !refresh)}
@@ -148,6 +151,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
             </IconButton>
           </Tooltip>
 
+          {/* More details toggle */}
           <FormGroup>
             <FormControlLabel
               control={
@@ -170,6 +174,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
           </FormGroup>
         </div>
 
+        {/* DCC icon buttons */}
         <Box
           sx={{
             display: "flex",
@@ -191,7 +196,6 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
         </Box>
       </Box>
 
-      {/*More details toggle*/}
       <Collapse in={moreDetails}>
         <div
           style={{
@@ -205,7 +209,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
             ⤷ {getFolderFromView()}
           </Typography>
 
-          {/*Action button to open folder or create hierarchy */}
+          {/* Action button to open folder or create hierarchy */}
           {isElectron() && (
             <Tooltip
               title={pathExists ? "Open in explorer" : "Create folders"}
