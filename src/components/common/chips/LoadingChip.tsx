@@ -20,8 +20,10 @@ const LoadingChip = ({
   return (
     <Box
       onClick={() => {
-        setIsLoading(true);
-        onClick(() => setIsLoading(false));
+        if (!isLoading) {
+          setIsLoading(true);
+          onClick(() => setIsLoading(false));
+        }
       }}
       sx={{
         height: 32,
