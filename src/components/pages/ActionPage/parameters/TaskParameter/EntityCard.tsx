@@ -44,6 +44,7 @@ const EntityCard = ({
           height={50}
           alt={entity.name}
           disableBorder
+          objectFit="cover"
         />
       </CardMedia>
 
