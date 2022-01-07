@@ -3,6 +3,7 @@ import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import {
   Alert,
   Collapse,
+  Dialog,
   Fade,
   LinearProgress,
   ListItemButton,
@@ -39,6 +40,8 @@ const FileOrFolderItem = ({
   const [response, setResponse] =
     useState<ServerResponse<{ entries: FileOrFolder[] }>>();
 
+  const [openPreview, setOpenPreview] = useState<boolean>();
+
   useEffect(() => {
     if (item.isDirectory && open) {
       setIsLoading(true);
@@ -70,33 +73,31 @@ const FileOrFolderItem = ({
   const hasExtension = tokens.length > 1;
   const extension = getExtensionFromName(tokens[tokens.length - 1]);
 
-  if (
-    hasExtension &&
-    extension &&
-    extension.tags &&
-    extension.tags.includes("image")
-  ) {
-    return (
-      <img
-        src={`local://${item.path}`}
-        style={{ width: "200px", height: "200px", objectFit: "contain" }}
-      />
-    );
-  }
-
   return (
     <>
       {!root && (
         <Paper
           elevation={1}
-          sx={{ mt: 2, borderRadius: LIST_ITEM_BORDER_RADIUS }}
+          sx={{
+            position: "relative",
+            mt: 2,
+            borderRadius: LIST_ITEM_BORDER_RADIUS,
+            backgroundImage: `url(local://${item.path})`,
+            backgroundSize: "cover",
+          }}
         >
           <ListItemButton
             sx={{
               borderRadius: LIST_ITEM_BORDER_RADIUS,
               color: "text.secondary",
             }}
-            onClick={() => setOpen(!open)}
+            onClick={() => {
+              if (item.isDirectory) {
+                setOpen(!open);
+              } else {
+                setOpenPreview(true);
+              }
+            }}
           >
             {/* File icon */}
             <ListItemIcon>
@@ -174,6 +175,16 @@ const FileOrFolderItem = ({
           )}
         </Collapse>
       )}
+
+      {openPreview &&
+        hasExtension &&
+        extension &&
+        extension.tags &&
+        extension.tags.includes("image") && (
+          <Dialog open onClose={() => setOpenPreview(false)} fullWidth>
+            <img src={`local://${item.path}`} alt={item.name} />
+          </Dialog>
+        )}
     </>
   );
 };
