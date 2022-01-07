@@ -3,12 +3,10 @@ import PageWrapper from "../PageWrapper/PageWrapper";
 const TicketPage = (): JSX.Element => {
   return (
     <PageWrapper title="Ticket" goBack fullHeight>
-      <iframe
-        title="Ticket"
-        width="100%"
-        height="100%"
+      <webview
         src={process.env.REACT_APP_TICKET_URL}
-      ></iframe>
+        style={{ width: "100%", height: "100%" }}
+      ></webview>
     </PageWrapper>
   );
 };
