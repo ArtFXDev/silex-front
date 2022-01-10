@@ -60,7 +60,7 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
     }
   };
 
-  const handleUndoLastCommand = () => {
+  /*const handleUndoLastCommand = () => {
     if (!finished) {
       uiSocket.emit("undoLastCommand", { uuid: action.uuid }, (response) => {
         enqueueSnackbar(`Undo last command`, {
@@ -68,7 +68,7 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
         });
       });
     }
-  };
+  };*/
 
   const actionToSring = formatContextToString(action.context_metadata);
 
