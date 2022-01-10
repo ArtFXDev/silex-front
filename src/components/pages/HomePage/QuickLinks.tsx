@@ -64,8 +64,9 @@ const QuickLinks = (): JSX.Element => {
 
           <LoadingChip
             label="Conform"
+            disabled
             color="#ff6600"
-            icon={<DCCLogo name="houdini" size={18} />}
+            icon={<DCCLogo name="houdini" size={18} disabled />}
             onClick={(done) => {
               uiSocket.emit(
                 "launchAction",
@@ -80,7 +81,8 @@ const QuickLinks = (): JSX.Element => {
           <LoadingChip
             label="Conform"
             color="#2fb6b9"
-            icon={<DCCLogo name="maya" size={18} />}
+            disabled
+            icon={<DCCLogo name="maya" size={18} disabled />}
             onClick={(done) => {
               uiSocket.emit(
                 "launchAction",
