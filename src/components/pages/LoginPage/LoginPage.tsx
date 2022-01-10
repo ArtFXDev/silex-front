@@ -9,7 +9,9 @@ import {
   TextField,
 } from "@mui/material";
 import SilexText from "assets/images/silex_text.png";
-import ProdBadge from "components/common/badges/ProdBadge";
+import ProdBadge from "components/common/chips/ProdBetaDevChip";
+import SubmitButton from "components/common/chips/SubmitButton";
+import NimbyController from "components/common/NimbyController/NimbyController";
 import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
 import SilexLogo from "components/common/SilexLogo/SilexLogo";
 import { useAuth, useSocket } from "context";
@@ -17,9 +19,6 @@ import isElectron from "is-electron";
 import { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import * as Zou from "utils/zou";
-
-import NimbyController from "../../common/NimbyController/NimbyController";
-import RenderController from "./RenderController";
 
 const SilexLogoAndText = (): JSX.Element => (
   <Grid
@@ -91,7 +90,8 @@ const LoginPage = (): JSX.Element => {
   };
 
   // TODO: better regexp?
-  const validateEmail = (s: string): boolean => /[a-z]+@[a-z]+\.[a-z]+/.test(s);
+  const validateEmail = (s: string): boolean =>
+    /[a-z0-9]+@[a-z0-9]+\.[a-z]+/.test(s);
   const isEmailError = email !== undefined && !validateEmail(email);
   const isPasswordError = password !== undefined && password.length === 0;
 
@@ -215,7 +215,7 @@ const LoginPage = (): JSX.Element => {
       >
         {isElectron() && <NimbyController />}
 
-        <RenderController />
+        <SubmitButton />
       </div>
 
       <div

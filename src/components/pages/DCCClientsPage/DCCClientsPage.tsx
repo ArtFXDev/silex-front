@@ -1,110 +1,8 @@
-import FlagIcon from "@mui/icons-material/Flag";
-import {
-  Alert,
-  AlertTitle,
-  Chip,
-  Fade,
-  Paper,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material";
-import DCCLogo from "components/common/DCCLogo/DCCLogo";
-import { useAction, useSocket } from "context";
-import { useSnackbar } from "notistack";
-import { useHistory } from "react-router";
-import { Action } from "types/action/action";
-import { DCCContext } from "types/action/context";
+import { Alert, AlertTitle, Typography } from "@mui/material";
+import { useSocket } from "context";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
-
-const DCCRow = ({ dcc }: { dcc: DCCContext }): JSX.Element => {
-  const { actions, actionStatuses } = useAction();
-  const history = useHistory();
-  const { uiSocket } = useSocket();
-  const { enqueueSnackbar } = useSnackbar();
-
-  const actionsForThisDcc = Object.values(actions).filter(
-    (action) => action.context_metadata.uuid === dcc.uuid
-  );
-
-  const handleClearAction = (action: Action) => {
-    uiSocket.emit("clearAction", { uuid: action.uuid }, () => {
-      enqueueSnackbar(`Cancelled action ${action.name}`, {
-        variant: "warning",
-      });
-    });
-  };
-
-  return (
-    <Fade in timeout={400}>
-      <TableRow>
-        <TableCell>
-          <DCCLogo name={dcc.dcc || "python"} sx={{ pl: 1, float: "left" }} />
-        </TableCell>
-        <TableCell>{dcc.pid || "-"}</TableCell>
-        <TableCell>{dcc.project || "-"}</TableCell>
-        <TableCell>{dcc.sequence || "-"}</TableCell>
-        <TableCell>{dcc.shot || "-"}</TableCell>
-        <TableCell>{dcc.task || "-"}</TableCell>
-        <TableCell>
-          {actionsForThisDcc.length > 0 ? (
-            <Stack direction="row" spacing={1}>
-              {actionsForThisDcc.map((action) => (
-                <Chip
-                  key={action.uuid}
-                  label={action.name}
-                  variant="outlined"
-                  color="success"
-                  onClick={() => history.push(`/action/${action.uuid}`)}
-                  onDelete={() => handleClearAction(action)}
-                  deleteIcon={
-                    actionStatuses[action.uuid] ? <FlagIcon /> : undefined
-                  }
-                />
-              ))}
-            </Stack>
-          ) : (
-            "-"
-          )}
-        </TableCell>
-      </TableRow>
-    </Fade>
-  );
-};
-
-const DCCClientsTable = ({
-  dccClients,
-}: {
-  dccClients: DCCContext[];
-}): JSX.Element => {
-  return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>DCC</TableCell>
-            <TableCell>PID</TableCell>
-            <TableCell>Project</TableCell>
-            <TableCell>Sequence</TableCell>
-            <TableCell>Shot</TableCell>
-            <TableCell>Task</TableCell>
-            <TableCell>Running actions</TableCell>
-          </TableRow>
-        </TableHead>
-
-        <TableBody>
-          {dccClients.map((dcc) => dcc && <DCCRow dcc={dcc} key={dcc.uuid} />)}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-};
+import ClientsTable from "./ClientsTable";
 
 const DCCClientsPage = (): JSX.Element => {
   const socket = useSocket();
@@ -112,7 +10,7 @@ const DCCClientsPage = (): JSX.Element => {
   const content = () => {
     if (socket.isConnected) {
       return socket.dccClients.length !== 0 ? (
-        <DCCClientsTable dccClients={socket.dccClients} />
+        <ClientsTable clients={socket.dccClients} />
       ) : (
         <Typography color="text.disabled">No sofware connected...</Typography>
       );
@@ -129,7 +27,7 @@ const DCCClientsPage = (): JSX.Element => {
   };
 
   return (
-    <PageWrapper title="Connected softwares" goBack>
+    <PageWrapper title="Connected software" goBack>
       <div style={{ marginTop: "20px" }}>{content()}</div>
     </PageWrapper>
   );

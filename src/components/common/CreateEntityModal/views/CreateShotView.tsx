@@ -23,6 +23,8 @@ import { useRouteMatch } from "react-router-dom";
 import { Sequence } from "types/entities";
 import * as Zou from "utils/zou";
 
+import { TargetEntity } from "../CreateEntityModal";
+
 const SEQUENCES_SHOTS = gql`
   query SequencesAndShotsForProject($id: ID!) {
     project(id: $id) {
@@ -48,20 +50,20 @@ const SEQUENCES_SHOTS = gql`
 `;
 
 interface CreateShotViewProps {
-  targetSequence: Sequence | undefined;
+  targetEntity: TargetEntity;
   onClose: () => void;
   projectIdOverride?: string;
 }
 
 const CreateShotView = ({
-  targetSequence,
+  targetEntity,
   projectIdOverride,
 }: CreateShotViewProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [newShotName, setNewShotName] = useState<string>();
   const [autoCreateTasks, setAutoCreateTasks] = useState<boolean>(true);
   const [selectedSequenceId, setSelectedSequenceId] = useState<string>(
-    targetSequence ? targetSequence.id : ""
+    targetEntity ? targetEntity.id : ""
   );
 
   const projectIdFromURL =
@@ -94,11 +96,11 @@ const CreateShotView = ({
 
   const offsetShotNumber = useCallback(() => {
     if (data) {
-      const shots = (
-        data?.project.sequences.find(
-          (seq) => seq.id === selectedSequenceId
-        ) as Sequence
-      ).shots
+      const sequence = data.project.sequences.find(
+        (seq) => seq.id === selectedSequenceId
+      ) as Sequence;
+
+      const shots = sequence.shots
         .slice()
         .sort((a, b) => a.name.localeCompare(b.name));
 
@@ -108,6 +110,8 @@ const CreateShotView = ({
           lastShotName[0] +
           (parseInt(lastShotName.slice(1)) + 10).toString().padStart(3, "0")
         );
+      } else {
+        return "P010";
       }
     }
 
@@ -118,8 +122,8 @@ const CreateShotView = ({
     setNewShotName(offsetShotNumber());
   }, [offsetShotNumber, selectedSequenceId]);
 
-  const handleClick = () => {
-    if (data && newShotName) {
+  const handleClickCreateShot = () => {
+    if (!isLoading && data && newShotName) {
       setIsLoading(true);
 
       Zou.createShot(projectId, selectedSequenceId, newShotName)
@@ -196,7 +200,7 @@ const CreateShotView = ({
                   sx={{ maxHeight: 300, overflowX: "hidden", flexWrap: "wrap" }}
                   direction={{ xs: "column", sm: "row" }}
                 >
-                  {currentSequence?.shots
+                  {currentSequence.shots
                     .slice()
                     .sort((a, b) => a.name.localeCompare(b.name))
                     .map((shot) => (
@@ -237,7 +241,7 @@ const CreateShotView = ({
         <Button
           variant="contained"
           sx={{ textAlign: "left", color: "white" }}
-          onClick={handleClick}
+          onClick={handleClickCreateShot}
           color="success"
         >
           Confirm and stay

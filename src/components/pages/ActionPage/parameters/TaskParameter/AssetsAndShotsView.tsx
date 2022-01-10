@@ -1,7 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { Grid } from "@mui/material";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
-import { Action } from "types/action/action";
 import { Asset, Project, Shot } from "types/entities";
 import { fuzzyMatch } from "utils/string";
 
@@ -62,28 +61,27 @@ const ASSETS_AND_SHOTS = gql`
 `;
 
 interface AssetsAndShotsViewProps {
+  projectId: string;
+
   /** Search input */
   search: string | undefined;
 
-  /** The current action */
-  action: Action;
-
   /** The previous selected entity is highlighted */
-  selectedEntity: Shot | Asset | undefined;
+  selectedEntityId: string | undefined;
 
   /** Called when clicking on an entity */
   onEntityClick: (entity: Shot | Asset) => void;
 }
 
 const AssetsAndShotsView = ({
+  projectId,
   search,
-  action,
   onEntityClick,
-  selectedEntity,
+  selectedEntityId,
 }: AssetsAndShotsViewProps): JSX.Element => {
   const query = useQuery<{ project: Project }>(ASSETS_AND_SHOTS, {
     variables: {
-      id: action.context_metadata.project_id,
+      id: projectId,
     },
   });
   const { data } = query;
@@ -94,21 +92,19 @@ const AssetsAndShotsView = ({
         <Grid
           container
           spacing={1.5}
-          sx={{ maxHeight: 300, overflow: "scroll", overflowX: "hidden" }}
+          sx={{ maxHeight: 340, pb: 2, overflowY: "auto" }}
         >
           {data.project.sequences.map((sq) =>
             sq.shots
-              .filter((sh) =>
-                search
-                  ? fuzzyMatch(sh.name, search) || fuzzyMatch(sq.name, search)
-                  : true
-              )
+              .filter((sh) => fuzzyMatch([sh.name, sq.name], search))
               .map((shot) => (
                 <Grid item key={shot.id} onClick={() => onEntityClick(shot)}>
                   <EntityCard
                     entity={shot}
                     name={`${sq.name} - ${shot.name}`}
-                    selected={selectedEntity && shot.id === selectedEntity.id}
+                    selected={
+                      selectedEntityId ? shot.id === selectedEntityId : false
+                    }
                   />
                 </Grid>
               ))
@@ -120,7 +116,9 @@ const AssetsAndShotsView = ({
               <Grid item key={asset.id} onClick={() => onEntityClick(asset)}>
                 <EntityCard
                   entity={asset}
-                  selected={selectedEntity && asset.id === selectedEntity.id}
+                  selected={
+                    selectedEntityId ? asset.id === selectedEntityId : false
+                  }
                 />
               </Grid>
             ))}

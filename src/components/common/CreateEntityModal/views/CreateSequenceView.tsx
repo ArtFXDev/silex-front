@@ -22,7 +22,7 @@ const CreateSequenceView = ({
   projectIdOverride,
 }: CreateSequenceViewProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [newSequenceName, setNewSequenceName] = useState<string>("");
+  const [newSequenceName, setNewSequenceName] = useState<string>("S01");
 
   const projectIdFromURL =
     useRouteMatch<{ projectId: string }>().params.projectId;
@@ -34,11 +34,10 @@ const CreateSequenceView = ({
   const handleClick = () => {
     Zou.createSequence(projectId, null, newSequenceName)
       .then(() => {
-        enqueueSnackbar(`Created sequence: ${name}`, {
+        enqueueSnackbar(`Created sequence: ${newSequenceName}`, {
           variant: "success",
         });
 
-        // Refresh GraphQL cache to refetch assets
         client.refetchQueries({ include: "active" });
 
         // Close the window

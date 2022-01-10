@@ -31,7 +31,7 @@ const GenericInputParameter = ({
 
   // Update state when the parameter value from action changes
   useEffect(() => {
-    setValue(parameter.value);
+    setValue(parameter.value || (parameter.type.name === "int" ? 0 : ""));
   }, [parameter]);
 
   return (

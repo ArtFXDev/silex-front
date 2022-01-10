@@ -12,9 +12,9 @@ import {
 import { useAction, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { Action } from "types/action/action";
-import { Status } from "types/action/status";
 import {
   formatContextToString,
+  isActionFinished,
   someStepsAreWaitingForInput,
 } from "utils/action";
 import { capitalize } from "utils/string";
@@ -26,30 +26,23 @@ interface ActionItemProps {
   simplify?: boolean;
 }
 
+/**
+ * Represents a single action, an action has steps
+ */
 const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
-  const { clearAction, actions, actionStatuses } = useAction();
+  const { clearAction, actions, sendActionUpdate } = useAction();
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
 
-  const action = actions[uuid];
-  const finished = actionStatuses[uuid];
+  // Get the action
+  const { action } = actions[uuid];
+  const finished = isActionFinished(action);
 
   // Called when clicking on the submit button
   const handleClickOnContinue = () => {
-    // TODO: heck because we need to manually set the ask_user status to false
-    for (const step of Object.values(action.steps)) {
-      for (const cmd of Object.values(step.commands)) {
-        if (cmd.status === Status.WAITING_FOR_RESPONSE) {
-          // eslint-disable-next-line camelcase
-          cmd.ask_user = false;
-        }
-      }
-    }
-
-    // Send the whole action object to the socket server
-    uiSocket.emit("actionUpdate", action, (data) => {
+    sendActionUpdate(uuid, true, (data) => {
       enqueueSnackbar(`Action ${action.name} sent (${data.status})`, {
-        variant: "success",
+        variant: data.status === 200 ? "success" : "error",
       });
     });
   };
@@ -69,10 +62,21 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
     }
   };
 
+  /*const handleUndoLastCommand = () => {
+    if (!finished) {
+      uiSocket.emit("undoLastCommand", { uuid: action.uuid }, (response) => {
+        enqueueSnackbar(`Undo last command`, {
+          variant: response.status === 200 ? "success" : "error",
+        });
+      });
+    }
+  };*/
+
   const actionToSring = formatContextToString(action.context_metadata);
 
   return (
     <Box sx={{ maxWidth: 800 }}>
+      {/* Header */}
       <Box sx={{ mb: simplify ? 1 : 3 }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <div>
@@ -127,14 +131,38 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
 
       {/* Continue button */}
       <Fade in={someStepsAreWaitingForInput(action)}>
-        <Button
-          variant="contained"
-          sx={{ position: "sticky", bottom: 30, left: 800 }}
-          onClick={handleClickOnContinue}
-          disabled={finished}
+        <div
+          style={{
+            display: "initial",
+            position: "sticky",
+            bottom: 30,
+            left: 800,
+          }}
         >
-          Continue
-        </Button>
+          <div
+            style={{ display: "inline-flex", alignItems: "center", gap: 10 }}
+          >
+            {/* <Tooltip title="Undo last command" placement="top" arrow>
+              <IconButton onClick={handleUndoLastCommand}>
+                <FirstPageIcon
+                  color="disabled"
+                  sx={{
+                    transition: "all 0.2s ease",
+                    "&:hover": { color: "rgb(180, 180, 180)" },
+                  }}
+                />
+              </IconButton>
+            </Tooltip> */}
+
+            <Button
+              variant="contained"
+              onClick={handleClickOnContinue}
+              disabled={finished}
+            >
+              Continue
+            </Button>
+          </div>
+        </div>
       </Fade>
     </Box>
   );

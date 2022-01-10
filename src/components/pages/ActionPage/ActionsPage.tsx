@@ -5,7 +5,10 @@ import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import PageWrapper from "../PageWrapper/PageWrapper";
 import ActionsView from "./ActionsView";
 
-const ActionPage = (): JSX.Element => {
+/**
+ * The action page is responsible for routing on the correct action tab
+ */
+const ActionsPage = (): JSX.Element => {
   const routeMatch = useRouteMatch<{ uuid: string }>();
   const { actions } = useAction();
 
@@ -43,4 +46,4 @@ const ActionPage = (): JSX.Element => {
   );
 };
 
-export default ActionPage;
+export default ActionsPage;

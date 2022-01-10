@@ -10,6 +10,7 @@ import {
   PathParameter as PathParameterType,
   RadioSelectParameter as RadioSelectParameterType,
   SelectParameter as SelectParameterType,
+  TaskParameter as TaskParameterType,
   TextParameter as TextParameterType,
 } from "types/action/parameters";
 
@@ -29,6 +30,9 @@ interface ParameterItemProps {
   simplify?: boolean;
 }
 
+/**
+ * A parameter has a type and renders a different component based on that
+ */
 const ParameterItem = ({
   parameter,
   simplify,
@@ -75,11 +79,7 @@ const ParameterItem = ({
           />
         );
       case "task":
-        return (
-          <TaskParameter
-            onTaskSelect={(newTaskId) => (parameter.value = newTaskId)}
-          />
-        );
+        return <TaskParameter parameter={parameter as TaskParameterType} />;
       case "multiple_select":
         return (
           <MultipleSelectParameter
@@ -121,6 +121,7 @@ const ParameterItem = ({
         borderRadius: LIST_ITEM_BORDER_RADIUS,
       }}
     >
+      {/* Label */}
       {!(parameter.type.name === "text") && (
         <Typography
           variant={simplify ? "subtitle2" : "body1"}
@@ -130,6 +131,7 @@ const ParameterItem = ({
         </Typography>
       )}
 
+      {/* Specific parameter component */}
       <Box sx={{ width: parameter.type.name === "text" ? "100%" : "70%" }}>
         {inputComponent()}
       </Box>

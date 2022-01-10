@@ -4,10 +4,13 @@ import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { useAction } from "context";
 import { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { getLastStepStatusColor } from "utils/action";
+import { getLastStepStatusColor, isActionFinished } from "utils/action";
 
 import ActionItem from "./ActionItem";
 
+/**
+ * Actions are displayed as tabs so the user can navigate between them
+ */
 const ActionsView = (): JSX.Element => {
   const [simpleMode, setSimpleMode] = useState<boolean>(
     window.localStorage.getItem("action-simple-mode") === "true"
@@ -15,7 +18,7 @@ const ActionsView = (): JSX.Element => {
 
   const routeMatch = useRouteMatch<{ uuid: string }>();
   const history = useHistory();
-  const { actions, actionStatuses, clearAction, cleanActions } = useAction();
+  const { actions, clearAction, cleanActions } = useAction();
 
   useEffect(() => {
     // Listen to react router route change
@@ -27,7 +30,7 @@ const ActionsView = (): JSX.Element => {
 
     // Clear the listener
     return unlisten;
-  }, [actionStatuses, cleanActions, clearAction, history]);
+  }, [cleanActions, clearAction, history]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     history.push(`/action/${newValue}`);
@@ -45,20 +48,22 @@ const ActionsView = (): JSX.Element => {
           scrollButtons="auto"
         >
           {Object.keys(actions).map((uuid) => {
-            const actionColor = getLastStepStatusColor(actions[uuid]);
+            const { action } = actions[uuid];
+            const actionColor = getLastStepStatusColor(action);
 
             return (
               <Tab
                 key={uuid}
-                label={actions[uuid].name}
+                label={action.name}
                 value={uuid}
                 icon={
-                  actionStatuses[uuid] ? (
+                  isActionFinished(action) ? (
                     <FlagIcon sx={{ color: actionColor }} />
                   ) : (
                     <div style={{ marginLeft: "10px" }}>
                       <DCCLogo
-                        name={actions[uuid].context_metadata.dcc}
+                        action
+                        name={actions[uuid].action.context_metadata.dcc}
                         size={20}
                         disabled={!(uuid === routeMatch.params.uuid)}
                       />

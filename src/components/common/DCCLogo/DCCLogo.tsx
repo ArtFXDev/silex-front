@@ -1,20 +1,24 @@
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { Box, BoxProps } from "@mui/system";
+import ArnoldLogo from "assets/images/logos/arnold.svg";
 import BlenderLogo from "assets/images/logos/blender.svg";
 import HoudiniLogo from "assets/images/logos/houdini.svg";
 import MayaLogo from "assets/images/logos/maya.svg";
 import NukeLogo from "assets/images/logos/nuke.svg";
 import PythonLogo from "assets/images/logos/python.svg";
+import VrayLogo from "assets/images/logos/vray.svg";
 
 /**
  * Dictionnary of dcc names and icon paths
  */
 const logos: Record<string, string> = {
+  arnold: ArnoldLogo,
   blender: BlenderLogo,
   houdini: HoudiniLogo,
   maya: MayaLogo,
   nuke: NukeLogo,
   python: PythonLogo,
+  vray: VrayLogo,
 };
 
 interface DCCLogoProps {
@@ -29,6 +33,9 @@ interface DCCLogoProps {
 
   /** Opacity from 0 to 1 */
   opacity?: number;
+
+  /** Wether it's an action or not */
+  action?: boolean;
 }
 
 /**
@@ -39,6 +46,7 @@ const DCCLogo = ({
   size,
   sx,
   disabled,
+  action,
   opacity,
 }: DCCLogoProps & BoxProps): JSX.Element => {
   return (
@@ -50,7 +58,7 @@ const DCCLogo = ({
         justifyContent: "center",
       }}
     >
-      {name && logos[name] ? (
+      {action || (name && logos[name]) ? (
         <img
           src={logos[name || "python"]}
           alt={`${name} logo`}

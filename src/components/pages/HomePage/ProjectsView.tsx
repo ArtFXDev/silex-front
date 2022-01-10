@@ -10,7 +10,7 @@ import LazyMedia from "components/utils/LazyMedia/LazyMedia";
 import { useAuth } from "context";
 import { useHistory } from "react-router";
 import { getColorFromString } from "utils/color";
-import { capitalize } from "utils/string";
+import { formatUnderScoreStringWithSpaces } from "utils/string";
 import { pictureThumbnailURL } from "utils/zou";
 
 const ProjectsView = (): JSX.Element => {
@@ -21,13 +21,14 @@ const ProjectsView = (): JSX.Element => {
     <div>
       <Typography sx={{ mb: 2 }}>My projects:</Typography>
 
-      <Grid container spacing={1.5}>
-        {auth.projects &&
-          auth.projects
+      {auth.projects && auth.projects.length > 0 ? (
+        <Grid container spacing={1.5}>
+          {auth.projects
             .sort((a, b) => a.name.localeCompare(b.name))
             .map((project) => (
               <Grid key={project.id} item>
                 <Card
+                  sx={{ width: 120 }}
                   onClick={() => history.push(`/explorer/${project.id}/shots`)}
                 >
                   <CardActionArea>
@@ -58,15 +59,20 @@ const ProjectsView = (): JSX.Element => {
                     </CardMedia>
 
                     <CardContent>
-                      <Typography>
-                        {capitalize(project.name.replace("_", " "))}
+                      <Typography noWrap>
+                        {formatUnderScoreStringWithSpaces(project.name)}
                       </Typography>
                     </CardContent>
                   </CardActionArea>
                 </Card>
               </Grid>
             ))}
-      </Grid>
+        </Grid>
+      ) : (
+        <Typography color="text.disabled">
+          You don{"'"}t have any projects...
+        </Typography>
+      )}
     </div>
   );
 };
