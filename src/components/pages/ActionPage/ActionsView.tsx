@@ -4,7 +4,7 @@ import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { useAction } from "context";
 import { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { getLastStepStatusColor } from "utils/action";
+import { getLastStepStatusColor, isActionFinished } from "utils/action";
 
 import ActionItem from "./ActionItem";
 
@@ -48,7 +48,7 @@ const ActionsView = (): JSX.Element => {
           scrollButtons="auto"
         >
           {Object.keys(actions).map((uuid) => {
-            const { action, finished } = actions[uuid];
+            const { action } = actions[uuid];
             const actionColor = getLastStepStatusColor(action);
 
             return (
@@ -57,7 +57,7 @@ const ActionsView = (): JSX.Element => {
                 label={action.name}
                 value={uuid}
                 icon={
-                  finished ? (
+                  isActionFinished(action) ? (
                     <FlagIcon sx={{ color: actionColor }} />
                   ) : (
                     <div style={{ marginLeft: "10px" }}>

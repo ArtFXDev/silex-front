@@ -5,6 +5,7 @@ import { useHistory } from "react-router";
 import { Action } from "types/action/action";
 import { Status } from "types/action/status";
 import { ServerResponse, UIOnServerEvents } from "types/socket";
+import { isActionFinished } from "utils/action";
 import { diff } from "utils/diff";
 import { runIfInElectron } from "utils/electron";
 
@@ -13,7 +14,6 @@ export interface ActionContext {
   actions: {
     [uuid: Action["uuid"]]: {
       action: Action; // The action object
-      finished: boolean; // Either the action is finished or not
       oldAction: Action; // Action backup in order to diff it with the updated state
     };
   };
@@ -46,7 +46,7 @@ const actions: ActionContext["actions"] = {};
 function addNewAction(action: Action) {
   // Deep copy to have an action clone for diffs
   const deepActionCopy = JSON.parse(JSON.stringify(action));
-  actions[action.uuid] = { action, oldAction: deepActionCopy, finished: false };
+  actions[action.uuid] = { action, oldAction: deepActionCopy };
 }
 
 interface ProvideActionProps {
@@ -80,8 +80,12 @@ export const ProvideAction = ({
   const cleanActions = () => {
     // Filter actions that are finished
     Object.keys(actions)
-      .filter((uuid) => actions[uuid].finished)
-      .forEach((uuid) => delete actions[uuid]);
+      .filter((uuid) => isActionFinished(actions[uuid].action))
+      .forEach((uuid) => {
+        uiSocket.emit("clearAction", { uuid }, () => {
+          delete actions[uuid];
+        });
+      });
     forceUpdate();
   };
 
@@ -191,24 +195,9 @@ export const ProvideAction = ({
           // Clean actions when not on the page
           if (!window.location.pathname.startsWith("/action")) {
             delete actions[action.action.uuid];
-          } else {
-            actions[action.action.uuid].finished = true;
           }
         }
       });
-
-      forceUpdate();
-    },
-    []
-  );
-
-  /**
-   * Called when when we receive the information that an action was finished
-   */
-  const onClearAction = useCallback<UIOnServerEvents["clearAction"]>(
-    (response) => {
-      // Mark the action as finished
-      actions[response.data.uuid].finished = true;
 
       forceUpdate();
     },
@@ -253,7 +242,6 @@ export const ProvideAction = ({
 
     uiSocket.on("actionQuery", onActionQuery);
     uiSocket.on("actionUpdate", onActionUpdate);
-    uiSocket.on("clearAction", onClearAction);
 
     uiSocket.on("dccDisconnect", onClientDisconnect);
 
@@ -262,18 +250,10 @@ export const ProvideAction = ({
 
       uiSocket.off("actionQuery", onActionQuery);
       uiSocket.off("actionUpdate", onActionUpdate);
-      uiSocket.off("clearAction", onClearAction);
 
       uiSocket.off("dccDisconnect", onClientDisconnect);
     };
-  }, [
-    uiSocket,
-    onActionQuery,
-    onActionUpdate,
-    onClientDisconnect,
-    onConnect,
-    onClearAction,
-  ]);
+  }, [uiSocket, onActionQuery, onActionUpdate, onClientDisconnect, onConnect]);
 
   return (
     <ActionContext.Provider

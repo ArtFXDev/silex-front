@@ -1,5 +1,4 @@
 import DangerousIcon from "@mui/icons-material/Dangerous";
-import FlagIcon from "@mui/icons-material/Flag";
 import {
   Chip,
   CircularProgress,
@@ -57,7 +56,7 @@ const ClientRow = ({ dcc }: ClientsRowProps): JSX.Element => {
           {actionsForThisDcc.length > 0 ? (
             <Stack direction="row" spacing={1}>
               {actionsForThisDcc.map((actionObject) => {
-                const { action, finished } = actionObject;
+                const { action } = actionObject;
                 return (
                   <Chip
                     key={action.uuid}
@@ -66,7 +65,6 @@ const ClientRow = ({ dcc }: ClientsRowProps): JSX.Element => {
                     color="success"
                     onClick={() => history.push(`/action/${action.uuid}`)}
                     onDelete={() => handleClearAction(action)}
-                    deleteIcon={finished ? <FlagIcon /> : undefined}
                   />
                 );
               })}

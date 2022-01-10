@@ -14,6 +14,7 @@ import { useSnackbar } from "notistack";
 import { Action } from "types/action/action";
 import {
   formatContextToString,
+  isActionFinished,
   someStepsAreWaitingForInput,
 } from "utils/action";
 import { capitalize } from "utils/string";
@@ -34,7 +35,8 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
   const { enqueueSnackbar } = useSnackbar();
 
   // Get the action
-  const { action, finished } = actions[uuid];
+  const { action } = actions[uuid];
+  const finished = isActionFinished(action);
 
   // Called when clicking on the submit button
   const handleClickOnContinue = () => {
