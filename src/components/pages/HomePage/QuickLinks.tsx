@@ -7,6 +7,7 @@ import SubmitButton from "components/common/chips/SubmitButton";
 import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { uiSocket } from "context";
 import { useHistory } from "react-router-dom";
+import { colors } from "style/colors";
 import { theme } from "style/theme";
 
 const QuickLinks = (): JSX.Element => {
@@ -55,6 +56,7 @@ const QuickLinks = (): JSX.Element => {
             label="Conform"
             color={theme.palette.success.main}
             icon={<InputIcon sx={{ color: theme.palette.success.main }} />}
+            notif={{ message: "Launched conform action", variant: "success" }}
             onClick={(done) => {
               uiSocket.emit("launchAction", { action: "conform" }, () => {
                 done();
@@ -65,8 +67,9 @@ const QuickLinks = (): JSX.Element => {
           <LoadingChip
             label="Conform"
             disabled
-            color="#ff6600"
-            icon={<DCCLogo name="houdini" size={18} disabled />}
+            color={colors.houdini}
+            icon={<DCCLogo name="houdini" size={18} />}
+            notif={{ message: "Launched Houdini conform", variant: "success" }}
             onClick={(done) => {
               uiSocket.emit(
                 "launchAction",
@@ -80,9 +83,10 @@ const QuickLinks = (): JSX.Element => {
 
           <LoadingChip
             label="Conform"
-            color="#2fb6b9"
             disabled
-            icon={<DCCLogo name="maya" size={18} disabled />}
+            color={colors.maya}
+            icon={<DCCLogo name="maya" size={18} />}
+            notif={{ message: "Launched Maya conform", variant: "success" }}
             onClick={(done) => {
               uiSocket.emit(
                 "launchAction",

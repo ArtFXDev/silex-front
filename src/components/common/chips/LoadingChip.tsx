@@ -1,5 +1,6 @@
 import { Box, CircularProgress, Collapse } from "@mui/material";
 import { alpha } from "@mui/material/styles";
+import { useSnackbar, VariantType as NotifVariant } from "notistack";
 import { useState } from "react";
 
 interface LoadingChipProps {
@@ -8,6 +9,7 @@ interface LoadingChipProps {
   icon: JSX.Element;
   onClick: (done: () => void) => void;
   disabled?: boolean;
+  notif?: { variant: NotifVariant; message: string };
 }
 
 const LoadingChip = ({
@@ -16,15 +18,24 @@ const LoadingChip = ({
   icon,
   onClick,
   disabled,
+  notif,
 }: LoadingChipProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <Box
       onClick={() => {
         if (!isLoading && !disabled) {
           setIsLoading(true);
-          onClick(() => setIsLoading(false));
+
+          if (notif) {
+            enqueueSnackbar(notif.message, { variant: notif.variant });
+          }
+
+          const done = () => setIsLoading(false);
+          onClick(done);
         }
       }}
       sx={{
@@ -63,7 +74,7 @@ const LoadingChip = ({
       </span>
 
       <Collapse in={isLoading} orientation="horizontal" unmountOnExit>
-        <CircularProgress size={18} sx={{ ml: 1, mt: 0.5, color }} />
+        <CircularProgress size={18} sx={{ ml: 1, mt: 0.55, color }} />
       </Collapse>
     </Box>
   );

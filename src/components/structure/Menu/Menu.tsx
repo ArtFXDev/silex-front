@@ -13,6 +13,7 @@ import ProdBadge from "components/common/chips/ProdBetaDevChip";
 import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
 import SilexLogo from "components/common/SilexLogo/SilexLogo";
 import { useAction, useAuth } from "context";
+import isElectron from "is-electron";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
 /**
@@ -33,7 +34,14 @@ const links = [
     to: "/tractor",
     exact: true,
     openInNewWindow: true,
-    openTo: "http://tractor/tv",
+    openTo: process.env.REACT_APP_TRACTOR_URL,
+  },
+  {
+    text: "Ticket",
+    to: "/ticket",
+    exact: true,
+    openInNewWindow: true,
+    openTo: process.env.REACT_APP_TICKET_URL,
   },
 ];
 
@@ -120,9 +128,10 @@ const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
                   </Link>
 
                   {/* Open in new window button */}
-                  {link.openInNewWindow && (
+                  {link.openInNewWindow && isElectron() && (
                     <Tooltip title="New window" placement="top" arrow>
                       <OpenInNewIcon
+                        onClick={() => window.open(link.openTo)}
                         sx={{
                           ml: 1.5,
                           transition: "all 0.2s ease",
