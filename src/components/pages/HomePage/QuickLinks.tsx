@@ -68,7 +68,7 @@ const QuickLinks = (): JSX.Element => {
             label="Conform"
             disabled
             color={colors.houdini}
-            icon={<DCCLogo name="houdini" size={18} />}
+            icon={<DCCLogo name="houdini" size={18} disabled />}
             notif={{ message: "Launched Houdini conform", variant: "success" }}
             onClick={(done) => {
               uiSocket.emit(
@@ -85,7 +85,7 @@ const QuickLinks = (): JSX.Element => {
             label="Conform"
             disabled
             color={colors.maya}
-            icon={<DCCLogo name="maya" size={18} />}
+            icon={<DCCLogo name="maya" size={18} disabled />}
             notif={{ message: "Launched Maya conform", variant: "success" }}
             onClick={(done) => {
               uiSocket.emit(
