@@ -25,7 +25,7 @@ const SwitchParameter = ({ parameter }: SwitchParameterProps): JSX.Element => {
       onChange={(e) => {
         parameter.value = e.target.checked;
         setChecked(e.target.checked);
-        sendActionUpdate(actionUUID);
+        sendActionUpdate(actionUUID, false);
       }}
     />
   );

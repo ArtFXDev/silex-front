@@ -53,8 +53,13 @@ export interface UIClientEmitEvents {
   >;
 
   pullPublishedScene: EmitWithCallback<
-    { taskId: string; publishedFilePath: string },
+    { publishedFilePath: string },
     ServerResponse<unknown>
+  >;
+
+  copyFile: EmitWithCallback<
+    { source: string; destination: string; errorOnDestExist?: boolean },
+    ServerResponse<{ destination: string }>
   >;
 
   launchScene: EmitWithCallback<LaunchSceneParameters>;
@@ -62,6 +67,7 @@ export interface UIClientEmitEvents {
   launchAction: EmitWithCallback<LaunchActionParameters>;
 
   clearAction: EmitWithCallback<{ uuid: string }>;
+  undoLastCommand: EmitWithCallback<{ uuid: string }>;
 
   killProcess: EmitWithCallback<{ pid: number }>;
 }

@@ -7,7 +7,7 @@ import { BORDER_RADIUS_BOTTOM } from "style/constants";
 import { LogLine } from "types/action/action";
 
 function colorFromLogStatus(message: LogLine["message"]): string {
-  const match = /(INFO|ERROR|WARNING)/.exec(message);
+  const match = /(INFO|ERROR|WARNING|DEBUG)/.exec(message);
 
   if (match && match.length > 0) return `${match[1].toLowerCase()}.main`;
   return "primary";
@@ -73,6 +73,7 @@ const Logs = ({
           navigator.clipboard.writeText(
             logs.map((l, i) => `${getLineNumber(i)}\t${l.message}`).join("\n")
           );
+
           enqueueSnackbar(`Copied ${logs.length} lines to clipboard`, {
             variant: "success",
           });
@@ -101,12 +102,14 @@ const Logs = ({
               py: 0.2,
             }}
           >
+            {/* Line number */}
             <span
               style={{
                 color: "#8b949e",
                 fontSize: "12px",
                 textAlign: "right",
                 minWidth: "40px",
+                marginTop: "4px",
               }}
             >
               {getLineNumber(i)}
@@ -117,35 +120,34 @@ const Logs = ({
                 whiteSpace: "pre-wrap",
                 padding: "0",
                 overflowX: "auto",
+                marginLeft: "15px",
               }}
             >
+              {/* If the line was splitted we color some parts */}
               {regexp && splitLine ? (
-                splitLine.splice(1).map((part, i) => (
-                  <Typography
-                    key={i}
-                    component="span"
-                    color={
-                      i === 1 || i === 3
-                        ? colorFromLogStatus(logLine.message)
-                        : "inherit"
-                    }
-                    sx={{
-                      ...logLineGlobalStyle,
-                      ml: i === 0 ? "15px" : "",
-                    }}
-                  >
-                    {part}&nbsp;
-                  </Typography>
-                ))
+                splitLine.splice(1).map((part, i) => {
+                  return (
+                    <Typography
+                      key={i}
+                      component="span"
+                      sx={{ ...logLineGlobalStyle }}
+                      color={
+                        i === 1 || i === 3
+                          ? colorFromLogStatus(logLine.message)
+                          : "inherit"
+                      }
+                    >
+                      {part}&nbsp;
+                    </Typography>
+                  );
+                })
               ) : (
+                // Regular line
                 <Typography
                   key={i}
                   component="span"
                   color={"inherit"}
-                  sx={{
-                    ...logLineGlobalStyle,
-                    ml: "15px",
-                  }}
+                  sx={logLineGlobalStyle}
                 >
                   {logLine.message}
                 </Typography>

@@ -2,6 +2,7 @@ import HideImageOutlinedIcon from "@mui/icons-material/HideImageOutlined";
 import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 import { Box, CircularProgress, Fade } from "@mui/material";
 import { createRef, useState } from "react";
+import { extensionHasTag } from "utils/files";
 
 interface LazyMediaProps {
   src: { url: string; extension: string } | undefined;
@@ -10,6 +11,7 @@ interface LazyMediaProps {
   height: number;
   disableBorder?: boolean;
   disableFade?: boolean;
+  objectFit?: "cover" | "contain";
 }
 
 /**
@@ -40,15 +42,16 @@ const LazyMedia = (props: LazyMediaProps): JSX.Element => {
 
   const media = (src: { url: string; extension: string }): JSX.Element => (
     <div>
-      {["png", "gif"].includes(src.extension) ? (
+      {extensionHasTag(src.extension, "image") ? (
         <img
           src={src.url}
           alt={props.alt}
           loading="lazy"
           style={{
             display: "block",
-            width: width,
-            height: height,
+            width,
+            height,
+            objectFit: props.objectFit,
           }}
           onLoad={() => setIsImageLoading(false)}
           onError={() => setErrorLoading(true)}
@@ -70,9 +73,13 @@ const LazyMedia = (props: LazyMediaProps): JSX.Element => {
   );
 
   return (
-    <>
+    <div style={{ position: "relative", width, height }}>
       {props.src && (
-        <Fade in={!isImageLoading} timeout={props.disableFade ? 0 : 400}>
+        <Fade
+          in={!isImageLoading}
+          timeout={props.disableFade ? 0 : 400}
+          style={{ top: 0, left: 0 }}
+        >
           {media(props.src)}
         </Fade>
       )}
@@ -81,10 +88,14 @@ const LazyMedia = (props: LazyMediaProps): JSX.Element => {
         <Box
           sx={{
             display: "flex",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width,
+            height,
             justifyContent: "center",
             alignItems: "center",
-            width: width,
-            height: height,
+
             backgroundColor: "rgba(255, 255, 255, 0.1)",
             border: !props.disableBorder
               ? "2px solid rgba(255, 255, 255, 0.2)"
@@ -101,7 +112,7 @@ const LazyMedia = (props: LazyMediaProps): JSX.Element => {
           )}
         </Box>
       )}
-    </>
+    </div>
   );
 };
 

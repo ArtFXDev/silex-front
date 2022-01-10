@@ -40,13 +40,9 @@ const TASK = gql`
 
 interface TaskParameterProps {
   parameter: TaskParameterType;
-  onTaskSelect: (newTaskId: string) => void;
 }
 
-const TaskParameter = ({
-  parameter,
-  onTaskSelect,
-}: TaskParameterProps): JSX.Element => {
+const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
   const [search, setSearch] = useState<string>();
   const [taskView, setTaskView] = useState<boolean>();
   const [selectedEntity, setSelectedEntity] =
@@ -54,9 +50,16 @@ const TaskParameter = ({
   const [selectedEntityObject, setSelectedEntityObject] = useState<
     Asset | Shot
   >();
-  const [selectedTaskId, setSelectedTaskId] = useState<TaskId>();
+  const [selectedTaskId, setSelectedTaskId] = useState<TaskId | null>(
+    parameter.value
+  );
   const [createEntityModal, setCreateEntityModal] = useState<boolean>(false);
   const [selectedProjectId, setSelectedProjectId] = useState<string>();
+
+  const setTaskIdValue = (newTaskId: TaskId | null) => {
+    setSelectedTaskId(newTaskId);
+    parameter.value = newTaskId;
+  };
 
   useQuery<{
     task: {
@@ -66,16 +69,16 @@ const TaskParameter = ({
     };
   }>(TASK, {
     variables: {
-      id: parameter.value,
+      id: selectedTaskId,
     },
-    skip: parameter.value === null,
+    skip: selectedTaskId === null,
     onCompleted: (data) => {
       setSelectedEntity({
         id: data.task.entity_id,
         forShots: data.task.taskType.for_shots,
       });
       setTaskView(true);
-      setSelectedTaskId(parameter.value as string);
+      setTaskIdValue(selectedTaskId);
     },
   });
 
@@ -83,7 +86,7 @@ const TaskParameter = ({
   const auth = useAuth();
 
   const { actions } = useAction();
-  const action = actions[routeMatch.params.uuid];
+  const action = actions[routeMatch.params.uuid].action;
 
   // If not set choose the action context project id or the current project
   const projectId =
@@ -102,6 +105,7 @@ const TaskParameter = ({
   return (
     <div>
       <Grid container sx={{ mb: 3, mr: 5 }} spacing={1}>
+        {/* Project selector */}
         <Grid item xs>
           <Select
             disabled={action.context_metadata.project_id !== undefined}
@@ -113,7 +117,11 @@ const TaskParameter = ({
             }}
             variant="outlined"
             value={projectId}
-            onChange={(e) => setSelectedProjectId(e.target.value)}
+            onChange={(e) => {
+              setSelectedProjectId(e.target.value);
+              setTaskIdValue(null);
+              setTaskView(false);
+            }}
             color="info"
           >
             {auth.projects &&
@@ -149,6 +157,7 @@ const TaskParameter = ({
           </Select>
         </Grid>
 
+        {/* Search bar */}
         <Grid item xs={5}>
           <SearchTextField
             variant="outlined"
@@ -159,18 +168,17 @@ const TaskParameter = ({
           />
         </Grid>
 
+        {/* Add new entity + button */}
         <Grid item xs>
-          {selectedEntityObject && (
-            <Tooltip title="Add" placement="top" arrow>
-              <IconButton
-                onClick={() => {
-                  setCreateEntityModal(true);
-                }}
-              >
-                <AddIcon />
-              </IconButton>
-            </Tooltip>
-          )}
+          <Tooltip title="Add" placement="top" arrow>
+            <IconButton
+              onClick={() => {
+                setCreateEntityModal(true);
+              }}
+            >
+              <AddIcon />
+            </IconButton>
+          </Tooltip>
         </Grid>
       </Grid>
 
@@ -180,8 +188,8 @@ const TaskParameter = ({
           onExit={() => setTaskView(false)}
           selectedTaskId={selectedTaskId}
           setSelectedTaskId={(newTaskId) => {
-            onTaskSelect(newTaskId);
-            setSelectedTaskId(newTaskId);
+            setTaskIdValue(newTaskId);
+            parameter.value = newTaskId;
           }}
         />
       ) : (
@@ -204,8 +212,9 @@ const TaskParameter = ({
         <CreateEntityModal
           targetEntity={selectedEntityObject}
           onClose={() => setCreateEntityModal(false)}
-          entityType={taskView && selectedEntity ? "Task" : "Shot"}
-          projectId={action.context_metadata.project_id}
+          entityType={taskView ? "Task" : "Shot"}
+          entityTypes={!taskView ? ["Asset", "Shot"] : undefined}
+          projectId={projectId}
         />
       )}
     </div>

@@ -92,15 +92,11 @@ const AssetsAndShotsView = ({
         <Grid
           container
           spacing={1.5}
-          sx={{ maxHeight: 320, overflow: "scroll", overflowX: "hidden" }}
+          sx={{ maxHeight: 340, pb: 2, overflowY: "auto" }}
         >
           {data.project.sequences.map((sq) =>
             sq.shots
-              .filter((sh) =>
-                search
-                  ? fuzzyMatch(sh.name, search) || fuzzyMatch(sq.name, search)
-                  : true
-              )
+              .filter((sh) => fuzzyMatch([sh.name, sq.name], search))
               .map((shot) => (
                 <Grid item key={shot.id} onClick={() => onEntityClick(shot)}>
                   <EntityCard
