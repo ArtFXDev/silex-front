@@ -28,6 +28,9 @@ type ItemAction = {
 
   /** Optional icon when the action is finished */
   finishedIcon?: JSX.Element;
+
+  /** Disable the action, when a feature is coming */
+  disabled?: boolean;
 };
 
 interface ActionButtonProps {
@@ -85,11 +88,12 @@ const ActionButton = ({ data }: ActionButtonProps): JSX.Element => {
     },
     {
       title: "Submit to farm",
+      disabled: true,
       pattern: (extension) =>
         extension.tags && extension.tags.includes("submit"),
-      icon: <SendIcon sx={{ color: "#9575cd" }} />,
+      icon: <SendIcon /*sx={{ color: "#9575cd" }}*/ color="disabled" />,
       action: (done) => {
-        uiSocket.emit("launchAction", { action: "submit" }, (response) => {
+        uiSocket.emit("launchAction", { action: "submit" }, () => {
           done();
         });
       },
@@ -102,16 +106,23 @@ const ActionButton = ({ data }: ActionButtonProps): JSX.Element => {
     <>
       {action && (
         <ListItemIcon>
-          <Tooltip title={action.title} placement="top" arrow>
+          <Tooltip
+            title={action.disabled ? "Coming soon..." : action.title}
+            placement="top"
+            arrow
+          >
             <IconButton
               onClick={() => {
                 if (!loading && !finished) {
-                  setLoading(true);
-                  action.action(() => {
-                    setLoading(false);
-                    setFinished(true);
-                    setTimeout(() => setFinished(false), 3000);
-                  });
+                  if (!action.disabled) {
+                    setLoading(true);
+
+                    action.action(() => {
+                      setLoading(false);
+                      setFinished(true);
+                      setTimeout(() => setFinished(false), 3000);
+                    });
+                  }
                 }
               }}
             >

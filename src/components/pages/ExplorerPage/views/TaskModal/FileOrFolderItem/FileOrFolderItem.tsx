@@ -82,8 +82,6 @@ const FileOrFolderItem = ({
             position: "relative",
             mt: 2,
             borderRadius: LIST_ITEM_BORDER_RADIUS,
-            backgroundImage: `url(local://${item.path})`,
-            backgroundSize: "cover",
           }}
         >
           <ListItemButton
