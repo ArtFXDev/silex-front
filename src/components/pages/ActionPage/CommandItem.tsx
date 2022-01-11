@@ -60,6 +60,7 @@ const CommandItem = ({
             borderRadius: BORDER_RADIUS_TOP,
             backgroundColor: getStatusColor(command.status),
             py: simplify ? 0.5 : 1,
+            scrollMarginTop: "100px",
           }}
           disabled={disabled}
           id={`cmd-${command.uuid}`}
@@ -87,7 +88,6 @@ const CommandItem = ({
                   fontSize: "50px",
                 }}
                 onClick={() => setOpenLogs(!shouldOpenLogs)}
-                // size={simplify ? "small" : "medium"}
               >
                 <BugReportIcon style={{ fontSize: simplify ? 15 : 25 }} />
               </IconButton>
