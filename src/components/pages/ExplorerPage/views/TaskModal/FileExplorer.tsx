@@ -60,7 +60,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
     Zou.buildWorkingFilePath(taskId).then((response) => {
       setPath(response.data.path);
 
-      if (isElectron() && moreDetails) {
+      if (isElectron()) {
         const exists = window.electron.sendSync(
           "pathExists",
           getFolderFromView()
@@ -73,7 +73,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
     setRefreshView((refreshView) => !refreshView);
   };
 
-  useEffect(updateData, [getFolderFromView, moreDetails, taskId]);
+  useEffect(updateData, [getFolderFromView, taskId]);
 
   return (
     <>
