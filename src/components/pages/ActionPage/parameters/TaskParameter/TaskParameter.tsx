@@ -82,11 +82,11 @@ const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
     },
   });
 
-  const routeMatch = useRouteMatch<{ uuid: string }>();
+  const actionUUID = useRouteMatch<{ uuid: string }>().params.uuid;
   const auth = useAuth();
 
-  const { actions } = useAction();
-  const action = actions[routeMatch.params.uuid].action;
+  const { actions, sendActionUpdate } = useAction();
+  const action = actions[actionUUID].action;
 
   // If not set choose the action context project id or the current project
   const projectId =
@@ -190,6 +190,8 @@ const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
           setSelectedTaskId={(newTaskId) => {
             setTaskIdValue(newTaskId);
             parameter.value = newTaskId;
+
+            sendActionUpdate(actionUUID, false);
           }}
         />
       ) : (
