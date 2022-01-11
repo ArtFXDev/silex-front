@@ -96,6 +96,8 @@ const AssetsAndShotsView = ({
         >
           {data.project.sequences.map((sq) =>
             sq.shots
+              .slice()
+              .sort((a, b) => a.name.localeCompare(b.name))
               .filter((sh) => fuzzyMatch([sh.name, sq.name], search))
               .map((shot) => (
                 <Grid item key={shot.id} onClick={() => onEntityClick(shot)}>
@@ -111,6 +113,8 @@ const AssetsAndShotsView = ({
           )}
 
           {data.project.assets
+            .slice()
+            .sort((a, b) => a.name.localeCompare(b.name))
             .filter((a) => (search ? fuzzyMatch(a.name, search) : true))
             .map((asset) => (
               <Grid item key={asset.id} onClick={() => onEntityClick(asset)}>

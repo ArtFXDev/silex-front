@@ -154,24 +154,27 @@ export const ProvideAction = ({
           .flat();
 
         if (allCommands.length > 0) {
-          const sortedCommands = allCommands.sort(
-            (a, b) => a.status - b.status
+          const firstCommandWaitingForResponse = allCommands.find(
+            (c) => c.status === Status.WAITING_FOR_RESPONSE
           );
 
-          const allCommandsAreWaitingForResponse = !sortedCommands.some(
-            (cmd) => cmd.status !== Status.WAITING_FOR_RESPONSE
-          );
+          if (firstCommandWaitingForResponse) {
+            const commandItem = document.getElementById(
+              `cmd-${firstCommandWaitingForResponse.uuid}`
+            );
 
-          if (!allCommandsAreWaitingForResponse) {
-            // Get the last one
-            const lastCommand = sortedCommands[sortedCommands.length - 1];
-
-            // Scroll to that specific id element
-            document.getElementById(`cmd-${lastCommand.uuid}`)?.scrollIntoView({
-              behavior: "smooth",
-              inline: "start",
-              block: "start",
-            });
+            if (commandItem) {
+              // Scroll to that specific command
+              setTimeout(
+                () =>
+                  commandItem.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                    inline: "nearest",
+                  }),
+                400
+              );
+            }
           }
         }
       }
