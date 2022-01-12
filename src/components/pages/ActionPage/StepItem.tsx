@@ -72,7 +72,7 @@ const StepItem = ({ step, disabled, simplify }: StepItemProps): JSX.Element => {
         />
       </Paper>
 
-      <Collapse in={step.status !== Status.INITIALIZED}>
+      <Collapse in={step.status !== Status.INITIALIZED} unmountOnExit>
         <List sx={{ pl: 4, py: 0 }}>
           {commands.map((command: Command) => (
             <CommandItem

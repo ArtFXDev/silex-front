@@ -155,7 +155,7 @@ export const ProvideAction = ({
 
         if (allCommands.length > 0) {
           const firstCommandWaitingForResponse = allCommands.find(
-            (c) => c.status === Status.WAITING_FOR_RESPONSE
+            (c) => c.status === Status.WAITING_FOR_RESPONSE && !c.hide
           );
 
           if (firstCommandWaitingForResponse) {

@@ -111,7 +111,10 @@ const CommandItem = ({
       )}
 
       {/* Parameters */}
-      <Collapse in={command.status === Status.WAITING_FOR_RESPONSE}>
+      <Collapse
+        in={command.status === Status.WAITING_FOR_RESPONSE}
+        unmountOnExit
+      >
         {parameters.length > 0 && (
           <Paper elevation={2} sx={{ borderRadius: BORDER_RADIUS_BOTTOM }}>
             <List sx={{ px: 3 }}>
