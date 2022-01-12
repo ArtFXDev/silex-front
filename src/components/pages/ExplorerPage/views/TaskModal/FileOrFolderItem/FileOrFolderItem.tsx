@@ -178,7 +178,7 @@ const FileOrFolderItem = ({
         hasExtension &&
         extension &&
         extension.tags &&
-        extension.tags.includes("image") && (
+        extension.tags.includes("preview") && (
           <Dialog open onClose={() => setOpenPreview(false)} fullWidth>
             <img src={`local://${item.path}`} alt={item.name} />
           </Dialog>
