@@ -108,7 +108,7 @@ const FileOrFolderItem = ({
                   )
                 ) : hasExtension ? (
                   <DCCLogo
-                    name={extension ? extension.software : undefined}
+                    name={extension?.software || extension?.name}
                     size={25}
                     opacity={0.8}
                   />

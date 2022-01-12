@@ -1,4 +1,9 @@
-export type FileExtensionTag = "sceneFile" | "image" | "video" | "submit";
+export type FileExtensionTag =
+  | "sceneFile"
+  | "image"
+  | "video"
+  | "submit"
+  | "geometry";
 
 export type FileExtension = {
   name: string;
@@ -33,4 +38,12 @@ export const extensions: FileExtension[] = [
   { name: "bmp", tags: ["image"] },
   { name: "bmp", tags: ["image"] },
   { name: "webp", tags: ["image"] },
+  { name: "tiff", tags: ["image"] },
+  { name: "tif", tags: ["image"] },
+
+  // Geometry
+  { name: "fbx", tags: ["geometry"] },
+  { name: "abc", tags: ["geometry"] },
+  { name: "obj", tags: ["geometry"] },
+  { name: "vdb", software: "openvdb" },
 ];
