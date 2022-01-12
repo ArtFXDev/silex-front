@@ -14,7 +14,6 @@ import { useSnackbar } from "notistack";
 import { Action } from "types/action/action";
 import {
   formatContextToString,
-  isActionFinished,
   someStepsAreWaitingForInput,
 } from "utils/action";
 import { capitalize } from "utils/string";
@@ -30,7 +29,8 @@ interface ActionItemProps {
  * Represents a single action, an action has steps
  */
 const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
-  const { clearAction, actions, sendActionUpdate } = useAction();
+  const { clearAction, actions, sendActionUpdate, isActionFinished } =
+    useAction();
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -49,13 +49,13 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
 
   // Cancel or clear the action
   const handleClearAction = () => {
-    uiSocket.emit("clearAction", { uuid: action.uuid }, () => {
-      clearAction(action.uuid);
-
-      enqueueSnackbar(`Cancelled action ${action.name}`, {
-        variant: "warning",
+    if (!finished) {
+      uiSocket.emit("clearAction", { uuid: action.uuid }, () => {
+        clearAction(action.uuid);
       });
-    });
+    } else {
+      clearAction(action.uuid);
+    }
   };
 
   /*const handleUndoLastCommand = () => {

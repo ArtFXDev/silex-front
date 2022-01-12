@@ -5,7 +5,6 @@ import { useHistory } from "react-router";
 import { Action } from "types/action/action";
 import { Status } from "types/action/status";
 import { ServerResponse, UIOnServerEvents } from "types/socket";
-import { isActionFinished } from "utils/action";
 import { diff } from "utils/diff";
 import { runIfInElectron } from "utils/electron";
 
@@ -30,6 +29,8 @@ export interface ActionContext {
     removeAskUser: boolean,
     callback?: (data: ServerResponse) => void
   ) => void;
+
+  isActionFinished: (action: Action) => boolean;
 }
 
 export const ActionContext = React.createContext<ActionContext>(
@@ -64,7 +65,7 @@ export const ProvideAction = ({
   const [_, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const history = useHistory();
-  const { uiSocket } = useSocket();
+  const { uiSocket, dccClients } = useSocket();
 
   /**
    * Clears an action
@@ -72,6 +73,14 @@ export const ProvideAction = ({
   const clearAction = (uuid: Action["uuid"]) => {
     delete actions[uuid];
     forceUpdate();
+  };
+
+  const isActionFinished = (action: Action) => {
+    return (
+      [Status.COMPLETED, Status.ERROR, Status.INVALID].includes(
+        action.status
+      ) || !dccClients.find((e) => e.uuid === action.context_metadata.uuid)
+    );
   };
 
   /**
@@ -265,6 +274,7 @@ export const ProvideAction = ({
         clearAction,
         cleanActions,
         sendActionUpdate,
+        isActionFinished,
       }}
     >
       {children}
