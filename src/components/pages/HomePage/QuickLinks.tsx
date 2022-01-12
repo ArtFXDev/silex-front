@@ -1,4 +1,5 @@
 import AgricultureIcon from "@mui/icons-material/Agriculture";
+import BugReportIcon from "@mui/icons-material/BugReport";
 import InputIcon from "@mui/icons-material/Input";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import { Box, Chip } from "@mui/material";
@@ -29,6 +30,14 @@ const QuickLinks = (): JSX.Element => {
         color="warning"
         icon={<AgricultureIcon />}
         onClick={() => history.push("/tractor")}
+      />
+
+      <Chip
+        label="Ticket"
+        variant="outlined"
+        sx={{ color: "#e84f83", borderColor: "#e84f83" }}
+        icon={<BugReportIcon style={{ color: "#e84f83" }} />}
+        onClick={() => history.push("/ticket")}
       />
 
       <div
