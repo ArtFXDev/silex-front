@@ -7,7 +7,8 @@ type IPCSendChannel =
   | "killAllActiveTasksOnBlade"
   | "openPath"
   | "pathExists"
-  | "mkdir";
+  | "mkdir"
+  | "clipboardWriteText";
 
 // IPC messages we can receive from Electron
 type IPCReceiveChannel =

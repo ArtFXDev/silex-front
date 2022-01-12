@@ -1,4 +1,10 @@
-export type FileExtensionTag = "sceneFile" | "image" | "video" | "submit";
+export type FileExtensionTag =
+  | "sceneFile"
+  | "image"
+  | "video"
+  | "submit"
+  | "geometry"
+  | "preview";
 
 export type FileExtension = {
   name: string;
@@ -26,11 +32,18 @@ export const extensions: FileExtension[] = [
   { name: "ass", software: "arnold", tags: ["submit"] },
 
   // Image formats
-  { name: "jpg", tags: ["image"] },
-  { name: "jpeg", tags: ["image"] },
-  { name: "png", tags: ["image"] },
-  { name: "gif", tags: ["image"] },
-  { name: "bmp", tags: ["image"] },
-  { name: "bmp", tags: ["image"] },
-  { name: "webp", tags: ["image"] },
+  { name: "jpg", tags: ["image", "preview"] },
+  { name: "jpeg", tags: ["image", "preview"] },
+  { name: "png", tags: ["image", "preview"] },
+  { name: "gif", tags: ["image", "preview"] },
+  { name: "bmp", tags: ["image", "preview"] },
+  { name: "webp", tags: ["image", "preview"] },
+  { name: "tiff", tags: ["image"] },
+  { name: "tif", tags: ["image"] },
+
+  // Geometry
+  { name: "fbx", tags: ["geometry"] },
+  { name: "abc", tags: ["geometry"] },
+  { name: "obj", tags: ["geometry"] },
+  { name: "vdb", software: "openvdb" },
 ];

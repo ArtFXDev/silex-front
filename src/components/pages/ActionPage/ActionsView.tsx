@@ -4,7 +4,7 @@ import DCCLogo from "components/common/DCCLogo/DCCLogo";
 import { useAction } from "context";
 import { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { getLastStepStatusColor, isActionFinished } from "utils/action";
+import { getLastStepStatusColor } from "utils/action";
 
 import ActionItem from "./ActionItem";
 
@@ -18,7 +18,7 @@ const ActionsView = (): JSX.Element => {
 
   const routeMatch = useRouteMatch<{ uuid: string }>();
   const history = useHistory();
-  const { actions, clearAction, cleanActions } = useAction();
+  const { actions, clearAction, cleanActions, isActionFinished } = useAction();
 
   useEffect(() => {
     // Listen to react router route change

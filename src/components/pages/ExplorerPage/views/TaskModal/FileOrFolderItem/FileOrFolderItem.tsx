@@ -108,7 +108,7 @@ const FileOrFolderItem = ({
                   )
                 ) : hasExtension ? (
                   <DCCLogo
-                    name={extension ? extension.software : undefined}
+                    name={extension?.software || extension?.name}
                     size={25}
                     opacity={0.8}
                   />
@@ -178,7 +178,7 @@ const FileOrFolderItem = ({
         hasExtension &&
         extension &&
         extension.tags &&
-        extension.tags.includes("image") && (
+        extension.tags.includes("preview") && (
           <Dialog open onClose={() => setOpenPreview(false)} fullWidth>
             <img src={`local://${item.path}`} alt={item.name} />
           </Dialog>

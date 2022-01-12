@@ -43,7 +43,7 @@ const StepItem = ({ step, disabled, simplify }: StepItemProps): JSX.Element => {
   const commands = Object.values(step.commands).filter((cmd) => !cmd.hide);
 
   return (
-    <Box sx={{ mb: simplify ? 0.1 : 0.5 }}>
+    <Box sx={{ mb: commands.length === 0 ? (simplify ? 0.5 : 1) : 0 }}>
       <Paper elevation={3}>
         <ListItem sx={{ py: simplify ? 0.5 : 1 }} disabled={disabled}>
           <ListItemIcon>{getStatusIcon(step.status, true)}</ListItemIcon>
@@ -72,7 +72,7 @@ const StepItem = ({ step, disabled, simplify }: StepItemProps): JSX.Element => {
         />
       </Paper>
 
-      <Collapse in={step.status !== Status.INITIALIZED}>
+      <Collapse in={step.status !== Status.INITIALIZED} unmountOnExit>
         <List sx={{ pl: 4, py: 0 }}>
           {commands.map((command: Command) => (
             <CommandItem

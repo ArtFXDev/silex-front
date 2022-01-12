@@ -31,12 +31,6 @@ export function getLastStepStatusColor(action: Action): string {
   );
 }
 
-export function isActionFinished(action: Action): boolean {
-  return [Status.COMPLETED, Status.ERROR, Status.INVALID].includes(
-    action.status
-  );
-}
-
 export function formatContextToString(ctx: ActionContext): string | undefined {
   const inContextValues = [
     ctx.project,
