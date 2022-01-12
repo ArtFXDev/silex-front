@@ -41,7 +41,12 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
   // Called when clicking on the submit button
   const handleClickOnContinue = () => {
     sendActionUpdate(uuid, true, (data) => {
-      enqueueSnackbar(`Action ${action.name} sent (${data.status})`, {
+      const message =
+        data.status === 200
+          ? `Continue ${action.name} sent`
+          : `Failed to send update ${action.name}`;
+
+      enqueueSnackbar(message, {
         variant: data.status === 200 ? "success" : "error",
       });
     });
