@@ -45,6 +45,14 @@ const actions: ActionContext["actions"] = {};
  * Adds a new action to the store
  */
 function addNewAction(action: Action) {
+  let keys = Object.keys(actions);
+
+  // Don't allow more than a certain number of tabs
+  while (keys.length >= 10) {
+    delete actions[keys[0]];
+    keys = Object.keys(actions);
+  }
+
   // Deep copy to have an action clone for diffs
   const deepActionCopy = JSON.parse(JSON.stringify(action));
   actions[action.uuid] = { action, oldAction: deepActionCopy };
