@@ -1,6 +1,7 @@
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { Box, IconButton, Typography } from "@mui/material";
 import { SxProps } from "@mui/system";
+import isElectron from "is-electron";
 import { useSnackbar } from "notistack";
 import { useEffect, useRef } from "react";
 import { BORDER_RADIUS_BOTTOM } from "style/constants";
@@ -53,6 +54,22 @@ const Logs = ({
     }
   }, [scrollToBottom]);
 
+  const handleCopyLogs = () => {
+    const buffer = logs
+      .map((l, i) => `${getLineNumber(i)}\t${l.message}`)
+      .join("\n");
+
+    if (isElectron()) {
+      window.electron.send("clipboardWriteText", buffer);
+    } else {
+      navigator.clipboard.writeText(buffer);
+    }
+
+    enqueueSnackbar(`Copied ${logs.length} lines to clipboard`, {
+      variant: "success",
+    });
+  };
+
   return (
     <Box
       ref={scrollableViewRef}
@@ -69,15 +86,7 @@ const Logs = ({
     >
       <IconButton
         sx={{ position: "sticky", top: 0, float: "right" }}
-        onClick={() => {
-          navigator.clipboard.writeText(
-            logs.map((l, i) => `${getLineNumber(i)}\t${l.message}`).join("\n")
-          );
-
-          enqueueSnackbar(`Copied ${logs.length} lines to clipboard`, {
-            variant: "success",
-          });
-        }}
+        onClick={handleCopyLogs}
       >
         <ContentCopyIcon fontSize="small" />
       </IconButton>
