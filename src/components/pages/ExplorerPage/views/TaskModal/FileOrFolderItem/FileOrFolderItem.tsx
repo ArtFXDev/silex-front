@@ -16,8 +16,9 @@ import { uiSocket } from "context";
 import isElectron from "is-electron";
 import { useEffect, useState } from "react";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
+import { extensions } from "types/files/extensions";
 import { FileOrFolder, ServerResponse } from "types/socket";
-import { getExtensionFromName } from "utils/files";
+import { getFileExtension } from "utils/files";
 
 import ActionButton from "./ActionButton";
 
@@ -47,16 +48,12 @@ const FileOrFolderItem = ({
     if (item.isDirectory && open) {
       setIsLoading(true);
 
-      uiSocket.emit(
-        "readDir",
-        { path: item.path, includeHiddenFiles: moreDetails },
-        (response) => {
-          setResponse(response);
-          setIsLoading(false);
-        }
-      );
+      uiSocket.emit("readDir", { path: item.path }, (response) => {
+        setResponse(response);
+        setIsLoading(false);
+      });
     }
-  }, [item.isDirectory, item.path, moreDetails, open, refresh]);
+  }, [item.isDirectory, item.path, open, refresh]);
 
   if (response && response.status !== 200) {
     return (
@@ -70,9 +67,8 @@ const FileOrFolderItem = ({
     );
   }
 
-  const tokens = item.name.split(".");
-  const hasExtension = tokens.length > 1;
-  const extension = getExtensionFromName(tokens[tokens.length - 1]);
+  const extensionName = getFileExtension(item.name);
+  const extension = extensionName ? extensions[extensionName] : undefined;
 
   return (
     <>
@@ -117,13 +113,13 @@ const FileOrFolderItem = ({
                   ) : (
                     <FolderIcon color="disabled" />
                   )
-                ) : hasExtension ? (
+                ) : (
                   <FileIcon
-                    name={extension?.software || extension?.name}
+                    name={extension?.software || extensionName}
                     size={25}
                     opacity={0.8}
                   />
-                ) : null}
+                )}
               </>
             </ListItemIcon>
 
@@ -139,7 +135,7 @@ const FileOrFolderItem = ({
             </ListItemText>
 
             {/* Action buttons */}
-            {hasExtension && extension && (
+            {extension && (
               <ActionButton
                 data={{ name: item.name, path: item.path, extension }}
               />
@@ -185,7 +181,7 @@ const FileOrFolderItem = ({
         </Collapse>
       )}
 
-      {openPreview && hasExtension && (
+      {openPreview && extension && (
         <Dialog open onClose={() => setOpenPreview(false)} fullWidth>
           <img src={`local://${item.path}`} alt={item.name} />
         </Dialog>

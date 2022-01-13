@@ -54,13 +54,9 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
 
   // Cancel or clear the action
   const handleClearAction = () => {
-    if (!finished) {
-      uiSocket.emit("clearAction", { uuid: action.uuid }, () => {
-        clearAction(action.uuid);
-      });
-    } else {
+    uiSocket.emit("clearAction", { uuid: action.uuid }, () => {
       clearAction(action.uuid);
-    }
+    });
   };
 
   /*const handleUndoLastCommand = () => {

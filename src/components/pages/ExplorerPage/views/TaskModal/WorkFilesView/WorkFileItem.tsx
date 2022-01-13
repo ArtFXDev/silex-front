@@ -18,9 +18,10 @@ import { useState } from "react";
 import { useRouteMatch } from "react-router-dom";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Project } from "types/entities";
+import { extensions } from "types/files/extensions";
 import { FileOrFolder } from "types/socket";
 import { formatDateTime } from "utils/date";
-import { getExtensionFromName } from "utils/files";
+import { getFileExtension } from "utils/files";
 
 interface WorkFileItemProps {
   file: FileOrFolder;
@@ -38,8 +39,8 @@ const WorkFileItem = ({
   const { getCurrentProject } = useAuth();
   const { taskId } = useRouteMatch<{ taskId: string }>().params;
 
-  const tokens = file.name.split(".");
-  const extension = getExtensionFromName(tokens[tokens.length - 1]);
+  const extensionName = getFileExtension(file.name);
+  const extension = extensionName ? extensions[extensionName] : undefined;
 
   const openScene = (dcc: string, scene: string) => {
     setIsLoading(true);

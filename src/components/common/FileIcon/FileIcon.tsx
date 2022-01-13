@@ -4,6 +4,7 @@ import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import ViewInArIcon from "@mui/icons-material/ViewInAr";
 import { Box, BoxProps } from "@mui/system";
+import AlembicLogo from "assets/images/logos/alembic.svg";
 import ArnoldLogo from "assets/images/logos/arnold.svg";
 import BlenderLogo from "assets/images/logos/blender.svg";
 import GLTFLogo from "assets/images/logos/gltf.svg";
@@ -14,7 +15,7 @@ import OpenVDBLogo from "assets/images/logos/openvdb.svg";
 import PythonLogo from "assets/images/logos/python.svg";
 import USDLogo from "assets/images/logos/usd.svg";
 import VrayLogo from "assets/images/logos/vray.svg";
-import { getExtensionFromName } from "utils/files";
+import { extensions } from "types/files/extensions";
 
 /**
  * Dictionnary of dcc names and icon paths
@@ -30,6 +31,7 @@ const logos: Record<string, string> = {
   openvdb: OpenVDBLogo,
   usd: USDLogo,
   gltf: GLTFLogo,
+  alembic: AlembicLogo,
 };
 
 /**
@@ -75,7 +77,7 @@ const FileIcon = ({
 
   // Get the fallback icon if we didn't find a logo from the extension
   if (name && !foundLogo) {
-    const extension = getExtensionFromName(name);
+    const extension = extensions[name];
 
     if (extension && extension.tags) {
       for (const tag of extension.tags) {
