@@ -4,7 +4,9 @@ export type FileExtensionTag =
   | "video"
   | "submit"
   | "geometry"
-  | "preview";
+  | "preview"
+  | "openable"
+  | "light";
 
 export type FileExtension = {
   name: string;
@@ -23,6 +25,8 @@ export const extensions: FileExtension[] = [
   // Houdini
   { name: "hip", software: "houdini", tags: ["sceneFile"] },
   { name: "hipnc", software: "houdini", tags: ["sceneFile"] },
+  { name: "hda", software: "houdini" },
+  { name: "hdanc", software: "houdini" },
 
   // V-Ray
   { name: "vrscene", software: "vray", tags: ["submit"] },
@@ -38,12 +42,31 @@ export const extensions: FileExtension[] = [
   { name: "gif", tags: ["image", "preview"] },
   { name: "bmp", tags: ["image", "preview"] },
   { name: "webp", tags: ["image", "preview"] },
-  { name: "tiff", tags: ["image"] },
-  { name: "tif", tags: ["image"] },
+  { name: "tiff", tags: ["image", "openable"] },
+  { name: "tif", tags: ["image", "openable"] },
+  { name: "tx", tags: ["image"] },
+  { name: "hdr", tags: ["image"] },
+  { name: "tga", tags: ["image"] },
+
+  // Video formats
+  { name: "mov", tags: ["video"] },
+  { name: "mkv", tags: ["video"] },
+  { name: "avi", tags: ["video"] },
+  { name: "mp4", tags: ["video"] },
+  { name: "webm", tags: ["video"] },
 
   // Geometry
   { name: "fbx", tags: ["geometry"] },
   { name: "abc", tags: ["geometry"] },
   { name: "obj", tags: ["geometry"] },
   { name: "vdb", software: "openvdb" },
+  { name: "fbx", tags: ["geometry"] },
+
+  // USD
+  { name: "usd", software: "usd" },
+  { name: "usda", software: "usd" },
+  { name: "usdc", software: "usd" },
+
+  //Misc
+  { name: "ies", tags: ["light"] },
 ];

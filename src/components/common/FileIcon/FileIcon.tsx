@@ -1,5 +1,7 @@
 import ImageIcon from "@mui/icons-material/Image";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import LightbulbIcon from "@mui/icons-material/Lightbulb";
+import VideocamIcon from "@mui/icons-material/Videocam";
 import ViewInArIcon from "@mui/icons-material/ViewInAr";
 import { Box, BoxProps } from "@mui/system";
 import ArnoldLogo from "assets/images/logos/arnold.svg";
@@ -9,6 +11,7 @@ import MayaLogo from "assets/images/logos/maya.svg";
 import NukeLogo from "assets/images/logos/nuke.svg";
 import OpenVDBLogo from "assets/images/logos/openvdb.svg";
 import PythonLogo from "assets/images/logos/python.svg";
+import USDLogo from "assets/images/logos/usd.svg";
 import VrayLogo from "assets/images/logos/vray.svg";
 import { getExtensionFromName } from "utils/files";
 
@@ -24,6 +27,7 @@ const logos: Record<string, string> = {
   python: PythonLogo,
   vray: VrayLogo,
   openvdb: OpenVDBLogo,
+  usd: USDLogo,
 };
 
 /**
@@ -32,9 +36,11 @@ const logos: Record<string, string> = {
 const fallbackIcons: { [tag: string]: JSX.Element } = {
   image: <ImageIcon />,
   geometry: <ViewInArIcon />,
+  video: <VideocamIcon />,
+  light: <LightbulbIcon />,
 };
 
-interface DCCLogoProps {
+interface FileIconProps {
   /** The name of the icon file eg blender, houdini or maya */
   name: string | null | undefined;
 
@@ -54,14 +60,14 @@ interface DCCLogoProps {
 /**
  * DCC software logo component
  */
-const DCCLogo = ({
+const FileIcon = ({
   name,
   size,
   sx,
   disabled,
   action,
   opacity,
-}: DCCLogoProps & BoxProps): JSX.Element => {
+}: FileIconProps & BoxProps): JSX.Element => {
   let fallbackIcon;
   const foundLogo = name && logos[name];
 
@@ -106,4 +112,4 @@ const DCCLogo = ({
   );
 };
 
-export default DCCLogo;
+export default FileIcon;

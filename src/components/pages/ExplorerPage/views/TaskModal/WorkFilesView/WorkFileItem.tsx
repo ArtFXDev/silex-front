@@ -11,7 +11,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import DCCLogo from "components/common/DCCLogo/DCCLogo";
+import FileIcon from "components/common/FileIcon/FileIcon";
 import { uiSocket, useAuth } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
@@ -77,7 +77,7 @@ const WorkFileItem = ({
         }}
       >
         <ListItemIcon>
-          <DCCLogo name={extension?.software} size={30} sx={{ mr: 2 }} />
+          <FileIcon name={extension?.software} size={30} sx={{ mr: 2 }} />
         </ListItemIcon>
 
         <ListItemText

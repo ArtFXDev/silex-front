@@ -11,8 +11,9 @@ import {
   ListItemText,
   Paper,
 } from "@mui/material";
-import DCCLogo from "components/common/DCCLogo/DCCLogo";
+import FileIcon from "components/common/FileIcon/FileIcon";
 import { uiSocket } from "context";
+import isElectron from "is-electron";
 import { useEffect, useState } from "react";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { FileOrFolder, ServerResponse } from "types/socket";
@@ -93,12 +94,22 @@ const FileOrFolderItem = ({
               if (item.isDirectory) {
                 setOpen(!open);
               } else {
-                setOpenPreview(true);
+                // Test if we can preview the file in the interface
+                if (extension && extension.tags) {
+                  if (extension.tags.includes("preview")) {
+                    setOpenPreview(true);
+                  }
+
+                  // If in electron open the file with the os
+                  if (isElectron() && extension.tags.includes("openable")) {
+                    window.electron.send("openPath", item.path);
+                  }
+                }
               }
             }}
           >
             {/* File icon */}
-            <ListItemIcon>
+            <ListItemIcon sx={{ minWidth: "50px" }}>
               <>
                 {item.isDirectory ? (
                   open ? (
@@ -107,7 +118,7 @@ const FileOrFolderItem = ({
                     <FolderIcon color="disabled" />
                   )
                 ) : hasExtension ? (
-                  <DCCLogo
+                  <FileIcon
                     name={extension?.software || extension?.name}
                     size={25}
                     opacity={0.8}
@@ -174,15 +185,11 @@ const FileOrFolderItem = ({
         </Collapse>
       )}
 
-      {openPreview &&
-        hasExtension &&
-        extension &&
-        extension.tags &&
-        extension.tags.includes("preview") && (
-          <Dialog open onClose={() => setOpenPreview(false)} fullWidth>
-            <img src={`local://${item.path}`} alt={item.name} />
-          </Dialog>
-        )}
+      {openPreview && hasExtension && (
+        <Dialog open onClose={() => setOpenPreview(false)} fullWidth>
+          <img src={`local://${item.path}`} alt={item.name} />
+        </Dialog>
+      )}
     </>
   );
 };
