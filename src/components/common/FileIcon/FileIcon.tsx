@@ -6,6 +6,7 @@ import ViewInArIcon from "@mui/icons-material/ViewInAr";
 import { Box, BoxProps } from "@mui/system";
 import ArnoldLogo from "assets/images/logos/arnold.svg";
 import BlenderLogo from "assets/images/logos/blender.svg";
+import GLTFLogo from "assets/images/logos/gltf.svg";
 import HoudiniLogo from "assets/images/logos/houdini.svg";
 import MayaLogo from "assets/images/logos/maya.svg";
 import NukeLogo from "assets/images/logos/nuke.svg";
@@ -28,6 +29,7 @@ const logos: Record<string, string> = {
   vray: VrayLogo,
   openvdb: OpenVDBLogo,
   usd: USDLogo,
+  gltf: GLTFLogo,
 };
 
 /**

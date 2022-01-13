@@ -45,8 +45,8 @@ export const extensions: FileExtension[] = [
   { name: "tiff", tags: ["image", "openable"] },
   { name: "tif", tags: ["image", "openable"] },
   { name: "tx", tags: ["image"] },
-  { name: "hdr", tags: ["image"] },
-  { name: "tga", tags: ["image"] },
+  { name: "hdr", tags: ["image", "openable"] },
+  { name: "tga", tags: ["image", "openable"] },
 
   // Video formats
   { name: "mov", tags: ["video"] },
@@ -69,4 +69,5 @@ export const extensions: FileExtension[] = [
 
   //Misc
   { name: "ies", tags: ["light"] },
+  { name: "gltf", software: "gltf", tags: ["openable"] },
 ];
