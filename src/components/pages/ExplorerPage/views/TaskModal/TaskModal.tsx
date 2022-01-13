@@ -25,11 +25,7 @@ import { Task } from "types/entities";
 import { RecentTasks } from "types/storage/task";
 import { formatDateTime } from "utils/date";
 import { entityURLAndExtension } from "utils/entity";
-import {
-  assignUserToTask,
-  clearAssignation,
-  originalPreviewFileURL,
-} from "utils/zou";
+import { assignUserToTask, clearAssignation } from "utils/zou";
 
 import FileExplorer from "./FileExplorer";
 
@@ -65,6 +61,7 @@ const TASK = gql`
       previews {
         id
         extension
+        revision
       }
     }
   }
@@ -248,7 +245,7 @@ const TaskModal = (): JSX.Element => {
               <Grid item xs={6}>
                 <Box sx={{ float: "right", position: "relative" }}>
                   <LazyMedia
-                    src={entityURLAndExtension(data.task)}
+                    src={entityURLAndExtension(data.task, "thumbnail")}
                     width={248}
                     height={140}
                     alt="task image"
@@ -267,10 +264,7 @@ const TaskModal = (): JSX.Element => {
                   {zoomPreview && (
                     <Dialog open onClose={() => setZoomPreview(false)}>
                       <img
-                        src={originalPreviewFileURL(
-                          data.task.previews[0].id,
-                          "pictures"
-                        )}
+                        src={entityURLAndExtension(data.task, "original")?.url}
                       />
                     </Dialog>
                   )}

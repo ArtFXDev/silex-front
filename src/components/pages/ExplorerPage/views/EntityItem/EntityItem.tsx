@@ -182,7 +182,7 @@ const EntityItem = ({
                   sx={{ position: "relative", width: 180, height: 100 }}
                 >
                   <LazyMedia
-                    src={entityURLAndExtension(entity)}
+                    src={entityURLAndExtension(entity, "thumbnail")}
                     width={180}
                     height={100}
                     alt={entity.name}
