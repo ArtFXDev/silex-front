@@ -8,7 +8,7 @@ import {
   TableCell,
   TableRow,
 } from "@mui/material";
-import DCCLogo from "components/common/DCCLogo/DCCLogo";
+import FileIcon from "components/common/FileIcon/FileIcon";
 import { useAction, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
@@ -45,7 +45,7 @@ const ClientRow = ({ dcc }: ClientsRowProps): JSX.Element => {
     <Fade in timeout={400}>
       <TableRow>
         <TableCell>
-          <DCCLogo name={dcc.dcc} sx={{ pl: 1, float: "left" }} />
+          <FileIcon name={dcc.dcc} sx={{ pl: 1, float: "left" }} />
         </TableCell>
         <TableCell>{dcc.pid || "-"}</TableCell>
         <TableCell>{dcc.project || "-"}</TableCell>

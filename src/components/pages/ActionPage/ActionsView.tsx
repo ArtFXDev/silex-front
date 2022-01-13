@@ -1,6 +1,6 @@
 import FlagIcon from "@mui/icons-material/Flag";
 import { Box, FormControlLabel, Switch, Tab, Tabs } from "@mui/material";
-import DCCLogo from "components/common/DCCLogo/DCCLogo";
+import FileIcon from "components/common/FileIcon/FileIcon";
 import { useAction } from "context";
 import { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
@@ -61,7 +61,7 @@ const ActionsView = (): JSX.Element => {
                     <FlagIcon sx={{ color: actionColor }} />
                   ) : (
                     <div style={{ marginLeft: "10px" }}>
-                      <DCCLogo
+                      <FileIcon
                         action
                         name={actions[uuid].action.context_metadata.dcc}
                         size={20}

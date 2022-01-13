@@ -9,7 +9,7 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/material";
-import DCCLogo from "components/common/DCCLogo/DCCLogo";
+import FileIcon from "components/common/FileIcon/FileIcon";
 import { useAuth, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
@@ -89,7 +89,7 @@ const DCCIconButton = ({
             sx={{ mx: 0.5 }}
             disabled={disabled}
           >
-            <DCCLogo name={dcc} size={30} disabled={disabled} />
+            <FileIcon name={dcc} size={30} disabled={disabled} />
 
             <Fade in={loading}>
               <CircularProgress

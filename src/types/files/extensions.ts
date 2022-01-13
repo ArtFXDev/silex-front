@@ -4,46 +4,68 @@ export type FileExtensionTag =
   | "video"
   | "submit"
   | "geometry"
-  | "preview";
+  | "preview"
+  | "openable"
+  | "light";
 
 export type FileExtension = {
-  name: string;
   tags?: FileExtensionTag[];
   software?: string;
 };
 
-export const extensions: FileExtension[] = [
+export const extensions: { [name: string]: FileExtension } = {
   // Maya
-  { name: "ma", software: "maya", tags: ["sceneFile"] },
-  { name: "mb", software: "maya", tags: ["sceneFile"] },
+  ma: { software: "maya", tags: ["sceneFile"] },
+  mb: { software: "maya", tags: ["sceneFile"] },
 
-  { name: "blend", software: "blender", tags: ["sceneFile"] },
-  { name: "nk", software: "nuke", tags: ["sceneFile"] },
+  blend: { software: "blender", tags: ["sceneFile"] },
+  nk: { software: "nuke", tags: ["sceneFile"] },
 
   // Houdini
-  { name: "hip", software: "houdini", tags: ["sceneFile"] },
-  { name: "hipnc", software: "houdini", tags: ["sceneFile"] },
+  hip: { software: "houdini", tags: ["sceneFile"] },
+  hipnc: { software: "houdini", tags: ["sceneFile"] },
+  hda: { software: "houdini" },
+  hdanc: { software: "houdini" },
 
   // V-Ray
-  { name: "vrscene", software: "vray", tags: ["submit"] },
-  { name: "vrmesh", software: "vray" },
+  vrscene: { software: "vray", tags: ["submit"] },
+  vrmesh: { software: "vray" },
 
   // Arnold
-  { name: "ass", software: "arnold", tags: ["submit"] },
+  ass: { software: "arnold", tags: ["submit"] },
 
   // Image formats
-  { name: "jpg", tags: ["image", "preview"] },
-  { name: "jpeg", tags: ["image", "preview"] },
-  { name: "png", tags: ["image", "preview"] },
-  { name: "gif", tags: ["image", "preview"] },
-  { name: "bmp", tags: ["image", "preview"] },
-  { name: "webp", tags: ["image", "preview"] },
-  { name: "tiff", tags: ["image"] },
-  { name: "tif", tags: ["image"] },
+  jpg: { tags: ["image", "preview"] },
+  jpeg: { tags: ["image", "preview"] },
+  png: { tags: ["image", "preview"] },
+  gif: { tags: ["image", "preview"] },
+  bmp: { tags: ["image", "preview"] },
+  webp: { tags: ["image", "preview"] },
+  tiff: { tags: ["image", "openable"] },
+  tif: { tags: ["image", "openable"] },
+  tx: { tags: ["image"] },
+  hdr: { tags: ["image", "openable"] },
+  tga: { tags: ["image", "openable"] },
+
+  // Video formats
+  mov: { tags: ["video"] },
+  mkv: { tags: ["video"] },
+  avi: { tags: ["video"] },
+  mp4: { tags: ["video"] },
+  webm: { tags: ["video"] },
 
   // Geometry
-  { name: "fbx", tags: ["geometry"] },
-  { name: "abc", tags: ["geometry"] },
-  { name: "obj", tags: ["geometry"] },
-  { name: "vdb", software: "openvdb" },
-];
+  fbx: { tags: ["geometry"] },
+  abc: { software: "alembic", tags: ["geometry"] },
+  obj: { tags: ["geometry"] },
+  vdb: { software: "openvdb" },
+
+  // USD
+  usd: { software: "usd" },
+  usda: { software: "usd" },
+  usdc: { software: "usd" },
+
+  //Misc
+  ies: { tags: ["light"] },
+  gltf: { software: "gltf", tags: ["openable"] },
+};
