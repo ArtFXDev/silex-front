@@ -60,6 +60,7 @@ const CommandItem = ({
             borderRadius: BORDER_RADIUS_TOP,
             backgroundColor: getStatusColor(command.status),
             py: simplify ? 0.5 : 1,
+            scrollMarginTop: "100px",
           }}
           disabled={disabled}
           id={`cmd-${command.uuid}`}
@@ -74,7 +75,7 @@ const CommandItem = ({
 
           {!simplify && command.tooltip && (
             <Tooltip title={command.tooltip} arrow>
-              <HelpOutlineIcon color="disabled" />
+              <HelpOutlineIcon color="disabled" sx={{ mr: "4px" }} />
             </Tooltip>
           )}
 
@@ -85,9 +86,10 @@ const CommandItem = ({
                   transition: "all 0.2s ease",
                   transform: `rotate(${shouldOpenLogs ? -90 : 0}deg)`,
                   fontSize: "50px",
+                  p: "4px",
+                  ml: 1,
                 }}
                 onClick={() => setOpenLogs(!shouldOpenLogs)}
-                // size={simplify ? "small" : "medium"}
               >
                 <BugReportIcon style={{ fontSize: simplify ? 15 : 25 }} />
               </IconButton>
@@ -109,7 +111,10 @@ const CommandItem = ({
       )}
 
       {/* Parameters */}
-      <Collapse in={command.status === Status.WAITING_FOR_RESPONSE}>
+      <Collapse
+        in={command.status === Status.WAITING_FOR_RESPONSE}
+        unmountOnExit
+      >
         {parameters.length > 0 && (
           <Paper elevation={2} sx={{ borderRadius: BORDER_RADIUS_BOTTOM }}>
             <List sx={{ px: 3 }}>

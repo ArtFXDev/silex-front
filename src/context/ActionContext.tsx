@@ -5,7 +5,6 @@ import { useHistory } from "react-router";
 import { Action } from "types/action/action";
 import { Status } from "types/action/status";
 import { ServerResponse, UIOnServerEvents } from "types/socket";
-import { isActionFinished } from "utils/action";
 import { diff } from "utils/diff";
 import { runIfInElectron } from "utils/electron";
 
@@ -30,6 +29,8 @@ export interface ActionContext {
     removeAskUser: boolean,
     callback?: (data: ServerResponse) => void
   ) => void;
+
+  isActionFinished: (action: Action) => boolean;
 }
 
 export const ActionContext = React.createContext<ActionContext>(
@@ -44,6 +45,14 @@ const actions: ActionContext["actions"] = {};
  * Adds a new action to the store
  */
 function addNewAction(action: Action) {
+  let keys = Object.keys(actions);
+
+  // Don't allow more than a certain number of tabs
+  while (keys.length >= 10) {
+    delete actions[keys[0]];
+    keys = Object.keys(actions);
+  }
+
   // Deep copy to have an action clone for diffs
   const deepActionCopy = JSON.parse(JSON.stringify(action));
   actions[action.uuid] = { action, oldAction: deepActionCopy };
@@ -64,7 +73,7 @@ export const ProvideAction = ({
   const [_, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const history = useHistory();
-  const { uiSocket } = useSocket();
+  const { uiSocket, dccClients } = useSocket();
 
   /**
    * Clears an action
@@ -72,6 +81,14 @@ export const ProvideAction = ({
   const clearAction = (uuid: Action["uuid"]) => {
     delete actions[uuid];
     forceUpdate();
+  };
+
+  const isActionFinished = (action: Action) => {
+    return (
+      [Status.COMPLETED, Status.ERROR, Status.INVALID].includes(
+        action.status
+      ) || !dccClients.find((e) => e.uuid === action.context_metadata.uuid)
+    );
   };
 
   /**
@@ -154,24 +171,27 @@ export const ProvideAction = ({
           .flat();
 
         if (allCommands.length > 0) {
-          const sortedCommands = allCommands.sort(
-            (a, b) => a.status - b.status
+          const firstCommandWaitingForResponse = allCommands.find(
+            (c) => c.status === Status.WAITING_FOR_RESPONSE && !c.hide
           );
 
-          const allCommandsAreWaitingForResponse = !sortedCommands.some(
-            (cmd) => cmd.status !== Status.WAITING_FOR_RESPONSE
-          );
+          if (firstCommandWaitingForResponse) {
+            const commandItem = document.getElementById(
+              `cmd-${firstCommandWaitingForResponse.uuid}`
+            );
 
-          if (!allCommandsAreWaitingForResponse) {
-            // Get the last one
-            const lastCommand = sortedCommands[sortedCommands.length - 1];
-
-            // Scroll to that specific id element
-            document.getElementById(`cmd-${lastCommand.uuid}`)?.scrollIntoView({
-              behavior: "smooth",
-              inline: "start",
-              block: "start",
-            });
+            if (commandItem) {
+              // Scroll to that specific command
+              setTimeout(
+                () =>
+                  commandItem.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                    inline: "nearest",
+                  }),
+                400
+              );
+            }
           }
         }
       }
@@ -262,6 +282,7 @@ export const ProvideAction = ({
         clearAction,
         cleanActions,
         sendActionUpdate,
+        isActionFinished,
       }}
     >
       {children}

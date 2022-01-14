@@ -1,12 +1,21 @@
+import ImageIcon from "@mui/icons-material/Image";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import LightbulbIcon from "@mui/icons-material/Lightbulb";
+import VideocamIcon from "@mui/icons-material/Videocam";
+import ViewInArIcon from "@mui/icons-material/ViewInAr";
 import { Box, BoxProps } from "@mui/system";
+import AlembicLogo from "assets/images/logos/alembic.svg";
 import ArnoldLogo from "assets/images/logos/arnold.svg";
 import BlenderLogo from "assets/images/logos/blender.svg";
+import GLTFLogo from "assets/images/logos/gltf.svg";
 import HoudiniLogo from "assets/images/logos/houdini.svg";
 import MayaLogo from "assets/images/logos/maya.svg";
 import NukeLogo from "assets/images/logos/nuke.svg";
+import OpenVDBLogo from "assets/images/logos/openvdb.svg";
 import PythonLogo from "assets/images/logos/python.svg";
+import USDLogo from "assets/images/logos/usd.svg";
 import VrayLogo from "assets/images/logos/vray.svg";
+import { extensions } from "types/files/extensions";
 
 /**
  * Dictionnary of dcc names and icon paths
@@ -19,9 +28,23 @@ const logos: Record<string, string> = {
   nuke: NukeLogo,
   python: PythonLogo,
   vray: VrayLogo,
+  openvdb: OpenVDBLogo,
+  usd: USDLogo,
+  gltf: GLTFLogo,
+  alembic: AlembicLogo,
 };
 
-interface DCCLogoProps {
+/**
+ * Fallback icons based on tags
+ */
+const fallbackIcons: { [tag: string]: JSX.Element } = {
+  image: <ImageIcon />,
+  geometry: <ViewInArIcon />,
+  video: <VideocamIcon />,
+  light: <LightbulbIcon />,
+};
+
+interface FileIconProps {
   /** The name of the icon file eg blender, houdini or maya */
   name: string | null | undefined;
 
@@ -41,14 +64,29 @@ interface DCCLogoProps {
 /**
  * DCC software logo component
  */
-const DCCLogo = ({
+const FileIcon = ({
   name,
   size,
   sx,
   disabled,
   action,
   opacity,
-}: DCCLogoProps & BoxProps): JSX.Element => {
+}: FileIconProps & BoxProps): JSX.Element => {
+  let fallbackIcon;
+  const foundLogo = name && logos[name];
+
+  // Get the fallback icon if we didn't find a logo from the extension
+  if (name && !foundLogo) {
+    const extension = extensions[name];
+
+    if (extension && extension.tags) {
+      for (const tag of extension.tags) {
+        fallbackIcon = fallbackIcons[tag];
+        if (fallbackIcon) break;
+      }
+    }
+  }
+
   return (
     <Box
       sx={{
@@ -58,7 +96,7 @@ const DCCLogo = ({
         justifyContent: "center",
       }}
     >
-      {action || (name && logos[name]) ? (
+      {action || foundLogo ? (
         <img
           src={logos[name || "python"]}
           alt={`${name} logo`}
@@ -69,6 +107,8 @@ const DCCLogo = ({
             opacity: opacity || 1,
           }}
         />
+      ) : fallbackIcon ? (
+        <fallbackIcon.type color="disabled" />
       ) : (
         <InsertDriveFileIcon color="disabled" />
       )}
@@ -76,4 +116,4 @@ const DCCLogo = ({
   );
 };
 
-export default DCCLogo;
+export default FileIcon;

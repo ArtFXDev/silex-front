@@ -3,36 +3,42 @@ import { Asset, Shot, Task } from "types/entities";
 import { originalPreviewFileURL, pictureThumbnailURL } from "./zou";
 
 export const entityURLAndExtension = (
-  entity: Shot | Task | Asset
+  entity: Shot | Task | Asset,
+  type: "original" | "thumbnail"
 ): { url: string; extension: string } | undefined => {
-  let url,
-    extension = "png";
+  let id;
+  let extension = "png";
 
   switch (entity.type) {
     case "Asset":
     case "Shot":
-      if (entity.preview_file_id) url = entity.preview_file_id;
+      if (entity.preview_file_id) id = entity.preview_file_id;
       break;
     case "Task":
       if (entity.previews.length > 0) {
-        const lastIndex = entity.previews.length - 1;
-        url = entity.previews[lastIndex].id;
-        extension = entity.previews[lastIndex].extension;
+        const sortedByRevision = entity.previews
+          .slice()
+          .sort((a, b) => a.revision - b.revision);
+
+        const lastIndex = sortedByRevision.length - 1;
+        id = sortedByRevision[lastIndex].id;
+        extension = sortedByRevision[lastIndex].extension;
       }
+
       break;
   }
 
-  if (!url) return undefined;
+  if (!id) return undefined;
 
   return {
     url:
-      extension && extension !== "png"
+      type === "original" || extension === "mp4"
         ? originalPreviewFileURL(
-            url,
+            id,
             extension === "mp4" ? "movies" : "pictures",
             extension
           )
-        : pictureThumbnailURL("preview-files", url, extension),
+        : pictureThumbnailURL("preview-files", id, extension),
     extension,
   };
 };

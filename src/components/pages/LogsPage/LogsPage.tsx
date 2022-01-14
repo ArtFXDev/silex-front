@@ -4,7 +4,7 @@ import axios from "axios";
 import Logs from "components/common/Logs/Logs";
 import Separator from "components/common/Separator/Separator";
 import { useSnackbar } from "notistack";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { LogLine } from "types/action/action";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
@@ -22,30 +22,31 @@ const LogFile = ({ fileName, title }: LogFileProps) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  useEffect(() => {
-    const getLog = () => {
-      axios
-        .get<{ totalLines: number; lines: string[] }>(
-          `${process.env.REACT_APP_WS_SERVER}/log/${fileName}?fromEnd=${lines}`
-        )
-        .then((response) => {
-          setLogs({
-            ...response.data,
-            lines: response.data.lines.map((l) => ({ message: l })),
-          });
+  const fetchLogs = useCallback(() => {
+    axios
+      .get<{ totalLines: number; lines: string[] }>(
+        `${process.env.REACT_APP_WS_SERVER}/log/${fileName}?fromEnd=${lines}`
+      )
+      .then((response) => {
+        setLogs({
+          ...response.data,
+          lines: response.data.lines.map((l) => ({ message: l })),
         });
-    };
-
-    getLog();
-    const interval = setInterval(getLog, 2000);
-    return () => clearInterval(interval);
+      });
   }, [fileName, lines]);
+
+  useEffect(() => {
+    fetchLogs();
+    const interval = setInterval(fetchLogs, 2000);
+    return () => clearInterval(interval);
+  }, [fileName, fetchLogs, lines]);
 
   const handleClearLog = () => {
     axios
       .delete(`${process.env.REACT_APP_WS_SERVER}/log/${fileName}`)
       .then(() => {
         enqueueSnackbar(`Cleared logfile ${fileName}`, { variant: "success" });
+        fetchLogs();
       })
       .catch((err) =>
         enqueueSnackbar(`Couldn't clear logfile ${fileName}: ${err}`, {

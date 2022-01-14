@@ -39,7 +39,7 @@ const EntityCard = ({
     >
       <CardMedia sx={{ width: 90, height: 50 }}>
         <LazyMedia
-          src={entityURLAndExtension(entity)}
+          src={entityURLAndExtension(entity, "thumbnail")}
           width={90}
           height={50}
           alt={entity.name}

@@ -39,6 +39,7 @@ const TASK_FIELDS = gql`
     previews {
       id
       extension
+      revision
     }
   }
 `;
