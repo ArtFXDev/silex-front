@@ -23,18 +23,13 @@ import ParameterItem from "./ParameterItem";
 
 interface CommandItemProps {
   command: Command;
-  disabled?: boolean;
   simplify?: boolean;
 }
 
 /**
  * Represents a command, a command has parameters
  */
-const CommandItem = ({
-  command,
-  disabled,
-  simplify,
-}: CommandItemProps): JSX.Element => {
+const CommandItem = ({ command, simplify }: CommandItemProps): JSX.Element => {
   const [openLogs, setOpenLogs] = useState<boolean>();
 
   // Get parameters and delete hidden ones
@@ -62,7 +57,6 @@ const CommandItem = ({
             py: simplify ? 0.5 : 1,
             scrollMarginTop: "100px",
           }}
-          disabled={disabled}
           id={`cmd-${command.uuid}`}
         >
           <ListItemIcon>{getStatusIcon(command.status)}</ListItemIcon>
