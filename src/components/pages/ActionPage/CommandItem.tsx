@@ -34,7 +34,7 @@ const CommandItem = ({ command }: CommandItemProps): JSX.Element => {
   const { simpleMode } = useAction();
 
   // Get parameters and delete hidden ones
-  const parameters = Object.values(command.parameters).filter((p) => !p.hide);
+  const parameters = Object.values(command.children).filter((p) => !p.hide);
 
   const shouldOpenLogs =
     openLogs ||

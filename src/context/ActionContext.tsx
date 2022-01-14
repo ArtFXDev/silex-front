@@ -187,8 +187,8 @@ export const ProvideAction = ({
         !(previousStatus === Status.WAITING_FOR_RESPONSE)
       ) {
         // Sort the commands by status code
-        const allCommands = Object.values(actions[uuid].action.steps)
-          .map((s) => Object.values(s.commands))
+        const allCommands = Object.values(actions[uuid].action.children)
+          .map((s) => Object.values(s.children))
           .flat();
 
         if (allCommands.length > 0) {
@@ -253,8 +253,8 @@ export const ProvideAction = ({
     if (actions[uuid] !== undefined) {
       if (removeAskUser) {
         // Manually set the ask_user fields to false
-        for (const step of Object.values(actions[uuid].action.steps)) {
-          for (const cmd of Object.values(step.commands)) {
+        for (const step of Object.values(actions[uuid].action.children)) {
+          for (const cmd of Object.values(step.children)) {
             if (cmd.status === Status.WAITING_FOR_RESPONSE) {
               // eslint-disable-next-line camelcase
               cmd.ask_user = false;

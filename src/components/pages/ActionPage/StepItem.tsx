@@ -24,7 +24,7 @@ interface StepItemProps {
  * Computes the progress of a step from 0 to 100
  */
 const computeStepProgress = (step: Step) => {
-  const cmds = Object.values(step.commands);
+  const cmds = Object.values(step.children);
   if (cmds.length === 0) return 0;
 
   const stepsCompleted = cmds.filter(
@@ -38,7 +38,7 @@ const StepItem = ({ step }: StepItemProps): JSX.Element => {
   const { simpleMode } = useAction();
 
   const statusColor = getStatusColor(step.status);
-  const commands = Object.values(step.commands).filter((cmd) => !cmd.hide);
+  const commands = Object.values(step.children).filter((cmd) => !cmd.hide);
 
   return (
     <div

@@ -18,14 +18,14 @@ export function getCurrentMode(): "prod" | "beta" | "dev" {
  * Returns true if any of the steps of the action is waiting for user input
  */
 export function someStepsAreWaitingForInput(action: Action): boolean {
-  return Object.values(action.steps).some(
+  return Object.values(action.children).some(
     (step) => step.status === Status.WAITING_FOR_RESPONSE
   );
 }
 
 export function getLastStepStatusColor(action: Action): string {
   return getStatusColor(
-    Object.values(action.steps)
+    Object.values(action.children)
       .reverse()
       .find((a) => a.status !== Status.INITIALIZED)?.status
   );

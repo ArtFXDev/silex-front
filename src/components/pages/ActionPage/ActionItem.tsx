@@ -136,7 +136,7 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
 
       {/* List of steps */}
       <List sx={{ mb: 2 }}>
-        {Object.values(action.steps)
+        {Object.values(action.children)
           .filter((s) => !s.hide)
           .sort((a, b) => a.index - b.index)
           .map((step) => (

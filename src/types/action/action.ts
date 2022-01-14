@@ -27,7 +27,7 @@ export type Command = CommonFields & {
   status: Status;
   ask_user: boolean;
   skip: boolean;
-  parameters: { [paramName: string]: Parameter };
+  children: { [paramName: string]: Parameter };
   logs: LogLine[];
 };
 
@@ -36,7 +36,7 @@ export type Command = CommonFields & {
  */
 export type Step = CommonFields & {
   status: Status;
-  commands: { [commandName: string]: Command };
+  children: { [commandName: string]: Command };
 };
 
 export interface ActionContext {
@@ -66,6 +66,6 @@ export interface Action {
   label: string;
   status: Status;
   context_metadata: ActionContext;
-  steps: { [stepName: string]: Step };
+  children: { [stepName: string]: Step };
   uuid: string;
 }
