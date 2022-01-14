@@ -48,7 +48,14 @@ export const getStatusIcon = (
     case Status.ERROR:
       return <ErrorOutlineIcon sx={{ ...sx }} />;
     case Status.PROCESSING:
-      return <CircularProgress size={25} color="inherit" sx={{ ...sx }} />;
+      return (
+        <CircularProgress
+          size={25}
+          color="inherit"
+          sx={{ ...sx }}
+          disableShrink
+        />
+      );
     case Status.INVALID:
       return <WarningAmberIcon sx={{ ...sx }} />;
     case Status.INITIALIZED:
