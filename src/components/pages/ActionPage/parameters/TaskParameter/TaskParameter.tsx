@@ -4,7 +4,6 @@ import AddIcon from "@mui/icons-material/Add";
 import AirIcon from "@mui/icons-material/Air";
 import {
   Alert,
-  Box,
   Fade,
   Grid,
   IconButton,
@@ -137,8 +136,8 @@ const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
                       sx={{ color: projectColor }}
                     >
                       <Fade in>
-                        <Box
-                          sx={{
+                        <div
+                          style={{
                             display: "flex",
                             alignItems: "center",
                             textOverflow: "ellipsis",
@@ -149,7 +148,7 @@ const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
                             fontSize="small"
                           />
                           {formatUnderScoreStringWithSpaces(project.name)}
-                        </Box>
+                        </div>
                       </Fade>
                     </MenuItem>
                   );
