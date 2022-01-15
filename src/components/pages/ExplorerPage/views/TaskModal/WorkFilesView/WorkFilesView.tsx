@@ -13,7 +13,6 @@ interface WorkFilesViewProps {
 }
 
 const WorkFilesView = ({
-  refresh,
   path,
   moreDetails,
   sortByModificationDate,
@@ -33,7 +32,7 @@ const WorkFilesView = ({
         setResponse(response);
       }
     );
-  }, [path, refresh]);
+  }, [path]);
 
   if (response && response.status !== 200) {
     return (

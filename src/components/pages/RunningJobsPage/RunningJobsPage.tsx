@@ -136,7 +136,7 @@ const KillJobsButton = ({
       window.electron.removeListener("operationSuccess", onOperationSuccess);
       window.electron.removeListener("operationError", onOperationError);
     };
-  }, [enqueueSnackbar, onOperationError, onOperationSuccess]);
+  }, [onOperationError, onOperationSuccess]);
 
   const handleClick = () => {
     if (!isLoading && !success) {

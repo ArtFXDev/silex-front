@@ -1,6 +1,12 @@
 import { useSocket } from "context";
 import merge from "deepmerge";
-import React, { useCallback, useContext, useEffect, useReducer } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import { useHistory } from "react-router";
 import { Action } from "types/action/action";
 import { Status } from "types/action/status";
@@ -30,7 +36,12 @@ export interface ActionContext {
     callback?: (data: ServerResponse) => void
   ) => void;
 
+  /** Returns true if the given action is finished */
   isActionFinished: (action: Action) => boolean;
+
+  /** Used to simplify the action view */
+  simpleMode: boolean;
+  setSimpleMode: (newValue: boolean) => void;
 }
 
 export const ActionContext = React.createContext<ActionContext>(
@@ -71,6 +82,10 @@ export const ProvideAction = ({
   // Hack to force the update when the actions change because the state is outside the component
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, forceUpdate] = useReducer((x) => x + 1, 0);
+
+  const [simpleMode, setSimpleMode] = useState<boolean>(
+    window.localStorage.getItem("action-simple-mode") === "true"
+  );
 
   const history = useHistory();
   const { uiSocket, dccClients } = useSocket();
@@ -273,7 +288,7 @@ export const ProvideAction = ({
 
       uiSocket.off("dccDisconnect", onClientDisconnect);
     };
-  }, [uiSocket, onActionQuery, onActionUpdate, onClientDisconnect, onConnect]);
+  }, [onActionQuery, onActionUpdate, onClientDisconnect, onConnect, uiSocket]);
 
   return (
     <ActionContext.Provider
@@ -283,6 +298,8 @@ export const ProvideAction = ({
         cleanActions,
         sendActionUpdate,
         isActionFinished,
+        simpleMode,
+        setSimpleMode,
       }}
     >
       {children}

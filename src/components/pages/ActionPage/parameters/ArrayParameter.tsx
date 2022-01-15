@@ -1,4 +1,4 @@
-import { Box, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ArrayParameter as ArrayParameterType } from "types/action/parameters";
 
@@ -23,7 +23,7 @@ const ArrayParameter = ({
   }, [parameter]);
 
   return (
-    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.8 }}>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 6.4 }}>
       {values.map((value, i) => (
         <TextField
           sx={{ width: 100 }}
@@ -38,7 +38,7 @@ const ArrayParameter = ({
           }}
         />
       ))}
-    </Box>
+    </div>
   );
 };
 

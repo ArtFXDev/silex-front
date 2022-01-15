@@ -1,7 +1,6 @@
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import {
-  Box,
   Button,
   Fade,
   IconButton,
@@ -22,15 +21,19 @@ import StepItem from "./StepItem";
 
 interface ActionItemProps {
   uuid: Action["uuid"];
-  simplify?: boolean;
 }
 
 /**
  * Represents a single action, an action has steps
  */
-const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
-  const { clearAction, actions, sendActionUpdate, isActionFinished } =
-    useAction();
+const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
+  const {
+    clearAction,
+    actions,
+    sendActionUpdate,
+    isActionFinished,
+    simpleMode,
+  } = useAction();
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -72,10 +75,10 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
   const actionToSring = formatContextToString(action.context_metadata);
 
   return (
-    <Box sx={{ maxWidth: 800 }}>
+    <div style={{ maxWidth: 800 }}>
       {/* Header */}
-      <Box sx={{ mb: simplify ? 1 : 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
+      <div style={{ marginBottom: simpleMode ? 10 : 30 }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <div>
             <Typography
               color="text.disabled"
@@ -100,11 +103,11 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
               )}
             </IconButton>
           </Tooltip>
-        </Box>
+        </div>
 
         {/* Context subtitle */}
-        {!simplify && actionToSring && (
-          <Box sx={{ mt: 1 }}>
+        {!simpleMode && actionToSring && (
+          <div style={{ marginTop: 10 }}>
             <Typography
               color="text.disabled"
               fontSize={14}
@@ -112,9 +115,9 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
             >
               ⤷ {actionToSring}
             </Typography>
-          </Box>
+          </div>
         )}
-      </Box>
+      </div>
 
       {/* List of steps */}
       <List sx={{ mb: 2 }}>
@@ -122,7 +125,7 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
           .filter((s) => !s.hide)
           .sort((a, b) => a.index - b.index)
           .map((step) => (
-            <StepItem key={step.uuid} step={step} simplify={simplify} />
+            <StepItem key={step.uuid} step={step} />
           ))}
       </List>
 
@@ -161,7 +164,7 @@ const ActionItem = ({ uuid, simplify }: ActionItemProps): JSX.Element => {
           </div>
         </div>
       </Fade>
-    </Box>
+    </div>
   );
 };
 

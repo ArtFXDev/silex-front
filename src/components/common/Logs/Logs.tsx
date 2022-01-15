@@ -35,12 +35,7 @@ interface LogsProps {
   scrollToBottom?: boolean;
 }
 
-const Logs = ({
-  logs,
-  regexp,
-  linesOffset,
-  scrollToBottom,
-}: LogsProps): JSX.Element => {
+const Logs = ({ logs, regexp, linesOffset }: LogsProps): JSX.Element => {
   const { enqueueSnackbar } = useSnackbar();
   const scrollableViewRef = useRef<HTMLElement>();
 
@@ -52,7 +47,7 @@ const Logs = ({
       scrollableViewRef.current.scrollTop =
         scrollableViewRef.current.scrollHeight;
     }
-  }, [scrollToBottom]);
+  }, []);
 
   const handleCopyLogs = () => {
     const buffer = logs

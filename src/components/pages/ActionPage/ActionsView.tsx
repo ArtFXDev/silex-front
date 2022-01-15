@@ -1,8 +1,8 @@
 import FlagIcon from "@mui/icons-material/Flag";
-import { Box, FormControlLabel, Switch, Tab, Tabs } from "@mui/material";
+import { FormControlLabel, Switch, Tab, Tabs } from "@mui/material";
 import FileIcon from "components/common/FileIcon/FileIcon";
 import { useAction } from "context";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { getLastStepStatusColor } from "utils/action";
 
@@ -12,13 +12,10 @@ import ActionItem from "./ActionItem";
  * Actions are displayed as tabs so the user can navigate between them
  */
 const ActionsView = (): JSX.Element => {
-  const [simpleMode, setSimpleMode] = useState<boolean>(
-    window.localStorage.getItem("action-simple-mode") === "true"
-  );
-
   const routeMatch = useRouteMatch<{ uuid: string }>();
   const history = useHistory();
-  const { actions, clearAction, cleanActions, isActionFinished } = useAction();
+  const { actions, cleanActions, isActionFinished, simpleMode, setSimpleMode } =
+    useAction();
 
   useEffect(() => {
     // Listen to react router route change
@@ -30,16 +27,20 @@ const ActionsView = (): JSX.Element => {
 
     // Clear the listener
     return unlisten;
-  }, [cleanActions, clearAction, history]);
+  }, [cleanActions, history]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     history.push(`/action/${newValue}`);
   };
 
   return (
-    <Box sx={{ maxWidth: 800 }}>
-      <Box
-        sx={{ display: "flex", borderBottom: 1, borderColor: "divider", mb: 3 }}
+    <div style={{ maxWidth: 800 }}>
+      <div
+        style={{
+          display: "flex",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.12)",
+          marginBottom: 27,
+        }}
       >
         <Tabs
           value={routeMatch.params.uuid}
@@ -56,21 +57,20 @@ const ActionsView = (): JSX.Element => {
                 key={uuid}
                 label={action.name}
                 value={uuid}
+                iconPosition="end"
                 icon={
                   isActionFinished(action) ? (
                     <FlagIcon sx={{ color: actionColor }} />
                   ) : (
-                    <div style={{ marginLeft: "10px" }}>
-                      <FileIcon
-                        action
-                        name={actions[uuid].action.context_metadata.dcc}
-                        size={20}
-                        disabled={!(uuid === routeMatch.params.uuid)}
-                      />
-                    </div>
+                    <FileIcon
+                      action
+                      name={actions[uuid].action.context_metadata.dcc}
+                      size={20}
+                      disabled={!(uuid === routeMatch.params.uuid)}
+                      sx={{ ml: "10px" }}
+                    />
                   )
                 }
-                iconPosition="end"
                 sx={{
                   "&.MuiTab-root": {
                     minHeight: "0px !important",
@@ -103,10 +103,10 @@ const ActionsView = (): JSX.Element => {
           }
           label="Simplify"
         />
-      </Box>
+      </div>
 
-      <ActionItem uuid={routeMatch.params.uuid} simplify={simpleMode} />
-    </Box>
+      <ActionItem uuid={routeMatch.params.uuid} />
+    </div>
   );
 };
 

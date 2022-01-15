@@ -1,5 +1,5 @@
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
-import { Box, Fade, IconButton, Tooltip, Typography } from "@mui/material";
+import { Fade, IconButton, Tooltip, Typography } from "@mui/material";
 import { useHistory } from "react-router";
 
 interface PageWrapperProps {
@@ -26,7 +26,7 @@ const PageWrapper = ({
 
   return (
     <Fade in timeout={200}>
-      <Box p={6} sx={{ height: fullHeight ? "100vh" : "" }}>
+      <div style={{ padding: 48, height: fullHeight ? "100vh" : "" }}>
         <div style={{ display: "flex", alignItems: "center" }}>
           {title &&
             (typeof title === "string" ? (
@@ -53,8 +53,10 @@ const PageWrapper = ({
           )}
         </div>
 
-        <Box sx={{ py: 2, height: fullHeight ? "100%" : "" }}>{children}</Box>
-      </Box>
+        <div style={{ padding: "16px 0", height: fullHeight ? "100%" : "" }}>
+          {children}
+        </div>
+      </div>
     </Fade>
   );
 };
