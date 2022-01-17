@@ -58,6 +58,7 @@ const CommandItem = ({ command }: CommandItemProps): JSX.Element => {
             py: simpleMode ? 0.5 : 1,
             scrollMarginTop: "100px",
           }}
+          disabled={command.skip}
           id={`cmd-${command.uuid}`}
         >
           <ListItemIcon>{getStatusIcon(command.status)}</ListItemIcon>

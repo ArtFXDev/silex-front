@@ -26,6 +26,7 @@ export type Command = CommonFields & {
   path: string;
   status: Status;
   ask_user: boolean;
+  skip: boolean;
   parameters: { [paramName: string]: Parameter };
   logs: LogLine[];
 };
