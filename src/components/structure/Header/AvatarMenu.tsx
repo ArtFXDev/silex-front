@@ -1,5 +1,6 @@
 import { AccountCircle, Logout } from "@mui/icons-material";
-import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
+import { Button, ListItemIcon, Menu, MenuItem, Paper } from "@mui/material";
+import SilexCoinIcon from "assets/images/silex_coin.svg";
 import { PersonAvatar } from "components/common/avatar";
 import { useAuth } from "context";
 import { useSnackbar } from "notistack";
@@ -45,12 +46,39 @@ const AvatarMenu = (): JSX.Element => {
 
   return (
     <div>
-      <PersonAvatar
-        person={auth.user}
-        onClick={handleMenu}
-        size={42}
-        clickable
-      />
+      <div style={{ position: "relative" }}>
+        <PersonAvatar
+          person={auth.user}
+          onClick={handleMenu}
+          size={42}
+          clickable
+        />
+
+        <Paper
+          elevation={1}
+          sx={{
+            position: "absolute",
+            bottom: -5,
+            right: -5,
+            display: "flex",
+            alignItems: "center",
+            borderRadius: "9999px",
+            px: 0.6,
+            py: 0.2,
+          }}
+        >
+          <p
+            style={{
+              fontSize: 9,
+              margin: 0,
+              paddingRight: 2,
+            }}
+          >
+            {auth.user.data ? auth.user.data.silexCoins : 0}
+          </p>
+          <img width={12} height={12} src={SilexCoinIcon} />
+        </Paper>
+      </div>
 
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={handleClose} component={Link} to="/profile">
