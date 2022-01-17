@@ -55,6 +55,10 @@ const ExplorerPage = (): JSX.Element => {
     return <PageWrapper>You don{"'"}t have any projects yet...</PageWrapper>;
   }
 
+  const defaultCategory =
+    window.localStorage.getItem("explorer-default-category") || "shots";
+  const lastProjectId = window.localStorage.getItem("last-project-id");
+
   return (
     <PageWrapper>
       <div>
@@ -115,7 +119,7 @@ const ExplorerPage = (): JSX.Element => {
         <Switch>
           {/* Redirect to the shots by default when we go to the explorer */}
           <Route exact path={`/explorer`}>
-            <Redirect to={`/explorer/${auth.currentProjectId}/shots`} />
+            <Redirect to={`/explorer/${lastProjectId}/${defaultCategory}`} />
           </Route>
 
           <Switch>
