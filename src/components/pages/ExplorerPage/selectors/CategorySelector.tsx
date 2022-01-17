@@ -2,19 +2,25 @@ import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 
-const categories = [
+type Category = {
+  value: "shots" | "assets";
+  label: string;
+};
+
+const categories: Category[] = [
   { value: "shots", label: "Shots" },
   { value: "assets", label: "Assets" },
 ];
 
 const CategorySelector = (): JSX.Element => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("shots");
 
   const location = useLocation();
   const history = useHistory();
 
   useEffect(() => {
     const tokens = location.pathname.split("/");
+
     if (tokens.length >= 3) {
       setSelectedCategory(tokens[3]);
     }
@@ -25,6 +31,10 @@ const CategorySelector = (): JSX.Element => {
       `${location.pathname.split(selectedCategory)[0]}${event.target.value}`
     );
     setSelectedCategory(event.target.value);
+    window.localStorage.setItem(
+      "explorer-default-category",
+      event.target.value
+    );
   };
 
   return (
