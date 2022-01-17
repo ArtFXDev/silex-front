@@ -1,4 +1,5 @@
-import { Box, ListItem, Slider, Typography } from "@mui/material";
+import { ListItem, Slider, Typography } from "@mui/material";
+import { useAction } from "context";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import {
   ArrayParameter as ArrayParameterType,
@@ -27,16 +28,14 @@ import TextParameter from "./parameters/TextParameter";
 
 interface ParameterItemProps {
   parameter: Parameter;
-  simplify?: boolean;
 }
 
 /**
  * A parameter has a type and renders a different component based on that
  */
-const ParameterItem = ({
-  parameter,
-  simplify,
-}: ParameterItemProps): JSX.Element => {
+const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
+  const { simpleMode } = useAction();
+
   /**
    * Returns the apprioriate parameter component based on the type
    * For now the state handling part is not ideal since we modify the object directly
@@ -117,14 +116,14 @@ const ParameterItem = ({
         width: "100%",
         display: "flex",
         justifyContent: "space-between",
-        my: simplify ? 1 : 2,
+        my: simpleMode ? 1 : 2,
         borderRadius: LIST_ITEM_BORDER_RADIUS,
       }}
     >
       {/* Label */}
       {!(parameter.type.name === "text") && (
         <Typography
-          variant={simplify ? "subtitle2" : "body1"}
+          variant={simpleMode ? "subtitle2" : "body1"}
           sx={{ width: "30%", mr: 4 }}
         >
           {parameter.label}
@@ -132,9 +131,9 @@ const ParameterItem = ({
       )}
 
       {/* Specific parameter component */}
-      <Box sx={{ width: parameter.type.name === "text" ? "100%" : "70%" }}>
+      <div style={{ width: parameter.type.name === "text" ? "100%" : "70%" }}>
         {inputComponent()}
-      </Box>
+      </div>
     </ListItem>
   );
 };

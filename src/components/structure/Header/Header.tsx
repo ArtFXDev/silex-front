@@ -27,7 +27,7 @@ const SilexLogoAndText = (): JSX.Element => {
       }}
     >
       <SilexLogo
-        size={50}
+        size={48}
         sx={{
           marginRight: "10px",
           display: "flex",

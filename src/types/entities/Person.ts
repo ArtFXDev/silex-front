@@ -1,6 +1,10 @@
 /* eslint-disable camelcase */
 import { BaseEntity } from "./BaseEntity";
 
+type UserData = {
+  silexCoins?: number;
+};
+
 export interface Person extends BaseEntity {
   first_name: string;
   last_name: string;
@@ -12,7 +16,7 @@ export interface Person extends BaseEntity {
   shotgun_id: string | null;
   timezone: string;
   locale: string;
-  data: unknown;
+  data: UserData | null;
   role: string;
   has_avatar: boolean;
   notifications_enabled: boolean;

@@ -4,7 +4,7 @@ import {
   GridView as GridViewIcon,
   List as ListIcon,
 } from "@mui/icons-material";
-import { Alert, Box, IconButton, Link } from "@mui/material";
+import { Alert, IconButton, Link } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import SearchTextField from "components/common/SearchTextField/SearchTextField";
 import { useAuth } from "context";
@@ -55,21 +55,25 @@ const ExplorerPage = (): JSX.Element => {
     return <PageWrapper>You don{"'"}t have any projects yet...</PageWrapper>;
   }
 
+  const defaultCategory =
+    window.localStorage.getItem("explorer-default-category") || "shots";
+  const lastProjectId = window.localStorage.getItem("last-project-id");
+
   return (
     <PageWrapper>
-      <Box>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
+      <div>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <ProjectSelector />
           <ChevronRightIcon fontSize="large" sx={{ mx: 1 }} />
           <CategorySelector />
-        </Box>
+        </div>
 
-        <Box
-          sx={{
+        <div
+          style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            mt: !bigScreen ? 3 : 0,
+            marginTop: !bigScreen ? 27 : 0,
           }}
         >
           <SearchTextField
@@ -81,7 +85,7 @@ const ExplorerPage = (): JSX.Element => {
             onChange={handleSearchInput}
           />
 
-          <Box>
+          <div>
             <IconButton
               onClick={() => history.goBack()}
               disabled={locationDepth <= 3}
@@ -107,15 +111,15 @@ const ExplorerPage = (): JSX.Element => {
             >
               {listView ? <GridViewIcon /> : <ListIcon />}
             </IconButton>
-          </Box>
-        </Box>
-      </Box>
+          </div>
+        </div>
+      </div>
 
-      <Box sx={{ mt: 2, mb: 1 }}>
+      <div style={{ marginTop: 16, marginBottom: 8 }}>
         <Switch>
           {/* Redirect to the shots by default when we go to the explorer */}
           <Route exact path={`/explorer`}>
-            <Redirect to={`/explorer/${auth.currentProjectId}/shots`} />
+            <Redirect to={`/explorer/${lastProjectId}/${defaultCategory}`} />
           </Route>
 
           <Switch>
@@ -143,7 +147,7 @@ const ExplorerPage = (): JSX.Element => {
             </Route>
           </Switch>
         </Switch>
-      </Box>
+      </div>
     </PageWrapper>
   );
 };

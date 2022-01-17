@@ -1,3 +1,4 @@
+import StarIcon from "@mui/icons-material/Star";
 import {
   Card,
   CardActionArea,
@@ -17,6 +18,16 @@ const ProjectsView = (): JSX.Element => {
   const auth = useAuth();
   const history = useHistory();
 
+  const handleGoOnProject = (projectId: string) => {
+    const defaultCategory =
+      window.localStorage.getItem("explorer-default-category") || "shots";
+
+    history.push(`/explorer/${projectId}/${defaultCategory}`);
+    window.localStorage.setItem("last-project-id", projectId);
+  };
+
+  const lastProjectId = window.localStorage.getItem("last-project-id");
+
   return (
     <div>
       <Typography sx={{ mb: 2 }}>My projects:</Typography>
@@ -29,11 +40,12 @@ const ProjectsView = (): JSX.Element => {
               <Grid key={project.id} item>
                 <Card
                   sx={{ width: 120 }}
-                  onClick={() => history.push(`/explorer/${project.id}/shots`)}
+                  onClick={() => handleGoOnProject(project.id)}
                 >
                   <CardActionArea>
                     <CardMedia
                       sx={{
+                        position: "relative",
                         borderBottom: `3px solid ${getColorFromString(
                           project.name
                         )}`,
@@ -56,6 +68,13 @@ const ProjectsView = (): JSX.Element => {
                         alt={project.name}
                         disableBorder
                       />
+
+                      {project.id === lastProjectId && (
+                        <StarIcon
+                          fontSize="small"
+                          sx={{ position: "absolute", top: 5, right: 5 }}
+                        />
+                      )}
                     </CardMedia>
 
                     <CardContent>

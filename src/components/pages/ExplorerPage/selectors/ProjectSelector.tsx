@@ -1,5 +1,5 @@
 import AirIcon from "@mui/icons-material/Air";
-import { Box, Fade, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { Fade, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { useAuth } from "context/AuthContext";
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
@@ -73,13 +73,13 @@ const ProjectSelector = (): JSX.Element => {
                 sx={{ color: projectColor }}
               >
                 <Fade in>
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <div style={{ display: "flex", alignItems: "center" }}>
                     <AirIcon sx={{ color: projectColor, mr: 1 }} />
                     {project.name
                       .split("_")
                       .map((s) => capitalize(s))
                       .join(" ")}
-                  </Box>
+                  </div>
                 </Fade>
               </MenuItem>
             );

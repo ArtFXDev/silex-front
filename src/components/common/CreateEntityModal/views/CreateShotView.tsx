@@ -120,7 +120,7 @@ const CreateShotView = ({
 
   useEffect(() => {
     setNewShotName(offsetShotNumber());
-  }, [offsetShotNumber, selectedSequenceId]);
+  }, [offsetShotNumber]);
 
   const handleClickCreateShot = () => {
     if (!isLoading && data && newShotName) {

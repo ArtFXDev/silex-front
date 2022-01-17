@@ -39,7 +39,7 @@ const LogFile = ({ fileName, title }: LogFileProps) => {
     fetchLogs();
     const interval = setInterval(fetchLogs, 2000);
     return () => clearInterval(interval);
-  }, [fileName, fetchLogs, lines]);
+  }, [fetchLogs]);
 
   const handleClearLog = () => {
     axios

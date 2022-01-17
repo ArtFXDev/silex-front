@@ -4,7 +4,6 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonAddDisabledIcon from "@mui/icons-material/PersonAddDisabled";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import {
-  Box,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -152,8 +151,8 @@ const TaskModal = (): JSX.Element => {
       {data && (
         <>
           <DialogTitle>
-            <Box
-              sx={{
+            <div
+              style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
@@ -184,7 +183,7 @@ const TaskModal = (): JSX.Element => {
                 </Typography>
               </div>
 
-              <Box sx={{ display: "flex", alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center" }}>
                 <Tooltip
                   title={
                     !currentUserAssignedToTask
@@ -224,8 +223,8 @@ const TaskModal = (): JSX.Element => {
                 <IconButton onClick={onClose}>
                   <CloseIcon color="disabled" />
                 </IconButton>
-              </Box>
-            </Box>
+              </div>
+            </div>
           </DialogTitle>
 
           <DialogContent dividers sx={{ height: "100%" }}>
@@ -243,7 +242,7 @@ const TaskModal = (): JSX.Element => {
               </Grid>
 
               <Grid item xs={6}>
-                <Box sx={{ float: "right", position: "relative" }}>
+                <div style={{ float: "right", position: "relative" }}>
                   <LazyMedia
                     src={entityURLAndExtension(data.task, "thumbnail")}
                     width={248}
@@ -268,7 +267,7 @@ const TaskModal = (): JSX.Element => {
                       />
                     </Dialog>
                   )}
-                </Box>
+                </div>
               </Grid>
 
               <Grid item xs={12}>

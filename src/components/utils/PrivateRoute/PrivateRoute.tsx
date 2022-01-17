@@ -1,7 +1,6 @@
 import { Backdrop, CircularProgress } from "@mui/material";
 import Header from "components/structure/Header/Header";
 import { useAuth } from "context";
-import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { Redirect, Route, RouteProps } from "react-router-dom";
 import * as Zou from "utils/zou";
@@ -21,7 +20,6 @@ const PrivateRoute = ({
   const [fetching, setFetching] = useState<boolean>(false);
 
   const auth = useAuth();
-  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const checkIfUserLoggedIn = async () => {
@@ -47,7 +45,7 @@ const PrivateRoute = ({
     } else {
       if (!isUserLoggedIn && !fetching) checkIfUserLoggedIn();
     }
-  }, [auth, isUserLoggedIn, loading, fetching, enqueueSnackbar, allowNonAuth]);
+  }, [auth, fetching, isUserLoggedIn]);
 
   return (
     <Route

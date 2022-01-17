@@ -243,7 +243,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
         </div>
       </Collapse>
 
-      <Box sx={{ borderRadius: 3, mt: 1.5 }}>
+      <div style={{ borderRadius: 24, marginTop: 12 }}>
         {path &&
           (view === "work" ? (
             <WorkFilesView
@@ -266,7 +266,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
               depth={0}
             />
           ))}
-      </Box>
+      </div>
     </>
   );
 };

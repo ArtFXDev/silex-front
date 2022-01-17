@@ -35,8 +35,8 @@ function isObject(o: unknown): boolean {
 export function diff(a: any, b: any): any {
   const result: any = {};
 
-  Object.keys(a).forEach((keyA) => {
-    if (typeof b[keyA] !== "undefined") {
+  for (const keyA of Object.keys(a)) {
+    if (Object.prototype.hasOwnProperty.call(b, keyA)) {
       if (!deepEqual(b[keyA], a[keyA])) {
         if (isObject(b[keyA])) {
           result[keyA] = diff(a[keyA], b[keyA]);
@@ -45,7 +45,7 @@ export function diff(a: any, b: any): any {
         }
       }
     }
-  });
+  }
 
   return result;
 }
