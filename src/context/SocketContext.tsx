@@ -150,14 +150,7 @@ export const ProvideSocket = ({
       uiSocket.off("dccConnect", onDCCConnect);
       uiSocket.off("dccDisconnect", onDCCDisconnect);
     };
-  }, [
-    dccClients,
-    enqueueSnackbar,
-    onConnect,
-    onDisconnect,
-    onDCCConnect,
-    onDCCDisconnect,
-  ]);
+  }, [onConnect, onDCCConnect, onDCCDisconnect, onDisconnect]);
 
   return (
     <socketContext.Provider

@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Chip,
   MenuItem,
@@ -64,11 +63,11 @@ const MultipleSelectParameter = ({
         multiple
         MenuProps={MenuProps}
         renderValue={(selected) => (
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
             {selected.map((value) => (
               <Chip key={value} label={value} />
             ))}
-          </Box>
+          </div>
         )}
       >
         {Object.keys(parameter.type.options).map((label) => (

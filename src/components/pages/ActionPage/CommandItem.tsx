@@ -1,7 +1,6 @@
 import BugReportIcon from "@mui/icons-material/BugReport";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import {
-  Box,
   Collapse,
   Divider,
   IconButton,
@@ -13,6 +12,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import Logs from "components/common/Logs/Logs";
+import { useAction } from "context";
 import { useState } from "react";
 import { BORDER_RADIUS_BOTTOM, BORDER_RADIUS_TOP } from "style/constants";
 import { Command } from "types/action/action";
@@ -23,19 +23,15 @@ import ParameterItem from "./ParameterItem";
 
 interface CommandItemProps {
   command: Command;
-  disabled?: boolean;
-  simplify?: boolean;
 }
 
 /**
  * Represents a command, a command has parameters
  */
-const CommandItem = ({
-  command,
-  disabled,
-  simplify,
-}: CommandItemProps): JSX.Element => {
+const CommandItem = ({ command }: CommandItemProps): JSX.Element => {
   const [openLogs, setOpenLogs] = useState<boolean>();
+
+  const { simpleMode } = useAction();
 
   // Get parameters and delete hidden ones
   const parameters = Object.values(command.parameters).filter((p) => !p.hide);
@@ -46,7 +42,7 @@ const CommandItem = ({
       (command.status === Status.ERROR || command.status === Status.INVALID));
 
   return (
-    <Box sx={{ my: simplify ? 1 : 2 }}>
+    <div style={{ margin: `${simpleMode ? 8 : 16}px 0` }}>
       {/* Header */}
       <Paper
         elevation={2}
@@ -59,22 +55,21 @@ const CommandItem = ({
           sx={{
             borderRadius: BORDER_RADIUS_TOP,
             backgroundColor: getStatusColor(command.status),
-            py: simplify ? 0.5 : 1,
+            py: simpleMode ? 0.5 : 1,
             scrollMarginTop: "100px",
           }}
-          disabled={disabled}
           id={`cmd-${command.uuid}`}
         >
           <ListItemIcon>{getStatusIcon(command.status)}</ListItemIcon>
 
           <ListItemText
-            primaryTypographyProps={{ fontSize: simplify ? 13 : 16 }}
+            primaryTypographyProps={{ fontSize: simpleMode ? 13 : 16 }}
           >
             {command.label}
           </ListItemText>
 
-          {!simplify && command.tooltip && (
-            <Tooltip title={command.tooltip} arrow>
+          {!simpleMode && command.tooltip && (
+            <Tooltip title={command.tooltip} arrow placement="top">
               <HelpOutlineIcon color="disabled" sx={{ mr: "4px" }} />
             </Tooltip>
           )}
@@ -91,7 +86,7 @@ const CommandItem = ({
                 }}
                 onClick={() => setOpenLogs(!shouldOpenLogs)}
               >
-                <BugReportIcon style={{ fontSize: simplify ? 15 : 25 }} />
+                <BugReportIcon style={{ fontSize: simpleMode ? 15 : 25 }} />
               </IconButton>
             </Tooltip>
           )}
@@ -100,7 +95,7 @@ const CommandItem = ({
 
       {/* Logs */}
       {command.logs.length > 0 && (
-        <Collapse in={shouldOpenLogs}>
+        <Collapse in={shouldOpenLogs} unmountOnExit>
           <Logs
             logs={command.logs}
             regexp={
@@ -119,16 +114,16 @@ const CommandItem = ({
           <Paper elevation={2} sx={{ borderRadius: BORDER_RADIUS_BOTTOM }}>
             <List sx={{ px: 3 }}>
               {parameters.map((parameter, i) => (
-                <div key={i}>
-                  <ParameterItem parameter={parameter} simplify={simplify} />
+                <>
+                  <ParameterItem key={i} parameter={parameter} />
                   {i !== parameters.length - 1 && <Divider />}
-                </div>
+                </>
               ))}
             </List>
           </Paper>
         )}
       </Collapse>
-    </Box>
+    </div>
   );
 };
 

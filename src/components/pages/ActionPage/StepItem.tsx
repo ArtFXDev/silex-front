@@ -1,5 +1,4 @@
 import {
-  Box,
   Collapse,
   LinearProgress,
   List,
@@ -10,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { linearProgressClasses } from "@mui/material/LinearProgress";
+import { useAction } from "context";
 import { Command, Step } from "types/action/action";
 import { Status } from "types/action/status";
 import { getStatusColor, getStatusIcon } from "utils/status";
@@ -18,8 +18,6 @@ import CommandItem from "./CommandItem";
 
 interface StepItemProps {
   step: Step;
-  disabled?: boolean;
-  simplify?: boolean;
 }
 
 /**
@@ -36,21 +34,25 @@ const computeStepProgress = (step: Step) => {
   return (stepsCompleted / cmds.length) * 100;
 };
 
-const StepItem = ({ step, disabled, simplify }: StepItemProps): JSX.Element => {
-  const stepProgress = computeStepProgress(step);
-  const statusColor = getStatusColor(step.status);
+const StepItem = ({ step }: StepItemProps): JSX.Element => {
+  const { simpleMode } = useAction();
 
+  const statusColor = getStatusColor(step.status);
   const commands = Object.values(step.commands).filter((cmd) => !cmd.hide);
 
   return (
-    <Box sx={{ mb: commands.length === 0 ? (simplify ? 0.5 : 1) : 0 }}>
+    <div
+      style={{
+        marginBottom: commands.length === 0 ? (simpleMode ? 5 : 10) : 0,
+      }}
+    >
       <Paper elevation={3}>
-        <ListItem sx={{ py: simplify ? 0.5 : 1 }} disabled={disabled}>
+        <ListItem sx={{ py: simpleMode ? 0.5 : 1 }}>
           <ListItemIcon>{getStatusIcon(step.status, true)}</ListItemIcon>
 
           <ListItemText>
             <Typography
-              variant={simplify ? "subtitle2" : "h6"}
+              variant={simpleMode ? "subtitle2" : "h6"}
               sx={{ wordBreak: "break-word" }}
             >
               {step.label}
@@ -60,7 +62,7 @@ const StepItem = ({ step, disabled, simplify }: StepItemProps): JSX.Element => {
 
         <LinearProgress
           variant="determinate"
-          value={stepProgress}
+          value={computeStepProgress(step)}
           sx={{
             [`&.${linearProgressClasses.colorPrimary}`]: {
               backgroundColor: "background.paper",
@@ -75,16 +77,11 @@ const StepItem = ({ step, disabled, simplify }: StepItemProps): JSX.Element => {
       <Collapse in={step.status !== Status.INITIALIZED} unmountOnExit>
         <List sx={{ pl: 4, py: 0 }}>
           {commands.map((command: Command) => (
-            <CommandItem
-              key={command.uuid}
-              command={command}
-              disabled={disabled}
-              simplify={simplify}
-            />
+            <CommandItem key={command.uuid} command={command} />
           ))}
         </List>
       </Collapse>
-    </Box>
+    </div>
   );
 };
 

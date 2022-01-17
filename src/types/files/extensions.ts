@@ -46,6 +46,7 @@ export const extensions: { [name: string]: FileExtension } = {
   tx: { tags: ["image"] },
   hdr: { tags: ["image", "openable"] },
   tga: { tags: ["image", "openable"] },
+  exr: { tags: ["image", "openable"] },
 
   // Video formats
   mov: { tags: ["video"] },

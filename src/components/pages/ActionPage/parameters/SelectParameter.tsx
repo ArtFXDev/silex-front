@@ -5,6 +5,7 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
+import { useAction } from "context";
 import { useEffect, useState } from "react";
 import { SelectParameter as SelectParameterType } from "types/action/parameters";
 
@@ -18,6 +19,8 @@ const SelectParameter = ({
   onChange,
 }: SelectParameterProps): JSX.Element => {
   const [value, setValue] = useState<string | null>(parameter.value);
+
+  const { simpleMode } = useAction();
 
   // Update state when the parameter value from action changes
   useEffect(() => {
@@ -34,7 +37,7 @@ const SelectParameter = ({
           height: 40,
           borderRadius: 3,
           paddingTop: 0,
-          fontSize: 20,
+          fontSize: simpleMode ? 15 : 20,
         }}
         color="info"
         variant="outlined"

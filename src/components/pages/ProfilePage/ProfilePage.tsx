@@ -34,9 +34,15 @@ const ProfilePage = (): JSX.Element => {
         }}
       >
         <Paper elevation={5} sx={{ width: "50%", p: 5, borderRadius: 3 }}>
-          <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: 32,
+            }}
+          >
             <PersonAvatar person={auth.user} size={100} fontSize={40} />
-          </Box>
+          </div>
 
           <Table component="table">
             <TableBody>

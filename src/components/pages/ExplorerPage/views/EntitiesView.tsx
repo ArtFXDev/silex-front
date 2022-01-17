@@ -1,4 +1,4 @@
-import { Box, List } from "@mui/material";
+import { List } from "@mui/material";
 import { Asset, Shot, Task } from "types/entities";
 
 import EntityItem from "./EntityItem/EntityItem";
@@ -26,9 +26,11 @@ const EntitiesView = ({
       {listView ? (
         <List>{entitiesItems}</List>
       ) : (
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mt: 1.5 }}>
+        <div
+          style={{ display: "flex", flexWrap: "wrap", gap: 16, marginTop: 12 }}
+        >
           {entitiesItems}
-        </Box>
+        </div>
       )}
     </>
   );
