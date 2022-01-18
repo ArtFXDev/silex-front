@@ -15,6 +15,7 @@ interface WorkFilesViewProps {
 const WorkFilesView = ({
   path,
   moreDetails,
+  refresh,
   sortByModificationDate,
 }: WorkFilesViewProps): JSX.Element => {
   const [response, setResponse] =
@@ -32,7 +33,7 @@ const WorkFilesView = ({
         setResponse(response);
       }
     );
-  }, [path]);
+  }, [path, refresh]);
 
   if (response && response.status !== 200) {
     return (
