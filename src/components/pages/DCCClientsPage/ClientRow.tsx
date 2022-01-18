@@ -45,7 +45,7 @@ const ClientRow = ({ dcc }: ClientsRowProps): JSX.Element => {
     <Fade in timeout={400}>
       <TableRow>
         <TableCell>
-          <FileIcon name={dcc.dcc} sx={{ pl: 1, float: "left" }} />
+          <FileIcon name={dcc.dcc || "python"} sx={{ pl: 1, float: "left" }} />
         </TableCell>
         <TableCell>{dcc.pid || "-"}</TableCell>
         <TableCell>{dcc.project || "-"}</TableCell>
