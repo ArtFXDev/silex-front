@@ -53,7 +53,7 @@ const FileOrFolderItem = ({
         setIsLoading(false);
       });
     }
-  }, [item.isDirectory, item.path, open]);
+  }, [item.isDirectory, item.path, open, refresh]);
 
   if (response && response.status !== 200) {
     return (
