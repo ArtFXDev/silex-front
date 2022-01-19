@@ -10,6 +10,7 @@ import {
   ListItemIcon,
   ListItemText,
   Paper,
+  Typography,
 } from "@mui/material";
 import FileIcon from "components/common/FileIcon/FileIcon";
 import { uiSocket } from "context";
@@ -18,6 +19,7 @@ import { useEffect, useState } from "react";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { extensions } from "types/files/extensions";
 import { FileOrFolder, ServerResponse } from "types/socket";
+import { formatDateTime } from "utils/date";
 import { getFileExtension } from "utils/files";
 
 import ActionButton from "./ActionButton";
@@ -67,6 +69,8 @@ const FileOrFolderItem = ({
     );
   }
 
+  const id = `file-${item.name}-${item.mtime}`;
+
   const extensionName = getFileExtension(item.name);
   const extension = extensionName ? extensions[extensionName] : undefined;
 
@@ -74,6 +78,7 @@ const FileOrFolderItem = ({
     <>
       {!root && (
         <Paper
+          id={id}
           elevation={1}
           sx={{
             position: "relative",
@@ -88,6 +93,17 @@ const FileOrFolderItem = ({
             }}
             onClick={() => {
               if (item.isDirectory) {
+                if (!open) {
+                  setTimeout(
+                    () =>
+                      document.getElementById(id)?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                        inline: "nearest",
+                      }),
+                    200
+                  );
+                }
                 setOpen(!open);
               } else {
                 // Test if we can preview the file in the interface
@@ -133,6 +149,12 @@ const FileOrFolderItem = ({
             >
               {item.name}
             </ListItemText>
+
+            {moreDetails && (
+              <Typography color="text.disabled" fontSize={13} mr={1}>
+                Last modif: {formatDateTime(item.mtime)}
+              </Typography>
+            )}
 
             {/* Action buttons */}
             {extension && (
