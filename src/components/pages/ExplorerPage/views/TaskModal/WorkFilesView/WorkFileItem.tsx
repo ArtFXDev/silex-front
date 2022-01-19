@@ -83,7 +83,11 @@ const WorkFileItem = ({
 
         <ListItemText
           primaryTypographyProps={{
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
             fontSize: 14,
+            pr: 6,
           }}
           secondaryTypographyProps={{
             color: "text.disabled",
