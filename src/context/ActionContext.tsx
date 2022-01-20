@@ -160,6 +160,8 @@ export const ProvideAction = ({
     (actionDiff) => {
       const { uuid } = actionDiff.data;
 
+      const previousStatus = actions[uuid].action.status;
+
       // Only keep the last version when merging arrays
       const arrayMerge: merge.Options["arrayMerge"] = (
         destinationArray,
@@ -179,7 +181,11 @@ export const ProvideAction = ({
       );
 
       // Test if we scroll to the next command
-      if (actions[uuid] && actions[uuid].action) {
+      if (
+        actions[uuid] &&
+        actions[uuid].action &&
+        !(previousStatus === Status.WAITING_FOR_RESPONSE)
+      ) {
         // Sort the commands by status code
         const allCommands = Object.values(actions[uuid].action.steps)
           .map((s) => Object.values(s.commands))
