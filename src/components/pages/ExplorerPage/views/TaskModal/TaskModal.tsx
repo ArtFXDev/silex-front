@@ -239,10 +239,10 @@ const TaskModal = (): JSX.Element => {
                 </Typography>
               </Grid>
 
-              <Grid item xs />
-
-              <Grid item xs={2}>
-                <ThumbnailsViewer task={data.task} />
+              <Grid item xs={6}>
+                <div style={{ float: "right" }}>
+                  <ThumbnailsViewer task={data.task} />
+                </div>
               </Grid>
 
               <Grid item xs={12}>
