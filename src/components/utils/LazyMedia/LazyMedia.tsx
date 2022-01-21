@@ -35,8 +35,10 @@ const LazyMedia = (props: LazyMediaProps): JSX.Element => {
   ) => {
     if (videoRef.current) {
       const position = videoRef.current.getBoundingClientRect();
-      const diffXNorm = (e.pageX - position.x) / position.width;
-      videoRef.current.currentTime = diffXNorm * videoRef.current.duration;
+      if (position.width > 0) {
+        const diffXNorm = (e.pageX - position.x) / position.width;
+        videoRef.current.currentTime = diffXNorm * videoRef.current.duration;
+      }
     }
   };
 
