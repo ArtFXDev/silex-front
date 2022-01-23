@@ -60,6 +60,18 @@ They are:
 
 - 🚨 `yarn lint` -> shows ESLint warnings and errors. Add `:fix` to apply auto fixes.
 
+## ⚠️ Issues
+
+Currently, Silex uses the Zou API to authenticate the user against the database. For that we make a request to `/api/auth/login` and we receive headers with the [Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) directive so that the token is sent again on future requests.
+
+Recently the standards changed for the [`SameSite`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite) attribute for cookies which restrict the usage to a first-party or same site context.
+
+Previously if the `SameSite` value wasn't provided (it was not the case for Zou, see [this](https://github.com/cgwire/zou/issues/385)) cookies were sent all the time. This is the behavior of Electron and [our desktop app](https://github.com/ArtFXDev/silex-desktop) is concerned.
+
+Since the Zou API is hosted on a different domain name than Silex, cookies must now have the `SameSite=None` value with the `Secure` attribute which allows the usage of the cookie on another domain but forces HTTPS which may not be ideal...
+
+It also constrain the local development of the front-end since you need to setup https locally. Hopefully you can disable it in [Firefox](https://stackoverflow.com/questions/65130753/disable-samesite-cookie-policy-in-firefox-developer-edition) or [Chrome](https://stackoverflow.com/questions/59030096/how-to-disable-same-site-policy-in-chrome).
+
 ## Libraries
 
 Here are the main libraries and packages used:
