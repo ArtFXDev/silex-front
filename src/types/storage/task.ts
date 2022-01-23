@@ -6,4 +6,4 @@ export type RecentTask = {
   task: Task;
 };
 
-export type RecentTasks = { [id: Task["id"]]: RecentTask };
+export type RecentTasks = { [id: string]: RecentTask };

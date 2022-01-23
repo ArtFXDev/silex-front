@@ -21,8 +21,9 @@ import { useAuth } from "context";
 import { forwardRef, useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { Task } from "types/entities";
-import { RecentTasks } from "types/storage/task";
+import { RecentTask } from "types/storage/task";
 import { formatDateTime } from "utils/date";
+import { addElementToLocalStorageQueue } from "utils/storage";
 import { assignUserToTask, clearAssignation } from "utils/zou";
 
 import FileExplorer from "./FileExplorer";
@@ -125,37 +126,16 @@ const TaskModal = (): JSX.Element => {
   // Store the current task in the local storage to have an history of recent tasks
   useEffect(() => {
     if (data) {
-      const storedRecentTasks = window.localStorage.getItem("recent-tasks");
-      const newTask = {
-        pathname: window.location.pathname,
-        lastAccess: Date.now(),
-        task: data.task,
-      };
-      let recentTasks: RecentTasks = {};
-
-      if (storedRecentTasks) {
-        recentTasks = JSON.parse(storedRecentTasks);
-
-        // Limit the number of recent tasks to 5
-        if (
-          Object.keys(recentTasks).length >= 5 &&
-          !recentTasks[data.task.id]
-        ) {
-          // Sort them by last access time
-          const sortedTasks = Object.keys(recentTasks).sort(
-            (a, b) => recentTasks[b].lastAccess - recentTasks[a].lastAccess
-          );
-
-          // Remove the oldest one
-          delete recentTasks[sortedTasks[sortedTasks.length - 1]];
-        }
-      }
-
-      // Add the current task
-      recentTasks[data.task.id] = newTask;
-
-      // Save it to local storage
-      window.localStorage.setItem("recent-tasks", JSON.stringify(recentTasks));
+      addElementToLocalStorageQueue<RecentTask>(
+        "recent-tasks",
+        data.task.id,
+        {
+          pathname: window.location.pathname,
+          lastAccess: Date.now(),
+          task: data.task,
+        },
+        5
+      );
     }
   }, [data]);
 

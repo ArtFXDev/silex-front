@@ -1,5 +1,4 @@
 import { List, ListItemButton, Paper, Typography } from "@mui/material";
-import { alpha } from "@mui/material/styles";
 import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
 import ArrowDelimiter from "components/common/Separator/ArrowDelimiter";
 import { useHistory } from "react-router";
@@ -27,16 +26,7 @@ const RecentTasksList = (): JSX.Element => {
               const task = recentTasks[id];
 
               return (
-                <Paper
-                  key={id}
-                  sx={{
-                    mb: 1,
-                    boxShadow: `1px 5px -10px ${alpha(
-                      task.task.taskType.color,
-                      0.5
-                    )}`,
-                  }}
-                >
+                <Paper key={id} sx={{ mb: 1 }}>
                   <ListItemButton onClick={() => history.push(task.pathname)}>
                     <ColoredCircle
                       color={task.task.taskType.color}
