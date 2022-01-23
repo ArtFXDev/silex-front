@@ -12,9 +12,11 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { alpha, emphasize } from "@mui/material/styles";
 import { TransitionProps } from "@mui/material/transitions";
 import { PersonsAvatarGroup } from "components/common/avatar";
 import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
+import ArrowDelimiter from "components/common/Separator/ArrowDelimiter";
 import { useAuth } from "context";
 import { forwardRef, useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
@@ -60,9 +62,32 @@ const TASK = gql`
         extension
         revision
       }
+
+      entity {
+        ... on Shot {
+          id
+          name
+          type
+          preview_file_id
+
+          sequence {
+            id
+            name
+          }
+        }
+
+        ... on Asset {
+          id
+          name
+          type
+          preview_file_id
+        }
+      }
     }
   }
 `;
+
+const CustomArrowDelimiter = () => <ArrowDelimiter mx={1.2} fontSize={20} />;
 
 /**
  * Taken from https://mui.com/components/dialogs/#transitions
@@ -157,23 +182,45 @@ const TaskModal = (): JSX.Element => {
               }}
             >
               <div style={{ display: "flex", alignItems: "center" }}>
-                <div style={{ display: "flex", alignItems: "baseline" }}>
-                  <Typography color="text.disabled">Task:</Typography>
-
-                  <Typography variant="h6" ml={1}>
-                    {data.task.taskType.name}
-                  </Typography>
-                </div>
-
                 <ColoredCircle
                   size={22}
                   color={data.task.taskType.color}
-                  marginLeft={10}
+                  marginLeft={15}
+                  marginRight={15}
                 />
 
+                {data.task.entity.type === "Shot" && (
+                  <>
+                    <Typography fontSize={18} color="text.disabled">
+                      {data.task.entity.sequence.name}
+                    </Typography>
+                    <CustomArrowDelimiter />
+                  </>
+                )}
+
+                <Typography fontSize={18} color="text.disabled">
+                  {data.task.entity.name}
+                </Typography>
+
+                <CustomArrowDelimiter />
+
                 <Typography
-                  variant="h6"
-                  ml={1.5}
+                  fontSize={18}
+                  sx={{
+                    color: emphasize(data.task.taskType.color, 0.2),
+                    border: `1px solid ${alpha(data.task.taskType.color, 0.5)}`,
+                    backgroundColor: alpha(data.task.taskType.color, 0.1),
+                    borderRadius: "999px",
+                    px: 2,
+                  }}
+                >
+                  {data.task.taskType.name}
+                </Typography>
+
+                <CustomArrowDelimiter />
+
+                <Typography
+                  fontSize={18}
                   component="span"
                   color="text.disabled"
                 >
