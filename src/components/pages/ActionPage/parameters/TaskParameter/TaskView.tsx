@@ -19,7 +19,7 @@ import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Asset, Shot, TaskId } from "types/entities";
 
 const TASK_FIELDS = gql`
-  fragment TaskFields on Task {
+  fragment TaskFieldsParam on Task {
     id
     type
     name
@@ -46,7 +46,7 @@ const SHOT_TASKS = gql`
       }
 
       tasks {
-        ...TaskFields
+        ...TaskFieldsParam
       }
     }
   }
