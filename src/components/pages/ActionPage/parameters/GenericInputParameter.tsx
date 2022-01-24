@@ -1,4 +1,4 @@
-import { Input } from "@mui/material";
+import { Input, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ParameterInputType } from "types/action/parameters";
 
@@ -34,16 +34,30 @@ const GenericInputParameter = ({
     setValue(parameter.value || (parameter.type.name === "int" ? 0 : ""));
   }, [parameter]);
 
+  const inputError =
+    parameter.type.name === "str" && parameter.type.maxLenght && value
+      ? value.toString().length > parameter.type.maxLenght
+      : false;
+
   return (
-    <Input
-      type={pythonTypeToInputType(parameter.type.name)}
-      value={value}
-      onChange={(e) => {
-        setValue(e.target.value);
-        parameter.value = e.target.value;
-      }}
-      color="info"
-    />
+    <>
+      <Input
+        type={pythonTypeToInputType(parameter.type.name)}
+        value={value}
+        error={inputError}
+        onChange={(e) => {
+          setValue(e.target.value);
+          parameter.value = e.target.value;
+        }}
+        color="info"
+        sx={{ width: 300 }}
+      />
+      {inputError && (
+        <Typography color="error" fontSize={14}>
+          Name is too long...
+        </Typography>
+      )}
+    </>
   );
 };
 
