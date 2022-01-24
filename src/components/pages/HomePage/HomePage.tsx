@@ -12,7 +12,7 @@ import RecentTasksList from "./RecentTasksList";
 const HomePage = (): JSX.Element => {
   const auth = useAuth();
   const theme = useTheme();
-  const mdBreakPoint = useMediaQuery(theme.breakpoints.up("md"));
+  const mdBreakPoint = useMediaQuery(theme.breakpoints.up("lg"));
 
   return (
     <PageWrapper title={`Welcome ${auth.user?.full_name} 👋`}>
@@ -22,11 +22,11 @@ const HomePage = (): JSX.Element => {
 
       <Grid container sx={{ mt: 3 }} spacing={3}>
         <Grid container item xs={12} spacing={3}>
-          <Grid item xs={5} md={3}>
+          <Grid item xs={5} lg={3}>
             <ProjectsView />
           </Grid>
 
-          <Grid item xs={7} md={5}>
+          <Grid item xs={7} lg={5}>
             <RecentTasksList />
             {!mdBreakPoint && (
               <>
@@ -37,7 +37,7 @@ const HomePage = (): JSX.Element => {
           </Grid>
 
           {mdBreakPoint && (
-            <Grid item md={4}>
+            <Grid item lg={4}>
               <RecentlyOpenedScenes />
             </Grid>
           )}
