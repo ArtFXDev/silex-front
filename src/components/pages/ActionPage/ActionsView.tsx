@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { getLastStepStatusColor } from "utils/action";
 
-import ActionItem from "./ActionItem";
+import RootActionContainer from "./RootActionContainer";
 
 /**
  * Actions are displayed as tabs so the user can navigate between them
@@ -105,7 +105,7 @@ const ActionsView = (): JSX.Element => {
         />
       </div>
 
-      <ActionItem uuid={routeMatch.params.uuid} />
+      <RootActionContainer uuid={routeMatch.params.uuid} />
     </div>
   );
 };

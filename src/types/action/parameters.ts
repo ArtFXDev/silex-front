@@ -1,11 +1,12 @@
+/* eslint-disable camelcase */
+import { CommonFields } from "./action";
+
 export type ParameterValueType = number | boolean | string;
 
-export interface BaseParameter {
-  label: string;
-  name: string;
+export interface BaseParameter extends CommonFields {
+  buffer_type: "parameters";
   type: { name: string };
   value: ParameterValueType | ParameterValueType[] | null;
-  hide: boolean;
 }
 
 export interface StringParameter extends BaseParameter {

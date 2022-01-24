@@ -1,0 +1,172 @@
+import CancelIcon from "@mui/icons-material/Cancel";
+import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
+import { Button, Fade, IconButton, Tooltip, Typography } from "@mui/material";
+import { useAction, useSocket } from "context";
+import { useSnackbar } from "notistack";
+import { useEffect } from "react";
+import { Action } from "types/action/action";
+import {
+  formatContextToString,
+  someStepsAreWaitingForInput,
+} from "utils/action";
+import { capitalize } from "utils/string";
+
+import ActionItem from "./ActionItem";
+
+interface RootActionContainerProps {
+  uuid: Action["uuid"];
+}
+
+/**
+ * This is the top level action component
+ */
+const RootActionContainer = ({
+  uuid,
+}: RootActionContainerProps): JSX.Element => {
+  const {
+    clearAction,
+    actions,
+    sendActionUpdate,
+    isActionFinished,
+    simpleMode,
+  } = useAction();
+  const { uiSocket } = useSocket();
+  const { enqueueSnackbar } = useSnackbar();
+
+  // Get the action
+  const { action } = actions[uuid];
+  const finished = isActionFinished(action);
+  const actionToSring = formatContextToString(action.context_metadata);
+
+  const handleContinue = () => {
+    sendActionUpdate(uuid, true, (data) => {
+      const message =
+        data.status === 200
+          ? `Continue ${action.name} sent`
+          : `Failed to send update ${action.name}`;
+
+      enqueueSnackbar(message, {
+        variant: data.status === 200 ? "success" : "error",
+      });
+    });
+  };
+
+  // Register the Enter key to continue the action
+  useEffect(() => {
+    const listener = (e: KeyboardEvent) => {
+      if (
+        document.activeElement === document.body &&
+        (e.code === "Enter" || e.code === "NumpadEnter")
+      ) {
+        handleContinue();
+      }
+    };
+
+    document.addEventListener("keydown", listener);
+
+    return () => document.removeEventListener("keydown", listener);
+  });
+
+  // Cancel or clear the action
+  const handleClearAction = () => {
+    uiSocket.emit("clearAction", { uuid: action.uuid }, () => {
+      clearAction(action.uuid);
+    });
+  };
+
+  /*const handleUndoLastCommand = () => {
+    if (!finished) {
+      uiSocket.emit("undoLastCommand", { uuid: action.uuid }, (response) => {
+        enqueueSnackbar(`Undo last command`, {
+          variant: response.status === 200 ? "success" : "error",
+        });
+      });
+    }
+  };*/
+
+  return (
+    <div style={{ maxWidth: 800 }}>
+      {/* Header */}
+      <div style={{ marginBottom: simpleMode ? 10 : 30 }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div>
+            <Typography
+              color="text.disabled"
+              variant="h5"
+              sx={{ display: "inline-block", mr: 2 }}
+              display="inline-block"
+            >
+              Action:
+            </Typography>
+
+            <Typography variant="h4" display="inline-block" sx={{ mr: 3 }}>
+              {capitalize(action.label)}
+            </Typography>
+          </div>
+
+          <Tooltip title={finished ? "Clean" : "Cancel"} placement="top" arrow>
+            <IconButton sx={{ ml: "auto" }} onClick={handleClearAction}>
+              {finished ? (
+                <DeleteSweepIcon />
+              ) : (
+                <CancelIcon fontSize="medium" />
+              )}
+            </IconButton>
+          </Tooltip>
+        </div>
+
+        {/* Context subtitle */}
+        {!simpleMode && actionToSring && (
+          <div style={{ marginTop: 10 }}>
+            <Typography
+              color="text.disabled"
+              fontSize={14}
+              sx={{ opacity: 0.4 }}
+            >
+              ⤷ {actionToSring}
+            </Typography>
+          </div>
+        )}
+      </div>
+
+      <ActionItem action={action} root depth={0} />
+
+      {/* Continue button */}
+      <Fade in={someStepsAreWaitingForInput(action)}>
+        <div
+          style={{
+            display: "initial",
+            position: "sticky",
+            bottom: 30,
+            left: 800,
+          }}
+        >
+          <div
+            style={{ display: "inline-flex", alignItems: "center", gap: 10 }}
+          >
+            {/* <Tooltip title="Undo last command" placement="top" arrow>
+              <IconButton onClick={handleUndoLastCommand}>
+                <FirstPageIcon
+                  color="disabled"
+                  sx={{
+                    transition: "all 0.2s ease",
+                    "&:hover": { color: "rgb(180, 180, 180)" },
+                  }}
+                />
+              </IconButton>
+            </Tooltip> */}
+            <Button
+              variant="contained"
+              onClick={handleContinue}
+              disabled={finished}
+            >
+              Continue
+            </Button>
+          </div>
+        </div>
+      </Fade>
+    </div>
+  );
+};
+
+export default RootActionContainer;
