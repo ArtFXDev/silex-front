@@ -18,6 +18,18 @@ export const extensions: { [name: string]: FileExtension } = {
   ma: { software: "maya", tags: ["sceneFile"] },
   mb: { software: "maya", tags: ["sceneFile"] },
 
+  // XGen
+  xgen: { software: "maya" },
+  xdsc: { software: "maya" },
+  xdg: { software: "maya" },
+  xgfx: { software: "maya" },
+  xarc: { software: "maya" },
+  xpd: { software: "maya" },
+  xuv: { software: "maya" },
+  pda: { software: "maya" },
+  pdb: { software: "maya" },
+  xgc: { software: "maya" },
+
   blend: { software: "blender", tags: ["sceneFile"] },
   nk: { software: "nuke", tags: ["sceneFile"] },
 
@@ -49,6 +61,8 @@ export const extensions: { [name: string]: FileExtension } = {
   tga: { tags: ["image", "openable"] },
   exr: { tags: ["image", "openable"] },
   svg: { tags: ["image", "preview"] },
+  ptx: { tags: ["image"] },
+  ptex: { tags: ["image"] },
 
   // Video formats
   mov: { tags: ["video"] },
