@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
-import { BaseEntity, ProjectId } from "types/entities";
+import { BaseEntity, ProjectId, Shot } from "types/entities";
 
+import { Asset } from "./Asset";
 import { Person } from "./Person";
 import { PreviewFile } from "./PreviewFile";
 import { TaskStatus } from "./TaskStatus";
@@ -35,4 +36,6 @@ export interface Task extends BaseEntity {
   taskStatus: TaskStatus;
   assignees: Person[];
   previews: PreviewFile[];
+
+  entity: Shot | Asset;
 }

@@ -1,4 +1,3 @@
-import { Typography } from "@mui/material";
 import { useAction } from "context";
 import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 
@@ -10,6 +9,7 @@ import ActionsView from "./ActionsView";
  */
 const ActionsPage = (): JSX.Element => {
   const routeMatch = useRouteMatch<{ uuid: string }>();
+
   const { actions } = useAction();
 
   const currentAction = routeMatch.params.uuid;
@@ -24,11 +24,8 @@ const ActionsPage = (): JSX.Element => {
         {firstAction ? (
           <Redirect to={`/action/${firstAction}`} />
         ) : (
-          <PageWrapper title={"Actions"} goBack>
-            <Typography color="text.disabled">
-              You don{"'"}t have any running actions...
-            </Typography>
-          </PageWrapper>
+          // Redirect to the previous page if there's no actions
+          <Redirect to="/" />
         )}
       </Route>
 

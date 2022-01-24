@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useAction, useSocket } from "context";
 import { useSnackbar } from "notistack";
+import { useEffect } from "react";
 import { Action } from "types/action/action";
 import {
   formatContextToString,
@@ -40,9 +41,9 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
   // Get the action
   const { action } = actions[uuid];
   const finished = isActionFinished(action);
+  const actionToSring = formatContextToString(action.context_metadata);
 
-  // Called when clicking on the submit button
-  const handleClickOnContinue = () => {
+  const handleContinue = () => {
     sendActionUpdate(uuid, true, (data) => {
       const message =
         data.status === 200
@@ -54,6 +55,22 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
       });
     });
   };
+
+  // Register the Enter key to continue the action
+  useEffect(() => {
+    const listener = (e: KeyboardEvent) => {
+      if (
+        document.activeElement === document.body &&
+        (e.code === "Enter" || e.code === "NumpadEnter")
+      ) {
+        handleContinue();
+      }
+    };
+
+    document.addEventListener("keydown", listener);
+
+    return () => document.removeEventListener("keydown", listener);
+  });
 
   // Cancel or clear the action
   const handleClearAction = () => {
@@ -71,8 +88,6 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
       });
     }
   };*/
-
-  const actionToSring = formatContextToString(action.context_metadata);
 
   return (
     <div style={{ maxWidth: 800 }}>
@@ -153,10 +168,9 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
                 />
               </IconButton>
             </Tooltip> */}
-
             <Button
               variant="contained"
-              onClick={handleClickOnContinue}
+              onClick={handleContinue}
               disabled={finished}
             >
               Continue

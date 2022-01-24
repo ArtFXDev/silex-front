@@ -57,7 +57,14 @@ const ExplorerPage = (): JSX.Element => {
 
   const defaultCategory =
     window.localStorage.getItem("explorer-default-category") || "shots";
-  const lastProjectId = window.localStorage.getItem("last-project-id");
+
+  const storedLastProjectId = window.localStorage.getItem("last-project-id");
+
+  if (!storedLastProjectId) {
+    window.localStorage.setItem("last-project-id", auth.currentProjectId);
+  }
+
+  const lastProjectId = storedLastProjectId;
 
   return (
     <PageWrapper>

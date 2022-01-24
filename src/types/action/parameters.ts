@@ -9,7 +9,7 @@ export interface BaseParameter {
 }
 
 export interface StringParameter extends BaseParameter {
-  type: { name: "str" };
+  type: { name: "str"; maxLenght: number | null; multiline: boolean | null };
   value: string | null;
 }
 

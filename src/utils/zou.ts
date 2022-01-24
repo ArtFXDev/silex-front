@@ -247,3 +247,13 @@ export function buildWorkingFilePath(
     { withCredentials: true }
   );
 }
+
+export function setAsMainPreview(
+  previewFileId: string
+): PromiseResponse<Shot | Asset> {
+  return axios.put(
+    zouAPIURL(`actions/preview-files/${previewFileId}/set-main-preview`),
+    {},
+    { withCredentials: true }
+  );
+}

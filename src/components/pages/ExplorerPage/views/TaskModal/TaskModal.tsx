@@ -2,7 +2,6 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import CloseIcon from "@mui/icons-material/Close";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonAddDisabledIcon from "@mui/icons-material/PersonAddDisabled";
-import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import {
   Dialog,
   DialogContent,
@@ -13,20 +12,22 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { alpha, emphasize } from "@mui/material/styles";
 import { TransitionProps } from "@mui/material/transitions";
 import { PersonsAvatarGroup } from "components/common/avatar";
 import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
-import LazyMedia from "components/utils/LazyMedia/LazyMedia";
+import ArrowDelimiter from "components/common/Separator/ArrowDelimiter";
 import { useAuth } from "context";
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { Task } from "types/entities";
-import { RecentTasks } from "types/storage/task";
+import { RecentTask } from "types/storage/task";
 import { formatDateTime } from "utils/date";
-import { entityURLAndExtension } from "utils/entity";
+import { addElementToLocalStorageQueue } from "utils/storage";
 import { assignUserToTask, clearAssignation } from "utils/zou";
 
 import FileExplorer from "./FileExplorer";
+import ThumbnailsViewer from "./ThumbnailsViewer";
 
 const TASK = gql`
   query Task($id: ID!) {
@@ -62,9 +63,32 @@ const TASK = gql`
         extension
         revision
       }
+
+      entity {
+        ... on Shot {
+          id
+          name
+          type
+          preview_file_id
+
+          sequence {
+            id
+            name
+          }
+        }
+
+        ... on Asset {
+          id
+          name
+          type
+          preview_file_id
+        }
+      }
     }
   }
 `;
+
+const CustomArrowDelimiter = () => <ArrowDelimiter mx={1.2} fontSize={20} />;
 
 /**
  * Taken from https://mui.com/components/dialogs/#transitions
@@ -80,7 +104,6 @@ const Transition = forwardRef(function Transition(
 });
 
 const TaskModal = (): JSX.Element => {
-  const [zoomPreview, setZoomPreview] = useState<boolean>(false);
   const routeMatch = useRouteMatch<{ taskId: string }>();
 
   const history = useHistory();
@@ -93,6 +116,7 @@ const TaskModal = (): JSX.Element => {
 
   const query = useQuery<{ task: Task }>(TASK, {
     variables: { id: routeMatch.params.taskId },
+    fetchPolicy: "cache-and-network",
   });
   const { data } = query;
 
@@ -102,37 +126,16 @@ const TaskModal = (): JSX.Element => {
   // Store the current task in the local storage to have an history of recent tasks
   useEffect(() => {
     if (data) {
-      const storedRecentTasks = window.localStorage.getItem("recent-tasks");
-      const newTask = {
-        pathname: window.location.pathname,
-        lastAccess: Date.now(),
-        task: data.task,
-      };
-      let recentTasks: RecentTasks = {};
-
-      if (storedRecentTasks) {
-        recentTasks = JSON.parse(storedRecentTasks);
-
-        // Limit the number of recent tasks to 5
-        if (
-          Object.keys(recentTasks).length >= 5 &&
-          !recentTasks[data.task.id]
-        ) {
-          // Sort them by last access time
-          const sortedTasks = Object.keys(recentTasks).sort(
-            (a, b) => recentTasks[b].lastAccess - recentTasks[a].lastAccess
-          );
-
-          // Remove the oldest one
-          delete recentTasks[sortedTasks[sortedTasks.length - 1]];
-        }
-      }
-
-      // Add the current task
-      recentTasks[data.task.id] = newTask;
-
-      // Save it to local storage
-      window.localStorage.setItem("recent-tasks", JSON.stringify(recentTasks));
+      addElementToLocalStorageQueue<RecentTask>(
+        "recent-tasks",
+        data.task.id,
+        {
+          pathname: window.location.pathname,
+          lastAccess: Date.now(),
+          task: data.task,
+        },
+        5
+      );
     }
   }, [data]);
 
@@ -159,23 +162,45 @@ const TaskModal = (): JSX.Element => {
               }}
             >
               <div style={{ display: "flex", alignItems: "center" }}>
-                <div style={{ display: "flex", alignItems: "baseline" }}>
-                  <Typography color="text.disabled">Task:</Typography>
-
-                  <Typography variant="h6" ml={1}>
-                    {data.task.taskType.name}
-                  </Typography>
-                </div>
-
                 <ColoredCircle
                   size={22}
                   color={data.task.taskType.color}
-                  marginLeft={10}
+                  marginLeft={15}
+                  marginRight={15}
                 />
 
+                {data.task.entity.type === "Shot" && (
+                  <>
+                    <Typography fontSize={18} color="text.disabled">
+                      {data.task.entity.sequence.name}
+                    </Typography>
+                    <CustomArrowDelimiter />
+                  </>
+                )}
+
+                <Typography fontSize={18} color="text.disabled">
+                  {data.task.entity.name}
+                </Typography>
+
+                <CustomArrowDelimiter />
+
                 <Typography
-                  variant="h6"
-                  ml={1.5}
+                  fontSize={18}
+                  sx={{
+                    color: emphasize(data.task.taskType.color, 0.2),
+                    border: `1px solid ${alpha(data.task.taskType.color, 0.5)}`,
+                    backgroundColor: alpha(data.task.taskType.color, 0.1),
+                    borderRadius: "999px",
+                    px: 2,
+                  }}
+                >
+                  {data.task.taskType.name}
+                </Typography>
+
+                <CustomArrowDelimiter />
+
+                <Typography
+                  fontSize={18}
                   component="span"
                   color="text.disabled"
                 >
@@ -242,31 +267,8 @@ const TaskModal = (): JSX.Element => {
               </Grid>
 
               <Grid item xs={6}>
-                <div style={{ float: "right", position: "relative" }}>
-                  <LazyMedia
-                    src={entityURLAndExtension(data.task, "thumbnail")}
-                    width={248}
-                    height={140}
-                    alt="task image"
-                    disableFade
-                  />
-
-                  {data.task.previews.length >= 1 && (
-                    <IconButton
-                      sx={{ position: "absolute", top: 0, right: 0 }}
-                      onClick={() => setZoomPreview(true)}
-                    >
-                      <ZoomInIcon />
-                    </IconButton>
-                  )}
-
-                  {zoomPreview && (
-                    <Dialog open onClose={() => setZoomPreview(false)}>
-                      <img
-                        src={entityURLAndExtension(data.task, "original")?.url}
-                      />
-                    </Dialog>
-                  )}
+                <div style={{ float: "right" }}>
+                  <ThumbnailsViewer task={data.task} />
                 </div>
               </Grid>
 

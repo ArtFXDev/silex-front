@@ -1,10 +1,12 @@
 import { Asset, Shot, Task } from "types/entities";
+import { PreviewFile } from "types/entities/PreviewFile";
 
 import { originalPreviewFileURL, pictureThumbnailURL } from "./zou";
 
 export const entityURLAndExtension = (
   entity: Shot | Task | Asset,
-  type: "original" | "thumbnail"
+  type: "original" | "thumbnail",
+  revision?: number
 ): { url: string; extension: string } | undefined => {
   let id;
   let extension = "png";
@@ -16,13 +18,18 @@ export const entityURLAndExtension = (
       break;
     case "Task":
       if (entity.previews.length > 0) {
-        const sortedByRevision = entity.previews
-          .slice()
-          .sort((a, b) => a.revision - b.revision);
+        let preview;
 
-        const lastIndex = sortedByRevision.length - 1;
-        id = sortedByRevision[lastIndex].id;
-        extension = sortedByRevision[lastIndex].extension;
+        if (revision) {
+          preview = entity.previews.find(
+            (p) => p.revision === revision
+          ) as PreviewFile;
+        } else {
+          preview = entity.previews[0];
+        }
+
+        id = preview.id;
+        extension = preview.extension;
       }
 
       break;
