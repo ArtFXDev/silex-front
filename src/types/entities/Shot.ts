@@ -7,7 +7,7 @@ export type ShotId = string;
 
 export interface Shot extends BaseEntity {
   id: ShotId;
-  name: "SH01";
+  name: string;
   description: string | null;
   canceled: boolean;
   nb_frames: number | null;
@@ -19,7 +19,6 @@ export interface Shot extends BaseEntity {
   data: unknown;
   type: "Shot";
   project_name: string;
-  sequence_name: string;
 
   tasks: Task[];
   sequence: Sequence;

@@ -112,17 +112,17 @@ const AssetsView = ({ listView, search }: AssetsViewProps): JSX.Element => {
             The project doesn{"'"}t contain any assets...
           </Typography>
         )}
-      </QueryWrapper>
 
-      <Button
-        variant="outlined"
-        color="secondary"
-        sx={{ textTransform: "none", mt: 3 }}
-        startIcon={<AddIcon />}
-        onClick={() => setChoosenAssetCategory("")}
-      >
-        New asset...
-      </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          sx={{ textTransform: "none", mt: 3 }}
+          startIcon={<AddIcon />}
+          onClick={() => setChoosenAssetCategory("")}
+        >
+          New asset...
+        </Button>
+      </QueryWrapper>
 
       {choosenAssetCategory !== undefined && (
         <CreateEntityModal

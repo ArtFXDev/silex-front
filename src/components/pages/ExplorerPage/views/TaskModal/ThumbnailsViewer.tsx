@@ -1,10 +1,13 @@
+import { useApolloClient } from "@apollo/client";
+import PushPinIcon from "@mui/icons-material/PushPin";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
-import { Chip, Dialog, IconButton, Typography } from "@mui/material";
+import { Chip, Dialog, IconButton, Tooltip, Typography } from "@mui/material";
 import LazyMedia from "components/utils/LazyMedia/LazyMedia";
 import { useState } from "react";
 import { Task } from "types/entities";
 import { PreviewFile } from "types/entities/PreviewFile";
 import { entityURLAndExtension } from "utils/entity";
+import * as Zou from "utils/zou";
 
 interface ThumbnailsViewerProps {
   task: Task;
@@ -16,23 +19,32 @@ const ThumbnailsViewer = ({ task }: ThumbnailsViewerProps): JSX.Element => {
     PreviewFile["revision"] | undefined
   >(task.previews.length > 0 ? task.previews[0].revision : undefined);
 
+  const client = useApolloClient();
+
+  const currentPreview = task.previews.find(
+    (p) => p.revision === currentPreviewRevision
+  );
+
+  const currentPreviewIsTaskPreview =
+    currentPreview && currentPreview.id === task.entity.preview_file_id;
+
   return (
     <div
       style={{
         display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-end",
+        alignItems: "center",
       }}
     >
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          marginBottom: 10,
+          flexDirection: "column",
+          marginRight: 15,
           gap: 5,
         }}
       >
-        {task.previews.slice(0, 5).map((preview) => {
+        {task.previews.slice(0, 4).map((preview) => {
           const isCurrentPreview = currentPreviewRevision === preview.revision;
 
           return (
@@ -48,7 +60,7 @@ const ThumbnailsViewer = ({ task }: ThumbnailsViewerProps): JSX.Element => {
           );
         })}
 
-        {task.previews.length > 5 && (
+        {task.previews.length > 4 && (
           <Typography color="text.disabled">...</Typography>
         )}
       </div>
@@ -61,6 +73,34 @@ const ThumbnailsViewer = ({ task }: ThumbnailsViewerProps): JSX.Element => {
           alt="task image"
           disableFade
         />
+
+        {currentPreview && (
+          <Tooltip title={"Pin as main preview"} placement="top" arrow>
+            <IconButton
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                transform: `rotate(-45deg)`,
+              }}
+              onClick={() => {
+                if (!currentPreviewIsTaskPreview) {
+                  Zou.setAsMainPreview(currentPreview.id).then(() =>
+                    client.refetchQueries({ include: "active" })
+                  );
+                }
+              }}
+            >
+              <PushPinIcon
+                sx={{
+                  color: currentPreviewIsTaskPreview
+                    ? "#66BB6A"
+                    : "rgba(255, 255, 255, 0.3)",
+                }}
+              />
+            </IconButton>
+          </Tooltip>
+        )}
 
         {task.previews.length >= 1 && (
           <IconButton

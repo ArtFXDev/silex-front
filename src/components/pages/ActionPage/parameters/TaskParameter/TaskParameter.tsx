@@ -33,6 +33,25 @@ const TASK = gql`
       taskType {
         for_shots
       }
+
+      entity {
+        ... on Shot {
+          id
+          name
+          type
+
+          sequence {
+            id
+            name
+          }
+        }
+
+        ... on Asset {
+          id
+          name
+          type
+        }
+      }
     }
   }
 `;
@@ -44,11 +63,7 @@ interface TaskParameterProps {
 const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
   const [search, setSearch] = useState<string>();
   const [taskView, setTaskView] = useState<boolean>();
-  const [selectedEntity, setSelectedEntity] =
-    useState<{ id: string; forShots: boolean }>();
-  const [selectedEntityObject, setSelectedEntityObject] = useState<
-    Asset | Shot
-  >();
+  const [selectedEntity, setSelectedEntity] = useState<Asset | Shot>();
   const [selectedTaskId, setSelectedTaskId] = useState<TaskId | null>(
     parameter.value
   );
@@ -64,7 +79,7 @@ const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
     task: {
       entity_id: string;
       project_id: string;
-      taskType: { for_shots: boolean };
+      entity: Shot | Asset;
     };
   }>(TASK, {
     variables: {
@@ -72,10 +87,7 @@ const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
     },
     skip: selectedTaskId === null,
     onCompleted: (data) => {
-      setSelectedEntity({
-        id: data.task.entity_id,
-        forShots: data.task.taskType.for_shots,
-      });
+      setSelectedEntity(data.task.entity);
       setTaskView(true);
       setTaskIdValue(selectedTaskId);
     },
@@ -91,6 +103,7 @@ const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
   const projectId =
     selectedProjectId ||
     action.context_metadata.project_id ||
+    window.localStorage.getItem("last-project-id") ||
     auth.currentProjectId;
 
   if (!projectId) {
@@ -199,11 +212,7 @@ const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
           search={search}
           selectedEntityId={selectedTaskId ? selectedEntity?.id : undefined}
           onEntityClick={(entity) => {
-            setSelectedEntity({
-              id: entity.id,
-              forShots: entity.type === "Shot",
-            });
-            setSelectedEntityObject(entity);
+            setSelectedEntity(entity);
             setTaskView(true);
           }}
         />
@@ -211,7 +220,7 @@ const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
 
       {createEntityModal && (
         <CreateEntityModal
-          targetEntity={selectedEntityObject}
+          targetEntity={selectedEntity}
           onClose={() => setCreateEntityModal(false)}
           entityType={taskView ? "Task" : "Shot"}
           entityTypes={!taskView ? ["Asset", "Shot"] : undefined}

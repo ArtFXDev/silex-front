@@ -20,17 +20,21 @@ import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Project } from "types/entities";
 import { extensions } from "types/files/extensions";
 import { FileOrFolder } from "types/socket";
+import { RecentScene } from "types/storage/scene";
 import { formatDateTime } from "utils/date";
 import { getFileExtension } from "utils/files";
+import { addElementToLocalStorageQueue } from "utils/storage";
 
 interface WorkFileItemProps {
   file: FileOrFolder;
-  moreDetails: boolean;
+  moreDetails?: boolean;
+  small?: boolean;
 }
 
 const WorkFileItem = ({
   file,
   moreDetails,
+  small,
 }: WorkFileItemProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [launchSuccess, setLaunchSuccess] = useState<boolean>(false);
@@ -65,6 +69,13 @@ const WorkFileItem = ({
         setIsLoading(false);
         setLaunchSuccess(true);
         setTimeout(() => setLaunchSuccess(false), 8000);
+
+        addElementToLocalStorageQueue<RecentScene>(
+          "recent-scenes",
+          file.path,
+          { file, lastAccess: Date.now() },
+          5
+        );
       }
     });
   };
@@ -75,10 +86,11 @@ const WorkFileItem = ({
         sx={{
           borderRadius: LIST_ITEM_BORDER_RADIUS,
           color: "text.secondary",
+          py: small ? 0.5 : 1,
         }}
       >
         <ListItemIcon>
-          <FileIcon name={extension?.software} size={30} sx={{ mr: 2 }} />
+          <FileIcon name={extension?.software} size={small ? 25 : 30} />
         </ListItemIcon>
 
         <ListItemText

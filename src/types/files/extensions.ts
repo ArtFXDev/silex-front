@@ -30,6 +30,7 @@ export const extensions: { [name: string]: FileExtension } = {
   // V-Ray
   vrscene: { software: "vray", tags: ["submit"] },
   vrmesh: { software: "vray" },
+  vrlmap: { software: "vray" },
 
   // Arnold
   ass: { software: "arnold", tags: ["submit"] },
