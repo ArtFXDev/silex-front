@@ -129,7 +129,7 @@ const RootActionContainer = ({
         )}
       </div>
 
-      <ActionItem action={action} root depth={0} />
+      <ActionItem action={action} root />
 
       {/* Continue button */}
       <Fade in={someStepsAreWaitingForInput(action)}>

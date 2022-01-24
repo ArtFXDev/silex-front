@@ -6,19 +6,14 @@ import StepItem from "./StepItem";
 interface ActionItemProps {
   root?: boolean;
   action: Action;
-  depth: number;
 }
 
-export const ActionItem = ({
-  action,
-  root,
-  depth,
-}: ActionItemProps): JSX.Element => {
+export const ActionItem = ({ action, root }: ActionItemProps): JSX.Element => {
   return (
     <List
       sx={{
         mb: 2,
-        backgroundColor: `rgba(128, 128, 128, ${depth * 0.1})`,
+        backgroundColor: !root ? `rgba(128, 128, 128, 0.1)` : "",
         borderRadius: 3,
         p: !root ? 2 : 0,
       }}
@@ -30,7 +25,7 @@ export const ActionItem = ({
           child.buffer_type === "steps" ? (
             <StepItem key={child.uuid} step={child} />
           ) : (
-            <ActionItem action={child} depth={depth + 1} />
+            <ActionItem action={child} />
           )
         )}
     </List>
