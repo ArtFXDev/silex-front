@@ -20,7 +20,12 @@ const RecentlyOpenedScenes = (): JSX.Element => {
               (a, b) => recentScenes[b].lastAccess - recentScenes[a].lastAccess
             )
             .map((id) => (
-              <WorkFileItem key={id} file={recentScenes[id].file} small />
+              <WorkFileItem
+                key={id}
+                file={recentScenes[id].file}
+                small
+                taskId={recentScenes[id].taskId || ""}
+              />
             ))}
         </List>
       ) : (

@@ -20,8 +20,8 @@ export function addElementToLocalStorageQueue<T extends { lastAccess: number }>(
     queue = JSON.parse(storedQueue);
     const queueSize = Object.keys(queue).length;
 
-    // Limit the number of recent tasks to 5
-    if (queueSize >= limit && !queue[id]) {
+    // Limit the number of recent tasks
+    if (queueSize >= limit) {
       const sortedKeys = Object.keys(queue).sort(
         (a, b) => queue[b].lastAccess - queue[a].lastAccess
       );

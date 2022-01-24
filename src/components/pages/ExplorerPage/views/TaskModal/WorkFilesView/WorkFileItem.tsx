@@ -15,7 +15,6 @@ import FileIcon from "components/common/FileIcon/FileIcon";
 import { uiSocket, useAuth } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import { useRouteMatch } from "react-router-dom";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Project } from "types/entities";
 import { extensions } from "types/files/extensions";
@@ -29,19 +28,20 @@ interface WorkFileItemProps {
   file: FileOrFolder;
   moreDetails?: boolean;
   small?: boolean;
+  taskId: string;
 }
 
 const WorkFileItem = ({
   file,
   moreDetails,
   small,
+  taskId,
 }: WorkFileItemProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [launchSuccess, setLaunchSuccess] = useState<boolean>(false);
 
   const { enqueueSnackbar } = useSnackbar();
   const { getCurrentProject } = useAuth();
-  const { taskId } = useRouteMatch<{ taskId: string }>().params;
 
   const extensionName = getFileExtension(file.name);
   const extension = extensionName ? extensions[extensionName] : undefined;
@@ -73,7 +73,7 @@ const WorkFileItem = ({
         addElementToLocalStorageQueue<RecentScene>(
           "recent-scenes",
           file.path,
-          { file, lastAccess: Date.now() },
+          { file, lastAccess: Date.now(), taskId },
           5
         );
       }
@@ -83,6 +83,7 @@ const WorkFileItem = ({
   return (
     <Paper elevation={1} sx={{ my: 1, borderRadius: LIST_ITEM_BORDER_RADIUS }}>
       <ListItemButton
+        disabled={!taskId}
         sx={{
           borderRadius: LIST_ITEM_BORDER_RADIUS,
           color: "text.secondary",
