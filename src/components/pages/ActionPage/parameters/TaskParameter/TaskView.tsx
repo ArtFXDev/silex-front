@@ -39,6 +39,7 @@ const SHOT_TASKS = gql`
     shot(id: $id) {
       id
       name
+      type
 
       sequence {
         id
@@ -58,9 +59,10 @@ const ASSET_TASKS = gql`
     asset(id: $id) {
       id
       name
+      type
 
       tasks {
-        ...TaskFields
+        ...TaskFieldsParam
       }
     }
   }
@@ -68,7 +70,7 @@ const ASSET_TASKS = gql`
 
 interface TaskViewProps {
   /** Entity for which we want to see the tasks */
-  entity: { id: string; forShots: boolean };
+  entity: Asset | Shot;
 
   /** Id of the entity that is selected */
   selectedTaskId: TaskId | null;
@@ -86,7 +88,7 @@ const TasksView = ({
   setSelectedTaskId,
 }: TaskViewProps): JSX.Element => {
   const query = useQuery<{ shot?: Shot; asset?: Asset }>(
-    entity.forShots ? SHOT_TASKS : ASSET_TASKS,
+    entity.type === "Shot" ? SHOT_TASKS : ASSET_TASKS,
     {
       variables: {
         id: entity.id,
