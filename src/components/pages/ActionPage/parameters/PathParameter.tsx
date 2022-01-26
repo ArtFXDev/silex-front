@@ -8,8 +8,10 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { useAction } from "context";
 import isElectron from "is-electron";
 import { useRef, useState } from "react";
+import { useRouteMatch } from "react-router-dom";
 import { PathParameter as PathParameterType } from "types/action/parameters";
 import { humanFileSize } from "utils/string";
 import { v4 as uuidv4 } from "uuid";
@@ -29,6 +31,9 @@ interface PathParameterProps {
 const PathParameter = ({ parameter }: PathParameterProps): JSX.Element => {
   const inputElement = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<FileWithPath[]>([]);
+
+  const { sendActionUpdate } = useAction();
+  const actionUUID = useRouteMatch<{ uuid: string }>().params.uuid;
 
   if (!isElectron()) {
     return (
@@ -53,6 +58,7 @@ const PathParameter = ({ parameter }: PathParameterProps): JSX.Element => {
     }
 
     setFiles(newFiles);
+    sendActionUpdate(actionUUID, false);
   };
 
   return (
