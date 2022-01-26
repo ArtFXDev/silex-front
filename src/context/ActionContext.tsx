@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { useSocket } from "context";
 import merge from "deepmerge";
 import React, {
@@ -8,7 +9,7 @@ import React, {
   useState,
 } from "react";
 import { useHistory } from "react-router";
-import { Action } from "types/action/action";
+import { Action, Step } from "types/action/action";
 import { Status } from "types/action/status";
 import { ServerResponse, UIOnServerEvents } from "types/socket";
 import { diff } from "utils/diff";
@@ -68,6 +69,28 @@ function addNewAction(action: Action) {
   const deepActionCopy = JSON.parse(JSON.stringify(action));
   actions[action.uuid] = { action, oldAction: deepActionCopy };
 }
+
+/**
+ * Recursively set ask_user to false for an action or step
+ * Since a step can contain sub actions we can go deeper
+ */
+const setAskUserRecursively = (item: Step | Action) => {
+  const children = Object.keys(item.children);
+
+  children
+    .map((k) => item.children[k])
+    .forEach((child) => {
+      if (child.buffer_type === "actions") {
+        setAskUserRecursively(child);
+      } else if (child.buffer_type === "steps") {
+        Object.keys(child.children).forEach((k) => {
+          if (child.children[k].status === Status.WAITING_FOR_RESPONSE) {
+            child.children[k].ask_user = false;
+          }
+        });
+      }
+    });
+};
 
 interface ProvideActionProps {
   children: JSX.Element;
@@ -253,14 +276,7 @@ export const ProvideAction = ({
     if (actions[uuid] !== undefined) {
       if (removeAskUser) {
         // Manually set the ask_user fields to false
-        for (const step of Object.values(actions[uuid].action.children)) {
-          for (const cmd of Object.values(step.children)) {
-            if (cmd.status === Status.WAITING_FOR_RESPONSE) {
-              // eslint-disable-next-line camelcase
-              cmd.ask_user = false;
-            }
-          }
-        }
+        setAskUserRecursively(actions[uuid].action);
       }
 
       // Compute the diff
