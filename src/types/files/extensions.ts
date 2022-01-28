@@ -38,6 +38,7 @@ export const extensions: { [name: string]: FileExtension } = {
   hipnc: { software: "houdini", tags: ["sceneFile"] },
   hda: { software: "houdini" },
   hdanc: { software: "houdini" },
+  bgeo: { software: "houdini", tags: ["geometry"] },
 
   // V-Ray
   vrscene: { software: "vray", tags: ["submit"] },
