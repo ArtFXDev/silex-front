@@ -32,7 +32,7 @@ const MultipleSelectParameter = ({
   parameter,
   onChange,
 }: MultipleSelectParameterProps): JSX.Element => {
-  const [values, setValues] = useState<string[]>([]);
+  const [values, setValues] = useState<string[]>(parameter.value || []);
 
   // Update state when the parameter value from action changes
   useEffect(() => {
@@ -64,9 +64,12 @@ const MultipleSelectParameter = ({
         MenuProps={MenuProps}
         renderValue={(selected) => (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-            {selected.map((value) => (
-              <Chip key={value} label={value} />
-            ))}
+            {selected.map((value) => {
+              const labelFromValue = Object.keys(parameter.type.options).find(
+                (k) => parameter.type.options[k] === value
+              );
+              return <Chip key={value} label={labelFromValue} />;
+            })}
           </div>
         )}
       >
