@@ -55,24 +55,30 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
   });
   const { data } = query;
 
+  const filteredSequences =
+    data &&
+    data.project.sequences
+      .slice()
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((seq) => ({
+        seq,
+        shots: seq.shots
+          .filter((sh) => fuzzyMatch(sh.name, search))
+          .sort((a, b) => a.name.localeCompare(b.name)),
+      }));
+
   return (
     <QueryWrapper query={query}>
-      {data && data.project.sequences.length > 0 ? (
-        // Sort sequences by name
-        data.project.sequences
-          .slice()
-          .sort((a, b) => a.name.localeCompare(b.name))
-          .map((seq, i) => {
-            // Filter shots by search and sort them
-            const filteredShots = seq.shots
-              .filter((sh) => fuzzyMatch(sh.name, search))
-              .sort((a, b) => a.name.localeCompare(b.name));
-
-            const isLast = i === data.project.sequences.length - 1;
+      {filteredSequences && data.project.sequences.length > 0 ? (
+        filteredSequences.map((e) => e.shots.length).reduce((a, b) => a + b) !==
+        0 ? (
+          filteredSequences.map((items, i) => {
+            const { seq, shots } = items;
+            const isLast = i === filteredSequences.length - 1;
 
             return (
               <div key={seq.id}>
-                {(search.length === 0 ? true : filteredShots.length !== 0) ? (
+                {(search.length === 0 ? true : shots.length !== 0) ? (
                   <>
                     <div style={{ display: "flex", alignItems: "center" }}>
                       {/* Sequence name */}
@@ -104,10 +110,7 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
                     </div>
 
                     {seq.shots.length > 0 ? (
-                      <EntitiesView
-                        entities={filteredShots}
-                        listView={listView}
-                      />
+                      <EntitiesView entities={shots} listView={listView} />
                     ) : (
                       <Typography color="text.disabled" mt={2}>
                         No shots...
@@ -127,6 +130,9 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
               </div>
             );
           })
+        ) : (
+          <Typography color="text.disabled">No results found...</Typography>
+        )
       ) : (
         <Typography color="text.disabled">
           The project doesn{"'"}t contain any sequences or shots...
