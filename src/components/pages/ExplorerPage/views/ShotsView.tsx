@@ -63,7 +63,7 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
       .map((seq) => ({
         seq,
         shots: seq.shots
-          .filter((sh) => fuzzyMatch(sh.name, search))
+          .filter((sh) => fuzzyMatch([sh.name, seq.name], search))
           .sort((a, b) => a.name.localeCompare(b.name)),
       }));
 

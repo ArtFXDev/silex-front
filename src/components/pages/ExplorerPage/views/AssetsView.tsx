@@ -58,7 +58,7 @@ const AssetsView = ({ listView, search }: AssetsViewProps): JSX.Element => {
       }
 
       // Filter with the search input
-      if (fuzzyMatch(asset.name, search)) {
+      if (fuzzyMatch([asset.entity_type.name, asset.name], search)) {
         assetByTypes[asset.entity_type.id].push(asset);
         emptySearchResults = false;
       }
