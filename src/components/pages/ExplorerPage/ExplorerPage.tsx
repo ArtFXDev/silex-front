@@ -15,6 +15,7 @@ import {
   Switch,
   useHistory,
   useLocation,
+  useRouteMatch,
 } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -23,27 +24,57 @@ import { CategorySelector, ProjectSelector } from "./selectors";
 import { AssetsView, ShotsView, TasksView } from "./views";
 
 const ExplorerPage = (): JSX.Element => {
+  const [search, setSearch] = useState<string>();
   const [listView, setListView] = useState<boolean>(
     window.localStorage.getItem("list-view") === "true"
   );
-  const [search, setSearch] = useState<string>("");
+
+  const routeMatch = useRouteMatch<{ category: string }>(
+    "/explorer/:projectId/:category"
+  );
 
   const bigScreen = useMediaQuery("(min-width:1050px)");
   const auth = useAuth();
   const location = useLocation();
-  const locationDepth = location.pathname
-    .split("/")
-    .filter((e) => e.length !== 0).length;
   const history = useHistory();
+  const locationDepth = location.pathname.split("/").length - 1;
+
+  const setSearchWithSave = (value: string) => {
+    setSearch(value);
+
+    // Store the search input
+    if (locationDepth === 3 && routeMatch) {
+      window.localStorage.setItem(
+        `explorer-${routeMatch.params.category}-search`,
+        value
+      );
+    }
+  };
+
+  useEffect(() => {
+    // Restore the search input depending on the category
+    if (
+      routeMatch &&
+      routeMatch.params.category &&
+      search === undefined &&
+      locationDepth === 3
+    ) {
+      const savedSearch = window.localStorage.getItem(
+        `explorer-${routeMatch.params.category}-search`
+      );
+      setSearch(savedSearch || "");
+    }
+  }, [locationDepth, routeMatch, search]);
 
   useEffect(() => {
     // Clear the search input on route change
-    const unlisten = history.listen(() => {
-      setSearch("");
+    const unlisten = history.listen((newLocation) => {
+      const newDepth = newLocation.pathname.split("/").length - 1;
+      setSearch(newDepth === 3 ? undefined : "");
     });
 
     return () => unlisten();
-  }, [history]);
+  }, [history, locationDepth, routeMatch]);
 
   if (!auth.currentProjectId) {
     return <PageWrapper>Loading project...</PageWrapper>;
@@ -53,11 +84,12 @@ const ExplorerPage = (): JSX.Element => {
     return <PageWrapper>You don{"'"}t have any projects yet...</PageWrapper>;
   }
 
+  // We save the shots / assets category
   const defaultCategory =
     window.localStorage.getItem("explorer-default-category") || "shots";
 
+  // Use the stored last project id if exists
   const storedLastProjectId = window.localStorage.getItem("last-project-id");
-
   if (!storedLastProjectId) {
     window.localStorage.setItem("last-project-id", auth.currentProjectId);
   }
@@ -87,8 +119,8 @@ const ExplorerPage = (): JSX.Element => {
             size="small"
             sx={{ marginLeft: bigScreen ? "auto" : "none" }}
             value={search}
-            onClear={() => setSearch("")}
-            onChange={(e) => setSearch(e.target.value)}
+            onClear={() => setSearchWithSave("")}
+            onChange={(e) => setSearchWithSave(e.target.value)}
           />
 
           <div>
@@ -130,15 +162,15 @@ const ExplorerPage = (): JSX.Element => {
 
           <Switch>
             <Route path={`/explorer/:projectId/:category/:entityId/tasks`}>
-              <TasksView listView={listView} search={search} />
+              <TasksView listView={listView} search={search || ""} />
             </Route>
 
             <Route path={`/explorer/:projectId/shots`}>
-              <ShotsView listView={listView} search={search} />
+              <ShotsView listView={listView} search={search || ""} />
             </Route>
 
             <Route path={`/explorer/:projectId/assets`}>
-              <AssetsView listView={listView} search={search} />
+              <AssetsView listView={listView} search={search || ""} />
             </Route>
 
             <Route>
