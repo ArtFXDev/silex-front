@@ -177,6 +177,7 @@ const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
             size="small"
             value={search === undefined ? "" : search}
             onChange={(e) => setSearch(e.target.value)}
+            onClear={() => setSearch("")}
           />
         </Grid>
 

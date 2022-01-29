@@ -8,7 +8,7 @@ import { Alert, IconButton, Link } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import SearchTextField from "components/common/SearchTextField/SearchTextField";
 import { useAuth } from "context";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Redirect,
   Route,
@@ -35,8 +35,6 @@ const ExplorerPage = (): JSX.Element => {
     .split("/")
     .filter((e) => e.length !== 0).length;
   const history = useHistory();
-
-  const handleSearchInput = useCallback((e) => setSearch(e.target.value), []);
 
   useEffect(() => {
     // Clear the search input on route change
@@ -87,9 +85,10 @@ const ExplorerPage = (): JSX.Element => {
             variant="outlined"
             placeholder="Search..."
             size="small"
-            sx={{ mr: 3, marginLeft: bigScreen ? "auto" : "none" }}
+            sx={{ marginLeft: bigScreen ? "auto" : "none" }}
             value={search}
-            onChange={handleSearchInput}
+            onClear={() => setSearch("")}
+            onChange={(e) => setSearch(e.target.value)}
           />
 
           <div>
