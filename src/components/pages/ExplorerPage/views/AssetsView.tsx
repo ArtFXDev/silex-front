@@ -49,12 +49,21 @@ const AssetsView = ({ listView, search }: AssetsViewProps): JSX.Element => {
   const assetByTypes: { [assetType: EntityType["id"]]: Asset[] } = {};
   const assetTypes: { [id: EntityType["id"]]: EntityType["name"] } = {};
 
+  let emptySearchResults = true;
+
   if (data) {
     for (const asset of data.project.assets) {
       if (!assetByTypes[asset.entity_type.id]) {
         assetByTypes[asset.entity_type.id] = [];
       }
-      assetByTypes[asset.entity_type.id].push(asset);
+
+      // Filter with the search input
+      if (fuzzyMatch([asset.entity_type.name, asset.name], search)) {
+        assetByTypes[asset.entity_type.id].push(asset);
+        emptySearchResults = false;
+      }
+
+      // Store the category name
       assetTypes[asset.entity_type.id] = asset.entity_type.name;
     }
   }
@@ -66,11 +75,11 @@ const AssetsView = ({ listView, search }: AssetsViewProps): JSX.Element => {
   return (
     <>
       <QueryWrapper query={query}>
-        {data && data.project.assets.length > 0 ? (
+        {data && data.project.assets.length > 0 && !emptySearchResults ? (
           Object.keys(assetByTypes).map((assetTypeId, i) => {
-            const filteredAssets = assetByTypes[assetTypeId]
-              .filter((asset) => fuzzyMatch(asset.name, search))
-              .sort((a, b) => a.name.localeCompare(b.name));
+            const filteredAssets = assetByTypes[assetTypeId].sort((a, b) =>
+              a.name.localeCompare(b.name)
+            );
 
             const isLast = i === data.project.assets.length - 1;
 
@@ -107,6 +116,8 @@ const AssetsView = ({ listView, search }: AssetsViewProps): JSX.Element => {
               )
             );
           })
+        ) : emptySearchResults ? (
+          <Typography color="text.disabled">No results found...</Typography>
         ) : (
           <Typography color="text.disabled">
             The project doesn{"'"}t contain any assets...

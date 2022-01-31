@@ -35,7 +35,7 @@ const logos: Record<string, string> = {
 };
 
 /**
- * Fallback icons based on tags
+ * Fallback icons based on extension tags
  */
 const fallbackIcons: { [tag: string]: JSX.Element } = {
   image: <ImageIcon />,
@@ -57,12 +57,14 @@ interface FileIconProps {
   /** Opacity from 0 to 1 */
   opacity?: number;
 
-  /** Wether it's an action or not */
+  /** Wether it's for an action or not */
   action?: boolean;
 }
 
 /**
- * DCC software logo component
+ * A file icon component translating the name prop with an icon
+ * If the name prop correspond to a svg logo it uses it otherwise
+ * it fallbacks to the extension category icon (eg: images)
  */
 const FileIcon = ({
   name,
@@ -108,9 +110,15 @@ const FileIcon = ({
           }}
         />
       ) : fallbackIcon ? (
-        <fallbackIcon.type color="disabled" />
+        <fallbackIcon.type
+          color="disabled"
+          style={{ width: size, height: size }}
+        />
       ) : (
-        <InsertDriveFileIcon color="disabled" />
+        <InsertDriveFileIcon
+          color="disabled"
+          style={{ width: size, height: size }}
+        />
       )}
     </Box>
   );
