@@ -1,4 +1,5 @@
-import { TextField, TextFieldProps } from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
+import { Box, IconButton, TextField, TextFieldProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 const StyledTextField = styled(TextField)({
@@ -21,8 +22,33 @@ const StyledTextField = styled(TextField)({
   },
 });
 
-const SearchTextField = (props: TextFieldProps): JSX.Element => {
-  return <StyledTextField {...props} />;
+interface SearchTextFieldProps {
+  onClear: () => void;
+}
+
+const SearchTextField = (
+  props: SearchTextFieldProps & TextFieldProps
+): JSX.Element => {
+  const { sx, onClear, ...rest } = props;
+
+  return (
+    <Box
+      sx={{
+        ...sx,
+        display: "flex",
+        alignItems: "center",
+        position: "relative",
+      }}
+    >
+      <StyledTextField {...rest} />
+      <IconButton
+        style={{ display: "absolute", right: 45, marginLeft: 5, padding: 5 }}
+        onClick={onClear}
+      >
+        <ClearIcon color="disabled" fontSize="small" />
+      </IconButton>
+    </Box>
+  );
 };
 
 export default SearchTextField;

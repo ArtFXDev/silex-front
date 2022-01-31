@@ -16,7 +16,7 @@ export function fuzzyMatch(
 ): boolean {
   if (!search) return true;
   return (Array.isArray(input) ? input : [input]).some((s) =>
-    s.toLowerCase().includes(search.toLowerCase())
+    s.toLowerCase().includes(search.toLowerCase().replaceAll(" ", ""))
   );
 }
 

@@ -8,9 +8,13 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import FileIcon from "components/common/FileIcon/FileIcon";
+import { useAction } from "context";
 import isElectron from "is-electron";
 import { useRef, useState } from "react";
+import { useRouteMatch } from "react-router-dom";
 import { PathParameter as PathParameterType } from "types/action/parameters";
+import { getExtensionSoftwareFromFileName } from "utils/files";
 import { humanFileSize } from "utils/string";
 import { v4 as uuidv4 } from "uuid";
 
@@ -29,6 +33,11 @@ interface PathParameterProps {
 const PathParameter = ({ parameter }: PathParameterProps): JSX.Element => {
   const inputElement = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<FileWithPath[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [uuid, _] = useState<string>(uuidv4());
+
+  const { sendActionUpdate } = useAction();
+  const actionUUID = useRouteMatch<{ uuid: string }>().params.uuid;
 
   if (!isElectron()) {
     return (
@@ -39,12 +48,11 @@ const PathParameter = ({ parameter }: PathParameterProps): JSX.Element => {
     );
   }
 
-  const uuid = uuidv4();
-
   const updateFiles = (newFiles: FileWithPath[]) => {
     if (parameter.type.multiple) {
       parameter.value = newFiles.map((f) => f.path);
     } else {
+      // If it's a single path
       if (newFiles.length === 1) {
         parameter.value = newFiles[0].path;
       } else {
@@ -52,7 +60,13 @@ const PathParameter = ({ parameter }: PathParameterProps): JSX.Element => {
       }
     }
 
+    // Reset the input element if given empty
+    if (newFiles.length === 0 && inputElement.current) {
+      inputElement.current.value = "";
+    }
+
     setFiles(newFiles);
+    sendActionUpdate(actionUUID, false);
   };
 
   return (
@@ -76,6 +90,7 @@ const PathParameter = ({ parameter }: PathParameterProps): JSX.Element => {
       />
 
       <div>
+        {/* Choose a file button */}
         <label htmlFor={`file-input-${uuid}`}>
           <Button
             variant="outlined"
@@ -108,6 +123,7 @@ const PathParameter = ({ parameter }: PathParameterProps): JSX.Element => {
             : "No files choosen..."}
         </p>
 
+        {/* Clear files button */}
         {files.length > 0 && (
           <IconButton
             onClick={() => updateFiles([])}
@@ -119,6 +135,7 @@ const PathParameter = ({ parameter }: PathParameterProps): JSX.Element => {
         )}
       </div>
 
+      {/* List of selected files */}
       <div style={{ marginTop: "10px" }}>
         {files
           .sort((f1, f2) => f1.path.localeCompare(f2.path))
@@ -136,6 +153,14 @@ const PathParameter = ({ parameter }: PathParameterProps): JSX.Element => {
                 },
               }}
             >
+              <div style={{ padding: 5, marginRight: 10 }}>
+                <FileIcon
+                  name={getExtensionSoftwareFromFileName(file.name)}
+                  size={15}
+                />
+              </div>
+
+              {/* File name */}
               <Tooltip title={file.path} arrow placement="top">
                 <Typography
                   color="text.disabled"
@@ -154,6 +179,7 @@ const PathParameter = ({ parameter }: PathParameterProps): JSX.Element => {
                 </Typography>
               </Tooltip>
 
+              {/* File size*/}
               <Typography
                 color="text.disabled"
                 fontSize={12}
