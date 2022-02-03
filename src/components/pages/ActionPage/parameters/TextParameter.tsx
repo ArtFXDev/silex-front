@@ -28,7 +28,7 @@ const TextParameter = ({ parameter }: TextParameterProps): JSX.Element => {
         <LinearProgress
           variant={parameter.type.progress.variant}
           value={parameter.type.progress.value}
-          sx={{ mt: "20px" }}
+          sx={{ mt: 2 }}
           color={parameter.type.color}
         />
       )}
