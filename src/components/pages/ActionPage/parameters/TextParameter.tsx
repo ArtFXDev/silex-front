@@ -27,6 +27,7 @@ const TextParameter = ({ parameter }: TextParameterProps): JSX.Element => {
           variant={parameter.type.progress.variant}
           value={parameter.type.progress.value}
           style={{ marginTop: "20px" }}
+          color={parameter.type.color}
         />
       )}
     </div>

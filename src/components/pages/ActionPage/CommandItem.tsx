@@ -4,6 +4,7 @@ import {
   Collapse,
   Divider,
   IconButton,
+  LinearProgress,
   List,
   ListItem,
   ListItemIcon,
@@ -104,6 +105,15 @@ const CommandItem = ({ command }: CommandItemProps): JSX.Element => {
             }
           />
         </Collapse>
+      )}
+
+      {/* progress */}
+      {command.progress !== null && (
+        <LinearProgress
+          variant="determinate"
+          value={command.progress}
+          color="success"
+        />
       )}
 
       {/* Parameters */}

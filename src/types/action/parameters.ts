@@ -80,7 +80,7 @@ export interface ArrayParameter extends BaseParameter {
 export interface TextParameter extends BaseParameter {
   type: {
     name: "text";
-    color?: string;
+    color?: "info" | "error" | "success" | "warning";
     progress: null | {
       value: number;
       variant: "determinate" | "indeterminate";
