@@ -24,11 +24,11 @@ const TextParameter = ({ parameter }: TextParameterProps): JSX.Element => {
       </Typography>
 
       {/* progress */}
-      {parameter.type.progress !== null && (
+      {parameter.type.progress && (
         <LinearProgress
           variant={parameter.type.progress.variant}
           value={parameter.type.progress.value}
-          style={{ marginTop: "20px" }}
+          sx={{ mt: "20px" }}
           color={parameter.type.color}
         />
       )}
