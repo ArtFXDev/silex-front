@@ -78,7 +78,14 @@ export interface ArrayParameter extends BaseParameter {
 }
 
 export interface TextParameter extends BaseParameter {
-  type: { name: "text"; color?: string };
+  type: {
+    name: "text";
+    color?: string;
+    progress: null | {
+      value: number;
+      variant: "determinate" | "indeterminate";
+    };
+  };
   value: string | null;
 }
 
