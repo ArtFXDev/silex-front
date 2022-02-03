@@ -22,6 +22,8 @@ const TextParameter = ({ parameter }: TextParameterProps): JSX.Element => {
             )
           )}
       </Typography>
+
+      {/* progress */}
       {parameter.type.progress !== null && (
         <LinearProgress
           variant={parameter.type.progress.variant}
