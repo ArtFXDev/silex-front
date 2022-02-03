@@ -40,6 +40,14 @@ const QuickLinks = (): JSX.Element => {
         onClick={() => history.push("/ticket")}
       />
 
+      <Chip
+        label="Harvest"
+        variant="outlined"
+        sx={{ color: "#78b454", borderColor: "#78b454" }}
+        icon={<p style={{ fontSize: 20, marginLeft: 10 }}>👨‍🌾</p>}
+        onClick={() => history.push("/harvest")}
+      />
+
       <div
         style={{
           marginLeft: "auto",

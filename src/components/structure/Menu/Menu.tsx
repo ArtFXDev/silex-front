@@ -37,6 +37,13 @@ const links = [
     openTo: process.env.REACT_APP_TRACTOR_URL,
   },
   {
+    text: "👨‍🌾 Harvest",
+    to: "/harvest",
+    exact: true,
+    openInNewWindow: true,
+    openTo: process.env.REACT_APP_HARVEST_URL,
+  },
+  {
     text: "Ticket",
     to: "/ticket",
     exact: true,

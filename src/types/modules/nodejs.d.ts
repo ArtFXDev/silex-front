@@ -18,5 +18,8 @@ declare namespace NodeJS {
 
     /** Url of your ticket system */
     REACT_APP_TICKET_URL: string;
+
+    /** Url of Harvest */
+    REACT_APP_HARVEST_URL: string;
   }
 }
