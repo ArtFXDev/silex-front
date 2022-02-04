@@ -96,13 +96,15 @@ const CommandItem = ({ command }: CommandItemProps): JSX.Element => {
       </Paper>
 
       {/* progress */}
-      {command.progress !== null && command.progress !== undefined && (
-        <LinearProgress
-          variant="determinate"
-          value={command.progress}
-          color="success"
-        />
-      )}
+      {command.progress !== null &&
+        command.progress !== undefined &&
+        command.status === Status.PROCESSING && (
+          <LinearProgress
+            variant="determinate"
+            value={command.progress}
+            color="success"
+          />
+        )}
 
       {/* Logs */}
       {command.logs.length > 0 && (
