@@ -31,6 +31,11 @@ const ASSETS_AND_SHOTS = gql`
         type
         preview_file_id
 
+        entity_type {
+          id
+          name
+        }
+
         tasks {
           ...TaskFields
         }
@@ -115,7 +120,9 @@ const AssetsAndShotsView = ({
           {data.project.assets
             .slice()
             .sort((a, b) => a.name.localeCompare(b.name))
-            .filter((a) => (search ? fuzzyMatch(a.name, search) : true))
+            .filter((a) =>
+              search ? fuzzyMatch([a.name, a.entity_type.name], search) : true
+            )
             .map((asset) => (
               <Grid item key={asset.id} onClick={() => onEntityClick(asset)}>
                 <EntityCard
