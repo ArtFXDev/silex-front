@@ -95,6 +95,15 @@ const CommandItem = ({ command }: CommandItemProps): JSX.Element => {
         </ListItem>
       </Paper>
 
+      {/* progress */}
+      {command.progress !== null && (
+        <LinearProgress
+          variant="determinate"
+          value={command.progress}
+          color="success"
+        />
+      )}
+
       {/* Logs */}
       {command.logs.length > 0 && (
         <Collapse in={shouldOpenLogs} unmountOnExit>
@@ -105,15 +114,6 @@ const CommandItem = ({ command }: CommandItemProps): JSX.Element => {
             }
           />
         </Collapse>
-      )}
-
-      {/* progress */}
-      {command.progress !== null && (
-        <LinearProgress
-          variant="determinate"
-          value={command.progress}
-          color="success"
-        />
       )}
 
       {/* Parameters */}
