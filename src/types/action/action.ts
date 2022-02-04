@@ -23,6 +23,7 @@ export type LogLine = {
  * A command is a piece of code with parameters
  */
 export type Command = CommonFields & {
+  progress: number | null;
   path: string;
   status: Status;
   ask_user: boolean;
