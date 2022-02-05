@@ -1,6 +1,7 @@
 import ActionsPage from "components/pages/ActionPage/ActionsPage";
 import DCCClientsPage from "components/pages/DCCClientsPage/DCCClientsPage";
 import ExplorerPage from "components/pages/ExplorerPage/ExplorerPage";
+import HarvestPage from "components/pages/HarvestPage/HarvestPage";
 import HomePage from "components/pages/HomePage/HomePage";
 import LoginPage from "components/pages/LoginPage/LoginPage";
 import LogsPage from "components/pages/LogsPage/LogsPage";
@@ -69,6 +70,10 @@ const App = (): JSX.Element => {
 
                     <PrivateRoute exact path="/tractor">
                       <TractorPage />
+                    </PrivateRoute>
+
+                    <PrivateRoute exact path="/harvest">
+                      <HarvestPage />
                     </PrivateRoute>
 
                     <PrivateRoute exact path="/ticket">

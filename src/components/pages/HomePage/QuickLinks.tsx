@@ -8,7 +8,7 @@ import SubmitButton from "components/common/chips/SubmitButton";
 import FileIcon from "components/common/FileIcon/FileIcon";
 import { uiSocket } from "context";
 import { useHistory } from "react-router-dom";
-import { colors } from "style/colors";
+import { COLORS } from "style/colors";
 import { theme } from "style/theme";
 
 const QuickLinks = (): JSX.Element => {
@@ -40,6 +40,14 @@ const QuickLinks = (): JSX.Element => {
         onClick={() => history.push("/ticket")}
       />
 
+      <Chip
+        label="Harvest"
+        variant="outlined"
+        sx={{ color: "#78b454", borderColor: "#78b454" }}
+        icon={<p style={{ fontSize: 20, marginLeft: 10 }}>👨‍🌾</p>}
+        onClick={() => history.push("/harvest")}
+      />
+
       <div
         style={{
           marginLeft: "auto",
@@ -48,7 +56,7 @@ const QuickLinks = (): JSX.Element => {
           gap: 10,
         }}
       >
-        <SubmitButton />
+        <SubmitButton disabled />
 
         <Box
           sx={{
@@ -76,7 +84,7 @@ const QuickLinks = (): JSX.Element => {
           <LoadingChip
             label="Conform"
             disabled
-            color={colors.houdini}
+            color={COLORS.houdini}
             icon={<FileIcon name="houdini" size={18} disabled />}
             notif={{ message: "Launched Houdini conform", variant: "success" }}
             onClick={(done) => {
@@ -93,7 +101,7 @@ const QuickLinks = (): JSX.Element => {
           <LoadingChip
             label="Conform"
             disabled
-            color={colors.maya}
+            color={COLORS.maya}
             icon={<FileIcon name="maya" size={18} disabled />}
             notif={{ message: "Launched Maya conform", variant: "success" }}
             onClick={(done) => {
