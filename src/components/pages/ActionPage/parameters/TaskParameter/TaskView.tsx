@@ -1,8 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
-import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 import {
   Fade,
-  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -16,7 +14,7 @@ import { SxProps } from "@mui/system";
 import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
-import { Asset, Shot, TaskId } from "types/entities";
+import { Asset, Shot, Task, TaskId } from "types/entities";
 
 const TASK_FIELDS = gql`
   fragment TaskFieldsParam on Task {
@@ -73,19 +71,16 @@ interface TaskViewProps {
   entity: Asset | Shot;
 
   /** Id of the entity that is selected */
-  selectedTaskId: TaskId | null;
+  selectedTaskId: TaskId | undefined;
 
   /** Setter for the task id (managed by the parent component) */
-  setSelectedTaskId: (newId: TaskId) => void;
-
-  onExit: () => void;
+  onTaskSelect: (newTask: Task) => void;
 }
 
 const TasksView = ({
   entity,
   selectedTaskId,
-  onExit,
-  setSelectedTaskId,
+  onTaskSelect,
 }: TaskViewProps): JSX.Element => {
   const query = useQuery<{ shot?: Shot; asset?: Asset }>(
     entity.type === "Shot" ? SHOT_TASKS : ASSET_TASKS,
@@ -103,21 +98,6 @@ const TasksView = ({
     <QueryWrapper query={query}>
       {entityFetch && (
         <>
-          {/* Header */}
-          <div style={{ display: "flex", alignItems: "center" }}>
-            {/* Sequence and shot name */}
-            <Typography>
-              {entityFetch.type === "Shot"
-                ? `${entityFetch.sequence.name} - ${entityFetch.name}`
-                : entityFetch.name}
-            </Typography>
-
-            {/* Go back button */}
-            <IconButton sx={{ ml: "auto" }} onClick={onExit}>
-              <KeyboardReturnIcon />
-            </IconButton>
-          </div>
-
           {entityFetch.tasks.length > 0 ? (
             <List>
               {entityFetch.tasks
@@ -163,7 +143,7 @@ const TasksView = ({
                         <ListItem disablePadding>
                           <ListItemButton
                             sx={listItemProps}
-                            onClick={() => setSelectedTaskId(task.id)}
+                            onClick={() => onTaskSelect(task)}
                           >
                             {/* Task and subtask name */}
                             <div

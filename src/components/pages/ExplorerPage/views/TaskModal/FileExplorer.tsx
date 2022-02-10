@@ -14,13 +14,13 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import FileOrFolderItem from "components/common/FileOrFolderItem/FileOrFolderItem";
 import isElectron from "is-electron";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
 import * as Zou from "utils/zou";
 
 import DCCIconButton from "./DCCIconButton";
-import FileOrFolderItem from "./FileOrFolderItem/FileOrFolderItem";
 import WorkFilesView from "./WorkFilesView/WorkFilesView";
 
 interface FileExplorerProps {
@@ -254,6 +254,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
             />
           ) : (
             <FileOrFolderItem
+              root
               refresh={refreshView}
               moreDetails={moreDetails}
               item={{
@@ -262,8 +263,6 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
                 mtime: "",
                 isDirectory: true,
               }}
-              root
-              depth={0}
             />
           ))}
       </div>

@@ -20,24 +20,54 @@ import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { extensions } from "types/files/extensions";
 import { FileOrFolder, ServerResponse } from "types/socket";
 import { formatDateTime } from "utils/date";
-import { getFileExtension } from "utils/files";
+import { fileMatchExtensions, getFileExtension } from "utils/files";
 
 import ActionButton from "./ActionButton";
 
+const SCROLL_OPTIONS: ScrollIntoViewOptions = {
+  behavior: "smooth",
+  block: "center",
+  inline: "nearest",
+};
+
 interface FileOrFolderItem {
   item: FileOrFolder;
-  depth: number;
+
+  /** Tracks the depth of the file/folder, useful to open at a certain depth by default */
+  depth?: number;
+
+  /** When it's the top level folder, don't display the parent folder */
   root?: boolean;
+
+  /** Display the modification time */
   moreDetails?: boolean;
+
+  /** Boolean value to switch when we need to refresh the view. */
   refresh?: boolean;
+
+  /** Use a compact display for the file hierarchy */
+  small?: boolean;
+
+  /** Callback to register when the user click on a file */
+  onFileSelect?: (filePath: string) => void;
+
+  /** The selected file path */
+  selectedFile?: string;
+
+  /** List of extensions to filter */
+  filterExtensions?: string[];
 }
 
 const FileOrFolderItem = ({
   refresh,
   root,
   item,
-  depth,
+  depth = 0,
   moreDetails,
+  small,
+  onFileSelect,
+  selectedFile,
+  filterExtensions,
 }: FileOrFolderItem): JSX.Element => {
   const [open, setOpen] = useState<boolean>(depth < 2);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -69,10 +99,53 @@ const FileOrFolderItem = ({
     );
   }
 
+  // Called when clicking on the item (file or directory)
+  const onItemClick = () => {
+    if (item.isDirectory) {
+      // Scroll that element so it's centered
+      if (!open && !small) {
+        const scrollToItem = () =>
+          document.getElementById(id)?.scrollIntoView(SCROLL_OPTIONS);
+
+        setTimeout(scrollToItem, 200);
+      }
+
+      setOpen(!open);
+    } else {
+      if (onFileSelect) {
+        // Select the file when in select mode
+        onFileSelect(item.path);
+      } else {
+        if (extension && extension.tags && isElectron()) {
+          // Test if we can preview the file in the interface
+          if (extension.tags.includes("preview")) {
+            setOpenPreview(true);
+          }
+
+          // If in electron open the file with the os
+          if (extension.tags.includes("openable")) {
+            window.electron.send("openPath", item.path);
+          }
+        }
+      }
+    }
+  };
+
+  // A unique id identifying the file
+  // Used for scrolling to the selected div
   const id = `file-${item.name}-${item.mtime}`;
 
   const extensionName = getFileExtension(item.name);
   const extension = extensionName ? extensions[extensionName] : undefined;
+
+  const isSelected = selectedFile === item.path;
+
+  const filteredChildren =
+    response &&
+    response.data &&
+    response.data.entries.filter(
+      (e) => e.isDirectory || fileMatchExtensions(e.path, filterExtensions)
+    );
 
   return (
     <>
@@ -84,55 +157,39 @@ const FileOrFolderItem = ({
             position: "relative",
             mt: 2,
             borderRadius: LIST_ITEM_BORDER_RADIUS,
+            boxShadow: isSelected
+              ? `inset 0 0 0 2px rgba(98, 198, 115, 0.5)`
+              : "",
+            backgroundColor: isSelected ? "rgba(98, 198, 115, 0.1)" : "",
           }}
         >
           <ListItemButton
+            onClick={onItemClick}
             sx={{
               borderRadius: LIST_ITEM_BORDER_RADIUS,
               color: "text.secondary",
-            }}
-            onClick={() => {
-              if (item.isDirectory) {
-                if (!open) {
-                  setTimeout(
-                    () =>
-                      document.getElementById(id)?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                        inline: "nearest",
-                      }),
-                    200
-                  );
-                }
-                setOpen(!open);
-              } else {
-                // Test if we can preview the file in the interface
-                if (extension && extension.tags) {
-                  if (extension.tags.includes("preview")) {
-                    setOpenPreview(true);
-                  }
-
-                  // If in electron open the file with the os
-                  if (isElectron() && extension.tags.includes("openable")) {
-                    window.electron.send("openPath", item.path);
-                  }
-                }
-              }
+              py: small ? 0.5 : 1,
             }}
           >
             {/* File icon */}
-            <ListItemIcon sx={{ minWidth: "50px" }}>
+            <ListItemIcon sx={{ minWidth: small ? "35px" : "50px" }}>
               <>
                 {item.isDirectory ? (
                   open ? (
-                    <FolderOpenIcon color="success" />
+                    <FolderOpenIcon
+                      color="success"
+                      fontSize={small ? "small" : "medium"}
+                    />
                   ) : (
-                    <FolderIcon color="disabled" />
+                    <FolderIcon
+                      color="disabled"
+                      fontSize={small ? "small" : "medium"}
+                    />
                   )
                 ) : (
                   <FileIcon
                     name={extension?.software || extensionName}
-                    size={25}
+                    size={small ? 18 : 25}
                     opacity={0.8}
                   />
                 )}
@@ -142,6 +199,7 @@ const FileOrFolderItem = ({
             {/* File name */}
             <ListItemText
               primaryTypographyProps={{
+                fontSize: small ? 14 : 16,
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
@@ -150,14 +208,15 @@ const FileOrFolderItem = ({
               {item.name}
             </ListItemText>
 
+            {/* Modification time */}
             {moreDetails && (
               <Typography color="text.disabled" fontSize={13} mr={1}>
                 Last modif: {formatDateTime(item.mtime)}
               </Typography>
             )}
 
-            {/* Action buttons */}
-            {extension && (
+            {/* Action buttons (not in file select mode) */}
+            {!onFileSelect && extension && (
               <ActionButton
                 data={{ name: item.name, path: item.path, extension }}
               />
@@ -168,36 +227,48 @@ const FileOrFolderItem = ({
 
       {item.isDirectory && (
         <Collapse
-          in={!isLoading && open}
+          in={(!isLoading && open) || root}
+          timeout={depth <= 1 ? 0 : "auto"}
           sx={{
-            ml: !root ? 3 : 0,
-            pl: !root ? 3 : 0,
+            ml: !root ? (small ? 2 : 3) : 0,
+            pl: !root ? (small ? 2 : 3) : 0,
             borderLeft: !root ? "2px dashed rgba(255, 255, 255, 0.1)" : "",
           }}
         >
+          {/* Loading bar */}
           {!root && (
-            <Collapse in={isLoading}>
+            <Collapse in={isLoading} unmountOnExit>
               <Fade in timeout={200}>
                 <LinearProgress color="success" />
               </Fade>
             </Collapse>
           )}
 
-          {response &&
-            response.data &&
-            response.data.entries.map((entry) => (
+          {/* Display children */}
+          {filteredChildren &&
+            filteredChildren.map((entry) => (
               <FileOrFolderItem
+                onFileSelect={onFileSelect}
+                selectedFile={selectedFile}
+                small={small}
                 refresh={refresh}
                 moreDetails={moreDetails}
                 key={entry.path}
                 item={entry}
                 depth={depth + 1}
+                filterExtensions={filterExtensions}
               />
             ))}
 
-          {response && response.data && response.data.entries.length === 0 && (
-            <Alert variant="outlined" severity={"info"} sx={{ mt: 2 }}>
-              Folder is empty
+          {filteredChildren && filteredChildren.length === 0 && (
+            <Alert
+              variant="outlined"
+              severity={"info"}
+              sx={{ mt: 2, py: small ? 0 : 1 }}
+            >
+              {filterExtensions && filterExtensions.length > 0
+                ? "No matching files in this folder"
+                : "Folder is empty"}
             </Alert>
           )}
         </Collapse>
@@ -205,6 +276,7 @@ const FileOrFolderItem = ({
 
       {openPreview && extension && (
         <Dialog open onClose={() => setOpenPreview(false)} fullWidth>
+          {/* Use local file protocol defined in Electron */}
           <img src={`local://${item.path}`} alt={item.name} />
         </Dialog>
       )}

@@ -79,6 +79,13 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
         );
       case "task":
         return <TaskParameter parameter={parameter as TaskParameterType} />;
+      case "task_file":
+        return (
+          <TaskParameter
+            parameter={parameter as TaskParameterType}
+            selectFile
+          />
+        );
       case "multiple_select":
         return (
           <MultipleSelectParameter
@@ -131,7 +138,12 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
       )}
 
       {/* Specific parameter component */}
-      <div style={{ width: parameter.type.name === "text" ? "100%" : "70%" }}>
+      <div
+        style={{
+          maxWidth: parameter.type.name === "text" ? "100%" : "70%",
+          minWidth: parameter.type.name === "text" ? "100%" : "70%",
+        }}
+      >
         {inputComponent()}
       </div>
     </ListItem>

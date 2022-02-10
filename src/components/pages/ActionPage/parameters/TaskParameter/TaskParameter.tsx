@@ -1,27 +1,24 @@
 /* eslint-disable camelcase */
 import { gql, useQuery } from "@apollo/client";
 import AddIcon from "@mui/icons-material/Add";
-import AirIcon from "@mui/icons-material/Air";
-import {
-  Alert,
-  Fade,
-  Grid,
-  IconButton,
-  MenuItem,
-  Select,
-  Tooltip,
-} from "@mui/material";
+import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
+import { Alert, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import CreateEntityModal from "components/common/CreateEntityModal/CreateEntityModal";
+import ProjectSelector from "components/common/ProjectSelector/ProjectSelector";
 import SearchTextField from "components/common/SearchTextField/SearchTextField";
+import ArrowDelimiter from "components/common/Separator/ArrowDelimiter";
 import { useAction, useAuth } from "context";
 import { useState } from "react";
 import { useRouteMatch } from "react-router";
-import { TaskParameter as TaskParameterType } from "types/action/parameters";
+import {
+  TaskFileParameter,
+  TaskParameter as TaskParameterType,
+} from "types/action/parameters";
 import { Asset, Shot, TaskId } from "types/entities";
-import { getColorFromString } from "utils/color";
-import { formatUnderScoreStringWithSpaces } from "utils/string";
+import { getEntityFullName } from "utils/entity";
 
 import AssetsAndShotsView from "./AssetsAndShotsView";
+import PublishedFilesView from "./PublishedFilesView";
 import TasksView from "./TaskView";
 
 const TASK = gql`
@@ -56,23 +53,36 @@ const TASK = gql`
   }
 `;
 
+const views = ["entity", "task", "file"] as const;
+type View = typeof views[number];
+
 interface TaskParameterProps {
   parameter: TaskParameterType;
+
+  /** If we allow selecting files. This brings a third level of view to the component */
+  selectFile?: boolean;
 }
 
-const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
+const TaskParameter = ({
+  parameter,
+  selectFile,
+}: TaskParameterProps): JSX.Element => {
   const [search, setSearch] = useState<string>();
-  const [taskView, setTaskView] = useState<boolean>();
-  const [selectedEntity, setSelectedEntity] = useState<Asset | Shot>();
-  const [selectedTaskId, setSelectedTaskId] = useState<TaskId | null>(
-    parameter.value
-  );
+  const [view, setView] = useState<View>("entity");
   const [createEntityModal, setCreateEntityModal] = useState<boolean>(false);
-  const [selectedProjectId, setSelectedProjectId] = useState<string>();
+  const [breadCrumbItems, setBreadCrumbItems] = useState<string[]>([]);
 
-  const setTaskIdValue = (newTaskId: TaskId | null) => {
-    setSelectedTaskId(newTaskId);
-    parameter.value = newTaskId;
+  const [selectedProjectId, setSelectedProjectId] = useState<string>();
+  const [selectedEntity, setSelectedEntity] = useState<Asset | Shot>();
+  const [selectedTaskId, setSelectedTaskId] = useState<TaskId | undefined>(
+    parameter.value || undefined
+  );
+  const [selectedFilePath, setSelectedFilePath] = useState<string>();
+
+  /** Set the task id value both on the parameter and in the state */
+  const setTaskIdValue = (value: string | undefined) => {
+    parameter.value = value || null;
+    setSelectedTaskId(value);
   };
 
   useQuery<{
@@ -85,11 +95,18 @@ const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
     variables: {
       id: selectedTaskId,
     },
-    skip: selectedTaskId === null,
+    skip: selectedTaskId === null || selectedTaskId === undefined,
     onCompleted: (data) => {
       setSelectedEntity(data.task.entity);
-      setTaskView(true);
       setTaskIdValue(selectedTaskId);
+
+      if (view !== "file") {
+        setView("task");
+        setBreadCrumbItems([
+          ...breadCrumbItems,
+          getEntityFullName(data.task.entity),
+        ]);
+      }
     },
   });
 
@@ -106,6 +123,81 @@ const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
     window.localStorage.getItem("last-project-id") ||
     auth.currentProjectId;
 
+  const goBack = () => {
+    const currentIndex = views.indexOf(view);
+
+    if (currentIndex >= 0) {
+      setView(views[currentIndex - 1]);
+      setBreadCrumbItems(breadCrumbItems.slice(0, -1));
+    }
+  };
+
+  const getFilterLabel = () => {
+    const extensions = (parameter as unknown as TaskFileParameter).type
+      .extensions;
+    if (!extensions) return;
+    const label = extensions.map((e) => `*${e}`).join(", ");
+    return (
+      <Typography fontSize={13} color="text.disabled">
+        ({label})
+      </Typography>
+    );
+  };
+
+  const getView = () => {
+    switch (view) {
+      case "entity":
+        return (
+          <AssetsAndShotsView
+            projectId={projectId as string}
+            search={search}
+            selectedEntityId={selectedTaskId ? selectedEntity?.id : undefined}
+            onEntitySelect={(entity) => {
+              setSelectedEntity(entity);
+              setView("task");
+              setBreadCrumbItems([
+                ...breadCrumbItems,
+                getEntityFullName(entity),
+              ]);
+            }}
+          />
+        );
+
+      case "task":
+        return (
+          <TasksView
+            entity={selectedEntity as Asset | Shot}
+            selectedTaskId={selectedTaskId}
+            onTaskSelect={(task) => {
+              setTaskIdValue(task.id);
+              sendActionUpdate(actionUUID, false);
+
+              if (selectFile) {
+                setView("file");
+                setBreadCrumbItems([...breadCrumbItems, task.taskType.name]);
+              }
+            }}
+          />
+        );
+      case "file":
+        return (
+          <PublishedFilesView
+            taskId={selectedTaskId as string}
+            onFileSelect={(file) => {
+              parameter.value = file;
+              setSelectedFilePath(file);
+              sendActionUpdate(actionUUID, false);
+            }}
+            filterExtensions={
+              (parameter as unknown as TaskFileParameter).type.extensions ||
+              undefined
+            }
+            selectedFilePath={selectedFilePath}
+          />
+        );
+    }
+  };
+
   if (!projectId) {
     return (
       <Alert variant="outlined" color="error">
@@ -116,57 +208,20 @@ const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
 
   return (
     <div>
-      <Grid container sx={{ mb: 3, mr: 5 }} spacing={1}>
+      <Grid container sx={{ mb: 1.5, mr: 5 }} spacing={1}>
         {/* Project selector */}
         <Grid item xs>
-          <Select
-            disabled={action.context_metadata.project_id !== undefined}
-            sx={{
-              width: "auto",
-              height: 40,
-              borderRadius: 3,
-              fontSize: 16,
-            }}
-            variant="outlined"
+          <ProjectSelector
+            small
             value={projectId}
+            disabled={action.context_metadata.project_id !== undefined}
             onChange={(e) => {
               setSelectedProjectId(e.target.value);
-              setTaskIdValue(null);
-              setTaskView(false);
+              setTaskIdValue(undefined);
+              setView("entity");
+              setBreadCrumbItems([]);
             }}
-            color="info"
-          >
-            {auth.projects &&
-              auth.projects
-                .sort((a, b) => a.name.localeCompare(b.name))
-                .map((project) => {
-                  const projectColor = getColorFromString(project.name);
-
-                  return (
-                    <MenuItem
-                      key={project.id}
-                      value={project.id}
-                      sx={{ color: projectColor }}
-                    >
-                      <Fade in>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            textOverflow: "ellipsis",
-                          }}
-                        >
-                          <AirIcon
-                            sx={{ color: projectColor, mr: 1 }}
-                            fontSize="small"
-                          />
-                          {formatUnderScoreStringWithSpaces(project.name)}
-                        </div>
-                      </Fade>
-                    </MenuItem>
-                  );
-                })}
-          </Select>
+          />
         </Grid>
 
         {/* Search bar */}
@@ -193,38 +248,61 @@ const TaskParameter = ({ parameter }: TaskParameterProps): JSX.Element => {
             </IconButton>
           </Tooltip>
         </Grid>
+
+        {view !== "entity" && (
+          <Grid item xs>
+            {/* Go back button */}
+            <IconButton sx={{ ml: "auto" }} onClick={goBack}>
+              <KeyboardReturnIcon />
+            </IconButton>
+          </Grid>
+        )}
       </Grid>
 
-      {taskView && selectedEntity ? (
-        <TasksView
-          entity={selectedEntity}
-          onExit={() => setTaskView(false)}
-          selectedTaskId={selectedTaskId}
-          setSelectedTaskId={(newTaskId) => {
-            setTaskIdValue(newTaskId);
-            parameter.value = newTaskId;
-
-            sendActionUpdate(actionUUID, false);
+      <div>
+        {/* Header */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginTop: 20,
           }}
-        />
-      ) : (
-        <AssetsAndShotsView
-          projectId={projectId}
-          search={search}
-          selectedEntityId={selectedTaskId ? selectedEntity?.id : undefined}
-          onEntityClick={(entity) => {
-            setSelectedEntity(entity);
-            setTaskView(true);
-          }}
-        />
-      )}
+        >
+          {/* Sequence and shot name */}
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {breadCrumbItems.map((nav, i) => (
+              <div key={i}>
+                <Typography
+                  display="inline-block"
+                  fontSize={16}
+                  color={`rgba(255, 255, 255, ${
+                    i === breadCrumbItems.length - 1 ? 0.8 : 0.5
+                  })`}
+                >
+                  {nav}
+                </Typography>
+                {i !== breadCrumbItems.length - 1 && (
+                  <ArrowDelimiter key={`${i}-del`} />
+                )}
+              </div>
+            ))}
+          </div>
 
-      {createEntityModal && (
+          {view === "file" && getFilterLabel()}
+        </div>
+
+        {/* Display the entity/task/file view */}
+        {getView()}
+      </div>
+
+      {/* Entity creating modal when clicking on + button */}
+      {createEntityModal && ["entity", "task"].includes(view) && (
         <CreateEntityModal
           targetEntity={selectedEntity}
           onClose={() => setCreateEntityModal(false)}
-          entityType={taskView ? "Task" : "Shot"}
-          entityTypes={!taskView ? ["Asset", "Shot"] : undefined}
+          entityType={view === "task" ? "Task" : "Shot"}
+          entityTypes={view === "entity" ? ["Asset", "Shot"] : undefined}
           projectId={projectId}
         />
       )}
