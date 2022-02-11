@@ -5,6 +5,7 @@ import {
   ArrayParameter as ArrayParameterType,
   BooleanParameter,
   FrameSetParameter as FrameSetParameterType,
+  ListParameter as ListParameterType,
   MultipleSelectParameter as MultipleSelectParameterType,
   Parameter,
   ParameterInputType,
@@ -18,6 +19,7 @@ import {
 import ArrayParameter from "./parameters/ArrayParameter";
 import FrameSetParameter from "./parameters/FrameSetParameter";
 import GenericInputParameter from "./parameters/GenericInputParameter";
+import ListParameter from "./parameters/ListParameter";
 import MultipleSelectParameter from "./parameters/MultipleSelectParameter";
 import PathParameter from "./parameters/PathParameter";
 import MultipleRadioSelectParameter from "./parameters/RadioSelectParameter";
@@ -96,6 +98,13 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
         return (
           <ArrayParameter
             parameter={parameter as ArrayParameterType}
+            onChange={(newValues) => (parameter.value = newValues)}
+          />
+        );
+      case "list":
+        return (
+          <ListParameter
+            parameter={parameter as ListParameterType}
             onChange={(newValues) => (parameter.value = newValues)}
           />
         );

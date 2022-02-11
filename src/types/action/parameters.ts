@@ -1,10 +1,14 @@
 export type ParameterValueType = number | boolean | string;
+export type ParameterValueTypeSpan =
+  | ParameterValueType
+  | ParameterValueType[]
+  | null;
 
 export interface BaseParameter {
   label: string;
   name: string;
   type: { name: string };
-  value: ParameterValueType | ParameterValueType[] | null;
+  value: ParameterValueTypeSpan | ParameterValueTypeSpan[];
   hide: boolean;
 }
 
@@ -94,6 +98,11 @@ export interface FrameSetParameter extends BaseParameter {
   value: string | null;
 }
 
+export interface ListParameter extends BaseParameter {
+  type: { name: "list"; itemType: BaseParameter["type"] };
+  value: ParameterValueTypeSpan[];
+}
+
 export type ParameterInputType = IntegerParameter | StringParameter;
 
 export type Parameter =
@@ -108,4 +117,5 @@ export type Parameter =
   | ArrayParameter
   | TextParameter
   | FrameSetParameter
-  | RadioSelectParameter;
+  | RadioSelectParameter
+  | ListParameter;
