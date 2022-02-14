@@ -56,6 +56,15 @@ export interface TaskParameter extends BaseParameter {
   value: string | null;
 }
 
+export interface TaskFileParameter extends BaseParameter {
+  type: {
+    name: "task_file";
+    multiple: boolean | null;
+    extensions: string[] | null;
+  };
+  value: string | null;
+}
+
 export interface MultipleSelectParameter extends BaseParameter {
   type: {
     name: "multiple_select";
@@ -108,4 +117,5 @@ export type Parameter =
   | ArrayParameter
   | TextParameter
   | FrameSetParameter
-  | RadioSelectParameter;
+  | RadioSelectParameter
+  | TaskFileParameter;

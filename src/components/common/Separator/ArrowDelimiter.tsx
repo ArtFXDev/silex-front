@@ -10,6 +10,7 @@ const ArrowDelimiter = ({ mx, fontSize }: ArrowDelimiterProps): JSX.Element => (
     color="text.disabled"
     sx={{ mx: mx || 0.8 }}
     fontSize={fontSize || 16}
+    display="inline-block"
   >
     🢒
   </Typography>

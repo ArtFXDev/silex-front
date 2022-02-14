@@ -29,6 +29,17 @@ export const getFileExtension = (name: string): string | undefined => {
 };
 
 /**
+ * Returns true if the filename matches any extensions
+ */
+export const fileMatchExtensions = (
+  path: string,
+  extensions: string[] | undefined
+): boolean => {
+  if (!extensions) return true;
+  return extensions.some((ext) => path.includes(ext));
+};
+
+/**
  * Returns a file extension software / full extension
  * Ex: test.png -> png
  *     scene.ma -> maya

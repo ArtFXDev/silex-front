@@ -53,3 +53,9 @@ export const entityURLAndExtension = (
 export const getEntityName = (entity: Shot | Task | Asset): string => {
   return entity.type === "Task" ? `${entity.taskType.name}` : entity.name;
 };
+
+export const getEntityFullName = (entity: Shot | Task | Asset): string => {
+  return entity.type === "Shot"
+    ? `${entity.sequence.name} - ${entity.name}`
+    : entity.name;
+};

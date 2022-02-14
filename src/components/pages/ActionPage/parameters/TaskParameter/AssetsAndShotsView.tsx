@@ -75,13 +75,13 @@ interface AssetsAndShotsViewProps {
   selectedEntityId: string | undefined;
 
   /** Called when clicking on an entity */
-  onEntityClick: (entity: Shot | Asset) => void;
+  onEntitySelect: (entity: Shot | Asset) => void;
 }
 
 const AssetsAndShotsView = ({
   projectId,
   search,
-  onEntityClick,
+  onEntitySelect,
   selectedEntityId,
 }: AssetsAndShotsViewProps): JSX.Element => {
   const query = useQuery<{ project: Project }>(ASSETS_AND_SHOTS, {
@@ -105,7 +105,7 @@ const AssetsAndShotsView = ({
               .sort((a, b) => a.name.localeCompare(b.name))
               .filter((sh) => fuzzyMatch([sh.name, sq.name], search))
               .map((shot) => (
-                <Grid item key={shot.id} onClick={() => onEntityClick(shot)}>
+                <Grid item key={shot.id} onClick={() => onEntitySelect(shot)}>
                   <EntityCard
                     entity={shot}
                     name={`${sq.name} - ${shot.name}`}
@@ -124,7 +124,7 @@ const AssetsAndShotsView = ({
               search ? fuzzyMatch([a.name, a.entity_type.name], search) : true
             )
             .map((asset) => (
-              <Grid item key={asset.id} onClick={() => onEntityClick(asset)}>
+              <Grid item key={asset.id} onClick={() => onEntitySelect(asset)}>
                 <EntityCard
                   entity={asset}
                   selected={
