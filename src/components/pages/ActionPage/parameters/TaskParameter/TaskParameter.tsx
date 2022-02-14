@@ -169,8 +169,12 @@ const TaskParameter = ({
             entity={selectedEntity as Asset | Shot}
             selectedTaskId={selectedTaskId}
             onTaskSelect={(task) => {
-              setTaskIdValue(task.id);
-              sendActionUpdate(actionUUID, false);
+              if (selectFile) {
+                setSelectedTaskId(task.id);
+              } else {
+                setTaskIdValue(task.id);
+                sendActionUpdate(actionUUID, false);
+              }
 
               if (selectFile) {
                 setView("file");
