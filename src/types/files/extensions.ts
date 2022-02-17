@@ -45,6 +45,9 @@ export const extensions: { [name: string]: FileExtension } = {
   vrmesh: { software: "vray" },
   vrlmap: { software: "vray" },
 
+  // Substance
+  spp: { software: "substance-painter", tags: ["sceneFile"] },
+
   // Arnold
   ass: { software: "arnold", tags: ["submit"] },
 

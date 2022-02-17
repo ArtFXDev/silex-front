@@ -13,6 +13,7 @@ import MayaLogo from "assets/images/logos/maya.svg";
 import NukeLogo from "assets/images/logos/nuke.svg";
 import OpenVDBLogo from "assets/images/logos/openvdb.svg";
 import PythonLogo from "assets/images/logos/python.svg";
+import SubstancePainter from "assets/images/logos/substance-painter.svg";
 import USDLogo from "assets/images/logos/usd.svg";
 import VrayLogo from "assets/images/logos/vray.svg";
 import { extensions } from "types/files/extensions";
@@ -32,6 +33,7 @@ const logos: Record<string, string> = {
   usd: USDLogo,
   gltf: GLTFLogo,
   alembic: AlembicLogo,
+  "substance-painter": SubstancePainter,
 };
 
 /**
