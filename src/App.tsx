@@ -8,6 +8,7 @@ import LogsPage from "components/pages/LogsPage/LogsPage";
 import NotFoundPage from "components/pages/NotFoundPage/NotFoundPage";
 import ProfilePage from "components/pages/ProfilePage/ProfilePage";
 import RunningJobsPage from "components/pages/RunningJobsPage/RunningJobsPage";
+import SilexCoinPage from "components/pages/SilexCoinPage/SilexCoinPage";
 import TicketPage from "components/pages/TicketPage/TicketPage";
 import TractorPage from "components/pages/TractorPage/TractorPage";
 import PrivateRoute from "components/utils/PrivateRoute/PrivateRoute";
@@ -58,6 +59,10 @@ const App = (): JSX.Element => {
 
                     <PrivateRoute exact path="/profile">
                       <ProfilePage />
+                    </PrivateRoute>
+
+                    <PrivateRoute exact path="/coins">
+                      <SilexCoinPage />
                     </PrivateRoute>
 
                     <PrivateRoute exact path="/dccs">
