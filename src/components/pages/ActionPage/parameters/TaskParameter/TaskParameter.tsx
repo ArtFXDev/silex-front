@@ -8,7 +8,7 @@ import ProjectSelector from "components/common/ProjectSelector/ProjectSelector";
 import SearchTextField from "components/common/SearchTextField/SearchTextField";
 import ArrowDelimiter from "components/common/Separator/ArrowDelimiter";
 import { useAction, useAuth } from "context";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouteMatch } from "react-router";
 import {
   TaskFileParameter,
@@ -28,6 +28,7 @@ const TASK = gql`
       project_id
 
       taskType {
+        name
         for_shots
       }
 
@@ -53,8 +54,31 @@ const TASK = gql`
   }
 `;
 
+type TaskResponse = {
+  task: {
+    entity_id: string;
+    project_id: string;
+    entity: Shot | Asset;
+    taskType: { name: string };
+  };
+};
+
 const views = ["entity", "task", "file"] as const;
 type View = typeof views[number];
+
+/**
+ * Returns a formatted list of extensions
+ */
+const getFilterLabel = (parameter: TaskFileParameter) => {
+  const extensions = parameter.type.extensions;
+  if (!extensions) return;
+  const label = extensions.map((e) => `*${e}`).join(", ");
+  return (
+    <Typography fontSize={13} color="text.disabled">
+      ({label})
+    </Typography>
+  );
+};
 
 interface TaskParameterProps {
   parameter: TaskParameterType;
@@ -77,21 +101,18 @@ const TaskParameter = ({
   const [selectedTaskId, setSelectedTaskId] = useState<TaskId | undefined>(
     parameter.value || undefined
   );
-  const [selectedFilePath, setSelectedFilePath] = useState<string>();
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
 
   /** Set the task id value both on the parameter and in the state */
-  const setTaskIdValue = (value: string | undefined) => {
-    parameter.value = value || null;
-    setSelectedTaskId(value);
-  };
+  const setTaskIdValue = useCallback(
+    (value: string | undefined) => {
+      parameter.value = value || null;
+      setSelectedTaskId(value);
+    },
+    [parameter]
+  );
 
-  useQuery<{
-    task: {
-      entity_id: string;
-      project_id: string;
-      entity: Shot | Asset;
-    };
-  }>(TASK, {
+  useQuery<TaskResponse>(TASK, {
     variables: {
       id: selectedTaskId,
     },
@@ -101,11 +122,20 @@ const TaskParameter = ({
       setTaskIdValue(selectedTaskId);
 
       if (view !== "file") {
-        setView("task");
-        setBreadCrumbItems([
-          ...breadCrumbItems,
-          getEntityFullName(data.task.entity),
-        ]);
+        setView(selectFile ? "file" : "task");
+
+        if (selectFile) {
+          setBreadCrumbItems([
+            ...breadCrumbItems,
+            getEntityFullName(data.task.entity),
+            data.task.taskType.name,
+          ]);
+        } else {
+          setBreadCrumbItems([
+            ...breadCrumbItems,
+            getEntityFullName(data.task.entity),
+          ]);
+        }
       }
     },
   });
@@ -115,6 +145,17 @@ const TaskParameter = ({
 
   const { actions, sendActionUpdate } = useAction();
   const action = actions[actionUUID].action;
+
+  // Sets the task id value to the current context
+  // Used in the submit for example to prefill the parameter
+  useEffect(() => {
+    if (
+      selectFile &&
+      (parameter as unknown as TaskFileParameter).type.useCurrentContext
+    ) {
+      setSelectedTaskId(action.context_metadata.task_id);
+    }
+  }, [action.context_metadata.task_id, parameter, selectFile, setTaskIdValue]);
 
   // If not set choose the action context project id or the current project
   const projectId =
@@ -130,18 +171,6 @@ const TaskParameter = ({
       setView(views[currentIndex - 1]);
       setBreadCrumbItems(breadCrumbItems.slice(0, -1));
     }
-  };
-
-  const getFilterLabel = () => {
-    const extensions = (parameter as unknown as TaskFileParameter).type
-      .extensions;
-    if (!extensions) return;
-    const label = extensions.map((e) => `*${e}`).join(", ");
-    return (
-      <Typography fontSize={13} color="text.disabled">
-        ({label})
-      </Typography>
-    );
   };
 
   const getView = () => {
@@ -188,15 +217,30 @@ const TaskParameter = ({
           <PublishedFilesView
             taskId={selectedTaskId as string}
             onFileSelect={(file) => {
-              parameter.value = file;
-              setSelectedFilePath(file);
+              let newSelection: string[] = [file];
+
+              if ((parameter as unknown as TaskFileParameter).type.multiple) {
+                // If the files is already selected, unselect it
+                if (selectedFiles.includes(file)) {
+                  const index = selectedFiles.indexOf(file);
+                  newSelection = selectedFiles.slice();
+                  newSelection.splice(index, 1);
+                } else {
+                  // Add the file to the selection
+                  newSelection = [...selectedFiles, file];
+                }
+              }
+
+              setSelectedFiles(newSelection);
+              (parameter as unknown as TaskFileParameter).value = newSelection;
+
               sendActionUpdate(actionUUID, false);
             }}
             filterExtensions={
               (parameter as unknown as TaskFileParameter).type.extensions ||
               undefined
             }
-            selectedFilePath={selectedFilePath}
+            selectedFiles={selectedFiles}
           />
         );
     }
@@ -293,7 +337,8 @@ const TaskParameter = ({
             ))}
           </div>
 
-          {view === "file" && getFilterLabel()}
+          {view === "file" &&
+            getFilterLabel(parameter as unknown as TaskFileParameter)}
         </div>
 
         {/* Display the entity/task/file view */}

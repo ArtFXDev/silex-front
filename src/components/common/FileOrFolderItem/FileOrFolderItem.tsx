@@ -52,7 +52,7 @@ interface FileOrFolderItem {
   onFileSelect?: (filePath: string) => void;
 
   /** The selected file path */
-  selectedFile?: string;
+  selectedFiles?: string[];
 
   /** List of extensions to filter */
   filterExtensions?: string[];
@@ -66,7 +66,7 @@ const FileOrFolderItem = ({
   moreDetails,
   small,
   onFileSelect,
-  selectedFile,
+  selectedFiles,
   filterExtensions,
 }: FileOrFolderItem): JSX.Element => {
   const [open, setOpen] = useState<boolean>(depth < 2);
@@ -138,7 +138,7 @@ const FileOrFolderItem = ({
   const extensionName = getFileExtension(item.name);
   const extension = extensionName ? extensions[extensionName] : undefined;
 
-  const isSelected = selectedFile === item.path;
+  const isSelected = selectedFiles?.includes(item.path);
 
   const filteredChildren =
     response &&
@@ -249,7 +249,7 @@ const FileOrFolderItem = ({
             filteredChildren.map((entry) => (
               <FileOrFolderItem
                 onFileSelect={onFileSelect}
-                selectedFile={selectedFile}
+                selectedFiles={selectedFiles}
                 small={small}
                 refresh={refresh}
                 moreDetails={moreDetails}
