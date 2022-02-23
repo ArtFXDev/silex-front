@@ -61,8 +61,9 @@ export interface TaskFileParameter extends BaseParameter {
     name: "task_file";
     multiple: boolean | null;
     extensions: string[] | null;
+    useCurrentContext: boolean;
   };
-  value: string | null;
+  value: string | string[] | null;
 }
 
 export interface MultipleSelectParameter extends BaseParameter {

@@ -4,7 +4,7 @@ import * as Zou from "utils/zou";
 
 interface PublishedFilesViewProps {
   taskId: string;
-  selectedFilePath: string | undefined;
+  selectedFiles: string[];
 
   /** Called when the user select a file */
   onFileSelect: (filePath: string) => void;
@@ -16,7 +16,7 @@ interface PublishedFilesViewProps {
 const PublishedFilesView = ({
   taskId,
   onFileSelect,
-  selectedFilePath,
+  selectedFiles,
   filterExtensions,
 }: PublishedFilesViewProps): JSX.Element => {
   const [path, setPath] = useState<string>();
@@ -37,7 +37,7 @@ const PublishedFilesView = ({
       root
       small
       onFileSelect={onFileSelect}
-      selectedFile={selectedFilePath}
+      selectedFiles={selectedFiles}
       filterExtensions={filterExtensions}
       item={{
         path: path,
