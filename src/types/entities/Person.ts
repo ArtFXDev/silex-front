@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import { BaseEntity } from "./BaseEntity";
 
-type UserData = {
+export type UserData = {
   silexCoins?: number;
 };
 

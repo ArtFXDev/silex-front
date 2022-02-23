@@ -88,6 +88,13 @@ const AvatarMenu = (): JSX.Element => {
           Profile
         </MenuItem>
 
+        <MenuItem onClick={handleClose} component={Link} to="/coins">
+          <ListItemIcon>
+            <img width={22} height={22} src={SilexCoinIcon} />
+          </ListItemIcon>
+          Coins
+        </MenuItem>
+
         <MenuItem onClick={onLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />

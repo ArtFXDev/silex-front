@@ -4,8 +4,9 @@ import {
   GridView as GridViewIcon,
   List as ListIcon,
 } from "@mui/icons-material";
-import { Alert, IconButton, Link } from "@mui/material";
+import { Alert, IconButton, Link, SelectChangeEvent } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import ProjectSelector from "components/common/ProjectSelector/ProjectSelector";
 import SearchTextField from "components/common/SearchTextField/SearchTextField";
 import { useAuth } from "context";
 import { useEffect, useState } from "react";
@@ -18,18 +19,20 @@ import {
   useRouteMatch,
 } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
+import { ProjectId } from "types/entities";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
-import { CategorySelector, ProjectSelector } from "./selectors";
+import CategorySelector from "./CategorySelector";
 import { AssetsView, ShotsView, TasksView } from "./views";
 
 const ExplorerPage = (): JSX.Element => {
+  const [selectedProject, setSelectedProject] = useState<ProjectId>();
   const [search, setSearch] = useState<string>();
   const [listView, setListView] = useState<boolean>(
     window.localStorage.getItem("list-view") === "true"
   );
 
-  const routeMatch = useRouteMatch<{ category: string }>(
+  const routeMatch = useRouteMatch<{ projectId: string; category: string }>(
     "/explorer/:projectId/:category"
   );
 
@@ -38,6 +41,12 @@ const ExplorerPage = (): JSX.Element => {
   const location = useLocation();
   const history = useHistory();
   const locationDepth = location.pathname.split("/").length - 1;
+
+  useEffect(() => {
+    if (routeMatch) {
+      setSelectedProject(routeMatch.params.projectId);
+    }
+  }, [routeMatch]);
 
   const setSearchWithSave = (value: string) => {
     setSearch(value);
@@ -49,6 +58,16 @@ const ExplorerPage = (): JSX.Element => {
         value
       );
     }
+  };
+
+  const handleProjectChange = (e: SelectChangeEvent<string>) => {
+    auth.setCurrentProjectId(e.target.value);
+
+    setSelectedProject(e.target.value);
+    window.localStorage.setItem("last-project-id", e.target.value);
+
+    const sp = location.pathname.split("/");
+    history.push(`/${sp[1]}/${e.target.value}/${sp[3]}`);
   };
 
   useEffect(() => {
@@ -100,7 +119,10 @@ const ExplorerPage = (): JSX.Element => {
     <PageWrapper>
       <div>
         <div style={{ display: "flex", alignItems: "center" }}>
-          <ProjectSelector />
+          <ProjectSelector
+            value={selectedProject}
+            onChange={handleProjectChange}
+          />
           <ChevronRightIcon fontSize="large" sx={{ mx: 1 }} />
           <CategorySelector />
         </div>
