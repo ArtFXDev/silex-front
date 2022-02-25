@@ -145,6 +145,11 @@ const EntityItem = ({
                   )}
                 </div>
 
+                {entity.type === "Shot" &&
+                  entity.data &&
+                  JSON.parse(entity.data).canceled &&
+                  canceledIcon()}
+
                 {entity.type === "Task" && (
                   <PersonsAvatarGroup
                     persons={entity.assignees}
@@ -167,10 +172,6 @@ const EntityItem = ({
                   </div>
                 )}
 
-                {entity.type === "Shot" &&
-                  entity.data &&
-                  entity.data.canceled &&
-                  canceledIcon()}
                 {actionMenuIcon()}
               </ListItemButton>
             </ListItem>
@@ -250,7 +251,7 @@ const EntityItem = ({
 
             {entity.type === "Shot" &&
               entity.data &&
-              entity.data.canceled &&
+              JSON.parse(entity.data).canceled &&
               canceledIcon()}
             {actionMenuIcon()}
           </div>
