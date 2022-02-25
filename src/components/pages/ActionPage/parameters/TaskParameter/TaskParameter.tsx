@@ -217,7 +217,7 @@ const TaskParameter = ({
           <PublishedFilesView
             taskId={selectedTaskId as string}
             onFileSelect={(file) => {
-              let newSelection: string[] = [file];
+              let newSelection: string[] | string = file;
 
               if ((parameter as unknown as TaskFileParameter).type.multiple) {
                 // If the files is already selected, unselect it
@@ -231,7 +231,9 @@ const TaskParameter = ({
                 }
               }
 
-              setSelectedFiles(newSelection);
+              setSelectedFiles(
+                Array.isArray(newSelection) ? newSelection : [newSelection]
+              );
               (parameter as unknown as TaskFileParameter).value = newSelection;
 
               sendActionUpdate(actionUUID, false);
