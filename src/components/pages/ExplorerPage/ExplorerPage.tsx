@@ -140,7 +140,7 @@ const ExplorerPage = (): JSX.Element => {
             placeholder="Search..."
             size="small"
             sx={{ marginLeft: bigScreen ? "auto" : "none" }}
-            value={search}
+            value={search || ""}
             onClear={() => setSearchWithSave("")}
             onChange={(e) => setSearchWithSave(e.target.value)}
           />
