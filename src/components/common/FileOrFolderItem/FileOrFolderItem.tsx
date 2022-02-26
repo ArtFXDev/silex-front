@@ -198,11 +198,15 @@ const FileOrFolderItem = ({
 
             {/* File name */}
             <ListItemText
+              sx={{
+                direction: "rtl",
+              }}
               primaryTypographyProps={{
                 fontSize: small ? 14 : 16,
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
+                textAlign: "left",
               }}
             >
               {item.name}
