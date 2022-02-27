@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import AddIcon from "@mui/icons-material/Add";
-import { IconButton, Typography } from "@mui/material";
+import { Chip, IconButton, Typography } from "@mui/material";
 import CreateEntityModal from "components/common/CreateEntityModal/CreateEntityModal";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useState } from "react";
@@ -51,6 +51,7 @@ const SHOT_TASKS = gql`
       id
       name
       type
+      data
 
       sequence {
         id
@@ -154,6 +155,18 @@ const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
             >
               {entity.name}
             </h2>
+
+            {entity.type === "Shot" &&
+              entity.data &&
+              JSON.parse(entity.data).canceled && (
+                <Chip
+                  label="Canceled"
+                  color="error"
+                  variant="outlined"
+                  size="small"
+                  sx={{ ml: 1.5 }}
+                />
+              )}
 
             <IconButton
               sx={{ ml: 1.5 }}
