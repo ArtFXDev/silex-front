@@ -23,6 +23,7 @@ const SEQUENCES_AND_SHOTS = gql`
           id
           name
           type
+          data
           preview_file_id
 
           tasks {

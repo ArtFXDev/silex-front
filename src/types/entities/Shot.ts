@@ -16,7 +16,7 @@ export interface Shot extends BaseEntity {
   parent_id: SequenceId;
   source_id: string | null;
   preview_file_id: string | null;
-  data: unknown;
+  data: string;
   type: "Shot";
   project_name: string;
 
