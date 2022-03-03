@@ -51,6 +51,9 @@ export const extensions: { [name: string]: FileExtension } = {
   // Arnold
   ass: { software: "arnold", tags: ["submit"] },
 
+  // Redshift
+  rs: { software: "redshift", tags: ["submit"] },
+
   // Image formats
   jpg: { tags: ["image", "preview"] },
   jpeg: { tags: ["image", "preview"] },
