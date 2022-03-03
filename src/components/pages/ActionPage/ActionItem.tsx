@@ -1,4 +1,5 @@
 import CancelIcon from "@mui/icons-material/Cancel";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import {
   Button,
@@ -9,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useAction, useSocket } from "context";
+import isElectron from "is-electron";
 import { useSnackbar } from "notistack";
 import { useEffect } from "react";
 import { Action } from "types/action/action";
@@ -122,7 +124,7 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
 
         {/* Context subtitle */}
         {!simpleMode && actionToSring && (
-          <div style={{ marginTop: 10 }}>
+          <div style={{ marginTop: 10, display: "flex", alignItems: "center" }}>
             <Typography
               color="text.disabled"
               fontSize={14}
@@ -130,6 +132,32 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
             >
               ⤷ {actionToSring}
             </Typography>
+
+            <ContentCopyIcon
+              sx={{
+                fontSize: "18px",
+                ml: 2,
+                transition: "all 0.2s ease",
+                cursor: "pointer",
+                "&:hover": {
+                  fill: "rgba(255, 255, 255, 0.6)",
+                },
+              }}
+              color="disabled"
+              onClick={() => {
+                if (isElectron()) {
+                  if (isElectron()) {
+                    window.electron.send("clipboardWriteText", action.uuid);
+                  } else {
+                    navigator.clipboard.writeText(action.uuid);
+                  }
+
+                  enqueueSnackbar(`Copied action to clipboard`, {
+                    variant: "success",
+                  });
+                }
+              }}
+            />
           </div>
         )}
       </div>

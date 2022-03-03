@@ -33,7 +33,7 @@ const CollapseError = ({
       </Button>
       <Collapse in={!collapseError}>
         <pre style={{ whiteSpace: "pre-wrap" }}>
-          {JSON.stringify(error, null, 2)}
+          {JSON.stringify(error, Object.getOwnPropertyNames(error), 2)}
         </pre>
       </Collapse>
     </Alert>
