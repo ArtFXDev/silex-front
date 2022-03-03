@@ -6,6 +6,7 @@ import {
   Card,
   CardActions,
   CardMedia,
+  Chip,
   Fade,
   ListItem,
   ListItemButton,
@@ -97,6 +98,22 @@ const EntityItem = ({
     );
   };
 
+  const canceledIcon = () => {
+    return (
+      <Chip
+        label="Canceled"
+        color="error"
+        variant="outlined"
+        size="small"
+        sx={
+          !listView
+            ? { position: "absolute", top: 0, left: 0, m: 1 }
+            : { mr: 1, ml: 1 }
+        }
+      />
+    );
+  };
+
   return (
     <>
       <Fade in timeout={{ appear: 2000 * index, enter: 800 }}>
@@ -127,6 +144,11 @@ const EntityItem = ({
                     </Typography>
                   )}
                 </div>
+
+                {entity.type === "Shot" &&
+                  entity.data &&
+                  JSON.parse(entity.data).canceled &&
+                  canceledIcon()}
 
                 {entity.type === "Task" && (
                   <PersonsAvatarGroup
@@ -227,6 +249,10 @@ const EntityItem = ({
               </Card>
             </Button>
 
+            {entity.type === "Shot" &&
+              entity.data &&
+              JSON.parse(entity.data).canceled &&
+              canceledIcon()}
             {actionMenuIcon()}
           </div>
         )}

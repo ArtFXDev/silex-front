@@ -198,7 +198,7 @@ const NimbyController = ({ sx }: BoxProps): JSX.Element => {
                         Profile: {bladeStatus.profile}
                         <Separator />
                         <Chip
-                          label={`Running jobs: ${bladeStatus.pids.length}`}
+                          label={`Running tasks: ${bladeStatus.pids.length}`}
                           variant="outlined"
                           color={noRunningProcesses ? "success" : "warning"}
                           sx={{
