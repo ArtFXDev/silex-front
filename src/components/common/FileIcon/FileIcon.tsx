@@ -13,6 +13,7 @@ import MayaLogo from "assets/images/logos/maya.svg";
 import NukeLogo from "assets/images/logos/nuke.svg";
 import OpenVDBLogo from "assets/images/logos/openvdb.svg";
 import PythonLogo from "assets/images/logos/python.svg";
+import RedshiftLogo from "assets/images/logos/redshift.svg";
 import SubstancePainter from "assets/images/logos/substance-painter.svg";
 import USDLogo from "assets/images/logos/usd.svg";
 import VrayLogo from "assets/images/logos/vray.svg";
@@ -22,6 +23,7 @@ import { extensions } from "types/files/extensions";
  * Dictionnary of dcc names and icon paths
  */
 const logos: Record<string, string> = {
+  redshift: RedshiftLogo,
   arnold: ArnoldLogo,
   blender: BlenderLogo,
   houdini: HoudiniLogo,
