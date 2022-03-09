@@ -4,11 +4,7 @@ import CollapseError from "components/common/CollapseError/CollapseError";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
 
-interface KillJobsButtonProps {
-  hnm: string;
-}
-
-const KillJobsButton = ({ hnm }: KillJobsButtonProps): JSX.Element => {
+const KillJobsButton = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>();
   const [error, setError] = useState<unknown>();
   const [success, setSuccess] = useState<boolean>();
@@ -60,7 +56,7 @@ const KillJobsButton = ({ hnm }: KillJobsButtonProps): JSX.Element => {
       setIsLoading(true);
       setSuccess(false);
       window.electron.send("setNimbyStatus", true);
-      window.electron.send("killAllActiveTasksOnBlade", hnm);
+      window.electron.send("killAllActiveTasksOnBlade");
     }
   };
 
