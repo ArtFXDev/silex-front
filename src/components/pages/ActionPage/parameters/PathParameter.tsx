@@ -80,9 +80,6 @@ const PathParameter = ({ parameter }: PathParameterProps): JSX.Element => {
         id={`file-input-${uuid}`}
         multiple={parameter.type.multiple ? true : undefined}
         ref={inputElement}
-        // /* @ts-expect-error webkit not supported */
-        // directory=""
-        // webkitdirectory=""
         onChange={(e) => {
           const targetAsInput = e.target as HTMLInputElement;
 
