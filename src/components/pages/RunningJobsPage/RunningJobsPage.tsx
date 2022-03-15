@@ -45,7 +45,7 @@ const RunningJobsPage = (): JSX.Element => {
               </Table>
             </TableContainer>
 
-            <KillJobsButton hnm={bladeStatus.hnm} />
+            <KillJobsButton />
           </>
         ) : (
           <Typography color="text.disabled">
