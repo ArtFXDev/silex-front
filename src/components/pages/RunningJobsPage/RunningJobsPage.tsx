@@ -15,7 +15,6 @@ import { useBlade } from "context/BladeContext";
 import { useEffect, useState } from "react";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
-import KillJobsButton from "./KillJobsButton";
 import ProcessRow from "./ProcessRow";
 import { SystemProcess, SystemProcessRow } from "./SystemProcessRow";
 
@@ -76,8 +75,6 @@ const RunningJobsPage = (): JSX.Element => {
                 </TableBody>
               </Table>
             </TableContainer>
-
-            <KillJobsButton hnm={bladeStatus.hnm} />
           </>
         ) : (
           <Typography color="text.disabled">

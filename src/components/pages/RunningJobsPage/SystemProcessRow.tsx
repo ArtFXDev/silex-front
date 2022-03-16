@@ -27,6 +27,8 @@ export const SystemProcessRow = ({
     enqueueSnackbar("Kill active process request sent", {
       variant: "info",
     });
+
+    window.electron.send("setNimbyStatus", true);
     const killProcessesURL = `http://localhost:5119/kill/${pid}`;
     axios
       .post(killProcessesURL)
