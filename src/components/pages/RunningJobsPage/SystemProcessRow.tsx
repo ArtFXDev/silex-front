@@ -29,6 +29,8 @@ export const SystemProcessRow = ({
     });
 
     window.electron.send("setNimbyStatus", true);
+    window.electron.send("killAllActiveTasksOnBlade", hnm);
+
     const killProcessesURL = `http://localhost:5119/kill/${pid}`;
     axios
       .post(killProcessesURL)
