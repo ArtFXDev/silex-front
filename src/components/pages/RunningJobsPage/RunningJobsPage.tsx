@@ -19,7 +19,7 @@ import KillJobsButton from "./KillJobsButton";
 import ProcessRow from "./ProcessRow";
 import { SystemProcess, SystemProcessRow } from "./SystemProcessRow";
 
-const ProcessFilter = ["vray", "kick", "maya", "houdini", "python"];
+const ProcessFilter = ["vray", "kick", "maya", "houdini", "python", "hython"];
 
 const RunningJobsPage = (): JSX.Element => {
   const { bladeStatus } = useBlade();
@@ -35,7 +35,7 @@ const RunningJobsPage = (): JSX.Element => {
         response.data.filter((systemProcess) => {
           return (
             ProcessFilter.includes(systemProcess.name.toLowerCase()) &&
-            systemProcess.cpu > 20
+            systemProcess.cpu > 10
           );
         })
       );
