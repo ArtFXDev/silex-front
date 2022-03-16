@@ -23,23 +23,38 @@ const ProcessFilter = ["vray", "kick", "maya", "houdini", "python", "hython"];
 const RunningJobsPage = (): JSX.Element => {
   const { bladeStatus } = useBlade();
   const [systemProcesses, setSystemProcesses] = useState<SystemProcess[]>([]);
+  const [statusMessage, setStatusMessage] = useState<string>("");
   const [loadingSystemProcesses, setLoadingSystemProcesses] =
     useState<boolean>();
 
   const fetchSystemProcesses = () => {
     setLoadingSystemProcesses(true);
+    setStatusMessage("Fetching heavy system processes...");
     const systemProcessesURL = `http://localhost:5118/desktop/processes`;
-    axios.get<SystemProcess[]>(systemProcessesURL).then((response) => {
-      setSystemProcesses(
-        response.data.filter((systemProcess) => {
-          return (
-            ProcessFilter.includes(systemProcess.name.toLowerCase()) &&
-            systemProcess.cpu > 10
+    axios
+      .get<SystemProcess[]>(systemProcessesURL)
+      .then((response) => {
+        setSystemProcesses(
+          response.data.filter((systemProcess) => {
+            return (
+              ProcessFilter.includes(systemProcess.name.toLowerCase()) &&
+              systemProcess.cpu > 10
+            );
+          })
+        );
+        setLoadingSystemProcesses(false);
+        if (systemProcesses.length === 0) {
+          setStatusMessage(
+            "You don't have any heavy processes running on your computer..."
           );
-        })
-      );
-      setLoadingSystemProcesses(false);
-    });
+        }
+      })
+      .catch(() => {
+        setStatusMessage(
+          "Could not fetch heavy system processes, make sure silex is up to date..."
+        );
+        setLoadingSystemProcesses(false);
+      });
   };
 
   useEffect(() => {
@@ -111,13 +126,11 @@ const RunningJobsPage = (): JSX.Element => {
           <Typography color="text.disabled">
             <div style={{ display: "flex", alignItems: "center" }}>
               <CircularProgress color="info" sx={{ mr: 2 }} size={20} />
-              Fetching system processes...
+              {statusMessage}
             </div>
           </Typography>
         ) : (
-          <Typography color="text.disabled">
-            You don{"'"}t have any heavy processes running on your computer...
-          </Typography>
+          <Typography color="text.disabled">{statusMessage}</Typography>
         )}
       </div>
     </PageWrapper>
