@@ -124,13 +124,13 @@ const TaskParameter = ({
       if (view !== "file") {
         setView(selectFile ? "file" : "task");
 
-        if (selectFile) {
+        if (selectFile && !selectedFiles) {
           setBreadCrumbItems([
             ...breadCrumbItems,
             getEntityFullName(data.task.entity),
             data.task.taskType.name,
           ]);
-        } else {
+        } else if (!selectedEntity) {
           setBreadCrumbItems([
             ...breadCrumbItems,
             getEntityFullName(data.task.entity),
@@ -184,6 +184,7 @@ const TaskParameter = ({
             onEntitySelect={(entity) => {
               setSelectedEntity(entity);
               setView("task");
+
               setBreadCrumbItems([
                 ...breadCrumbItems,
                 getEntityFullName(entity),

@@ -35,6 +35,7 @@ function getPersonCoins(person: Person): number {
 }
 
 const SilexCoinPage = (): JSX.Element => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { loading, error, data } = useQuery<{
     persons: Person[];
   }>(PERSONS);
