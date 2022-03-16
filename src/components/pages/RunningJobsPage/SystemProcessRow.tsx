@@ -14,13 +14,15 @@ export interface SystemProcess {
   };
 }
 
-export const SystemProcessRow = ({
-  p,
-  killCallback,
-}: {
-  p: SystemProcess;
+interface SystemProcessRowProps {
+  process: SystemProcess;
   killCallback: () => void;
-}): JSX.Element => {
+}
+
+export const SystemProcessRow = ({
+  process,
+  killCallback,
+}: SystemProcessRowProps): JSX.Element => {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleClick = (pid: number) => {
@@ -29,7 +31,7 @@ export const SystemProcessRow = ({
     });
 
     window.electron.send("setNimbyStatus", true);
-    window.electron.send("killAllActiveTasksOnBlade", hnm);
+    window.electron.send("killAllActiveTasksOnBlade");
 
     const killProcessesURL = `http://localhost:5119/kill/${pid}`;
     axios
@@ -49,21 +51,19 @@ export const SystemProcessRow = ({
   };
 
   return (
-    <>
-      <TableRow key={p.pid}>
-        <TableCell>{p.name}</TableCell>
-        <TableCell>{p.pid}</TableCell>
-        <TableCell>{p.cpu}</TableCell>
-        <TableCell align="center">
-          <IconButton
-            onClick={() => handleClick(p.pid)}
-            aria-label="kill"
-            color="error"
-          >
-            <DangerousIcon />
-          </IconButton>
-        </TableCell>
-      </TableRow>
-    </>
+    <TableRow key={process.pid}>
+      <TableCell>{process.name}</TableCell>
+      <TableCell>{process.pid}</TableCell>
+      <TableCell>{process.cpu}</TableCell>
+      <TableCell align="center">
+        <IconButton
+          onClick={() => handleClick(process.pid)}
+          aria-label="kill"
+          color="error"
+        >
+          <DangerousIcon />
+        </IconButton>
+      </TableCell>
+    </TableRow>
   );
 };

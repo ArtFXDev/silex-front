@@ -18,7 +18,7 @@ import PageWrapper from "../PageWrapper/PageWrapper";
 import ProcessRow from "./ProcessRow";
 import { SystemProcess, SystemProcessRow } from "./SystemProcessRow";
 
-const ProcessFilter = ["vray", "kick", "maya", "houdini", "python", "hython"];
+const processFilter = ["vray", "kick", "maya", "houdini", "python", "hython"];
 
 const RunningJobsPage = (): JSX.Element => {
   const { bladeStatus } = useBlade();
@@ -37,7 +37,7 @@ const RunningJobsPage = (): JSX.Element => {
         setSystemProcesses(
           response.data.filter((systemProcess) => {
             return (
-              ProcessFilter.includes(systemProcess.name.toLowerCase()) &&
+              processFilter.includes(systemProcess.name.toLowerCase()) &&
               systemProcess.cpu > 10
             );
           })
@@ -114,7 +114,7 @@ const RunningJobsPage = (): JSX.Element => {
                   {systemProcesses.map((p) => (
                     <SystemProcessRow
                       key={p.pid}
-                      p={p}
+                      process={p}
                       killCallback={fetchSystemProcesses}
                     />
                   ))}
