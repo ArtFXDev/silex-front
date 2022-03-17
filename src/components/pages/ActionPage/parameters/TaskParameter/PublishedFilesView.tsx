@@ -12,6 +12,8 @@ interface PublishedFilesViewProps {
 
   /** Filter extensions */
   filterExtensions?: string[];
+
+  selectDirectory?: boolean;
 }
 
 const PublishedFilesView = ({
@@ -19,6 +21,7 @@ const PublishedFilesView = ({
   onFileSelect,
   selectedFiles,
   filterExtensions,
+  selectDirectory,
 }: PublishedFilesViewProps): JSX.Element => {
   const [path, setPath] = useState<string>();
 
@@ -39,6 +42,7 @@ const PublishedFilesView = ({
       onFileSelect={onFileSelect}
       selectedFiles={selectedFiles}
       filterExtensions={filterExtensions}
+      selectDirectory={selectDirectory}
     >
       <FileOrFolderItem
         root

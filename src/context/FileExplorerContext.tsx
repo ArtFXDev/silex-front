@@ -10,6 +10,9 @@ export interface FileExplorerContext {
   /** The selected file path */
   selectedFiles?: string[];
 
+  /** Wether it's possible to select folders */
+  selectDirectory?: boolean;
+
   /** List of extensions to filter */
   filterExtensions?: string[];
 

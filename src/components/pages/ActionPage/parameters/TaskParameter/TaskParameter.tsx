@@ -248,6 +248,9 @@ const TaskParameter = ({
               undefined
             }
             selectedFiles={selectedFiles}
+            selectDirectory={
+              (parameter as unknown as TaskFileParameter).type.directory
+            }
           />
         );
     }

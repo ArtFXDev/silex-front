@@ -2,6 +2,7 @@ import FolderIcon from "@mui/icons-material/Folder";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import {
   Alert,
+  Checkbox,
   Collapse,
   Dialog,
   Fade,
@@ -17,6 +18,7 @@ import { uiSocket } from "context";
 import { useFileExplorer } from "context/FileExplorerContext";
 import isElectron from "is-electron";
 import { useEffect, useState } from "react";
+import { COLORS } from "style/colors";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { extensions } from "types/files/extensions";
 import { FileOrFolder, ServerResponse } from "types/socket";
@@ -57,8 +59,14 @@ const FileOrFolderItem = ({
 
   const [openPreview, setOpenPreview] = useState<boolean>();
 
-  const { small, onFileSelect, selectedFiles, filterExtensions, moreDetails } =
-    useFileExplorer();
+  const {
+    small,
+    onFileSelect,
+    selectedFiles,
+    filterExtensions,
+    moreDetails,
+    selectDirectory,
+  } = useFileExplorer();
 
   useEffect(() => {
     if (item.isDirectory && open) {
@@ -141,9 +149,10 @@ const FileOrFolderItem = ({
             position: "relative",
             mt: 2,
             borderRadius: LIST_ITEM_BORDER_RADIUS,
-            boxShadow: isSelected
-              ? `inset 0 0 0 2px rgba(98, 198, 115, 0.5)`
-              : "",
+            boxShadow:
+              isSelected && !selectDirectory
+                ? `inset 0 0 0 2px ${COLORS.silexGreen}`
+                : "",
             backgroundColor: isSelected ? "rgba(98, 198, 115, 0.1)" : "",
           }}
         >
@@ -209,6 +218,23 @@ const FileOrFolderItem = ({
                 data={{ name: item.name, path: item.path, extension }}
               />
             )}
+
+            {item.isDirectory && selectDirectory && onFileSelect && (
+              <Checkbox
+                checked={isSelected}
+                color="info"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onFileSelect(item.path);
+                }}
+                sx={{
+                  "& .MuiSvgIcon-root": { fontSize: 20, py: 0 },
+                  "&.Mui-checked": {
+                    color: COLORS.silexGreen,
+                  },
+                }}
+              />
+            )}
           </ListItemButton>
         </Paper>
       )}
@@ -257,6 +283,7 @@ const FileOrFolderItem = ({
         </Collapse>
       )}
 
+      {/* Image file preview */}
       {openPreview && extension && (
         <Dialog open onClose={() => setOpenPreview(false)} fullWidth>
           {/* Use local file protocol defined in Electron */}
