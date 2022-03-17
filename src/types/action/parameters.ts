@@ -28,7 +28,6 @@ export interface PathParameter extends BaseParameter {
     name: "Path";
     multiple: boolean | null;
     extensions: string[] | null;
-    directory: boolean;
   };
   value: string | string[] | null;
 }
@@ -61,7 +60,7 @@ export interface TaskFileParameter extends BaseParameter {
     name: "task_file";
     multiple: boolean | null;
     extensions: string[] | null;
-    useCurrentContext: boolean;
+    directory: boolean;
   };
   value: string | string[] | null;
 }

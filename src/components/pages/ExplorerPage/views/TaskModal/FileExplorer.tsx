@@ -15,6 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import FileOrFolderItem from "components/common/FileOrFolderItem/FileOrFolderItem";
+import { ProvideFileExplorer } from "context/FileExplorerContext";
 import isElectron from "is-electron";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
@@ -253,17 +254,18 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
               moreDetails={moreDetails}
             />
           ) : (
-            <FileOrFolderItem
-              root
-              refresh={refreshView}
-              moreDetails={moreDetails}
-              item={{
-                path: path.replace("work", "publish"),
-                name: "",
-                mtime: "",
-                isDirectory: true,
-              }}
-            />
+            <ProvideFileExplorer moreDetails={moreDetails}>
+              <FileOrFolderItem
+                root
+                refresh={refreshView}
+                item={{
+                  path: path.replace("work", "publish"),
+                  name: "",
+                  mtime: "",
+                  isDirectory: true,
+                }}
+              />
+            </ProvideFileExplorer>
           ))}
       </div>
     </>

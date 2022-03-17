@@ -1,4 +1,5 @@
 import FileOrFolderItem from "components/common/FileOrFolderItem/FileOrFolderItem";
+import { ProvideFileExplorer } from "context/FileExplorerContext";
 import { useEffect, useState } from "react";
 import * as Zou from "utils/zou";
 
@@ -11,6 +12,8 @@ interface PublishedFilesViewProps {
 
   /** Filter extensions */
   filterExtensions?: string[];
+
+  selectDirectory?: boolean;
 }
 
 const PublishedFilesView = ({
@@ -18,6 +21,7 @@ const PublishedFilesView = ({
   onFileSelect,
   selectedFiles,
   filterExtensions,
+  selectDirectory,
 }: PublishedFilesViewProps): JSX.Element => {
   const [path, setPath] = useState<string>();
 
@@ -33,19 +37,23 @@ const PublishedFilesView = ({
   }
 
   return (
-    <FileOrFolderItem
-      root
+    <ProvideFileExplorer
       small
       onFileSelect={onFileSelect}
       selectedFiles={selectedFiles}
       filterExtensions={filterExtensions}
-      item={{
-        path: path,
-        name: "",
-        mtime: "",
-        isDirectory: true,
-      }}
-    />
+      selectDirectory={selectDirectory}
+    >
+      <FileOrFolderItem
+        root
+        item={{
+          path: path,
+          name: "",
+          mtime: "",
+          isDirectory: true,
+        }}
+      />
+    </ProvideFileExplorer>
   );
 };
 
