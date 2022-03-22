@@ -28,13 +28,11 @@ const AvatarMenu = (): JSX.Element => {
 
   const onLogout = () => {
     Zou.logout()
-      .then(() => {
-        auth.signout();
-        history.push("/login");
-      })
+      .then(auth.signout)
       .catch((err) =>
         enqueueSnackbar(`Logout error: ${err}`, { variant: "error" })
-      );
+      )
+      .finally(() => history.push("/login"));
   };
 
   if (!auth.user)
