@@ -14,7 +14,7 @@ const ProcessRow = ({ p }: { p: RunningJob }): JSX.Element => {
 
   useEffect(() => {
     const fetchLogs = () => {
-      const logsURL = `http://tractor/tractor/cmd-logs/${p.login}/J${p.jid}/T${p.tid}.log`;
+      const logsURL = `${process.env.REACT_APP_TRACTOR_LOG_URL}/${p.login}/J${p.jid}/T${p.tid}.log`;
       axios
         .get<string>(logsURL)
         .then((response) =>
