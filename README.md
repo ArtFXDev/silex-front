@@ -44,6 +44,8 @@ They are:
 
 - `REACT_APP_TRACTOR_URL` - url of the Tractor interface
 
+- `REACT_APP_TRACTOR_LOG_URL` - Tractor log retrieval url (see: https://rmanwiki.pixar.com/display/TRA/Logging)
+
 - `REACT_APP_TICKET_URL` - url of the Ticket system (we currently use [Zammad](https://zammad.com/))
 
 ### Available scripts

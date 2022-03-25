@@ -16,6 +16,9 @@ declare namespace NodeJS {
     /** Url of the tractor TV */
     REACT_APP_TRACTOR_URL: string;
 
+    /** Url for Tractor logs retrieval */
+    REACT_APP_TRACTOR_LOG_URL: string;
+
     /** Url of your ticket system */
     REACT_APP_TICKET_URL: string;
 
