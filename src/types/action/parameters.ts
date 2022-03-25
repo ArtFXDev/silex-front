@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 export type ParameterValueType = number | boolean | string;
 
 export interface BaseParameter {
@@ -6,6 +7,7 @@ export interface BaseParameter {
   type: { name: string };
   value: ParameterValueType | ParameterValueType[] | null;
   hide: boolean;
+  tooltip: string | null;
 }
 
 export interface StringParameter extends BaseParameter {
@@ -38,6 +40,9 @@ export interface RangeParameter extends BaseParameter {
     start: number;
     end: number;
     increment: number;
+    value_label: string | null;
+    marks: boolean;
+    n_marks: number | null;
   };
   value: number | null;
 }
