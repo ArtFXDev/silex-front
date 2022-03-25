@@ -1,4 +1,4 @@
-import { ListItem, Slider, Typography } from "@mui/material";
+import { ListItem, Tooltip, Typography } from "@mui/material";
 import { useAction } from "context";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import {
@@ -10,6 +10,7 @@ import {
   ParameterInputType,
   PathParameter as PathParameterType,
   RadioSelectParameter as RadioSelectParameterType,
+  RangeParameter as RangeParameterType,
   SelectParameter as SelectParameterType,
   TaskParameter as TaskParameterType,
   TextParameter as TextParameterType,
@@ -21,6 +22,7 @@ import GenericInputParameter from "./parameters/GenericInputParameter";
 import MultipleSelectParameter from "./parameters/MultipleSelectParameter";
 import PathParameter from "./parameters/PathParameter";
 import MultipleRadioSelectParameter from "./parameters/RadioSelectParameter";
+import RangeParameter from "./parameters/RangeParameter";
 import SelectParameter from "./parameters/SelectParameter";
 import SwitchParameter from "./parameters/SwitchParameter";
 import TaskParameter from "./parameters/TaskParameter/TaskParameter";
@@ -64,19 +66,7 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
           />
         );
       case "range":
-        return (
-          <Slider
-            min={type.start}
-            max={type.end}
-            step={type.increment}
-            marks={type.increment >= 5}
-            defaultValue={parameter.value as number}
-            onChange={(e, newValue) =>
-              (parameter.value = (newValue as number).toString())
-            }
-            valueLabelDisplay="on"
-          />
-        );
+        return <RangeParameter parameter={parameter as RangeParameterType} />;
       case "task":
         return <TaskParameter parameter={parameter as TaskParameterType} />;
       case "task_file":
@@ -117,6 +107,15 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
     }
   };
 
+  const label = (
+    <Typography
+      variant={simpleMode ? "subtitle2" : "body1"}
+      sx={{ width: "30%", mr: 4 }}
+    >
+      {parameter.label}
+    </Typography>
+  );
+
   return (
     <ListItem
       sx={{
@@ -128,14 +127,14 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
       }}
     >
       {/* Label */}
-      {!(parameter.type.name === "text") && (
-        <Typography
-          variant={simpleMode ? "subtitle2" : "body1"}
-          sx={{ width: "30%", mr: 4 }}
-        >
-          {parameter.label}
-        </Typography>
-      )}
+      {!(parameter.type.name === "text") &&
+        (parameter.tooltip ? (
+          <Tooltip title={parameter.tooltip} arrow placement="top-start">
+            {label}
+          </Tooltip>
+        ) : (
+          label
+        ))}
 
       {/* Specific parameter component */}
       <div
