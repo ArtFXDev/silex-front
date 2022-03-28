@@ -2,6 +2,7 @@ import FolderIcon from "@mui/icons-material/Folder";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import {
   Alert,
+  Checkbox,
   Collapse,
   Dialog,
   Fade,
@@ -14,8 +15,10 @@ import {
 } from "@mui/material";
 import FileIcon from "components/common/FileIcon/FileIcon";
 import { uiSocket } from "context";
+import { useFileExplorer } from "context/FileExplorerContext";
 import isElectron from "is-electron";
 import { useEffect, useState } from "react";
+import { COLORS } from "style/colors";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { extensions } from "types/files/extensions";
 import { FileOrFolder, ServerResponse } from "types/socket";
@@ -30,7 +33,7 @@ const SCROLL_OPTIONS: ScrollIntoViewOptions = {
   inline: "nearest",
 };
 
-interface FileOrFolderItem {
+interface FileOrFolderItemProps {
   item: FileOrFolder;
 
   /** Tracks the depth of the file/folder, useful to open at a certain depth by default */
@@ -39,23 +42,8 @@ interface FileOrFolderItem {
   /** When it's the top level folder, don't display the parent folder */
   root?: boolean;
 
-  /** Display the modification time */
-  moreDetails?: boolean;
-
   /** Boolean value to switch when we need to refresh the view. */
   refresh?: boolean;
-
-  /** Use a compact display for the file hierarchy */
-  small?: boolean;
-
-  /** Callback to register when the user click on a file */
-  onFileSelect?: (filePath: string) => void;
-
-  /** The selected file path */
-  selectedFiles?: string[];
-
-  /** List of extensions to filter */
-  filterExtensions?: string[];
 }
 
 const FileOrFolderItem = ({
@@ -63,18 +51,22 @@ const FileOrFolderItem = ({
   root,
   item,
   depth = 0,
-  moreDetails,
-  small,
-  onFileSelect,
-  selectedFiles,
-  filterExtensions,
-}: FileOrFolderItem): JSX.Element => {
+}: FileOrFolderItemProps): JSX.Element => {
   const [open, setOpen] = useState<boolean>(depth < 2);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [response, setResponse] =
     useState<ServerResponse<{ entries: FileOrFolder[] }>>();
 
   const [openPreview, setOpenPreview] = useState<boolean>();
+
+  const {
+    small,
+    onFileSelect,
+    selectedFiles,
+    filterExtensions,
+    moreDetails,
+    selectDirectory,
+  } = useFileExplorer();
 
   useEffect(() => {
     if (item.isDirectory && open) {
@@ -157,9 +149,10 @@ const FileOrFolderItem = ({
             position: "relative",
             mt: 2,
             borderRadius: LIST_ITEM_BORDER_RADIUS,
-            boxShadow: isSelected
-              ? `inset 0 0 0 2px rgba(98, 198, 115, 0.5)`
-              : "",
+            boxShadow:
+              isSelected && !selectDirectory
+                ? `inset 0 0 0 2px ${COLORS.silexGreen}`
+                : "",
             backgroundColor: isSelected ? "rgba(98, 198, 115, 0.1)" : "",
           }}
         >
@@ -225,6 +218,23 @@ const FileOrFolderItem = ({
                 data={{ name: item.name, path: item.path, extension }}
               />
             )}
+
+            {item.isDirectory && selectDirectory && onFileSelect && (
+              <Checkbox
+                checked={isSelected}
+                color="info"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onFileSelect(item.path);
+                }}
+                sx={{
+                  "& .MuiSvgIcon-root": { fontSize: 20, py: 0 },
+                  "&.Mui-checked": {
+                    color: COLORS.silexGreen,
+                  },
+                }}
+              />
+            )}
           </ListItemButton>
         </Paper>
       )}
@@ -252,15 +262,10 @@ const FileOrFolderItem = ({
           {filteredChildren &&
             filteredChildren.map((entry) => (
               <FileOrFolderItem
-                onFileSelect={onFileSelect}
-                selectedFiles={selectedFiles}
-                small={small}
                 refresh={refresh}
-                moreDetails={moreDetails}
                 key={entry.path}
                 item={entry}
                 depth={depth + 1}
-                filterExtensions={filterExtensions}
               />
             ))}
 
@@ -278,6 +283,7 @@ const FileOrFolderItem = ({
         </Collapse>
       )}
 
+      {/* Image file preview */}
       {openPreview && extension && (
         <Dialog open onClose={() => setOpenPreview(false)} fullWidth>
           {/* Use local file protocol defined in Electron */}

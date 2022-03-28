@@ -119,7 +119,14 @@ const TaskParameter = ({
     skip: selectedTaskId === null || selectedTaskId === undefined,
     onCompleted: (data) => {
       setSelectedEntity(data.task.entity);
-      setTaskIdValue(selectedTaskId);
+
+      if (selectFile) {
+        // Only set the task id state when it's a taskFileParameter
+        setSelectedTaskId(selectedTaskId);
+      } else {
+        // Otherwise pre-fill the parameter value
+        setTaskIdValue(selectedTaskId);
+      }
 
       if (view !== "file") {
         setView(selectFile ? "file" : "task");
@@ -149,10 +156,7 @@ const TaskParameter = ({
   // Sets the task id value to the current context
   // Used in the submit for example to prefill the parameter
   useEffect(() => {
-    if (
-      selectFile &&
-      (parameter as unknown as TaskFileParameter).type.useCurrentContext
-    ) {
+    if (selectFile) {
       setSelectedTaskId(action.context_metadata.task_id);
     }
   }, [action.context_metadata.task_id, parameter, selectFile, setTaskIdValue]);
@@ -244,6 +248,9 @@ const TaskParameter = ({
               undefined
             }
             selectedFiles={selectedFiles}
+            selectDirectory={
+              (parameter as unknown as TaskFileParameter).type.directory
+            }
           />
         );
     }
