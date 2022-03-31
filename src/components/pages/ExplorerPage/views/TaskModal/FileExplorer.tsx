@@ -74,7 +74,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
 
         setRefreshView((refreshView) => !refreshView);
       })
-      .catch((e) => {
+      .catch(() => {
         enqueueSnackbar("Error when building working file path", {
           variant: "error",
         });
