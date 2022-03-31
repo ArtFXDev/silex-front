@@ -1,6 +1,14 @@
 /* eslint-disable camelcase */
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { Asset, Person, Project, Sequence, Shot, Task } from "types/entities";
+import {
+  Asset,
+  Person,
+  Project,
+  Sequence,
+  Shot,
+  Task,
+  ValidationRecord,
+} from "types/entities";
 
 /**
  * Type of an axios response that returns a promise
@@ -254,6 +262,36 @@ export function setAsMainPreview(
   return axios.put(
     zouAPIURL(`actions/preview-files/${previewFileId}/set-main-preview`),
     {},
+    { withCredentials: true }
+  );
+}
+
+export function updateEntity<T>(
+  entityId: string,
+  data: Partial<T>
+): Promise<Record<string, never>> {
+  return axios.put(zouAPIURL(`data/entities/${entityId}`), data, {
+    withCredentials: true,
+  });
+}
+
+export function validateShotFrameSet(
+  shotId: string,
+  frameSet: string
+): PromiseResponse<ValidationRecord> {
+  return axios.post(
+    zouAPIURL(`data/shots/${shotId}/validation`),
+    { frame_set: frameSet },
+    { withCredentials: true }
+  );
+}
+
+export function unvalidateShotFrameSet(
+  shotId: string,
+  frameSet: string
+): PromiseResponse<ValidationRecord> {
+  return axios.delete(
+    zouAPIURL(`data/shots/${shotId}/validation?frame_set=${frameSet}`),
     { withCredentials: true }
   );
 }
