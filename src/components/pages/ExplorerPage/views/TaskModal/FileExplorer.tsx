@@ -41,6 +41,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
   const [path, setPath] = useState<string>("");
   const [pathExists, setPathExists] = useState<boolean>();
   const [refreshView, setRefreshView] = useState<boolean>(false);
+  const [error, setError] = useState();
   const [moreDetails, setMoreDetails] = useState<boolean>(
     window.localStorage.getItem("file-explorer-more-details") === "true"
   );
@@ -74,7 +75,8 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
 
         setRefreshView((refreshView) => !refreshView);
       })
-      .catch(() => {
+      .catch((error) => {
+        setError(error);
         enqueueSnackbar("Error when building working file path", {
           variant: "error",
         });
@@ -274,12 +276,12 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
               />
             </ProvideFileExplorer>
           )
-        ) : (
+        ) : error ? (
           <Alert variant="outlined" severity={"error"}>
             Can{"'"}t build a path, make sure the path template is setup on the
             backend.
           </Alert>
-        )}
+        ) : undefined}
       </div>
     </>
   );
