@@ -22,6 +22,10 @@ const AppGlobalStyles = (): JSX.Element => (
       "::-webkit-scrollbar-thumb:hover": {
         backgroundColor: "#666565",
       },
+      ".recharts-cartesian-grid-horizontal line, .recharts-cartesian-grid-vertical line":
+        {
+          stroke: "#999",
+        },
     }}
   />
 );

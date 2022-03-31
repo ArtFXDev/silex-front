@@ -20,6 +20,7 @@ import {
 import { IconButton } from "@mui/material";
 import { PersonsAvatarGroup } from "components/common/avatar";
 import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
+import ValidationTimeline from "components/common/ValidationTimeline/ValidationTimeline";
 import LazyMedia from "components/utils/LazyMedia/LazyMedia";
 import { useSnackbar } from "notistack";
 import { useRef, useState } from "react";
@@ -28,8 +29,6 @@ import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Asset, Shot, Task } from "types/entities";
 import { entityURLAndExtension, getEntityName } from "utils/entity";
 import * as Zou from "utils/zou";
-
-import ShotProgressBar from "./ShotProgressBar";
 
 interface EntityItemProps {
   index: number;
@@ -157,7 +156,17 @@ const EntityItem = ({
                   />
                 )}
 
-                {entity.type === "Shot" && <ShotProgressBar shot={entity} />}
+                {entity.type === "Shot" && (
+                  <ValidationTimeline
+                    frameSet={entity.validation?.frame_set}
+                    totalFrames={entity.nb_frames || undefined}
+                    frameIn={entity.frame_in || 0}
+                    backgroundColor="#335d35"
+                    width={130}
+                    height={25}
+                    noBorder
+                  />
+                )}
 
                 {entity.type === "Task" && (
                   <div
@@ -243,7 +252,15 @@ const EntityItem = ({
                   </div>
 
                   {entity.type === "Shot" && entity.tasks.length > 0 && (
-                    <ShotProgressBar shot={entity} />
+                    <ValidationTimeline
+                      frameSet={entity.validation?.frame_set}
+                      totalFrames={entity.nb_frames || undefined}
+                      frameIn={entity.frame_in || 0}
+                      backgroundColor="#335d35"
+                      width={100}
+                      height={25}
+                      noBorder
+                    />
                   )}
                 </CardActions>
               </Card>

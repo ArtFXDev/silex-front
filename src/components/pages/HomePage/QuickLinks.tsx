@@ -73,7 +73,10 @@ const QuickLinks = (): JSX.Element => {
             label="Conform"
             color={theme.palette.success.main}
             icon={<InputIcon sx={{ color: theme.palette.success.main }} />}
-            notif={{ message: "Launched conform action", variant: "success" }}
+            clickNotification={{
+              message: "Launched conform action",
+              variant: "success",
+            }}
             onClick={(done) => {
               uiSocket.emit("launchAction", { action: "conform" }, () => {
                 done();
@@ -86,7 +89,10 @@ const QuickLinks = (): JSX.Element => {
             disabled
             color={COLORS.houdini}
             icon={<FileIcon name="houdini" size={18} disabled />}
-            notif={{ message: "Launched Houdini conform", variant: "success" }}
+            clickNotification={{
+              message: "Launched Houdini conform",
+              variant: "success",
+            }}
             onClick={(done) => {
               uiSocket.emit(
                 "launchAction",
@@ -103,7 +109,10 @@ const QuickLinks = (): JSX.Element => {
             disabled
             color={COLORS.maya}
             icon={<FileIcon name="maya" size={18} disabled />}
-            notif={{ message: "Launched Maya conform", variant: "success" }}
+            clickNotification={{
+              message: "Launched Maya conform",
+              variant: "success",
+            }}
             onClick={(done) => {
               uiSocket.emit(
                 "launchAction",
