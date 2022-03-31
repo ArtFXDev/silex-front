@@ -1,28 +1,56 @@
 const FRANGE_PATTERN =
   /^(-?\d+(?:\.\d+)?)(?:-(-?\d+(?:\.\d+)?)(?:([:xy])(-?\d+(?:\.\d+)?))?)?$/;
 
+type SingleFramePattern = { start: number; type: "single" };
+type FrameRangePattern = {
+  start: number;
+  end: number;
+  step?: number;
+  type: "range";
+};
+
+type FrameSetPattern = SingleFramePattern | FrameRangePattern;
+
 /**
- * Parse a frameset and return a list of tokens for each match
- * For example: "1-50, 4-8x2" => [ ["1", "50"], ["4", "8", "x", "2"]]
- *
+ * Parse a frameset and return either a single frame or frame range for each match
  * See: https://github.com/justinfx/fileseq/blob/master/src/fileseq/constants.py
  */
-export function parseFrameSet(value: string): string[][] {
+export function parseFrameSet(value: string): FrameSetPattern[] {
   const tokens = value.split(",").map((t) => t.trim());
   const matches = tokens.map((token) => token.match(FRANGE_PATTERN));
 
-  const parts = matches
+  const parts: FrameSetPattern[] = matches
     .filter((m): m is RegExpMatchArray => m !== null)
-    .map((m) => m.filter((e) => e !== undefined).slice(1));
+    .map((m) => m.filter((e) => e !== undefined).slice(1))
+    .map((tokens) => {
+      switch (tokens.length) {
+        case 1:
+          return { type: "single", start: parseInt(tokens[0]) };
+        case 2:
+          return {
+            type: "range",
+            start: parseInt(tokens[0]),
+            end: parseInt(tokens[1]),
+          };
+        case 4:
+          return {
+            type: "range",
+            start: parseInt(tokens[0]),
+            end: parseInt(tokens[1]),
+            step: parseInt(tokens[3]),
+          };
+        default:
+          return { type: "single", start: 0 };
+      }
+    });
 
   return parts;
 }
 
 export function isFrameSetValid(value: string): boolean {
   const tokens = value.split(",").map((t) => t.trim());
-  return !tokens
-    .map((token) => token.match(FRANGE_PATTERN))
-    .some((v) => v === null);
+  const match = tokens.map((token) => token.match(FRANGE_PATTERN));
+  return !match.some((v) => v === null);
 }
 
 /**
@@ -44,21 +72,6 @@ export function frameSetToList(pattern: string[]): number[] {
     for (let i = start; i < end; i += step) {
       frames.push(i);
     }
-  }
-
-  return frames;
-}
-
-/**
- * Convert a frameSet expression to a Set of numbers
- * Ex: "1-5, 3-7, 10-14x2" -> Set(1, 2, 3, 4, 5, 6, 7, 10, 12, 14)
- */
-export function frameSetToSet(value: string): Set<number> {
-  const tokens = parseFrameSet(value);
-  const frames = new Set<number>();
-
-  for (const token of tokens) {
-    frameSetToList(token).forEach(frames.add, frames);
   }
 
   return frames;

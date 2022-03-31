@@ -1,4 +1,5 @@
 import { GlobalStyles } from "@mui/material";
+import { darken } from "@mui/material/styles";
 
 const AppGlobalStyles = (): JSX.Element => (
   <GlobalStyles
@@ -25,6 +26,17 @@ const AppGlobalStyles = (): JSX.Element => (
       ".recharts-cartesian-grid-horizontal line, .recharts-cartesian-grid-vertical line":
         {
           stroke: "#999",
+        },
+      ".recharts-default-tooltip": {
+        borderRadius: "10px",
+        filter: "drop-shadow( 3px 3px 2px rgba(0, 0, 0, .2)) !important",
+        fill: "#2c2b2b !important",
+        backgroundColor: "#353B48 !important",
+        borderColor: "#353B48 !important",
+      },
+      ".recharts-text.recharts-cartesian-axis-tick-value, .recharts-text.recharts-label":
+        {
+          fill: `${darken("#ccc", 0.2)} !important`,
         },
     }}
   />

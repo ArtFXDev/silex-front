@@ -41,25 +41,18 @@ const FrameSetTextField = ({
 
       <div style={{ marginTop: "10px" }}>
         {!error &&
-          matches.map((match, i) => {
+          matches.map((pattern, i) => {
             let text = "";
-            const size = match.length;
 
-            if (size >= 1) {
-              text += `frame ${match[0]}`;
+            if (pattern.type === "single" || pattern.type === "range") {
+              text += `frame ${pattern.start}`;
             }
 
-            if (size >= 2) {
-              text += ` to ${match[1]}`;
-            }
+            if (pattern.type === "range") {
+              text += ` to ${pattern.end}`;
 
-            if (size >= 3) {
-              if (match[2] === "x") {
-                text += `, every ${match[3]}th frame`;
-              } else if (match[2] === "y") {
-                text += `, every frames not multiple of ${match[4]}`;
-              } else if (match[2] === ":") {
-                text += `, every ${match[4]}th down to 1th frame`;
+              if (pattern.step) {
+                text += `, every ${pattern.step}th frame`;
               }
             }
 

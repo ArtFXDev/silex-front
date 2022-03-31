@@ -56,6 +56,7 @@ const SHOT_TASKS = gql`
       validation {
         id
         frame_set
+        total
       }
 
       validation_history {

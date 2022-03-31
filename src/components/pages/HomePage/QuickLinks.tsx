@@ -1,6 +1,7 @@
 import AgricultureIcon from "@mui/icons-material/Agriculture";
 import BugReportIcon from "@mui/icons-material/BugReport";
 import InputIcon from "@mui/icons-material/Input";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import { Box, Chip } from "@mui/material";
 import LoadingChip from "components/common/chips/LoadingChip";
@@ -15,29 +16,44 @@ const QuickLinks = (): JSX.Element => {
   const history = useHistory();
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        flexWrap: "wrap",
+      }}
+    >
       <Chip
         label="Explorer"
         variant="outlined"
         color="info"
-        icon={<TravelExploreIcon />}
+        icon={<TravelExploreIcon style={{ marginLeft: 5 }} />}
         onClick={() => history.push("/explorer")}
       />
 
       <Chip
-        label="Tractor"
+        label="Stats"
         variant="outlined"
-        color="warning"
-        icon={<AgricultureIcon />}
-        onClick={() => history.push("/tractor")}
+        sx={{ color: "#b19ef9", borderColor: "#b19ef9" }}
+        icon={<QueryStatsIcon style={{ color: "#b19ef9", marginLeft: 5 }} />}
+        onClick={() => history.push("/stats")}
       />
 
       <Chip
         label="Ticket"
         variant="outlined"
         sx={{ color: "#e84f83", borderColor: "#e84f83" }}
-        icon={<BugReportIcon style={{ color: "#e84f83" }} />}
+        icon={<BugReportIcon style={{ color: "#e84f83", marginLeft: 5 }} />}
         onClick={() => history.push("/ticket")}
+      />
+
+      <Chip
+        label="Tractor"
+        variant="outlined"
+        color="warning"
+        icon={<AgricultureIcon style={{ marginLeft: 5 }} />}
+        onClick={() => history.push("/tractor")}
       />
 
       <Chip
@@ -53,6 +69,7 @@ const QuickLinks = (): JSX.Element => {
           marginLeft: "auto",
           display: "flex",
           alignItems: "center",
+          flexWrap: "wrap",
           gap: 10,
         }}
       >

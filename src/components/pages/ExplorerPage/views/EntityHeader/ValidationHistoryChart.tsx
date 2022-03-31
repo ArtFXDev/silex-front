@@ -93,7 +93,9 @@ const ValidationHistoryChart = ({
           type="linear"
           dataKey="value"
           stroke="#82ca9d"
-          dot={CustomScatterDot}
+          dot={(props) => {
+            return <CustomScatterDot {...props} />;
+          }}
         />
       </ComposedChart>
     </ResponsiveContainer>

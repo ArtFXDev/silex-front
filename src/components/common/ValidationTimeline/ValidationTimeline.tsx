@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { theme } from "style/theme";
-import { frameSetToSet } from "utils/frameset";
+import { parseFrameSet } from "utils/frameset";
 
 interface ValidationTimelineProps {
   totalFrames?: number;
@@ -40,28 +40,48 @@ const ValidationTimeline = ({
       context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
+    if (!frameSet || !totalFrames) return;
     context.fillStyle = theme.palette.success.main;
-    context.globalAlpha = 1.0;
 
-    const displayFrames = (frameSet: string | undefined, color: string) => {
-      if (!frameSet || !totalFrames) return;
-
+    const displayFrames = (frameSet: string, color: string) => {
       const frameWidth = canvas.width / totalFrames;
       context.fillStyle = color;
-      const frames = frameSetToSet(frameSet);
 
-      frames.forEach((frame) => {
-        frame = frame + frameIn;
-        const x = frame * frameWidth;
+      const patterns = parseFrameSet(frameSet);
+
+      const drawRange = (start: number, end: number) => {
+        const x = start * frameWidth;
 
         if (x <= canvas.width) {
-          context.fillRect(x - 1, 0, frameWidth + 1, canvas.height);
+          context.fillRect(
+            x - 1,
+            0,
+            frameWidth * (end - start) + 1,
+            canvas.height
+          );
         }
-      });
+      };
+
+      for (const pattern of patterns) {
+        if (pattern.type === "single") {
+          drawRange(pattern.start, pattern.start);
+        } else if (pattern.type === "range") {
+          if (pattern.step) {
+            for (let i = pattern.start; i < pattern.end; i += pattern.step) {
+              drawRange(i, i);
+            }
+          } else {
+            drawRange(pattern.start, pattern.end);
+          }
+        }
+      }
     };
 
     displayFrames(frameSet, theme.palette.success.main);
-    displayFrames(tempFrameSet, theme.palette.info.main);
+
+    if (tempFrameSet) {
+      displayFrames(tempFrameSet, theme.palette.info.main);
+    }
   }, [backgroundColor, frameIn, frameSet, tempFrameSet, totalFrames]);
 
   return (

@@ -206,6 +206,17 @@ const ShotHeader = ({ shot }: ShotHeaderProps): JSX.Element => {
                 {frameIn}
               </Typography>
 
+              {shot.validation && (
+                <Typography
+                  fontSize={12}
+                  color="success.main"
+                  textAlign="center"
+                  display="inline-block"
+                >
+                  {Math.floor((shot.validation.total / shot.nb_frames) * 100)} %
+                </Typography>
+              )}
+
               <Typography
                 fontSize={11}
                 width={30}

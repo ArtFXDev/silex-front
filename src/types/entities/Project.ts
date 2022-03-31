@@ -27,4 +27,5 @@ export interface Project extends BaseEntity {
 
   sequences: Sequence[];
   assets: Asset[];
+  total_frames: number;
 }
