@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { Socket } from "socket.io-client";
 import { Action } from "types/action/action";
 import { DCCContext } from "types/action/context";
@@ -72,6 +73,15 @@ export interface UIClientEmitEvents {
   killProcess: EmitWithCallback<{ pid: number }>;
 }
 
+type SilexCoinsEvent = {
+  type: "silexCoins";
+  data: {
+    new_coins: number;
+  };
+};
+
+type FrontEvent = SilexCoinsEvent;
+
 export interface UIOnServerEvents {
   dccConnect: Listener<{ uuid: string; context: DCCContext }>;
   dccDisconnect: Listener<{ uuid: string }>;
@@ -80,6 +90,9 @@ export interface UIOnServerEvents {
   clearAction: Listener<{ uuid: string }>;
   actionQuery: Listener<Action>;
   actionUpdate: Listener<Partial<Action> & { uuid: string }>;
+
+  // Special events
+  frontEvent: Listener<FrontEvent>;
 }
 
 export type UINamespaceSocket = Socket<UIOnServerEvents, UIClientEmitEvents>;
