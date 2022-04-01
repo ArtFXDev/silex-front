@@ -40,7 +40,7 @@ const ValidationTimeline = ({
       context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    if (!frameSet || !totalFrames) return;
+    if (!totalFrames) return;
     context.fillStyle = theme.palette.success.main;
 
     const displayFrames = (frameSet: string, color: string) => {
@@ -77,7 +77,9 @@ const ValidationTimeline = ({
       }
     };
 
-    displayFrames(frameSet, theme.palette.success.main);
+    if (frameSet) {
+      displayFrames(frameSet, theme.palette.success.main);
+    }
 
     if (tempFrameSet) {
       displayFrames(tempFrameSet, theme.palette.info.main);
