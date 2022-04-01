@@ -4,6 +4,7 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import SortByAlphaIcon from "@mui/icons-material/SortByAlpha";
 import {
+  Alert,
   Box,
   Chip,
   Collapse,
@@ -40,6 +41,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
   const [path, setPath] = useState<string>("");
   const [pathExists, setPathExists] = useState<boolean>();
   const [refreshView, setRefreshView] = useState<boolean>(false);
+  const [error, setError] = useState();
   const [moreDetails, setMoreDetails] = useState<boolean>(
     window.localStorage.getItem("file-explorer-more-details") === "true"
   );
@@ -58,23 +60,30 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
 
   const updateData = () => {
     // Uses Zou to fetch the working directory for that task
-    Zou.buildWorkingFilePath(taskId).then((response) => {
-      setPath(response.data.path);
+    Zou.buildWorkingFilePath(taskId)
+      .then((response) => {
+        setPath(response.data.path);
 
-      if (isElectron()) {
-        const exists = window.electron.sendSync(
-          "pathExists",
-          getFolderFromView()
-        ) as boolean;
+        if (isElectron()) {
+          const exists = window.electron.sendSync(
+            "pathExists",
+            getFolderFromView()
+          ) as boolean;
 
-        setPathExists(exists);
-      }
-    });
+          setPathExists(exists);
+        }
 
-    setRefreshView((refreshView) => !refreshView);
+        setRefreshView((refreshView) => !refreshView);
+      })
+      .catch((error) => {
+        setError(error);
+        enqueueSnackbar("Error when building working file path", {
+          variant: "error",
+        });
+      });
   };
 
-  useEffect(updateData, [getFolderFromView, taskId]);
+  useEffect(updateData, [enqueueSnackbar, getFolderFromView, taskId]);
 
   return (
     <>
@@ -245,8 +254,8 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
       </Collapse>
 
       <div style={{ borderRadius: 24, marginTop: 12 }}>
-        {path &&
-          (view === "work" ? (
+        {path ? (
+          view === "work" ? (
             <WorkFilesView
               refresh={refreshView}
               path={path}
@@ -266,7 +275,13 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
                 }}
               />
             </ProvideFileExplorer>
-          ))}
+          )
+        ) : error ? (
+          <Alert variant="outlined" severity={"error"}>
+            Can{"'"}t build a path, make sure the path template is setup on the
+            backend.
+          </Alert>
+        ) : undefined}
       </div>
     </>
   );

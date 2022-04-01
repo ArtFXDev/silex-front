@@ -29,6 +29,7 @@ const links = [
     needProjectId: true,
   },
   { text: "Actions", to: "/action", exact: true },
+  { text: "Statistics", to: "/stats", exact: true },
   {
     text: "Tractor",
     to: "/tractor",
