@@ -19,6 +19,7 @@ import {
   ProvideGraphQLClient,
   ProvideSocket,
 } from "context";
+import { ProvideAnimation } from "context/AnimationContext";
 import { ProvideBlade } from "context/BladeContext";
 import { SnackbarProvider } from "notistack";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -32,74 +33,76 @@ const App = (): JSX.Element => {
   return (
     <Router>
       <SnackbarProvider maxSnack={3}>
-        <ProvideGraphQLClient>
-          <ProvideSocket>
-            <ProvideAction>
-              <ProvideBlade>
-                <ProvideAuth>
-                  <Switch>
-                    <Route exact path="/login">
-                      <LoginPage />
-                    </Route>
+        <ProvideAnimation>
+          <ProvideGraphQLClient>
+            <ProvideAuth>
+              <ProvideSocket>
+                <ProvideAction>
+                  <ProvideBlade>
+                    <Switch>
+                      <Route exact path="/login">
+                        <LoginPage />
+                      </Route>
 
-                    <PrivateRoute exact path="/logs" allowNonAuth>
-                      <LogsPage />
-                    </PrivateRoute>
+                      <PrivateRoute exact path="/logs" allowNonAuth>
+                        <LogsPage />
+                      </PrivateRoute>
 
-                    <PrivateRoute path="/action/:uuid?" allowNonAuth>
-                      <ActionsPage />
-                    </PrivateRoute>
+                      <PrivateRoute path="/action/:uuid?" allowNonAuth>
+                        <ActionsPage />
+                      </PrivateRoute>
 
-                    <PrivateRoute exact path="/running-jobs" allowNonAuth>
-                      <RunningJobsPage />
-                    </PrivateRoute>
+                      <PrivateRoute exact path="/running-jobs" allowNonAuth>
+                        <RunningJobsPage />
+                      </PrivateRoute>
 
-                    <PrivateRoute exact path="/stats" allowNonAuth>
-                      <StatsPage />
-                    </PrivateRoute>
+                      <PrivateRoute exact path="/stats" allowNonAuth>
+                        <StatsPage />
+                      </PrivateRoute>
 
-                    <PrivateRoute exact path="/">
-                      <HomePage />
-                    </PrivateRoute>
+                      <PrivateRoute exact path="/">
+                        <HomePage />
+                      </PrivateRoute>
 
-                    <PrivateRoute exact path="/profile">
-                      <ProfilePage />
-                    </PrivateRoute>
+                      <PrivateRoute exact path="/profile">
+                        <ProfilePage />
+                      </PrivateRoute>
 
-                    <PrivateRoute exact path="/coins">
-                      <SilexCoinPage />
-                    </PrivateRoute>
+                      <PrivateRoute exact path="/coins">
+                        <SilexCoinPage />
+                      </PrivateRoute>
 
-                    <PrivateRoute exact path="/dccs">
-                      <DCCClientsPage />
-                    </PrivateRoute>
+                      <PrivateRoute exact path="/dccs">
+                        <DCCClientsPage />
+                      </PrivateRoute>
 
-                    <PrivateRoute path="/explorer">
-                      <ExplorerPage />
-                    </PrivateRoute>
+                      <PrivateRoute path="/explorer">
+                        <ExplorerPage />
+                      </PrivateRoute>
 
-                    <PrivateRoute exact path="/tractor">
-                      <TractorPage />
-                    </PrivateRoute>
+                      <PrivateRoute exact path="/tractor">
+                        <TractorPage />
+                      </PrivateRoute>
 
-                    <PrivateRoute exact path="/harvest">
-                      <HarvestPage />
-                    </PrivateRoute>
+                      <PrivateRoute exact path="/harvest">
+                        <HarvestPage />
+                      </PrivateRoute>
 
-                    <PrivateRoute exact path="/ticket">
-                      <TicketPage />
-                    </PrivateRoute>
+                      <PrivateRoute exact path="/ticket">
+                        <TicketPage />
+                      </PrivateRoute>
 
-                    {/* 404 fallback page */}
-                    <Route path="/*">
-                      <NotFoundPage />
-                    </Route>
-                  </Switch>
-                </ProvideAuth>
-              </ProvideBlade>
-            </ProvideAction>
-          </ProvideSocket>
-        </ProvideGraphQLClient>
+                      {/* 404 fallback page */}
+                      <Route path="/*">
+                        <NotFoundPage />
+                      </Route>
+                    </Switch>
+                  </ProvideBlade>
+                </ProvideAction>
+              </ProvideSocket>
+            </ProvideAuth>
+          </ProvideGraphQLClient>
+        </ProvideAnimation>
       </SnackbarProvider>
     </Router>
   );

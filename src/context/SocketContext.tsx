@@ -5,6 +5,9 @@ import { DCCContext } from "types/action/context";
 import { UINamespaceSocket, UIOnServerEvents } from "types/socket";
 import { v4 as uuidv4 } from "uuid";
 
+import { useAnimation } from "./AnimationContext";
+import { useAuth } from "./AuthContext";
+
 export interface SocketContext {
   /** socket.io socket object (with types) */
   uiSocket: UINamespaceSocket;
@@ -37,6 +40,8 @@ export const ProvideSocket = ({
   const [dccClients, setDCCClients] = useState<DCCContext[]>([]);
 
   const { enqueueSnackbar } = useSnackbar();
+  const { triggerSilexCoinsAnimation } = useAnimation();
+  const { updateUser } = useAuth();
 
   /**
    * Called when the UI is connected
@@ -134,6 +139,18 @@ export const ProvideSocket = ({
     [dccClients, enqueueSnackbar]
   );
 
+  const onFrontEvent = useCallback<UIOnServerEvents["frontEvent"]>(
+    (response) => {
+      switch (response.data.type) {
+        case "silexCoins":
+          triggerSilexCoinsAnimation(response.data.data.new_coins);
+          updateUser();
+          break;
+      }
+    },
+    [triggerSilexCoinsAnimation, updateUser]
+  );
+
   useEffect(() => {
     // Register "on" events
     uiSocket.on("connect", onConnect);
@@ -142,6 +159,8 @@ export const ProvideSocket = ({
     uiSocket.on("dccConnect", onDCCConnect);
     uiSocket.on("dccDisconnect", onDCCDisconnect);
 
+    uiSocket.on("frontEvent", onFrontEvent);
+
     return () => {
       // Cleanup function remove the ws listeners
       uiSocket.off("connect", onConnect);
@@ -149,8 +168,10 @@ export const ProvideSocket = ({
 
       uiSocket.off("dccConnect", onDCCConnect);
       uiSocket.off("dccDisconnect", onDCCDisconnect);
+
+      uiSocket.off("frontEvent", onFrontEvent);
     };
-  }, [onConnect, onDCCConnect, onDCCDisconnect, onDisconnect]);
+  }, [onConnect, onDCCConnect, onDCCDisconnect, onDisconnect, onFrontEvent]);
 
   return (
     <socketContext.Provider
