@@ -1,14 +1,12 @@
 import { gql, useQuery } from "@apollo/client";
-import AddIcon from "@mui/icons-material/Add";
-import { Chip, IconButton, Typography } from "@mui/material";
-import CreateEntityModal from "components/common/CreateEntityModal/CreateEntityModal";
+import { Typography } from "@mui/material";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
-import { useState } from "react";
-import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { Asset, Shot } from "types/entities";
 import { fuzzyMatch } from "utils/string";
 
 import EntitiesView from "./EntitiesView";
+import EntityHeader from "./EntityHeader/EntityHeader";
 import TaskModal from "./TaskModal/TaskModal";
 
 const TASK_FIELDS = gql`
@@ -51,7 +49,21 @@ const SHOT_TASKS = gql`
       id
       name
       type
-      data
+
+      nb_frames
+      fps
+
+      validation {
+        id
+        frame_set
+        total
+      }
+
+      validation_history {
+        id
+        created_at
+        total
+      }
 
       sequence {
         id
@@ -91,10 +103,7 @@ interface TasksViewProps {
 }
 
 const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
-  const [createTaskModal, setCreateTaskModal] = useState<boolean>(false);
-
   const routeMatch = useRouteMatch<{ category: string; entityId: string }>();
-  const history = useHistory();
 
   const query = useQuery<{ shot?: Shot; asset?: Asset }>(
     routeMatch.params.category === "shots" ? SHOT_TASKS : ASSET_TASKS,
@@ -110,71 +119,8 @@ const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
   return (
     <QueryWrapper query={query}>
       {data && (
-        <div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <div>
-              <Typography
-                variant="h6"
-                color="text.disabled"
-                display="inline-block"
-                sx={{
-                  verticalAlign: "text-top",
-                  mr: 1,
-                  transition: "all 0.2s ease",
-                  cursor: "pointer",
-                  ":hover": { color: "rgba(255, 255, 255, 0.8)" },
-                }}
-                onClick={() =>
-                  history.push(
-                    window.location.pathname.split("/").slice(0, -2).join("/")
-                  )
-                }
-              >
-                {entity.type === "Shot"
-                  ? entity.sequence.name
-                  : entity.entity_type.name}
-              </Typography>
-
-              <Typography
-                variant="h6"
-                display="inline-block"
-                color="text.disabled"
-                mr={1}
-                style={{ verticalAlign: "text-top" }}
-              >
-                /
-              </Typography>
-            </div>
-
-            <h2
-              style={{
-                display: "inline-block",
-                marginBottom: 0,
-                marginTop: 0,
-              }}
-            >
-              {entity.name}
-            </h2>
-
-            {entity.type === "Shot" &&
-              entity.data &&
-              JSON.parse(entity.data).canceled && (
-                <Chip
-                  label="Canceled"
-                  color="error"
-                  variant="outlined"
-                  size="small"
-                  sx={{ ml: 1.5 }}
-                />
-              )}
-
-            <IconButton
-              sx={{ ml: 1.5 }}
-              onClick={() => setCreateTaskModal(true)}
-            >
-              <AddIcon />
-            </IconButton>
-          </div>
+        <>
+          <EntityHeader entity={entity} />
 
           {entity.tasks.length > 0 ? (
             <EntitiesView
@@ -188,15 +134,7 @@ const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
               This {data.asset ? "asset" : "shot"} doesn{"'"}t have any tasks...
             </Typography>
           )}
-        </div>
-      )}
-
-      {createTaskModal && (
-        <CreateEntityModal
-          targetEntity={entity}
-          onClose={() => setCreateTaskModal(false)}
-          entityType="Task"
-        />
+        </>
       )}
 
       <Switch>

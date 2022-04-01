@@ -16,7 +16,7 @@ const SubmitButton = ({ disabled }: SubmitButtonProps): JSX.Element => (
     icon={
       <SendIcon sx={{ color: disabled ? "text.disabled" : COLORS.submit }} />
     }
-    notif={{ message: "Launched submit", variant: "success" }}
+    clickNotification={{ message: "Launched submit", variant: "success" }}
     onClick={(done) => {
       uiSocket.emit("launchAction", { action: "submit" }, () => done());
     }}

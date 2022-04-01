@@ -25,6 +25,13 @@ const SEQUENCES_AND_SHOTS = gql`
           type
           data
           preview_file_id
+          nb_frames
+          frame_in
+
+          validation {
+            id
+            frame_set
+          }
 
           tasks {
             id

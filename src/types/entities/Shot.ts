@@ -5,12 +5,23 @@ import { BaseEntity } from "./BaseEntity";
 
 export type ShotId = string;
 
+export type ValidationRecord = {
+  id: string;
+  created_at: string;
+  shot_id: string;
+  frame_set: string;
+  total: number;
+};
+
 export interface Shot extends BaseEntity {
   id: ShotId;
   name: string;
   description: string | null;
   canceled: boolean;
   nb_frames: number | null;
+  fps: number | null;
+  frame_in: number | null;
+  frame_out: number | null;
   project_id: ProjectId;
   entity_type_id: string;
   parent_id: SequenceId;
@@ -22,4 +33,7 @@ export interface Shot extends BaseEntity {
 
   tasks: Task[];
   sequence: Sequence;
+
+  validation: ValidationRecord | null;
+  validation_history: ValidationRecord[];
 }
