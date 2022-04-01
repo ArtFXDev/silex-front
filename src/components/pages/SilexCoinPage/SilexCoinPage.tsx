@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+  CircularProgress,
   Fade,
   List,
   ListItem,
@@ -18,9 +19,11 @@ const PERSONS = gql`
   query Persons {
     persons {
       id
+
       full_name
       first_name
       last_name
+
       has_avatar
       data
     }
@@ -39,6 +42,10 @@ const SilexCoinPage = (): JSX.Element => {
   const { loading, error, data } = useQuery<{
     persons: Person[];
   }>(PERSONS);
+
+  if (loading) {
+    return <CircularProgress />;
+  }
 
   return (
     <PageWrapper goBack>
