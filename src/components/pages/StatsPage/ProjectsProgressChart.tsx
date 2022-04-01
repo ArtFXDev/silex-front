@@ -8,6 +8,7 @@ import {
   Legend,
   Line,
   LineChart,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -48,7 +49,7 @@ const ProjectsProgressChart = (): JSX.Element => {
 
   useEffect(() => {
     axios
-      .get<ProgressData[]>(zouAPIURL("data/projects/progress?trunc_key=minute"))
+      .get<ProgressData[]>(zouAPIURL("data/projects/progress?trunc_key=day"))
       .then((response) => {
         setData(response.data);
       });
@@ -59,6 +60,13 @@ const ProjectsProgressChart = (): JSX.Element => {
   if (!data || !projectsQuery.data) {
     return <p>Loading...</p>;
   }
+
+  const minDate = Math.min(
+    ...projectsQuery.data.projects.map((p) => new Date(p.start_date).getTime())
+  );
+  const maxDate = Math.max(
+    ...projectsQuery.data.projects.map((p) => new Date(p.end_date).getTime())
+  );
 
   return (
     <div>
@@ -87,7 +95,7 @@ const ProjectsProgressChart = (): JSX.Element => {
               type="number"
               scale="linear"
               interval="preserveStartEnd"
-              domain={["minValue", "maxValue"]}
+              domain={[minDate, maxDate]}
               tickFormatter={(value) =>
                 new Date(value).toLocaleDateString("en-US")
               }
@@ -141,18 +149,22 @@ const ProjectsProgressChart = (): JSX.Element => {
 
             <Legend wrapperStyle={{ fontSize: 14 }} />
 
-            {/* <ReferenceLine x={deadline.getTime()} stroke="rgba(255, 0, 0)" strokeDasharray="3 3" /> */}
+            <ReferenceLine
+              x={maxDate}
+              stroke="rgba(255, 0, 0)"
+              strokeDasharray="3 3"
+            />
 
-            {/* <ReferenceLine
-        label="Goal"
-        stroke="red"
-        strokeDasharray="3 3"
-        segment={[
-          { x: project.start_date, y: 0 },
-          { x: project.end_date, y: 100 },
-        ]}
-        ifOverflow="extendDomain"
-      /> */}
+            <ReferenceLine
+              label="Goal"
+              stroke="red"
+              strokeDasharray="3 3"
+              segment={[
+                { x: minDate, y: 0 },
+                { x: maxDate, y: 1 },
+              ]}
+              ifOverflow="extendDomain"
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>
