@@ -35,7 +35,7 @@ type ProgressData = {
   date: number;
 };
 
-type Projects = {
+type ProjectsQuery = {
   projects: {
     name: string;
     start_date: string;
@@ -55,7 +55,7 @@ const ProjectsProgressChart = (): JSX.Element => {
       });
   }, []);
 
-  const projectsQuery = useQuery<Projects>(PROJECTS, {
+  const projectsQuery = useQuery<ProjectsQuery>(PROJECTS, {
     fetchPolicy: "no-cache",
   });
 
