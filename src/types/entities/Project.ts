@@ -11,7 +11,7 @@ export interface Project extends BaseEntity {
   description: string;
   shotgun_id: string | null;
   file_tree: null;
-  data: unknown;
+  data?: { tags?: string[] };
   has_avatar: boolean;
   fps: string;
   ratio: string;
