@@ -55,7 +55,9 @@ const ProjectsProgressChart = (): JSX.Element => {
       });
   }, []);
 
-  const projectsQuery = useQuery<Projects>(PROJECTS);
+  const projectsQuery = useQuery<Projects>(PROJECTS, {
+    fetchPolicy: "no-cache",
+  });
 
   if (!data || !projectsQuery.data) {
     return <p>Loading...</p>;
@@ -90,7 +92,6 @@ const ProjectsProgressChart = (): JSX.Element => {
             <CartesianGrid strokeDasharray="3 3" />
 
             <XAxis
-              // domain={[Math.min(proje)]}
               dataKey="date"
               type="number"
               scale="linear"
