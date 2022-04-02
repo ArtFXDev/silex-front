@@ -1,7 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import {
   CircularProgress,
-  Fade,
   List,
   ListItem,
   ListItemIcon,
@@ -10,6 +9,7 @@ import {
 } from "@mui/material";
 import SilexCoinIcon from "assets/images/silex_coin.svg";
 import { PersonAvatar } from "components/common/avatar";
+import SilexLogo from "components/common/SilexLogo/SilexLogo";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Person, UserData } from "types/entities";
 
@@ -26,6 +26,11 @@ const PERSONS = gql`
 
       has_avatar
       data
+
+      departments {
+        id
+        name
+      }
     }
   }
 `;
@@ -43,21 +48,33 @@ const SilexCoinPage = (): JSX.Element => {
     persons: Person[];
   }>(PERSONS);
 
-  if (loading) {
-    return <CircularProgress />;
-  }
-
   return (
     <PageWrapper goBack>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <List sx={{ width: "50%" }}>
-          {data?.persons
-            .slice()
-            .sort((a, b) => getPersonCoins(b) - getPersonCoins(a))
-            .map((person, i) => {
-              return (
-                <Fade key={person.id} in>
-                  <Paper sx={{ my: 1, borderRadius: LIST_ITEM_BORDER_RADIUS }}>
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <div style={{ marginBottom: 30 }}>
+            <SilexLogo size={200} />
+          </div>
+
+          <List sx={{ width: "50%" }}>
+            {data?.persons
+              .filter((p) => !p.departments.some((d) => d.name === "TD"))
+              .slice()
+              .sort((a, b) => getPersonCoins(b) - getPersonCoins(a))
+              .map((person, i) => {
+                return (
+                  <Paper
+                    key={person.id}
+                    sx={{ my: 1, borderRadius: LIST_ITEM_BORDER_RADIUS }}
+                  >
                     <ListItem>
                       <ListItemIcon style={{ position: "relative" }}>
                         <PersonAvatar person={person} size={40} />
@@ -106,11 +123,11 @@ const SilexCoinPage = (): JSX.Element => {
                       </Paper>
                     </ListItem>
                   </Paper>
-                </Fade>
-              );
-            })}
-        </List>
-      </div>
+                );
+              })}
+          </List>
+        </div>
+      )}
     </PageWrapper>
   );
 };

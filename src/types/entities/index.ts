@@ -1,5 +1,6 @@
 export * from "./Asset";
 export * from "./BaseEntity";
+export * from "./Department";
 export * from "./Person";
 export * from "./Project";
 export * from "./Sequence";

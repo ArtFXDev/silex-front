@@ -131,7 +131,7 @@ const ShotHeader = ({ shot }: ShotHeaderProps): JSX.Element => {
                 disabled={!frameSetValid || !shot.nb_frames}
                 onClick={(done) => {
                   validateShotFrameSet(shot.id, frameSet).then(() => {
-                    client.refetchQueries({ include: ["TasksForAssetOrShot"] });
+                    client.refetchQueries({ include: "active" });
                     done();
                   });
 
@@ -149,7 +149,7 @@ const ShotHeader = ({ shot }: ShotHeaderProps): JSX.Element => {
                 disabled={!frameSetValid || !shot.nb_frames}
                 onClick={(done) => {
                   unvalidateShotFrameSet(shot.id, frameSet).then(() => {
-                    client.refetchQueries({ include: ["TasksForAssetOrShot"] });
+                    client.refetchQueries({ include: "active" });
                     done();
                   });
 
