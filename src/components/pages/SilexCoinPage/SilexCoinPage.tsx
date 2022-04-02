@@ -1,7 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import {
   CircularProgress,
-  Fade,
   List,
   ListItem,
   ListItemIcon,
@@ -10,6 +9,7 @@ import {
 } from "@mui/material";
 import SilexCoinIcon from "assets/images/silex_coin.svg";
 import { PersonAvatar } from "components/common/avatar";
+import SilexLogo from "components/common/SilexLogo/SilexLogo";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Person, UserData } from "types/entities";
 
@@ -53,7 +53,17 @@ const SilexCoinPage = (): JSX.Element => {
       {loading ? (
         <CircularProgress />
       ) : (
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <div style={{ marginBottom: 30 }}>
+            <SilexLogo size={200} />
+          </div>
+
           <List sx={{ width: "50%" }}>
             {data?.persons
               .filter((p) => !p.departments.some((d) => d.name === "TD"))
@@ -61,59 +71,58 @@ const SilexCoinPage = (): JSX.Element => {
               .sort((a, b) => getPersonCoins(b) - getPersonCoins(a))
               .map((person, i) => {
                 return (
-                  <Fade key={person.id} in>
-                    <Paper
-                      sx={{ my: 1, borderRadius: LIST_ITEM_BORDER_RADIUS }}
-                    >
-                      <ListItem>
-                        <ListItemIcon style={{ position: "relative" }}>
-                          <PersonAvatar person={person} size={40} />
+                  <Paper
+                    key={person.id}
+                    sx={{ my: 1, borderRadius: LIST_ITEM_BORDER_RADIUS }}
+                  >
+                    <ListItem>
+                      <ListItemIcon style={{ position: "relative" }}>
+                        <PersonAvatar person={person} size={40} />
 
-                          {i <= 2 && (
-                            <div
-                              style={{
-                                position: "absolute",
-                                right: -5,
-                                bottom: -5,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                fontSize: (3 - i) * 3 + 8,
-                                width: 40,
-                                marginRight: 10,
-                              }}
-                            >
-                              🏆
-                            </div>
-                          )}
-                        </ListItemIcon>
+                        {i <= 2 && (
+                          <div
+                            style={{
+                              position: "absolute",
+                              right: -5,
+                              bottom: -5,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              fontSize: (3 - i) * 3 + 8,
+                              width: 40,
+                              marginRight: 10,
+                            }}
+                          >
+                            🏆
+                          </div>
+                        )}
+                      </ListItemIcon>
 
-                        <ListItemText>
-                          {person.first_name} {person.last_name}
-                        </ListItemText>
+                      <ListItemText>
+                        {person.first_name} {person.last_name}
+                      </ListItemText>
 
-                        <Paper
-                          elevation={0}
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            borderRadius: "9999px",
-                            pl: 1.4,
-                            pr: 1.2,
-                            py: 0.5,
-                          }}
-                        >
-                          {getPersonCoins(person)}
-                          <img
-                            width={20}
-                            height={20}
-                            src={SilexCoinIcon}
-                            style={{ marginLeft: 5 }}
-                          />
-                        </Paper>
-                      </ListItem>
-                    </Paper>
-                  </Fade>
+                      <Paper
+                        elevation={0}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          borderRadius: "9999px",
+                          pl: 1.4,
+                          pr: 1.2,
+                          py: 0.5,
+                        }}
+                      >
+                        {getPersonCoins(person)}
+                        <img
+                          width={20}
+                          height={20}
+                          src={SilexCoinIcon}
+                          style={{ marginLeft: 5 }}
+                        />
+                      </Paper>
+                    </ListItem>
+                  </Paper>
                 );
               })}
           </List>
