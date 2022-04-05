@@ -251,7 +251,7 @@ const EntityItem = ({
                     )}
                   </div>
 
-                  {entity.type === "Shot" && entity.tasks.length > 0 && (
+                  {entity.type === "Shot" && (
                     <ValidationTimeline
                       frameSet={entity.validation?.frame_set}
                       totalFrames={entity.nb_frames || undefined}
