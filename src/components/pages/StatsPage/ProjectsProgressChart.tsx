@@ -201,7 +201,7 @@ const ProjectsProgressChart = (): JSX.Element => {
                   (pr) => pr.name === value
                 );
                 if (!project) return "";
-                return `${Math.round(p * project.total_frames)} / ${
+                return `${Math.floor(p * project.total_frames)} / ${
                   project.total_frames
                 } frames`;
               }}
