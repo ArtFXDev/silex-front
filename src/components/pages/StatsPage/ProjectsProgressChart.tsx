@@ -14,7 +14,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { COLORS } from "style/colors";
+import { theme } from "style/theme";
 import { getColorFromString } from "utils/color";
+import { dateDiffDays } from "utils/date";
 import { zouAPIURL } from "utils/zou";
 
 const PROJECTS = gql`
@@ -70,11 +73,68 @@ const ProjectsProgressChart = (): JSX.Element => {
     ...projectsQuery.data.projects.map((p) => new Date(p.end_date).getTime())
   );
 
+  const totalFrames = projectsQuery.data.projects
+    .map((p) => p.total_frames)
+    .reduce((a, b) => a + b, 0);
+
+  const totalProgressFrames = Object.values(data[data.length - 1].projects)
+    .map((s) => s.total)
+    .reduce((a, b) => a + b, 0);
+
+  const daysFromDeadline = dateDiffDays(new Date(), new Date(maxDate));
+
   return (
     <div>
-      <Typography variant="h5" style={{ marginLeft: 50 }}>
-        Global project progression
-      </Typography>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Typography variant="h5" style={{ marginLeft: 50 }}>
+          Global project progression
+        </Typography>
+
+        <div
+          style={{
+            border: "1px solid grey",
+            borderRadius: 15,
+            display: "flex",
+            alignItems: "center",
+            gap: 15,
+            paddingLeft: 20,
+            paddingRight: 20,
+          }}
+        >
+          {/* End date info */}
+          <p>
+            Deadline :{" "}
+            <span style={{ color: theme.palette.warning.main }}>
+              {new Date(maxDate).toLocaleDateString("en-US")} (
+              {daysFromDeadline}d {daysFromDeadline >= 0 ? "left" : "late"})
+            </span>
+          </p>
+
+          {/* Total frames */}
+          {data && data.length !== 0 && (
+            <p>
+              Total progress :
+              <span
+                style={{
+                  backgroundColor: COLORS.silexGreen,
+                  color: "white",
+                  borderRadius: 10,
+                  marginLeft: 10,
+                  padding: 8,
+                }}
+              >
+                {totalProgressFrames} / {totalFrames}
+              </span>
+            </p>
+          )}
+        </div>
+      </div>
 
       <div style={{ width: "80vw", height: "550px" }}>
         <ResponsiveContainer width="100%" height="100%">
@@ -141,7 +201,7 @@ const ProjectsProgressChart = (): JSX.Element => {
                   (pr) => pr.name === value
                 );
                 if (!project) return "";
-                return `${Math.round(p * project.total_frames)} / ${
+                return `${Math.floor(p * project.total_frames)} / ${
                   project.total_frames
                 } frames`;
               }}

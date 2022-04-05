@@ -78,7 +78,7 @@ const ValidationHistoryChart = ({
 
         <YAxis
           tick={{ fontSize: 10 }}
-          tickFormatter={(v) => `${v}%`}
+          tickFormatter={(v) => `${Math.floor(v)}%`}
           domain={[0, 100]}
         />
 
