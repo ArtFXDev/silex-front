@@ -8,6 +8,7 @@ const ProfilePage = (): JSX.Element => {
         style={{
           display: "flex",
           justifyContent: "center",
+          paddingTop: 15,
         }}
       >
         <ProjectsProgressChart />
