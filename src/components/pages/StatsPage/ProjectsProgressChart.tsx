@@ -1,11 +1,11 @@
 /* eslint-disable camelcase */
 import { gql, useQuery } from "@apollo/client";
-import { Typography } from "@mui/material";
+import { Chip, Typography } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {
   CartesianGrid,
-  Legend,
   Line,
   LineChart,
   ReferenceLine,
@@ -47,12 +47,19 @@ type ProjectsQuery = {
   }[];
 };
 
+const EXCLUDE_PROJECTS = ["TEST_PIPE", "TEST_PIPE_2", "ACHROMATIC"];
+const START_DATE = new Date(new Date().getFullYear(), 0, 1).getTime();
+const AVG_KEY = "AVERAGE";
+
 const ProjectsProgressChart = (): JSX.Element => {
   const [data, setData] = useState<ProgressData[]>();
+  const [selectedProject, setSelectedProject] = useState<string>();
 
   useEffect(() => {
     axios
-      .get<ProgressData[]>(zouAPIURL("data/projects/progress?trunc_key=day"))
+      .get<ProgressData[]>(
+        zouAPIURL(`data/projects/progress?trunc_key=day&average_key=${AVG_KEY}`)
+      )
       .then((response) => {
         setData(response.data);
       });
@@ -66,19 +73,42 @@ const ProjectsProgressChart = (): JSX.Element => {
     return <p>Loading...</p>;
   }
 
+  if (data.length === 0) {
+    return <p>No validation data...</p>;
+  }
+
+  const projects = projectsQuery.data.projects
+    .filter((p) => !EXCLUDE_PROJECTS.includes(p.name))
+    .sort((a, b) => {
+      const last = data[data.length - 1];
+
+      const ap = last.projects[a.name];
+      const bp = last.projects[b.name];
+
+      if (ap && bp) {
+        return bp.progress - ap.progress;
+      } else if (!ap) {
+        return 1;
+      }
+
+      return -1;
+    });
+
   const minDate = Math.min(
-    ...projectsQuery.data.projects.map((p) => new Date(p.start_date).getTime())
+    ...projects.map((p) => new Date(p.start_date).getTime())
   );
   const maxDate = Math.max(
-    ...projectsQuery.data.projects.map((p) => new Date(p.end_date).getTime())
+    ...projects.map((p) => new Date(p.end_date).getTime())
   );
 
-  const totalFrames = projectsQuery.data.projects
+  const totalFrames = projects
     .map((p) => p.total_frames)
     .reduce((a, b) => a + b, 0);
 
-  const totalProgressFrames = Object.values(data[data.length - 1].projects)
-    .map((s) => s.total)
+  const lastSample = data[data.length - 1];
+
+  const totalProgressFrames = Object.keys(lastSample.projects)
+    .map((k) => (k === AVG_KEY ? 0 : lastSample.projects[k].total))
     .reduce((a, b) => a + b, 0);
 
   const daysFromDeadline = dateDiffDays(new Date(), new Date(maxDate));
@@ -90,6 +120,7 @@ const ProjectsProgressChart = (): JSX.Element => {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          marginRight: 15,
         }}
       >
         <Typography variant="h5" style={{ marginLeft: 50 }}>
@@ -179,36 +210,53 @@ const ProjectsProgressChart = (): JSX.Element => {
               }}
             />
 
-            {projectsQuery.data.projects.map((project) => (
-              <Line
-                type="linear"
-                key={project.name}
-                dataKey={(data) => {
-                  const sample = data.projects[project.name];
-                  return sample ? sample.progress : undefined;
-                }}
-                name={project.name}
-                strokeWidth={3}
-                dot={false}
-                connectNulls
-                stroke={getColorFromString(project.name)}
-              />
-            ))}
+            {projects
+              .filter((p) =>
+                selectedProject ? selectedProject === p.name : true
+              )
+              .map((project) => (
+                <Line
+                  type="linear"
+                  key={project.name}
+                  dataKey={(data) => {
+                    const sample = data.projects[project.name];
+                    return sample ? sample.progress : undefined;
+                  }}
+                  name={project.name}
+                  strokeWidth={3}
+                  dot={false}
+                  connectNulls
+                  stroke={getColorFromString(project.name)}
+                />
+              ))}
+
+            <Line
+              type="linear"
+              dataKey={(data) => data.projects[AVG_KEY].progress}
+              name="average"
+              strokeWidth={3}
+              dot={false}
+              connectNulls
+              stroke="#e8423b"
+            />
 
             <Tooltip
               formatter={(p: number, value: string) => {
                 const project = projectsQuery.data?.projects.find(
                   (pr) => pr.name === value
                 );
-                if (!project) return "";
-                return `${Math.floor(p * project.total_frames)} / ${
-                  project.total_frames
-                } frames`;
+
+                const totalFramesProject = project
+                  ? project.total_frames
+                  : totalFrames;
+                const frames = Math.floor(p * totalFramesProject);
+
+                return `${frames} / ${totalFramesProject} frames (${Math.round(
+                  p * 100
+                )}%)`;
               }}
               labelFormatter={(d) => new Date(d).toLocaleDateString("en-US")}
             />
-
-            <Legend wrapperStyle={{ fontSize: 14 }} />
 
             <ReferenceLine
               x={maxDate}
@@ -220,14 +268,50 @@ const ProjectsProgressChart = (): JSX.Element => {
               label="Goal"
               stroke="red"
               strokeDasharray="3 3"
+              ifOverflow="extendDomain"
               segment={[
-                { x: minDate, y: 0 },
+                { x: START_DATE, y: 0 },
                 { x: maxDate, y: 1 },
               ]}
-              ifOverflow="extendDomain"
             />
           </LineChart>
         </ResponsiveContainer>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          gap: 10,
+          justifyContent: "center",
+          flexWrap: "wrap",
+          marginTop: 10,
+        }}
+      >
+        {projects.map((p) => {
+          const projectColor = getColorFromString(p.name);
+          const selected = selectedProject === p.name;
+          const color = selected ? projectColor : alpha(projectColor, 0.3);
+
+          return (
+            <Chip
+              key={p.name}
+              label={p.name}
+              variant="outlined"
+              sx={{
+                color,
+                borderColor: color,
+                backgroundColor: selected ? alpha(projectColor, 0.2) : "",
+              }}
+              onClick={() => {
+                if (selectedProject === p.name) {
+                  setSelectedProject(undefined);
+                } else {
+                  setSelectedProject(p.name);
+                }
+              }}
+            />
+          );
+        })}
       </div>
     </div>
   );
