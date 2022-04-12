@@ -6,6 +6,7 @@ import {
   ListItemIcon,
   ListItemText,
   Paper,
+  Typography,
 } from "@mui/material";
 import SilexCoinIcon from "assets/images/silex_coin.svg";
 import { PersonAvatar } from "components/common/avatar";
@@ -70,12 +71,29 @@ const SilexCoinPage = (): JSX.Element => {
               .slice()
               .sort((a, b) => getPersonCoins(b) - getPersonCoins(a))
               .map((person, i) => {
+                const coins = getPersonCoins(person);
+
                 return (
                   <Paper
                     key={person.id}
                     sx={{ my: 1, borderRadius: LIST_ITEM_BORDER_RADIUS }}
                   >
-                    <ListItem>
+                    <ListItem disabled={coins === 0}>
+                      <ListItemIcon style={{ position: "relative" }}>
+                        <Typography
+                          color="text.disabled"
+                          sx={{
+                            px: 1.2,
+                            py: 0.4,
+                            fontSize: 14,
+                            borderRadius: 9999,
+                            backgroundColor: "rgba(255, 255, 255, 0.05)",
+                          }}
+                        >
+                          {i + 1}
+                        </Typography>
+                      </ListItemIcon>
+
                       <ListItemIcon style={{ position: "relative" }}>
                         <PersonAvatar person={person} size={40} />
 
@@ -113,12 +131,15 @@ const SilexCoinPage = (): JSX.Element => {
                           py: 0.5,
                         }}
                       >
-                        {getPersonCoins(person)}
+                        {coins}
                         <img
                           width={20}
                           height={20}
                           src={SilexCoinIcon}
-                          style={{ marginLeft: 5 }}
+                          style={{
+                            marginLeft: 5,
+                            filter: `grayscale(${coins === 0 ? "1" : "0"})`,
+                          }}
                         />
                       </Paper>
                     </ListItem>
