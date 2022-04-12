@@ -53,12 +53,7 @@ const ValidationTimeline = ({
         const x = (start - 1) * frameWidth;
 
         if (x <= canvas.width) {
-          context.fillRect(
-            x - 1,
-            0,
-            frameWidth * (end - start + 1) + 1,
-            canvas.height
-          );
+          context.fillRect(x, 0, frameWidth * (end - start + 1), canvas.height);
         }
       };
 
