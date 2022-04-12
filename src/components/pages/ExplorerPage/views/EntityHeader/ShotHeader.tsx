@@ -180,6 +180,16 @@ const ShotHeader = ({ shot }: ShotHeaderProps): JSX.Element => {
               marginLeft: 30,
             }}
           >
+            {shot.validation && (
+              <Typography
+                color="success.main"
+                fontSize={12}
+                style={{ marginBottom: 4 }}
+              >
+                {shot.validation.frame_set.split(",").join(", ")}
+              </Typography>
+            )}
+
             <ValidationTimeline
               frameSet={shot.validation ? shot.validation.frame_set : ""}
               tempFrameSet={frameSet}
