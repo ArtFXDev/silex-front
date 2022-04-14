@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { gql, useQuery } from "@apollo/client";
-import { Chip, Typography } from "@mui/material";
+import { Chip, Typography, useMediaQuery } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -54,6 +54,8 @@ const AVG_KEY = "AVERAGE";
 const ProjectsProgressChart = (): JSX.Element => {
   const [data, setData] = useState<ProgressData[]>();
   const [selectedProject, setSelectedProject] = useState<string>();
+
+  const mdBreakPoint = useMediaQuery(theme.breakpoints.up("xl"));
 
   useEffect(() => {
     axios
@@ -167,7 +169,7 @@ const ProjectsProgressChart = (): JSX.Element => {
         </div>
       </div>
 
-      <div style={{ width: "80vw", height: "550px" }}>
+      <div style={{ width: mdBreakPoint ? "80vw" : "95vw", height: "550px" }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             width={800}
