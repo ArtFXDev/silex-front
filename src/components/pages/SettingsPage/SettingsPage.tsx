@@ -21,6 +21,7 @@ const SettingsPage = (): JSX.Element => {
             sx={{
               px: 3,
               py: 1,
+              my: 1,
               borderRadius: LIST_ITEM_BORDER_RADIUS,
               display: "flex",
               justifyContent: "space-between",
