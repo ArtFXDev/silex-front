@@ -8,6 +8,7 @@ import LogsPage from "components/pages/LogsPage/LogsPage";
 import NotFoundPage from "components/pages/NotFoundPage/NotFoundPage";
 import ProfilePage from "components/pages/ProfilePage/ProfilePage";
 import RunningJobsPage from "components/pages/RunningJobsPage/RunningJobsPage";
+import SettingsPage from "components/pages/SettingsPage/SettingsPage";
 import SilexCoinPage from "components/pages/SilexCoinPage/SilexCoinPage";
 import StatsPage from "components/pages/StatsPage/StatsPage";
 import TicketPage from "components/pages/TicketPage/TicketPage";
@@ -90,6 +91,10 @@ const App = (): JSX.Element => {
 
                       <PrivateRoute exact path="/ticket">
                         <TicketPage />
+                      </PrivateRoute>
+
+                      <PrivateRoute exact path="/settings">
+                        <SettingsPage />
                       </PrivateRoute>
 
                       {/* 404 fallback page */}
