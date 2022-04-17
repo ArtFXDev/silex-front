@@ -36,4 +36,5 @@ export interface Shot extends BaseEntity {
 
   validation: ValidationRecord | null;
   validation_history: ValidationRecord[];
+  render_time: number;
 }

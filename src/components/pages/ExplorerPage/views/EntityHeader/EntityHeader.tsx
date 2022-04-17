@@ -37,6 +37,7 @@ const EntityHeader = ({ entity }: EntityHeaderProps): JSX.Element => {
   );
 
   const history = useHistory();
+  const entityHeader = getEntityHeader(entity);
 
   return (
     <>
@@ -123,18 +124,20 @@ const EntityHeader = ({ entity }: EntityHeaderProps): JSX.Element => {
         </Tooltip>
       </div>
 
-      <Collapse in={openEntitySettings} unmountOnExit>
-        <Paper
-          sx={{
-            py: 2,
-            px: 3,
-            borderRadius: LIST_ITEM_BORDER_RADIUS,
-            my: 2,
-          }}
-        >
-          {getEntityHeader(entity)}
-        </Paper>
-      </Collapse>
+      {entityHeader && (
+        <Collapse in={openEntitySettings} unmountOnExit>
+          <Paper
+            sx={{
+              py: 2,
+              px: 3,
+              borderRadius: LIST_ITEM_BORDER_RADIUS,
+              my: 2,
+            }}
+          >
+            {entityHeader}
+          </Paper>
+        </Collapse>
+      )}
 
       {createTaskModal && (
         <CreateEntityModal

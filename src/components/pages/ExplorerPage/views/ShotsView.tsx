@@ -27,6 +27,7 @@ const SEQUENCES_AND_SHOTS = gql`
           preview_file_id
           nb_frames
           frame_in
+          fps
 
           validation {
             id

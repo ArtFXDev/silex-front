@@ -1,5 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import SettingsIcon from "@mui/icons-material/Settings";
 import {
   Box,
   Drawer,
@@ -176,6 +177,10 @@ const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
         </div>
 
         <OpenLogsButton onClick={closeMenu} />
+
+        <IconButton component={RouterLink} to="/settings" onClick={closeMenu}>
+          <SettingsIcon color="disabled" />
+        </IconButton>
       </div>
     </Drawer>
   );

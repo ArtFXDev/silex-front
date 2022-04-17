@@ -3,6 +3,7 @@ interface ColoredCircleProps {
   color: string;
   marginLeft?: number;
   marginRight?: number;
+  border?: string;
 }
 
 const ColoredCircle = ({
@@ -10,6 +11,7 @@ const ColoredCircle = ({
   color,
   marginLeft,
   marginRight,
+  border,
 }: ColoredCircleProps): JSX.Element => (
   <span
     style={{
@@ -17,6 +19,7 @@ const ColoredCircle = ({
       width: size,
       height: size,
       borderRadius: "50%",
+      border,
       marginLeft: marginLeft,
       marginRight: marginRight,
       backgroundColor: color,
