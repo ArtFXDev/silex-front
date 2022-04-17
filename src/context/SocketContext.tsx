@@ -143,7 +143,12 @@ export const ProvideSocket = ({
     (response) => {
       switch (response.data.type) {
         case "silexCoins":
-          triggerSilexCoinsAnimation(response.data.data.new_coins);
+          if (
+            window.localStorage.getItem("settings-silex-coins-animation") ===
+            "true"
+          ) {
+            triggerSilexCoinsAnimation(response.data.data.new_coins);
+          }
           updateUser();
           break;
       }

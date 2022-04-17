@@ -6,12 +6,15 @@ import {
   ListItemIcon,
   ListItemText,
   Paper,
+  Typography,
 } from "@mui/material";
 import SilexCoinIcon from "assets/images/silex_coin.svg";
 import { PersonAvatar } from "components/common/avatar";
+import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
 import SilexLogo from "components/common/SilexLogo/SilexLogo";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Person, UserData } from "types/entities";
+import { getColorFromString } from "utils/color";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 
@@ -28,6 +31,11 @@ const PERSONS = gql`
       data
 
       departments {
+        id
+        name
+      }
+
+      projects {
         id
         name
       }
@@ -70,12 +78,32 @@ const SilexCoinPage = (): JSX.Element => {
               .slice()
               .sort((a, b) => getPersonCoins(b) - getPersonCoins(a))
               .map((person, i) => {
+                const coins = getPersonCoins(person);
+
                 return (
                   <Paper
                     key={person.id}
-                    sx={{ my: 1, borderRadius: LIST_ITEM_BORDER_RADIUS }}
+                    sx={{
+                      my: 1,
+                      borderRadius: LIST_ITEM_BORDER_RADIUS,
+                    }}
                   >
-                    <ListItem>
+                    <ListItem /*disabled={coins === 0}*/>
+                      <ListItemIcon style={{ position: "relative" }}>
+                        <Typography
+                          color="text.disabled"
+                          sx={{
+                            px: 1.2,
+                            py: 0.4,
+                            fontSize: 14,
+                            borderRadius: 9999,
+                            backgroundColor: "rgba(255, 255, 255, 0.05)",
+                          }}
+                        >
+                          {i + 1}
+                        </Typography>
+                      </ListItemIcon>
+
                       <ListItemIcon style={{ position: "relative" }}>
                         <PersonAvatar person={person} size={40} />
 
@@ -102,23 +130,44 @@ const SilexCoinPage = (): JSX.Element => {
                         {person.first_name} {person.last_name}
                       </ListItemText>
 
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row-reverse",
+                        }}
+                      >
+                        {person.projects.map((p) => (
+                          <ColoredCircle
+                            border="3px solid #3d3c3c"
+                            marginLeft={-5}
+                            key={p.name}
+                            color={getColorFromString(p.name)}
+                            size={25}
+                          />
+                        ))}
+                      </div>
+
                       <Paper
                         elevation={0}
                         sx={{
                           display: "flex",
                           alignItems: "center",
                           borderRadius: "9999px",
+                          ml: 2,
                           pl: 1.4,
                           pr: 1.2,
                           py: 0.5,
                         }}
                       >
-                        {getPersonCoins(person)}
+                        {coins}
                         <img
                           width={20}
                           height={20}
                           src={SilexCoinIcon}
-                          style={{ marginLeft: 5 }}
+                          style={{
+                            marginLeft: 5,
+                            filter: `grayscale(${coins === 0 ? "1" : "0"})`,
+                          }}
                         />
                       </Paper>
                     </ListItem>

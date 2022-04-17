@@ -159,6 +159,31 @@ const ShotHeader = ({ shot }: ShotHeaderProps): JSX.Element => {
             </div>
           </div>
         </Paper>
+
+        <div style={{ marginTop: 10 }}>
+          <Typography fontSize={14} style={{ marginBottom: 5 }}>
+            Render time (minutes)
+          </Typography>
+
+          <TextField
+            size="small"
+            type="number"
+            sx={{ width: "100%" }}
+            defaultValue={shot.render_time}
+            placeholder={shot.render_time ? undefined : "..."}
+            onBlur={(e) => {
+              const number = parseInt(e.target.value);
+
+              if (!isNaN(number)) {
+                updateEntity<Shot>(shot.id, {
+                  render_time: number,
+                }).then(() =>
+                  client.refetchQueries({ include: ["TasksForAssetOrShot"] })
+                );
+              }
+            }}
+          />
+        </div>
       </div>
 
       {shot.nb_frames && (
@@ -180,6 +205,16 @@ const ShotHeader = ({ shot }: ShotHeaderProps): JSX.Element => {
               marginLeft: 30,
             }}
           >
+            {shot.validation && (
+              <Typography
+                color="success.main"
+                fontSize={12}
+                style={{ marginBottom: 4 }}
+              >
+                {shot.validation.frame_set.split(",").join(", ")}
+              </Typography>
+            )}
+
             <ValidationTimeline
               frameSet={shot.validation ? shot.validation.frame_set : ""}
               tempFrameSet={frameSet}

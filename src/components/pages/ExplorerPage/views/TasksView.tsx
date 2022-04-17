@@ -52,6 +52,7 @@ const SHOT_TASKS = gql`
 
       nb_frames
       fps
+      render_time
 
       validation {
         id
