@@ -10,9 +10,11 @@ import {
 } from "@mui/material";
 import SilexCoinIcon from "assets/images/silex_coin.svg";
 import { PersonAvatar } from "components/common/avatar";
+import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
 import SilexLogo from "components/common/SilexLogo/SilexLogo";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import { Person, UserData } from "types/entities";
+import { getColorFromString } from "utils/color";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 
@@ -29,6 +31,11 @@ const PERSONS = gql`
       data
 
       departments {
+        id
+        name
+      }
+
+      projects {
         id
         name
       }
@@ -76,9 +83,12 @@ const SilexCoinPage = (): JSX.Element => {
                 return (
                   <Paper
                     key={person.id}
-                    sx={{ my: 1, borderRadius: LIST_ITEM_BORDER_RADIUS }}
+                    sx={{
+                      my: 1,
+                      borderRadius: LIST_ITEM_BORDER_RADIUS,
+                    }}
                   >
-                    <ListItem disabled={coins === 0}>
+                    <ListItem /*disabled={coins === 0}*/>
                       <ListItemIcon style={{ position: "relative" }}>
                         <Typography
                           color="text.disabled"
@@ -120,12 +130,30 @@ const SilexCoinPage = (): JSX.Element => {
                         {person.first_name} {person.last_name}
                       </ListItemText>
 
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row-reverse",
+                        }}
+                      >
+                        {person.projects.map((p) => (
+                          <ColoredCircle
+                            border="3px solid #3d3c3c"
+                            marginLeft={-5}
+                            key={p.name}
+                            color={getColorFromString(p.name)}
+                            size={25}
+                          />
+                        ))}
+                      </div>
+
                       <Paper
                         elevation={0}
                         sx={{
                           display: "flex",
                           alignItems: "center",
                           borderRadius: "9999px",
+                          ml: 2,
                           pl: 1.4,
                           pr: 1.2,
                           py: 0.5,

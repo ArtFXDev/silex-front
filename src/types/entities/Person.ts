@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import { BaseEntity } from "./BaseEntity";
 import { Department } from "./Department";
+import { Project } from "./Project";
 
 export type UserData = {
   silexCoins?: number;
@@ -25,4 +26,5 @@ export interface Person extends BaseEntity {
   notifications_slack_userid: string;
   full_name: string;
   departments: Department[];
+  projects: Project[];
 }
