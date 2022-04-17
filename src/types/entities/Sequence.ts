@@ -17,4 +17,5 @@ export interface Sequence extends BaseEntity {
 
   tasks: Task[];
   shots: Shot[];
+  render_time: number;
 }
