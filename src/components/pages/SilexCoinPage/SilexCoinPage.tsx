@@ -88,7 +88,7 @@ const SilexCoinPage = (): JSX.Element => {
                       borderRadius: LIST_ITEM_BORDER_RADIUS,
                     }}
                   >
-                    <ListItem /*disabled={coins === 0}*/>
+                    <ListItem disabled={coins === 0}>
                       <ListItemIcon style={{ position: "relative" }}>
                         <Typography
                           color="text.disabled"
