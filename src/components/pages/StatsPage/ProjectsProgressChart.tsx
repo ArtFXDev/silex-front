@@ -51,6 +51,44 @@ const EXCLUDE_PROJECTS = ["TEST_PIPE", "TEST_PIPE_2", "ACHROMATIC"];
 const START_DATE = new Date(new Date().getFullYear(), 0, 1).getTime();
 const AVG_KEY = "AVERAGE";
 
+// Create the linear regression function for the curve of the given project
+// Stollen from https://blog.oliverjumpertz.dev/simple-linear-regression-theory-math-and-implementation-in-javascript
+function linearRegression(
+  inputArray: ProgressData[],
+  projectName: string = AVG_KEY
+) {
+  const filteredArray = inputArray.filter(
+    (element) => element.projects[projectName]
+  );
+  const x = filteredArray.map((element) => element.date);
+  const y = filteredArray.map(
+    (element) => element.projects[projectName].progress
+  );
+  const sumX = x.reduce((prev, curr) => prev + curr, 0);
+  const avgX = sumX / x.length;
+  const xDifferencesToAverage = x.map((value) => avgX - value);
+  const xDifferencesToAverageSquared = xDifferencesToAverage.map(
+    (value) => value ** 2
+  );
+  const SSxx = xDifferencesToAverageSquared.reduce(
+    (prev, curr) => prev + curr,
+    0
+  );
+  const sumY = y.reduce((prev, curr) => prev + curr, 0);
+  const avgY = sumY / y.length;
+  const yDifferencesToAverage = y.map((value) => avgY - value);
+  const xAndYDifferencesMultiplied = xDifferencesToAverage.map(
+    (curr, index) => curr * yDifferencesToAverage[index]
+  );
+  const SSxy = xAndYDifferencesMultiplied.reduce(
+    (prev, curr) => prev + curr,
+    0
+  );
+  const slope = SSxy / SSxx;
+  const intercept = avgY - slope * avgX;
+  return (x: number) => intercept + slope * x;
+}
+
 const ProjectsProgressChart = (): JSX.Element => {
   const [data, setData] = useState<ProgressData[]>();
   const [selectedProject, setSelectedProject] = useState<string>();
@@ -114,6 +152,11 @@ const ProjectsProgressChart = (): JSX.Element => {
     .reduce((a, b) => a + b, 0);
 
   const daysFromDeadline = dateDiffDays(new Date(), new Date(maxDate));
+
+  const averageProjection = linearRegression(data);
+  const projectProjection = selectedProject
+    ? linearRegression(data, selectedProject)
+    : null;
 
   return (
     <div>
@@ -267,10 +310,49 @@ const ProjectsProgressChart = (): JSX.Element => {
             />
 
             <ReferenceLine
+              stroke="red"
+              strokeDasharray="8 10"
+              ifOverflow="hidden"
+              segment={[
+                { x: START_DATE, y: averageProjection(START_DATE) },
+                {
+                  x: data[data.length - 1].date,
+                  y: data[data.length - 1].projects[AVG_KEY].progress,
+                },
+              ]}
+            />
+
+            <ReferenceLine
+              label="Projection"
+              stroke="red"
+              strokeDasharray="8 10"
+              ifOverflow="hidden"
+              segment={[
+                {
+                  x: data[data.length - 1].date,
+                  y: data[data.length - 1].projects[AVG_KEY].progress,
+                },
+                { x: maxDate, y: averageProjection(maxDate) },
+              ]}
+            />
+            {selectedProject && projectProjection && (
+              <ReferenceLine
+                label="Projection"
+                stroke={getColorFromString(selectedProject)}
+                strokeDasharray="8 10"
+                ifOverflow="hidden"
+                segment={[
+                  { x: START_DATE, y: projectProjection(START_DATE) },
+                  { x: maxDate, y: projectProjection(maxDate) },
+                ]}
+              />
+            )}
+
+            <ReferenceLine
               label="Goal"
               stroke="red"
               strokeDasharray="3 3"
-              ifOverflow="extendDomain"
+              ifOverflow="hidden"
               segment={[
                 { x: START_DATE, y: 0 },
                 { x: maxDate, y: 1 },
