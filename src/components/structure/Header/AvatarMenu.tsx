@@ -72,7 +72,7 @@ const AvatarMenu = (): JSX.Element => {
               paddingRight: 2,
             }}
           >
-            {auth.user.data ? auth.user.data.silexCoins : 0}
+            {auth.user.coins || 0}
           </p>
           <img width={12} height={12} src={SilexCoinIcon} />
         </Paper>
