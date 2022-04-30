@@ -3,10 +3,6 @@ import { BaseEntity } from "./BaseEntity";
 import { Department } from "./Department";
 import { Project } from "./Project";
 
-export type UserData = {
-  silexCoins?: number;
-};
-
 export interface Person extends BaseEntity {
   first_name: string;
   last_name: string;
@@ -18,7 +14,7 @@ export interface Person extends BaseEntity {
   shotgun_id: string | null;
   timezone: string;
   locale: string;
-  data: UserData | null;
+  data: null;
   role: string;
   has_avatar: boolean;
   notifications_enabled: boolean;
@@ -27,4 +23,6 @@ export interface Person extends BaseEntity {
   full_name: string;
   departments: Department[];
   projects: Project[];
+
+  coins: number | null;
 }
