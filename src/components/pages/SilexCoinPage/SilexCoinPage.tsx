@@ -13,7 +13,7 @@ import { PersonAvatar } from "components/common/avatar";
 import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
 import SilexLogo from "components/common/SilexLogo/SilexLogo";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
-import { Person, UserData } from "types/entities";
+import { Person } from "types/entities";
 import { getColorFromString } from "utils/color";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
@@ -26,6 +26,8 @@ const PERSONS = gql`
       full_name
       first_name
       last_name
+
+      coins
 
       has_avatar
       data
@@ -42,13 +44,6 @@ const PERSONS = gql`
     }
   }
 `;
-
-function getPersonCoins(person: Person): number {
-  const userData = JSON.parse(person.data as string) as UserData;
-  let coins = 0;
-  if (userData && userData.silexCoins) coins = userData.silexCoins;
-  return coins;
-}
 
 const SilexCoinPage = (): JSX.Element => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -76,10 +71,9 @@ const SilexCoinPage = (): JSX.Element => {
             {data?.persons
               .filter((p) => !p.departments.some((d) => d.name === "TD"))
               .slice()
-              .sort((a, b) => getPersonCoins(b) - getPersonCoins(a))
+              .sort((a, b) => (b.coins || 0) - (a.coins || 0))
               .map((person, i) => {
-                const coins = getPersonCoins(person);
-
+                const coins = person.coins || 0;
                 return (
                   <Paper
                     key={person.id}
