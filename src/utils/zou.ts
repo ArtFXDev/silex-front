@@ -9,6 +9,7 @@ import {
   Task,
   ValidationRecord,
 } from "types/entities";
+import { GameVariant } from "types/entities/Game";
 
 /**
  * Type of an axios response that returns a promise
@@ -292,6 +293,35 @@ export function unvalidateShotFrameSet(
 ): PromiseResponse<ValidationRecord> {
   return axios.delete(
     zouAPIURL(`data/shots/${shotId}/validation?frame_set=${frameSet}`),
+    { withCredentials: true }
+  );
+}
+
+export function changePersonSilexCoins(
+  personId: string,
+  newAmount: number
+): PromiseResponse<Person> {
+  return axios.put(
+    zouAPIURL(`data/persons/${personId}`),
+    { coins: newAmount },
+    { withCredentials: true }
+  );
+}
+
+export function unlockGameVariant(
+  gameVariantId: string
+): PromiseResponse<GameVariant> {
+  return axios.post(
+    zouAPIURL(`data/game_variants/${gameVariantId}`),
+    {},
+    { withCredentials: true }
+  );
+}
+
+export function saveScore(gameId: string, score: number): Promise<void> {
+  return axios.post(
+    zouAPIURL(`/data/games/${gameId}/game_scores`),
+    { points: score },
     { withCredentials: true }
   );
 }
