@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import { BaseEntity } from "./BaseEntity";
 import { Department } from "./Department";
+import { GameVariant } from "./Game";
 import { Project } from "./Project";
 
 export interface Person extends BaseEntity {
@@ -25,4 +26,5 @@ export interface Person extends BaseEntity {
   projects: Project[];
 
   coins: number | null;
+  game_variants: GameVariant[];
 }

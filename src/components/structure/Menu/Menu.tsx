@@ -31,8 +31,9 @@ const links = [
   },
   { text: "Actions", to: "/action", exact: true },
   { text: "Statistics", to: "/stats", exact: true },
+  { text: "🎮 Arcade", to: "/arcade", exact: true },
   {
-    text: "Tractor",
+    text: "🚜 Tractor",
     to: "/tractor",
     exact: true,
     openInNewWindow: true,
