@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { gql, useQuery } from "@apollo/client";
 import {
   CircularProgress,
@@ -8,12 +9,15 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import SilexCoinIcon from "assets/images/silex_coin.svg";
 import { PersonAvatar } from "components/common/avatar";
 import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
 import SilexLogo from "components/common/SilexLogo/SilexLogo";
 import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
+import { theme } from "style/theme";
 import { Person } from "types/entities";
+import { GameVariant } from "types/entities/Game";
 import { getColorFromString } from "utils/color";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
@@ -41,6 +45,22 @@ const PERSONS = gql`
         id
         name
       }
+
+      game_variants {
+        id
+      }
+    }
+
+    game_variants {
+      id
+      badge
+      title
+      color
+      price
+
+      game {
+        name
+      }
     }
   }
 `;
@@ -49,7 +69,10 @@ const SilexCoinPage = (): JSX.Element => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { loading, error, data } = useQuery<{
     persons: Person[];
-  }>(PERSONS);
+    game_variants: GameVariant[];
+  }>(PERSONS, { fetchPolicy: "cache-and-network" });
+
+  const mdBreakPoint = useMediaQuery(theme.breakpoints.up("lg"));
 
   return (
     <PageWrapper goBack>
@@ -67,7 +90,7 @@ const SilexCoinPage = (): JSX.Element => {
             <SilexLogo size={200} />
           </div>
 
-          <List sx={{ width: "50%" }}>
+          <List sx={{ width: mdBreakPoint ? "50%" : "80%" }}>
             {data?.persons
               .filter((p) => !p.departments.some((d) => d.name === "TD"))
               .slice()
@@ -130,15 +153,28 @@ const SilexCoinPage = (): JSX.Element => {
                           flexDirection: "row-reverse",
                         }}
                       >
-                        {person.projects.map((p) => (
-                          <ColoredCircle
-                            border="3px solid #3d3c3c"
-                            marginLeft={-5}
-                            key={p.name}
-                            color={getColorFromString(p.name)}
-                            size={25}
-                          />
-                        ))}
+                        {person.game_variants.map((v) => {
+                          const variant = data.game_variants.find(
+                            (gv) => gv.id === v.id
+                          ) as GameVariant;
+
+                          return (
+                            <ColoredCircle
+                              key={variant.id}
+                              tooltip={{
+                                title: `${variant.game.name}: ${variant.title}`,
+                              }}
+                              border="3px solid #3d3c3c"
+                              marginLeft={-5}
+                              text={variant.badge || undefined}
+                              color={
+                                variant.color ||
+                                getColorFromString(variant.name)
+                              }
+                              size={35}
+                            />
+                          );
+                        })}
                       </div>
 
                       <Paper
