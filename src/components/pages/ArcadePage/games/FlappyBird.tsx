@@ -1,6 +1,4 @@
 /* eslint-disable camelcase */
-import "p5/lib/addons/p5.sound";
-
 import FlappyFont from "assets/fonts/flappy-font.ttf";
 import SilexCoinIcon from "assets/images/silex_logo.png";
 import axios from "axios";
