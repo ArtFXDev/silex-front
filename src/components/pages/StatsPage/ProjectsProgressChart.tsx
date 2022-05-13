@@ -91,7 +91,7 @@ function linearRegression(
 
 const ProjectsProgressChart = (): JSX.Element => {
   const [data, setData] = useState<ProgressData[]>();
-  const [selectedProject, setSelectedProject] = useState<string>();
+  const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
 
   const mdBreakPoint = useMediaQuery(theme.breakpoints.up("xl"));
 
@@ -154,9 +154,6 @@ const ProjectsProgressChart = (): JSX.Element => {
   const daysFromDeadline = dateDiffDays(new Date(), new Date(maxDate));
 
   const averageProjection = linearRegression(data);
-  const projectProjection = selectedProject
-    ? linearRegression(data, selectedProject)
-    : null;
 
   return (
     <div>
@@ -257,7 +254,9 @@ const ProjectsProgressChart = (): JSX.Element => {
 
             {projects
               .filter((p) =>
-                selectedProject ? selectedProject === p.name : true
+                selectedProjects.length > 0
+                  ? selectedProjects.includes(p.name)
+                  : true
               )
               .map((project) => (
                 <Line
@@ -335,18 +334,24 @@ const ProjectsProgressChart = (): JSX.Element => {
                 { x: maxDate, y: averageProjection(maxDate) },
               ]}
             />
-            {selectedProject && projectProjection && (
-              <ReferenceLine
-                label="Projection"
-                stroke={getColorFromString(selectedProject)}
-                strokeDasharray="8 10"
-                ifOverflow="hidden"
-                segment={[
-                  { x: START_DATE, y: projectProjection(START_DATE) },
-                  { x: maxDate, y: projectProjection(maxDate) },
-                ]}
-              />
-            )}
+            {selectedProjects.length > 0 &&
+              selectedProjects.map((sp) => {
+                const projectProjection = linearRegression(data, sp);
+
+                return (
+                  <ReferenceLine
+                    key={sp}
+                    label="Projection"
+                    stroke={getColorFromString(sp)}
+                    strokeDasharray="8 10"
+                    ifOverflow="hidden"
+                    segment={[
+                      { x: START_DATE, y: projectProjection(START_DATE) },
+                      { x: maxDate, y: projectProjection(maxDate) },
+                    ]}
+                  />
+                );
+              })}
 
             <ReferenceLine
               label="Goal"
@@ -373,7 +378,7 @@ const ProjectsProgressChart = (): JSX.Element => {
       >
         {projects.map((p) => {
           const projectColor = getColorFromString(p.name);
-          const selected = selectedProject === p.name;
+          const selected = selectedProjects.includes(p.name);
           const color = selected ? projectColor : alpha(projectColor, 0.3);
 
           return (
@@ -387,10 +392,12 @@ const ProjectsProgressChart = (): JSX.Element => {
                 backgroundColor: selected ? alpha(projectColor, 0.2) : "",
               }}
               onClick={() => {
-                if (selectedProject === p.name) {
-                  setSelectedProject(undefined);
+                if (selected) {
+                  setSelectedProjects(
+                    selectedProjects.filter((sp) => sp !== p.name)
+                  );
                 } else {
-                  setSelectedProject(p.name);
+                  setSelectedProjects([...selectedProjects, p.name]);
                 }
               }}
             />
