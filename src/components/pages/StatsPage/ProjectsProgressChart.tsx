@@ -184,8 +184,17 @@ const ProjectsProgressChart = (): JSX.Element => {
           <p>
             Deadline :{" "}
             <span style={{ color: theme.palette.warning.main }}>
-              {new Date(maxDate).toLocaleDateString("en-US")} (
-              {daysFromDeadline}d {daysFromDeadline >= 0 ? "left" : "late"})
+              {new Date(maxDate).toLocaleDateString("en-US")}{" "}
+              <span
+                style={{
+                  color:
+                    daysFromDeadline > 0
+                      ? theme.palette.warning.main
+                      : theme.palette.error.main,
+                }}
+              >
+                ({daysFromDeadline}d {daysFromDeadline >= 0 ? "left" : "late"})
+              </span>
             </span>
           </p>
 
@@ -195,7 +204,10 @@ const ProjectsProgressChart = (): JSX.Element => {
               Total progress :
               <span
                 style={{
-                  backgroundColor: COLORS.silexGreen,
+                  backgroundColor:
+                    daysFromDeadline > 0
+                      ? COLORS.silexGreen
+                      : theme.palette.error.main,
                   color: "white",
                   borderRadius: 10,
                   marginLeft: 10,
@@ -302,12 +314,14 @@ const ProjectsProgressChart = (): JSX.Element => {
               labelFormatter={(d) => new Date(d).toLocaleDateString("en-US")}
             />
 
+            {/* Deadline vertical line */}
             <ReferenceLine
               x={maxDate}
               stroke="rgba(255, 0, 0)"
               strokeDasharray="3 3"
             />
 
+            {/* Average projection line to latest point */}
             <ReferenceLine
               stroke="red"
               strokeDasharray="8 10"
@@ -321,19 +335,24 @@ const ProjectsProgressChart = (): JSX.Element => {
               ]}
             />
 
-            <ReferenceLine
-              label="Projection"
-              stroke="red"
-              strokeDasharray="8 10"
-              ifOverflow="hidden"
-              segment={[
-                {
-                  x: data[data.length - 1].date,
-                  y: data[data.length - 1].projects[AVG_KEY].progress,
-                },
-                { x: maxDate, y: averageProjection(maxDate) },
-              ]}
-            />
+            {/* Average projection line to the max date */}
+            {data[data.length - 1].date < maxDate && (
+              <ReferenceLine
+                label="Projection"
+                stroke="red"
+                strokeDasharray="8 10"
+                ifOverflow="hidden"
+                segment={[
+                  {
+                    x: data[data.length - 1].date,
+                    y: data[data.length - 1].projects[AVG_KEY].progress,
+                  },
+                  { x: maxDate, y: averageProjection(maxDate) },
+                ]}
+              />
+            )}
+
+            {/* Reference line for each selected project */}
             {selectedProjects.length > 0 &&
               selectedProjects.map((sp) => {
                 const projectProjection = linearRegression(data, sp);
@@ -347,12 +366,16 @@ const ProjectsProgressChart = (): JSX.Element => {
                     ifOverflow="hidden"
                     segment={[
                       { x: START_DATE, y: projectProjection(START_DATE) },
-                      { x: maxDate, y: projectProjection(maxDate) },
+                      {
+                        x: data[data.length - 1].date,
+                        y: projectProjection(maxDate),
+                      },
                     ]}
                   />
                 );
               })}
 
+            {/* Linear goal reference line */}
             <ReferenceLine
               label="Goal"
               stroke="red"
