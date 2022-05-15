@@ -91,7 +91,7 @@ export function isAuthenticated(): PromiseResponse<{
       .then((_token) => {
         // Check if authenticated on the zou side
         getWithCredentials<{ user: Person }>("auth/authenticated", {
-          timeout: 1500,
+          timeout: 2000,
         })
           .then((response) => resolve(response))
           .catch((err) => reject(err));
