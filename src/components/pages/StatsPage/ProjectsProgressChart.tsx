@@ -29,6 +29,7 @@ const PROJECTS = gql`
       start_date
       end_date
       total_frames
+      color
     }
   }
 `;
@@ -44,6 +45,7 @@ type ProjectsQuery = {
     start_date: string;
     end_date: string;
     total_frames: number;
+    color?: string;
   }[];
 };
 
@@ -282,7 +284,7 @@ const ProjectsProgressChart = (): JSX.Element => {
                   strokeWidth={3}
                   dot={false}
                   connectNulls
-                  stroke={getColorFromString(project.name)}
+                  stroke={project.color || getColorFromString(project.name)}
                 />
               ))}
 
@@ -400,7 +402,7 @@ const ProjectsProgressChart = (): JSX.Element => {
         }}
       >
         {projects.map((p) => {
-          const projectColor = getColorFromString(p.name);
+          const projectColor = p.color || getColorFromString(p.name);
           const selected = selectedProjects.includes(p.name);
           const color = selected ? projectColor : alpha(projectColor, 0.3);
 

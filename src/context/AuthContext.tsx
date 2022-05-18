@@ -12,6 +12,7 @@ export interface AuthContext {
   setCurrentProjectId: (id: ProjectId) => void;
   getCurrentProject: () => Project | undefined;
   updateUser: () => Promise<void>;
+  updateProjects: () => Promise<void>;
 }
 
 // Hack to set the default context (not available until we query the server)
@@ -81,6 +82,11 @@ export const ProvideAuth = ({ children }: ProvideAuthProps): JSX.Element => {
     setUser(response.data.user);
   };
 
+  const updateProjects = async () => {
+    const response = await Zou.getUserProjects();
+    setProjects(response.data);
+  };
+
   /**
    * Gets the current user project
    */
@@ -99,6 +105,7 @@ export const ProvideAuth = ({ children }: ProvideAuthProps): JSX.Element => {
         signin,
         signout,
         updateUser,
+        updateProjects,
       }}
     >
       {children}
