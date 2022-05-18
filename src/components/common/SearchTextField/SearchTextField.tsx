@@ -2,7 +2,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { Box, IconButton, TextField, TextFieldProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-export const StyledTextField = styled(TextField)({
+const StyledTextField = styled(TextField)({
   "& label.Mui-focused": {
     color: "#62c673",
   },

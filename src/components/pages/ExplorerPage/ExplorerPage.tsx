@@ -146,7 +146,7 @@ const ExplorerPage = (): JSX.Element => {
             onChange={(e) => setSearchWithSave(e.target.value)}
           />
 
-          <div>
+          <div style={{ display: "flex" }}>
             <IconButton
               onClick={() => history.goBack()}
               disabled={locationDepth <= 3}

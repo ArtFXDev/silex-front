@@ -13,17 +13,16 @@ import { ProjectId } from "types/entities";
 import { debounce } from "utils/action";
 import { updateProject } from "utils/zou";
 
-interface Props {
+interface ProjectSettingsProps {
   project?: ProjectId;
 }
-const ProjectSettings = ({ project }: Props): JSX.Element => {
+const ProjectSettings = ({ project }: ProjectSettingsProps): JSX.Element => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const auth = useAuth();
 
   const currentProject = auth.getCurrentProject();
-  const currentProjectColor = currentProject
-    ? currentProject.color || "#1aab7a"
-    : "#1aab7a";
+  const currentProjectColor =
+    currentProject && currentProject.color ? currentProject.color : "#1aab7a";
 
   const handleActionMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     // Stop propagation of onClick event because buttons are overlaping

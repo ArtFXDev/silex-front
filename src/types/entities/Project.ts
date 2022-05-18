@@ -8,7 +8,7 @@ export type ProjectId = string;
 export interface Project extends BaseEntity {
   id: ProjectId;
   code: null;
-  color?: string;
+  color: string | null;
   description: string;
   shotgun_id: string | null;
   file_tree: null;
