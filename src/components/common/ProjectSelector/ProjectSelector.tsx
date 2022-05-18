@@ -39,7 +39,9 @@ const ProjectSelector = ({
         auth.projects
           .sort((a, b) => a.name.localeCompare(b.name))
           .map((project) => {
-            const projectColor = getColorFromString(project.name);
+            const projectColor = project.color
+              ? project.color
+              : getColorFromString(project.name);
 
             return (
               <MenuItem

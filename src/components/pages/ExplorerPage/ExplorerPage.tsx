@@ -23,6 +23,7 @@ import { ProjectId } from "types/entities";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 import CategorySelector from "./CategorySelector";
+import ProjectSettings from "./ProjectSettings";
 import { AssetsView, ShotsView, TasksView } from "./views";
 
 const ExplorerPage = (): JSX.Element => {
@@ -171,6 +172,8 @@ const ExplorerPage = (): JSX.Element => {
             >
               {listView ? <GridViewIcon /> : <ListIcon />}
             </IconButton>
+
+            <ProjectSettings project={selectedProject} />
           </div>
         </div>
       </div>

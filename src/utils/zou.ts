@@ -276,6 +276,15 @@ export function updateEntity<T>(
   });
 }
 
+export function updateProject(
+  projectId: string,
+  data: Partial<Project>
+): PromiseResponse<Project> {
+  return axios.put(zouAPIURL(`data/projects/${projectId}`), data, {
+    withCredentials: true,
+  });
+}
+
 export function validateShotFrameSet(
   shotId: string,
   frameSet: string
