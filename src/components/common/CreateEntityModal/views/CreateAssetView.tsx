@@ -125,94 +125,97 @@ const CreateAssetView = ({
   };
 
   return (
-    <QueryWrapper query={query}>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-        <div>
-          <Typography sx={{ mb: 1.5 }}>Asset Type:</Typography>
-          <Select
-            sx={{
-              width: 230,
-              height: 40,
-              borderRadius: 3,
-              paddingTop: 0,
-              fontSize: 20,
-            }}
-            color="info"
-            variant="outlined"
-            value={assetTypeId}
-            onChange={(e) => setAssetTypeId(e.target.value)}
-          >
-            {data?.project.asset_types
-              .slice()
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((assetType) => (
-                <MenuItem key={assetType.id} value={assetType.id}>
-                  {assetType.name}
-                </MenuItem>
-              ))}
-          </Select>
-        </div>
+    <QueryWrapper
+      query={query}
+      render={(data) => (
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          <div>
+            <Typography sx={{ mb: 1.5 }}>Asset Type:</Typography>
+            <Select
+              sx={{
+                width: 230,
+                height: 40,
+                borderRadius: 3,
+                paddingTop: 0,
+                fontSize: 20,
+              }}
+              color="info"
+              variant="outlined"
+              value={assetTypeId}
+              onChange={(e) => setAssetTypeId(e.target.value)}
+            >
+              {data.project.asset_types
+                .slice()
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((assetType) => (
+                  <MenuItem key={assetType.id} value={assetType.id}>
+                    {assetType.name}
+                  </MenuItem>
+                ))}
+            </Select>
+          </div>
 
-        <div>
-          <Typography sx={{ mb: 1.5 }}>Name:</Typography>
-          <TextField
-            fullWidth
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            helperText={
-              inputError && name.length === 0 && "Name can't be empty"
-            }
-            error={inputError && name.length === 0}
+          <div>
+            <Typography sx={{ mb: 1.5 }}>Name:</Typography>
+            <TextField
+              fullWidth
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              helperText={
+                inputError && name.length === 0 && "Name can't be empty"
+              }
+              error={inputError && name.length === 0}
+            />
+          </div>
+
+          <div>
+            <Typography sx={{ mb: 1.5 }}>Description:</Typography>
+            <TextField
+              fullWidth
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              multiline
+              rows={4}
+            />
+          </div>
+
+          <FormControlLabel
+            sx={{ color: "text.disabled" }}
+            control={<Switch color="info" checked={autoCreateTasks} />}
+            onChange={() => setAutoCreateTasks(!autoCreateTasks)}
+            label="Automatically create all tasks"
           />
-        </div>
 
-        <div>
-          <Typography sx={{ mb: 1.5 }}>Description:</Typography>
-          <TextField
-            fullWidth
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            multiline
-            rows={4}
-          />
-        </div>
-
-        <FormControlLabel
-          sx={{ color: "text.disabled" }}
-          control={<Switch color="info" checked={autoCreateTasks} />}
-          onChange={() => setAutoCreateTasks(!autoCreateTasks)}
-          label="Automatically create all tasks"
-        />
-
-        <Button
-          variant="contained"
-          sx={{ textAlign: "left", color: "white" }}
-          color="success"
-          onClick={() => {
-            if (name.length === 0) {
-              setInputError(true);
-            } else {
-              setIsLoading(true);
-              handleClick();
-            }
-          }}
-        >
-          Create
-          <Collapse
-            in={isLoading}
-            orientation="horizontal"
-            sx={{
-              "&.MuiCollapse-wrapperInner": {
-                display: "flex",
-                justifyContent: "center",
-              },
+          <Button
+            variant="contained"
+            sx={{ textAlign: "left", color: "white" }}
+            color="success"
+            onClick={() => {
+              if (name.length === 0) {
+                setInputError(true);
+              } else {
+                setIsLoading(true);
+                handleClick();
+              }
             }}
           >
-            <CircularProgress size={20} sx={{ ml: 2 }} color="inherit" />
-          </Collapse>
-        </Button>
-      </Box>
-    </QueryWrapper>
+            Create
+            <Collapse
+              in={isLoading}
+              orientation="horizontal"
+              sx={{
+                "&.MuiCollapse-wrapperInner": {
+                  display: "flex",
+                  justifyContent: "center",
+                },
+              }}
+            >
+              <CircularProgress size={20} sx={{ ml: 2 }} color="inherit" />
+            </Collapse>
+          </Button>
+        </Box>
+      )}
+    />
   );
 };
 

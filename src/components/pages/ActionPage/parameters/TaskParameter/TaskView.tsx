@@ -82,7 +82,7 @@ const TasksView = ({
   selectedTaskId,
   onTaskSelect,
 }: TaskViewProps): JSX.Element => {
-  const query = useQuery<{ shot?: Shot; asset?: Asset }>(
+  const query = useQuery<{ shot: Shot; asset: Asset }>(
     entity.type === "Shot" ? SHOT_TASKS : ASSET_TASKS,
     {
       variables: {
@@ -90,112 +90,114 @@ const TasksView = ({
       },
     }
   );
-  const { data } = query;
-
-  const entityFetch = data?.asset || data?.shot;
 
   return (
-    <QueryWrapper query={query}>
-      {entityFetch && (
-        <>
-          {entityFetch.tasks.length > 0 ? (
-            <List>
-              {entityFetch.tasks
-                .slice() // Copy list since sort mutates
-                .sort((a, b) => a.taskType.priority - b.taskType.priority)
-                .map((task, i) => {
-                  const isSelected = task.id === selectedTaskId;
+    <QueryWrapper
+      query={query}
+      render={(data) => {
+        const entityFetch = data.asset || data.shot;
 
-                  let listItemProps: SxProps<Theme> = {
-                    borderRadius: LIST_ITEM_BORDER_RADIUS,
-                    py: 0.55,
-                  };
+        return (
+          <>
+            {entityFetch.tasks.length > 0 ? (
+              <List>
+                {entityFetch.tasks
+                  .slice() // Copy list since sort mutates
+                  .sort((a, b) => a.taskType.priority - b.taskType.priority)
+                  .map((task, i) => {
+                    const isSelected = task.id === selectedTaskId;
 
-                  if (isSelected) {
-                    listItemProps = {
-                      ...listItemProps,
-                      backgroundColor: alpha(task.taskType.color, 0.2),
-                      "&:hover": {
-                        backgroundColor: alpha(task.taskType.color, 0.4),
-                      },
+                    let listItemProps: SxProps<Theme> = {
+                      borderRadius: LIST_ITEM_BORDER_RADIUS,
+                      py: 0.55,
                     };
-                  }
 
-                  return (
-                    <Fade
-                      key={task.id}
-                      in
-                      timeout={{ appear: 2000 * i, enter: 800 }}
-                    >
-                      <Paper
-                        elevation={4}
-                        sx={{
-                          my: 1,
-                          borderRadius: LIST_ITEM_BORDER_RADIUS,
-                          boxShadow: isSelected
-                            ? `inset 0 0 0 1.5px ${alpha(
-                                task.taskType.color,
-                                0.5
-                              )}`
-                            : "",
-                        }}
+                    if (isSelected) {
+                      listItemProps = {
+                        ...listItemProps,
+                        backgroundColor: alpha(task.taskType.color, 0.2),
+                        "&:hover": {
+                          backgroundColor: alpha(task.taskType.color, 0.4),
+                        },
+                      };
+                    }
+
+                    return (
+                      <Fade
+                        key={task.id}
+                        in
+                        timeout={{ appear: 2000 * i, enter: 800 }}
                       >
-                        <ListItem disablePadding>
-                          <ListItemButton
-                            sx={listItemProps}
-                            onClick={() => onTaskSelect(task)}
-                          >
-                            {/* Task and subtask name */}
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "baseline",
-                                marginRight: "auto",
-                              }}
+                        <Paper
+                          elevation={4}
+                          sx={{
+                            my: 1,
+                            borderRadius: LIST_ITEM_BORDER_RADIUS,
+                            boxShadow: isSelected
+                              ? `inset 0 0 0 1.5px ${alpha(
+                                  task.taskType.color,
+                                  0.5
+                                )}`
+                              : "",
+                          }}
+                        >
+                          <ListItem disablePadding>
+                            <ListItemButton
+                              sx={listItemProps}
+                              onClick={() => onTaskSelect(task)}
                             >
-                              <ListItemText
-                                primaryTypographyProps={{ fontSize: 15 }}
-                                primary={task.taskType.name}
-                              />
-                              <Typography
-                                color="text.disabled"
-                                fontSize={14}
-                                ml={1}
+                              {/* Task and subtask name */}
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "baseline",
+                                  marginRight: "auto",
+                                }}
                               >
-                                {task.name}
-                              </Typography>
-                            </div>
+                                <ListItemText
+                                  primaryTypographyProps={{ fontSize: 15 }}
+                                  primary={task.taskType.name}
+                                />
+                                <Typography
+                                  color="text.disabled"
+                                  fontSize={14}
+                                  ml={1}
+                                >
+                                  {task.name}
+                                </Typography>
+                              </div>
 
-                            {/* Colored circle of task type */}
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "flex-end",
-                                alignItems: "center",
-                                width: "30px",
-                              }}
-                            >
-                              <ColoredCircle
-                                size={17}
-                                color={task.taskType.color}
-                              />
-                            </div>
-                          </ListItemButton>
-                        </ListItem>
-                      </Paper>
-                    </Fade>
-                  );
-                })}
-            </List>
-          ) : (
-            <Typography color="text.disabled" fontSize={14}>
-              No tasks... <br />
-              Click on the + button to create one
-            </Typography>
-          )}
-        </>
-      )}
-    </QueryWrapper>
+                              {/* Colored circle of task type */}
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "flex-end",
+                                  alignItems: "center",
+                                  width: "30px",
+                                }}
+                              >
+                                <ColoredCircle
+                                  size={17}
+                                  color={task.taskType.color}
+                                />
+                              </div>
+                            </ListItemButton>
+                          </ListItem>
+                        </Paper>
+                      </Fade>
+                    );
+                  })}
+              </List>
+            ) : (
+              <Typography color="text.disabled" fontSize={14}>
+                No tasks... <br />
+                Click on the + button to create one
+              </Typography>
+            )}
+          </>
+        );
+      }}
+    />
   );
 };
 

@@ -168,98 +168,105 @@ const CreateShotView = ({
   );
 
   return (
-    <QueryWrapper query={query}>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-        <Grid container>
-          <Grid item xs={5}>
-            <Typography sx={{ mb: 1.5 }}>For sequence: </Typography>
-            <Select
-              sx={{
-                width: 150,
-                height: 40,
-                borderRadius: 3,
-              }}
-              value={selectedSequenceId}
-              onChange={(e) => setSelectedSequenceId(e.target.value)}
-              color="success"
-              variant="outlined"
-            >
-              {data?.project.sequences.map((seq) => (
-                <MenuItem key={seq.id} value={seq.id}>
-                  {seq.name}
-                </MenuItem>
-              ))}
-            </Select>
+    <QueryWrapper
+      query={query}
+      render={(data) => (
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          <Grid container>
+            <Grid item xs={5}>
+              <Typography sx={{ mb: 1.5 }}>For sequence: </Typography>
+              <Select
+                sx={{
+                  width: 150,
+                  height: 40,
+                  borderRadius: 3,
+                }}
+                value={selectedSequenceId}
+                onChange={(e) => setSelectedSequenceId(e.target.value)}
+                color="success"
+                variant="outlined"
+              >
+                {data?.project.sequences.map((seq) => (
+                  <MenuItem key={seq.id} value={seq.id}>
+                    {seq.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+
+            <Grid item xs={7}>
+              {currentSequence && currentSequence.shots.length > 0 ? (
+                <>
+                  <Typography>Shots:</Typography>
+                  <Stack
+                    sx={{
+                      maxHeight: 300,
+                      overflowX: "hidden",
+                      flexWrap: "wrap",
+                    }}
+                    direction={{ xs: "column", sm: "row" }}
+                  >
+                    {currentSequence.shots
+                      .slice()
+                      .sort((a, b) => a.name.localeCompare(b.name))
+                      .map((shot) => (
+                        <Paper
+                          key={shot.id}
+                          elevation={2}
+                          sx={{ fontSize: 13, m: 0.4 }}
+                        >
+                          <ListItemButton sx={{ py: 0.5 }}>
+                            {shot.name}
+                          </ListItemButton>
+                        </Paper>
+                      ))}
+                  </Stack>{" "}
+                </>
+              ) : (
+                <Typography color="text.disabled">No shots...</Typography>
+              )}
+            </Grid>
           </Grid>
 
-          <Grid item xs={7}>
-            {currentSequence && currentSequence.shots.length > 0 ? (
-              <>
-                <Typography>Shots:</Typography>
-                <Stack
-                  sx={{ maxHeight: 300, overflowX: "hidden", flexWrap: "wrap" }}
-                  direction={{ xs: "column", sm: "row" }}
-                >
-                  {currentSequence.shots
-                    .slice()
-                    .sort((a, b) => a.name.localeCompare(b.name))
-                    .map((shot) => (
-                      <Paper
-                        key={shot.id}
-                        elevation={2}
-                        sx={{ fontSize: 13, m: 0.4 }}
-                      >
-                        <ListItemButton sx={{ py: 0.5 }}>
-                          {shot.name}
-                        </ListItemButton>
-                      </Paper>
-                    ))}
-                </Stack>{" "}
-              </>
-            ) : (
-              <Typography color="text.disabled">No shots...</Typography>
-            )}
-          </Grid>
-        </Grid>
+          <div>
+            <Typography sx={{ mb: 1.5 }}>New shot name: </Typography>
+            <TextField
+              fullWidth
+              value={newShotName || ""}
+              onChange={(e) => setNewShotName(e.target.value)}
+            />
+          </div>
 
-        <div>
-          <Typography sx={{ mb: 1.5 }}>New shot name: </Typography>
-          <TextField
-            fullWidth
-            value={newShotName || ""}
-            onChange={(e) => setNewShotName(e.target.value)}
+          <FormControlLabel
+            sx={{ color: "text.disabled" }}
+            control={<Switch color="info" checked={autoCreateTasks} />}
+            onChange={() => setAutoCreateTasks(!autoCreateTasks)}
+            label="Automatically create all tasks"
           />
-        </div>
 
-        <FormControlLabel
-          sx={{ color: "text.disabled" }}
-          control={<Switch color="info" checked={autoCreateTasks} />}
-          onChange={() => setAutoCreateTasks(!autoCreateTasks)}
-          label="Automatically create all tasks"
-        />
-
-        <Button
-          variant="contained"
-          sx={{ textAlign: "left", color: "white" }}
-          onClick={handleClickCreateShot}
-          color="success"
-        >
-          Confirm and stay
-          <Collapse
-            in={isLoading}
-            orientation="horizontal"
-            sx={{
-              "&.MuiCollapse-wrapperInner": {
-                display: "flex",
-                justifyContent: "center",
-              },
-            }}
+          <Button
+            variant="contained"
+            sx={{ textAlign: "left", color: "white" }}
+            onClick={handleClickCreateShot}
+            color="success"
           >
-            <CircularProgress size={20} sx={{ ml: 2 }} color="inherit" />
-          </Collapse>
-        </Button>
-      </Box>
-    </QueryWrapper>
+            Confirm and stay
+            <Collapse
+              in={isLoading}
+              orientation="horizontal"
+              sx={{
+                "&.MuiCollapse-wrapperInner": {
+                  display: "flex",
+                  justifyContent: "center",
+                },
+              }}
+            >
+              <CircularProgress size={20} sx={{ ml: 2 }} color="inherit" />
+            </Collapse>
+          </Button>
+        </Box>
+      )}
+    />
   );
 };
 
