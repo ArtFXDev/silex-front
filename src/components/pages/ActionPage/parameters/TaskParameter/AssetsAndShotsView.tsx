@@ -89,7 +89,6 @@ const AssetsAndShotsView = ({
       id: projectId,
     },
   });
-  const { data } = query;
 
   return (
     <QueryWrapper
