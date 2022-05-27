@@ -231,7 +231,7 @@ export function createTask(
 }
 
 export function deleteEntity(
-  category: (Shot | Task | Asset)["type"],
+  category: (Shot | Task | Asset | Sequence)["type"],
   entityId: string,
   force: boolean
 ): Promise<Record<string, never>> {

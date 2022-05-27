@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import AddIcon from "@mui/icons-material/Add";
-import { Button, IconButton, Tooltip, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import CreateEntityModal from "components/common/CreateEntityModal/CreateEntityModal";
 import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useState } from "react";
@@ -8,7 +8,7 @@ import { useRouteMatch } from "react-router";
 import { Project, Sequence } from "types/entities";
 import { fuzzyMatch } from "utils/string";
 
-import EntitiesView from "./EntitiesView";
+import SequenceShots from "./SequenceShots";
 
 const SEQUENCES_AND_SHOTS = gql`
   query SequencesAndShots($id: ID!) {
@@ -76,11 +76,14 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
           .sort((a, b) => a.name.localeCompare(b.name)),
       }));
 
+  const numberOfShots =
+    filteredSequences &&
+    filteredSequences.map((e) => e.shots.length).reduce((a, b) => a + b);
+
   return (
     <QueryWrapper query={query}>
       {filteredSequences && data.project.sequences.length > 0 ? (
-        filteredSequences.map((e) => e.shots.length).reduce((a, b) => a + b) !==
-        0 ? (
+        numberOfShots !== 0 ? (
           filteredSequences.map((items, i) => {
             const { seq, shots } = items;
             const isLast = i === filteredSequences.length - 1;
@@ -88,46 +91,13 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
             return (
               <div key={seq.id}>
                 {(search.length === 0 ? true : shots.length !== 0) ? (
-                  <>
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      {/* Sequence name */}
-                      <h2
-                        style={{
-                          display: "inline-block",
-                          marginBottom: 0,
-                          marginTop: 0,
-                        }}
-                      >
-                        {seq.name}{" "}
-                        {seq.nb_frames && <h4>({seq.nb_frames} frames)</h4>}
-                      </h2>
-
-                      {/* Add new shot + button */}
-                      <Tooltip title="New shot" placement="top" arrow>
-                        <IconButton
-                          sx={{ ml: 1.5 }}
-                          onClick={() => {
-                            setCreateEntityModal({
-                              type: "Shot",
-                              target: seq,
-                            });
-                          }}
-                        >
-                          <AddIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </div>
-
-                    {seq.shots.length > 0 ? (
-                      <EntitiesView entities={shots} listView={listView} />
-                    ) : (
-                      <Typography color="text.disabled" mt={2}>
-                        No shots...
-                      </Typography>
-                    )}
-
-                    {!isLast && <br />}
-                  </>
+                  <SequenceShots
+                    isLast={isLast}
+                    listView={listView}
+                    seq={seq}
+                    setCreateEntityModal={setCreateEntityModal}
+                    shots={shots}
+                  />
                 ) : (
                   search.length === 0 && (
                     <>
