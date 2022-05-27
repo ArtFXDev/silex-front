@@ -60,7 +60,6 @@ const CreateTaskView = ({
   }>(ASSET_TASK_TYPES, {
     variables: { id: projectId },
   });
-  const { data } = query;
 
   const onCreateTasks = () => {
     setIsLoading(true);
