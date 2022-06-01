@@ -112,38 +112,43 @@ const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
       variables: { id: routeMatch.params.entityId },
     }
   );
-  const { data } = query;
-
-  // Force entity to be one of both types
-  const entity = (data?.asset || data?.shot) as Shot | Asset;
 
   return (
-    <QueryWrapper query={query}>
-      {data && (
-        <>
-          <EntityHeader entity={entity} />
+    <QueryWrapper
+      query={query}
+      render={(data) => {
+        // Force entity to be one of both types
+        const entity = (data.asset || data.shot) as Shot | Asset;
 
-          {entity.tasks.length > 0 ? (
-            <EntitiesView
-              entities={entity.tasks
-                .filter((task) => fuzzyMatch(task.taskType.name, search))
-                .sort((a, b) => a.taskType.priority - b.taskType.priority)}
-              listView={listView}
-            />
-          ) : (
-            <Typography color="text.disabled" sx={{ mt: 4 }}>
-              This {data.asset ? "asset" : "shot"} doesn{"'"}t have any tasks...
-            </Typography>
-          )}
-        </>
-      )}
+        return (
+          <>
+            <EntityHeader entity={entity} />
 
-      <Switch>
-        <Route path={`/explorer/:projectId/:category/:entityId/tasks/:taskId`}>
-          <TaskModal />
-        </Route>
-      </Switch>
-    </QueryWrapper>
+            {entity.tasks.length > 0 ? (
+              <EntitiesView
+                entities={entity.tasks
+                  .filter((task) => fuzzyMatch(task.taskType.name, search))
+                  .sort((a, b) => a.taskType.priority - b.taskType.priority)}
+                listView={listView}
+              />
+            ) : (
+              <Typography color="text.disabled" sx={{ mt: 4 }}>
+                This {data.asset ? "asset" : "shot"} doesn{"'"}t have any
+                tasks...
+              </Typography>
+            )}
+
+            <Switch>
+              <Route
+                path={`/explorer/:projectId/:category/:entityId/tasks/:taskId`}
+              >
+                <TaskModal />
+              </Route>
+            </Switch>
+          </>
+        );
+      }}
+    />
   );
 };
 

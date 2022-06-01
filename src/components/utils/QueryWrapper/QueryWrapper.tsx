@@ -2,12 +2,15 @@ import { QueryResult } from "@apollo/client";
 import { CircularProgress, Fade } from "@mui/material";
 import CollapseError from "components/common/CollapseError/CollapseError";
 
-interface QueryWrapperProps {
-  query: QueryResult;
-  children?: React.ReactNode;
+interface QueryWrapperProps<T> {
+  query: QueryResult<T>;
+  render: (data: T) => React.ReactNode;
 }
 
-const QueryWrapper = ({ query, children }: QueryWrapperProps): JSX.Element => {
+const QueryWrapper = <T,>({
+  query,
+  render,
+}: QueryWrapperProps<T>): JSX.Element => {
   if (query.loading) {
     return <CircularProgress size={30} />;
   }
@@ -23,9 +26,12 @@ const QueryWrapper = ({ query, children }: QueryWrapperProps): JSX.Element => {
     );
   }
 
+  // Force cast data to return type
+  const data = query.data as T;
+
   return (
     <Fade in timeout={400}>
-      <div>{children}</div>
+      <div>{render(data)}</div>
     </Fade>
   );
 };

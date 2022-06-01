@@ -60,15 +60,6 @@ const CreateTaskView = ({
   }>(ASSET_TASK_TYPES, {
     variables: { id: projectId },
   });
-  const { data } = query;
-
-  const filteredTaskTypes = data?.project.task_types.filter((t) =>
-    targetEntity.type === "Shot" ? t.for_shots : !t.for_shots
-  );
-
-  if (data && filteredTaskTypes && selectedTaskTypeId.length === 0) {
-    setSelectedTaskTypeId(filteredTaskTypes[0].id);
-  }
 
   const onCreateTasks = () => {
     setIsLoading(true);
@@ -99,65 +90,78 @@ const CreateTaskView = ({
   };
 
   return (
-    <QueryWrapper query={query}>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-        <div>
-          {filteredTaskTypes && (
-            <>
-              <Typography sx={{ mb: 1.5 }}>Select task type: </Typography>
+    <QueryWrapper
+      query={query}
+      render={(data) => {
+        const filteredTaskTypes = data.project.task_types.filter((t) =>
+          targetEntity.type === "Shot" ? t.for_shots : !t.for_shots
+        );
 
-              <Select
+        if (filteredTaskTypes && selectedTaskTypeId.length === 0) {
+          setSelectedTaskTypeId(filteredTaskTypes[0].id);
+        }
+
+        return (
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            <div>
+              {filteredTaskTypes && (
+                <>
+                  <Typography sx={{ mb: 1.5 }}>Select task type: </Typography>
+
+                  <Select
+                    sx={{
+                      width: 150,
+                      height: 40,
+                      borderRadius: 3,
+                    }}
+                    value={selectedTaskTypeId}
+                    onChange={(e) => setSelectedTaskTypeId(e.target.value)}
+                    color="success"
+                    variant="outlined"
+                  >
+                    {filteredTaskTypes.map((taskType) => (
+                      <MenuItem key={taskType.id} value={taskType.id}>
+                        {taskType.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </>
+              )}
+            </div>
+
+            <div>
+              <Typography sx={{ mb: 1.5 }}>Subtask name: </Typography>
+              <TextField
+                fullWidth
+                value={taskName}
+                onChange={(e) => setTaskName(e.target.value)}
+              />
+            </div>
+
+            <Button
+              variant="contained"
+              sx={{ textAlign: "left", color: "white" }}
+              color="success"
+              onClick={onCreateTasks}
+            >
+              Create
+              <Collapse
+                in={isLoading}
+                orientation="horizontal"
                 sx={{
-                  width: 150,
-                  height: 40,
-                  borderRadius: 3,
+                  "&.MuiCollapse-wrapperInner": {
+                    display: "flex",
+                    justifyContent: "center",
+                  },
                 }}
-                value={selectedTaskTypeId}
-                onChange={(e) => setSelectedTaskTypeId(e.target.value)}
-                color="success"
-                variant="outlined"
               >
-                {filteredTaskTypes.map((taskType) => (
-                  <MenuItem key={taskType.id} value={taskType.id}>
-                    {taskType.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </>
-          )}
-        </div>
-
-        <div>
-          <Typography sx={{ mb: 1.5 }}>Subtask name: </Typography>
-          <TextField
-            fullWidth
-            value={taskName}
-            onChange={(e) => setTaskName(e.target.value)}
-          />
-        </div>
-
-        <Button
-          variant="contained"
-          sx={{ textAlign: "left", color: "white" }}
-          color="success"
-          onClick={onCreateTasks}
-        >
-          Create
-          <Collapse
-            in={isLoading}
-            orientation="horizontal"
-            sx={{
-              "&.MuiCollapse-wrapperInner": {
-                display: "flex",
-                justifyContent: "center",
-              },
-            }}
-          >
-            <CircularProgress size={20} sx={{ ml: 2 }} color="inherit" />
-          </Collapse>
-        </Button>
-      </Box>
-    </QueryWrapper>
+                <CircularProgress size={20} sx={{ ml: 2 }} color="inherit" />
+              </Collapse>
+            </Button>
+          </Box>
+        );
+      }}
+    />
   );
 };
 

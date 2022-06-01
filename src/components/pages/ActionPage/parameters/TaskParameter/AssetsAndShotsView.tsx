@@ -89,11 +89,11 @@ const AssetsAndShotsView = ({
       id: projectId,
     },
   });
-  const { data } = query;
 
   return (
-    <QueryWrapper query={query}>
-      {data && (
+    <QueryWrapper
+      query={query}
+      render={(data) => (
         <Grid
           container
           spacing={1.5}
@@ -135,7 +135,7 @@ const AssetsAndShotsView = ({
             ))}
         </Grid>
       )}
-    </QueryWrapper>
+    />
   );
 };
 
