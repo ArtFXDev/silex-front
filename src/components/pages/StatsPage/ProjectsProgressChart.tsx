@@ -3,6 +3,8 @@ import { gql, useQuery } from "@apollo/client";
 import { Chip, Typography, useMediaQuery } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import axios from "axios";
+import CrownAnimation from "components/common/animations/CrownAnimation";
+import { useAuth } from "context";
 import { useEffect, useState } from "react";
 import {
   CartesianGrid,
@@ -95,6 +97,9 @@ const ProjectsProgressChart = (): JSX.Element => {
   const [data, setData] = useState<ProgressData[]>();
   const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
 
+  const auth = useAuth();
+  const userProjects = auth.projects;
+
   const mdBreakPoint = useMediaQuery(theme.breakpoints.up("xl"));
 
   useEffect(() => {
@@ -156,6 +161,17 @@ const ProjectsProgressChart = (): JSX.Element => {
   const daysFromDeadline = dateDiffDays(new Date(), new Date(maxDate));
 
   const averageProjection = linearRegression(data);
+
+  lastSample.projects["WHAT_ABOUT_COOKING"].progress = 1;
+
+  const displayCrowns =
+    userProjects &&
+    userProjects.some((p) => {
+      return (
+        lastSample.projects[p.name] &&
+        lastSample.projects[p.name].progress === 1
+      );
+    });
 
   return (
     <div>
@@ -222,6 +238,8 @@ const ProjectsProgressChart = (): JSX.Element => {
           )}
         </div>
       </div>
+
+      {displayCrowns && <CrownAnimation />}
 
       <div style={{ width: mdBreakPoint ? "80vw" : "95vw", height: "550px" }}>
         <ResponsiveContainer width="100%" height="100%">
@@ -407,25 +425,39 @@ const ProjectsProgressChart = (): JSX.Element => {
           const color = selected ? projectColor : alpha(projectColor, 0.3);
 
           return (
-            <Chip
-              key={p.name}
-              label={p.name}
-              variant="outlined"
-              sx={{
-                color,
-                borderColor: color,
-                backgroundColor: selected ? alpha(projectColor, 0.2) : "",
-              }}
-              onClick={() => {
-                if (selected) {
-                  setSelectedProjects(
-                    selectedProjects.filter((sp) => sp !== p.name)
-                  );
-                } else {
-                  setSelectedProjects([...selectedProjects, p.name]);
-                }
-              }}
-            />
+            <div key={p.name} style={{ position: "relative" }}>
+              <Chip
+                label={p.name}
+                variant="outlined"
+                sx={{
+                  color,
+                  borderColor: color,
+                  backgroundColor: selected ? alpha(projectColor, 0.2) : "",
+                }}
+                onClick={() => {
+                  if (selected) {
+                    setSelectedProjects(
+                      selectedProjects.filter((sp) => sp !== p.name)
+                    );
+                  } else {
+                    setSelectedProjects([...selectedProjects, p.name]);
+                  }
+                }}
+              />
+              {lastSample.projects[p.name] &&
+                lastSample.projects[p.name].progress === 1 && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: -10,
+                      right: -10,
+                      transform: "rotate(30deg)",
+                    }}
+                  >
+                    👑
+                  </span>
+                )}
+            </div>
           );
         })}
       </div>
