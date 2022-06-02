@@ -239,7 +239,12 @@ const ProjectsProgressChart = (): JSX.Element => {
         </div>
       </div>
 
-      {displayCrowns && <CrownAnimation />}
+      {!(
+        window.localStorage.getItem(
+          "settings-disable-stats-crown-animation"
+        ) === "true"
+      ) &&
+        displayCrowns && <CrownAnimation />}
 
       <div style={{ width: mdBreakPoint ? "80vw" : "95vw", height: "550px" }}>
         <ResponsiveContainer width="100%" height="100%">
