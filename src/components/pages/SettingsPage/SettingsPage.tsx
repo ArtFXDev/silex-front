@@ -5,6 +5,10 @@ import PageWrapper from "../PageWrapper/PageWrapper";
 
 const settings = [
   { key: "silex-coins-animation", text: "Silex coins animation" },
+  {
+    key: "disable-stats-crown-animation",
+    text: "Disable crown animation in stats page",
+  },
 ];
 
 const SettingsPage = (): JSX.Element => {
