@@ -18,6 +18,9 @@ export interface FileExplorerContext {
 
   /** Display the modification time */
   moreDetails?: boolean;
+
+  /** Highlight color for file sequence for example */
+  highlightColor?: string;
 }
 
 export const FileExplorerContext = React.createContext<FileExplorerContext>(

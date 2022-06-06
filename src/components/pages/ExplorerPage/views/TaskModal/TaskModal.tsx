@@ -273,7 +273,7 @@ const TaskModal = (): JSX.Element => {
               </Grid>
 
               <Grid item xs={12}>
-                <FileExplorer taskId={data.task.id} />
+                <FileExplorer task={data.task} />
               </Grid>
             </Grid>
           </DialogContent>

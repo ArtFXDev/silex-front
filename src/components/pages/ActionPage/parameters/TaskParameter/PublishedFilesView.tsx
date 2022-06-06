@@ -51,6 +51,7 @@ const PublishedFilesView = ({
           name: "",
           mtime: "",
           isDirectory: true,
+          isSequence: false,
         }}
       />
     </ProvideFileExplorer>
