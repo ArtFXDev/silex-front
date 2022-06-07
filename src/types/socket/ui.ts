@@ -24,12 +24,27 @@ export type LaunchSceneParameters = SilexBaseParameters & {
   scene?: string;
 };
 
-export type FileOrFolder = {
-  path: string;
-  name: string;
-  isDirectory: boolean;
-  mtime: string;
-};
+export type FileOrFolder =
+  | {
+      isSequence: boolean;
+      isDirectory: boolean;
+      path: string;
+      name: string;
+      mtime: string;
+      extension?: string;
+      start?: number;
+      end?: number;
+    }
+  | {
+      isSequence: true;
+      isDirectory: false;
+      path: string;
+      name: string;
+      extension: string;
+      start: number;
+      end: number;
+      mtime: string;
+    };
 
 export interface UIClientEmitEvents {
   /** Emit this to register the UI as a client */
