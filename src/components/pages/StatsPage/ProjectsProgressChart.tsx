@@ -332,7 +332,7 @@ const ProjectsProgressChart = (): JSX.Element => {
                   : totalFrames;
                 const frames = Math.floor(p * totalFramesProject);
 
-                return `${frames} / ${totalFramesProject} frames (${Math.round(
+                return `${frames} / ${totalFramesProject} frames (${Math.floor(
                   p * 100
                 )}%)`;
               }}
