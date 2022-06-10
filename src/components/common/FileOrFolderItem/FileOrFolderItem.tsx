@@ -139,7 +139,13 @@ const FileOrFolderItem = ({
     response &&
     response.data &&
     response.data.entries.filter(
-      (e) => e.isDirectory || fileMatchExtensions(e.path, filterExtensions)
+      (e) =>
+        e.isDirectory ||
+        (e.isSequence &&
+          filterExtensions &&
+          e.extension &&
+          filterExtensions.includes(`.${e.extension}`)) ||
+        fileMatchExtensions(e.path, filterExtensions)
     );
 
   return (
