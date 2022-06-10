@@ -14,7 +14,7 @@
 
 ## Introduction
 
-This project is built upon [React](https://reactjs.org/) / [TypeScript](https://www.typescriptlang.org/) and [Material UI](mui.com/) and talks with the CGWire [Zou](zou.cg-wire.com/) API with [GraphQL](https://graphql.org/) in order to display and interact with the production data, launch dccs and manage scene versions.
+This project is built upon [React](https://reactjs.org/) / [TypeScript](https://www.typescriptlang.org/) and [Material UI](https://mui.com/) and talks with the CGWire [Zou](https://zou.cg-wire.com/) API with [GraphQL](https://graphql.org/) in order to display and interact with the production data, launch dccs and manage scene versions.
 
 We didn't want to rely on classical Qt interfaces in Python integrated in Houdini or Maya but leverage the power of the web through a user friendly and powerful frontend application.
 
