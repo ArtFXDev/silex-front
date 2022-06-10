@@ -20,14 +20,11 @@ import { ProvideFileExplorer } from "context/FileExplorerContext";
 import isElectron from "is-electron";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
+import { Task } from "types/entities";
 import * as Zou from "utils/zou";
 
 import DCCIconButton from "./DCCIconButton";
 import WorkFilesView from "./WorkFilesView/WorkFilesView";
-
-interface FileExplorerProps {
-  taskId: string;
-}
 
 const dccButtonsData = [
   { dcc: "blender", disabled: true },
@@ -36,7 +33,11 @@ const dccButtonsData = [
   { dcc: "maya" },
 ];
 
-const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
+interface FileExplorerProps {
+  task: Task;
+}
+
+const FileExplorer = ({ task }: FileExplorerProps): JSX.Element => {
   const [view, setView] = useState<"work" | "publish">("work");
   const [path, setPath] = useState<string>("");
   const [pathExists, setPathExists] = useState<boolean>();
@@ -60,7 +61,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
 
   const updateData = () => {
     // Uses Zou to fetch the working directory for that task
-    Zou.buildWorkingFilePath(taskId)
+    Zou.buildWorkingFilePath(task.id)
       .then((response) => {
         setPath(response.data.path);
 
@@ -83,7 +84,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
       });
   };
 
-  useEffect(updateData, [enqueueSnackbar, getFolderFromView, taskId]);
+  useEffect(updateData, [enqueueSnackbar, getFolderFromView, task.id]);
 
   return (
     <>
@@ -198,7 +199,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
           {dccButtonsData.map((d) => (
             <DCCIconButton
               key={d.dcc}
-              taskId={taskId}
+              taskId={task.id}
               dcc={d.dcc}
               disabled={d.disabled}
             />
@@ -263,7 +264,10 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
               moreDetails={moreDetails}
             />
           ) : (
-            <ProvideFileExplorer moreDetails={moreDetails}>
+            <ProvideFileExplorer
+              moreDetails={moreDetails}
+              highlightColor={task.taskType.color}
+            >
               <FileOrFolderItem
                 root
                 refresh={refreshView}
@@ -272,6 +276,7 @@ const FileExplorer = ({ taskId }: FileExplorerProps): JSX.Element => {
                   name: "",
                   mtime: "",
                   isDirectory: true,
+                  isSequence: false,
                 }}
               />
             </ProvideFileExplorer>

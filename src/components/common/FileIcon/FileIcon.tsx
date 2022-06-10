@@ -10,6 +10,7 @@ import BlenderLogo from "assets/images/logos/blender.svg";
 import GLTFLogo from "assets/images/logos/gltf.svg";
 import HoudiniLogo from "assets/images/logos/houdini.svg";
 import MayaLogo from "assets/images/logos/maya.svg";
+import NatronLogo from "assets/images/logos/natron.svg";
 import NukeLogo from "assets/images/logos/nuke.svg";
 import OpenVDBLogo from "assets/images/logos/openvdb.svg";
 import PythonLogo from "assets/images/logos/python.svg";
@@ -35,6 +36,7 @@ const logos: Record<string, string> = {
   usd: USDLogo,
   gltf: GLTFLogo,
   alembic: AlembicLogo,
+  natron: NatronLogo,
   "substance-painter": SubstancePainter,
 };
 

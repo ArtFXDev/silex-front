@@ -66,6 +66,7 @@ const FileOrFolderItem = ({
     filterExtensions,
     moreDetails,
     selectDirectory,
+    highlightColor,
   } = useFileExplorer();
 
   useEffect(() => {
@@ -127,7 +128,9 @@ const FileOrFolderItem = ({
   // Used for scrolling to the selected div
   const id = `file-${item.name}-${item.mtime}`;
 
-  const extensionName = getFileExtension(item.name);
+  const extensionName = item.isSequence
+    ? item.extension
+    : getFileExtension(item.name);
   const extension = extensionName ? extensions[extensionName] : undefined;
 
   const isSelected = selectedFiles?.includes(item.path);
@@ -136,7 +139,13 @@ const FileOrFolderItem = ({
     response &&
     response.data &&
     response.data.entries.filter(
-      (e) => e.isDirectory || fileMatchExtensions(e.path, filterExtensions)
+      (e) =>
+        e.isDirectory ||
+        (e.isSequence &&
+          filterExtensions &&
+          e.extension &&
+          filterExtensions.includes(`.${e.extension}`)) ||
+        fileMatchExtensions(e.path, filterExtensions)
     );
 
   return (
@@ -202,7 +211,17 @@ const FileOrFolderItem = ({
                 textAlign: "left",
               }}
             >
-              {item.name}
+              {item.isSequence ? (
+                <span>
+                  {`${item.name}.`}
+                  <span style={{ color: highlightColor || "#66BB6A" }}>
+                    {`${item.start}-${item.end}####`}
+                  </span>
+                  {`.${item.extension}`}
+                </span>
+              ) : (
+                item.name
+              )}
             </ListItemText>
 
             {/* Modification time */}
@@ -263,7 +282,7 @@ const FileOrFolderItem = ({
             filteredChildren.map((entry) => (
               <FileOrFolderItem
                 refresh={refresh}
-                key={entry.path}
+                key={entry.path + entry.name}
                 item={entry}
                 depth={depth + 1}
               />
