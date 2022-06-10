@@ -54,6 +54,9 @@ export const extensions: { [name: string]: FileExtension } = {
   // Redshift
   rs: { software: "redshift", tags: ["submit"] },
 
+  // Natron
+  ntp: { software: "natron", tags: ["sceneFile"] },
+
   // Image formats
   jpg: { tags: ["image", "preview"] },
   jpeg: { tags: ["image", "preview"] },
