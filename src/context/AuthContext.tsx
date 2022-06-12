@@ -58,6 +58,7 @@ export const ProvideAuth = ({ children }: ProvideAuthProps): JSX.Element => {
       // And the current project id
       if (projectsData.data.length > 0) {
         setCurrentProjectId(projectsData.data[0].id);
+        window.localStorage.setItem("last-project-id", projectsData.data[0].id);
       }
     }
   };
