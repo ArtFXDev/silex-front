@@ -91,6 +91,11 @@ export interface ArrayParameter extends BaseParameter {
   value: number[] | null;
 }
 
+export interface EditableListParameter extends BaseParameter {
+  type: { name: "editable_list" };
+  value: string[] | null;
+}
+
 export interface TextParameter extends BaseParameter {
   type: {
     name: "text";
@@ -123,4 +128,5 @@ export type Parameter =
   | TextParameter
   | FrameSetParameter
   | RadioSelectParameter
-  | TaskFileParameter;
+  | TaskFileParameter
+  | EditableListParameter;
