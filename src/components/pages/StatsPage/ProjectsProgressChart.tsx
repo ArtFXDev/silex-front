@@ -99,8 +99,6 @@ function linearRegression(
   const slope = SSxy / SSxx;
   const intercept = avgY - slope * avgX;
 
-  //console.log(`${intercept} + ${slope} * x`);
-
   return (x: number) => intercept + slope * x;
 }
 
