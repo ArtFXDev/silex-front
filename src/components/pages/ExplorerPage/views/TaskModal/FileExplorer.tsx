@@ -15,11 +15,14 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import SubmitButton from "components/common/chips/SubmitButton";
 import FileOrFolderItem from "components/common/FileOrFolderItem/FileOrFolderItem";
+import { useAuth } from "context";
 import { ProvideFileExplorer } from "context/FileExplorerContext";
 import isElectron from "is-electron";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
+import { useRouteMatch } from "react-router-dom";
 import { Task } from "types/entities";
 import * as Zou from "utils/zou";
 
@@ -52,6 +55,10 @@ const FileExplorer = ({ task }: FileExplorerProps): JSX.Element => {
   );
 
   const { enqueueSnackbar } = useSnackbar();
+  const projectId = useRouteMatch<{ projectId: string }>().params.projectId;
+  const { projects } = useAuth();
+  const projectName =
+    projects && projects.find((p) => p.id === projectId)?.name;
 
   // Returns the work of publish folder depending on the view
   const getFolderFromView = useCallback(
@@ -185,26 +192,30 @@ const FileExplorer = ({ task }: FileExplorerProps): JSX.Element => {
           </FormGroup>
         </div>
 
-        {/* DCC icon buttons */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            backgroundColor: "rgba(255, 255, 255, 0.05)",
-            borderRadius: 5,
-            px: 1.5,
-            py: 0.4,
-          }}
-        >
-          {dccButtonsData.map((d) => (
-            <DCCIconButton
-              key={d.dcc}
-              taskId={task.id}
-              dcc={d.dcc}
-              disabled={d.disabled}
-            />
-          ))}
-        </Box>
+        <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
+          <SubmitButton taskId={task.id} projectName={projectName} />
+
+          {/* DCC icon buttons */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: "rgba(255, 255, 255, 0.05)",
+              borderRadius: 5,
+              px: 1.5,
+              py: 0.4,
+            }}
+          >
+            {dccButtonsData.map((d) => (
+              <DCCIconButton
+                key={d.dcc}
+                taskId={task.id}
+                dcc={d.dcc}
+                disabled={d.disabled}
+              />
+            ))}
+          </Box>
+        </div>
       </Box>
 
       <Collapse in={moreDetails}>
