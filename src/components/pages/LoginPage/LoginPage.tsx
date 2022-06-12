@@ -68,10 +68,8 @@ const LoginPage = (): JSX.Element => {
     Zou.login({ email, password })
       .then((response) => {
         const { from } = location.state || { from: { pathname: "/" } };
-        auth.signin(response.data.user);
-
         // Redirect to the asked page
-        history.replace(from);
+        auth.signin(response.data.user).then(() => history.replace(from));
       })
       .catch((error) => {
         setIsLoading(false);
