@@ -4,6 +4,7 @@ import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
 import {
   ArrayParameter as ArrayParameterType,
   BooleanParameter,
+  EditableListParameter as EditableListParameterType,
   FrameSetParameter as FrameSetParameterType,
   MultipleSelectParameter as MultipleSelectParameterType,
   Parameter,
@@ -17,6 +18,7 @@ import {
 } from "types/action/parameters";
 
 import ArrayParameter from "./parameters/ArrayParameter";
+import EditableListParameter from "./parameters/EditableListParameter";
 import FrameSetParameter from "./parameters/FrameSetParameter";
 import GenericInputParameter from "./parameters/GenericInputParameter";
 import MultipleSelectParameter from "./parameters/MultipleSelectParameter";
@@ -87,6 +89,12 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
         return (
           <MultipleRadioSelectParameter
             parameter={parameter as RadioSelectParameterType}
+          />
+        );
+      case "editable_list":
+        return (
+          <EditableListParameter
+            parameter={parameter as EditableListParameterType}
           />
         );
       case "int_array":

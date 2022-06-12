@@ -5,7 +5,9 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
+import { useAction } from "context";
 import { useEffect, useState } from "react";
+import { useRouteMatch } from "react-router-dom";
 import { MultipleSelectParameter as MultipleSelectParameterType } from "types/action/parameters";
 
 // Used for styling the Select input
@@ -34,6 +36,9 @@ const MultipleSelectParameter = ({
 }: MultipleSelectParameterProps): JSX.Element => {
   const [values, setValues] = useState<string[]>(parameter.value || []);
 
+  const { sendActionUpdate } = useAction();
+  const actionUUID = useRouteMatch<{ uuid: string }>().params.uuid;
+
   // Update state when the parameter value from action changes
   useEffect(() => {
     setValues(parameter.value || []);
@@ -44,6 +49,7 @@ const MultipleSelectParameter = ({
     const newValues = typeof value === "string" ? value.split(",") : value;
     onChange(newValues);
     setValues(newValues);
+    sendActionUpdate(actionUUID, false);
   };
 
   return (

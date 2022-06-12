@@ -18,6 +18,7 @@ import {
 } from "recharts";
 import { COLORS } from "style/colors";
 import { theme } from "style/theme";
+import { Project } from "types/entities";
 import { getColorFromString } from "utils/color";
 import { dateDiffDays } from "utils/date";
 import { zouAPIURL } from "utils/zou";
@@ -64,16 +65,20 @@ function linearRegression(
   const filteredArray = inputArray.filter(
     (element) => element.projects[projectName]
   );
+
   const x = filteredArray.map((element) => element.date);
   const y = filteredArray.map(
     (element) => element.projects[projectName].progress
   );
+
   const sumX = x.reduce((prev, curr) => prev + curr, 0);
   const avgX = sumX / x.length;
+
   const xDifferencesToAverage = x.map((value) => avgX - value);
   const xDifferencesToAverageSquared = xDifferencesToAverage.map(
     (value) => value ** 2
   );
+
   const SSxx = xDifferencesToAverageSquared.reduce(
     (prev, curr) => prev + curr,
     0
@@ -81,15 +86,19 @@ function linearRegression(
   const sumY = y.reduce((prev, curr) => prev + curr, 0);
   const avgY = sumY / y.length;
   const yDifferencesToAverage = y.map((value) => avgY - value);
+
   const xAndYDifferencesMultiplied = xDifferencesToAverage.map(
     (curr, index) => curr * yDifferencesToAverage[index]
   );
+
   const SSxy = xAndYDifferencesMultiplied.reduce(
     (prev, curr) => prev + curr,
     0
   );
+
   const slope = SSxy / SSxx;
   const intercept = avgY - slope * avgX;
+
   return (x: number) => intercept + slope * x;
 }
 
@@ -232,7 +241,8 @@ const ProjectsProgressChart = (): JSX.Element => {
                   padding: 8,
                 }}
               >
-                {totalProgressFrames} / {totalFrames}
+                {totalProgressFrames} / {totalFrames} (
+                {Math.floor((totalProgressFrames / totalFrames) * 100)}%)
               </span>
             </p>
           )}
@@ -381,12 +391,13 @@ const ProjectsProgressChart = (): JSX.Element => {
             {selectedProjects.length > 0 &&
               selectedProjects.map((sp) => {
                 const projectProjection = linearRegression(data, sp);
+                const project = projects.find((p) => p.name === sp) as Project;
 
                 return (
                   <ReferenceLine
                     key={sp}
                     label="Projection"
-                    stroke={getColorFromString(sp)}
+                    stroke={project.color || getColorFromString(project.name)}
                     strokeDasharray="8 10"
                     ifOverflow="hidden"
                     segment={[

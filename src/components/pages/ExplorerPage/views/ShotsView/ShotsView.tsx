@@ -77,22 +77,24 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
               .sort((a, b) => a.name.localeCompare(b.name)),
           }));
 
+        let displaySentence = null;
+
         if (data.project.sequences.length === 0) {
-          return (
+          displaySentence = (
             <Typography color="text.disabled">
               The project doesn{"'"}t contain any sequences or shots...
             </Typography>
           );
-        }
+        } else if (search !== "") {
+          const filteredNumberOfShots = filteredSequences
+            .map((e) => e.shots.length)
+            .reduce((a, b) => a + b);
 
-        const numberOfShots = filteredSequences
-          .map((e) => e.shots.length)
-          .reduce((a, b) => a + b);
-
-        if (numberOfShots === 0) {
-          return (
-            <Typography color="text.disabled">No results found...</Typography>
-          );
+          if (filteredNumberOfShots === 0) {
+            displaySentence = (
+              <Typography color="text.disabled">No results found...</Typography>
+            );
+          }
         }
 
         const noSearch = search.length === 0;
@@ -126,6 +128,8 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
                 </div>
               );
             })}
+
+            {displaySentence}
 
             <Button
               variant="outlined"

@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { useAction } from "context";
 import { useEffect, useState } from "react";
+import { useRouteMatch } from "react-router-dom";
 import { SelectParameter as SelectParameterType } from "types/action/parameters";
 
 interface SelectParameterProps {
@@ -20,7 +21,8 @@ const SelectParameter = ({
 }: SelectParameterProps): JSX.Element => {
   const [value, setValue] = useState<string | null>(parameter.value);
 
-  const { simpleMode } = useAction();
+  const { simpleMode, sendActionUpdate } = useAction();
+  const actionUUID = useRouteMatch<{ uuid: string }>().params.uuid;
 
   // Update state when the parameter value from action changes
   useEffect(() => {
@@ -45,6 +47,7 @@ const SelectParameter = ({
         onChange={(e) => {
           onChange(e);
           setValue(e.target.value);
+          sendActionUpdate(actionUUID, false);
         }}
         value={value}
       >

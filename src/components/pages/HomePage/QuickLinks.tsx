@@ -6,7 +6,6 @@ import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import { Box, Chip } from "@mui/material";
 import LoadingChip from "components/common/chips/LoadingChip";
-import SubmitButton from "components/common/chips/SubmitButton";
 import FileIcon from "components/common/FileIcon/FileIcon";
 import { uiSocket } from "context";
 import { useHistory } from "react-router-dom";
@@ -82,8 +81,6 @@ const QuickLinks = (): JSX.Element => {
           gap: 10,
         }}
       >
-        <SubmitButton disabled />
-
         <Box
           sx={{
             display: "flex",
