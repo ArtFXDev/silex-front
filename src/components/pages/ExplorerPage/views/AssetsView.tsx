@@ -72,14 +72,16 @@ const AssetsView = ({ listView, search }: AssetsViewProps): JSX.Element => {
           assetTypes[asset.entity_type.id] = asset.entity_type.name;
         }
 
+        let displaySentence = null;
+
         if (emptySearchResults) {
-          return (
+          displaySentence = (
             <Typography color="text.disabled">No results found...</Typography>
           );
         }
 
         if (data.project.assets.length === 0) {
-          return (
+          displaySentence = (
             <Typography color="text.disabled">
               The project doesn{"'"}t contain any assets...
             </Typography>
@@ -131,6 +133,8 @@ const AssetsView = ({ listView, search }: AssetsViewProps): JSX.Element => {
                 )
               );
             })}
+
+            {displaySentence}
 
             <Button
               variant="outlined"
