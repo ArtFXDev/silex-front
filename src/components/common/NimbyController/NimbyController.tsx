@@ -5,6 +5,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import PortableWifiOffIcon from "@mui/icons-material/PortableWifiOff";
 import {
+  Badge,
   Box,
   BoxProps,
   Chip,
@@ -94,24 +95,29 @@ const NimbyController = ({ sx }: BoxProps): JSX.Element => {
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
       <Box sx={{ ...sx }}>
-        <Chip
-          label="Nimby"
-          color={color}
-          variant="outlined"
-          onClick={handleOpenMenu}
-          onDelete={handleOpenMenu}
-          deleteIcon={
-            bladeStatus ? (
-              bladeStatus.nimbyON ? (
-                <AirlineSeatReclineExtraIcon />
+        <Badge
+          badgeContent={bladeStatus && bladeStatus.pids.length}
+          color="error"
+        >
+          <Chip
+            label="Nimby"
+            color={color}
+            variant="outlined"
+            onClick={handleOpenMenu}
+            onDelete={handleOpenMenu}
+            deleteIcon={
+              bladeStatus ? (
+                bladeStatus.nimbyON ? (
+                  <AirlineSeatReclineExtraIcon />
+                ) : (
+                  <DirectionsRunIcon />
+                )
               ) : (
-                <DirectionsRunIcon />
+                <PortableWifiOffIcon />
               )
-            ) : (
-              <PortableWifiOffIcon />
-            )
-          }
-        />
+            }
+          />
+        </Badge>
 
         <PopperWithArrow
           open={open}
