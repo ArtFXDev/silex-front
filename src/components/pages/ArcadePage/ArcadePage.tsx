@@ -50,49 +50,53 @@ const ArcadePage = (): JSX.Element => {
     <PageWrapper goBack title="🎮 Arcade">
       <Route exact path="/arcade">
         {data ? (
-          data.games.map((game) => (
-            <div key={game.id} style={{ marginTop: 20 }}>
-              <Typography
-                style={{
-                  fontSize: 30,
-                  display: "inline-block",
-                }}
-              >
-                {capitalize(game.name)}
-              </Typography>
+          data.games.length === 0 ? (
+            <p>No games...</p>
+          ) : (
+            data.games.map((game) => (
+              <div key={game.id} style={{ marginTop: 20 }}>
+                <Typography
+                  style={{
+                    fontSize: 30,
+                    display: "inline-block",
+                  }}
+                >
+                  {capitalize(game.name)}
+                </Typography>
 
-              <Paper
-                key={game.id}
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 20,
-                  marginTop: 20,
-                  padding: 25,
-                  borderRadius: 20,
-                }}
-              >
-                {game.variants
-                  .slice()
-                  .sort((a, b) => a.price - b.price)
-                  .map((variant) => {
-                    const isVariantUnlocked =
-                      data.person.game_variants.find(
-                        (v) => v.id === variant.id
-                      ) !== undefined;
+                <Paper
+                  key={game.id}
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 20,
+                    marginTop: 20,
+                    padding: 25,
+                    borderRadius: 20,
+                  }}
+                >
+                  {game.variants
+                    .slice()
+                    .sort((a, b) => a.price - b.price)
+                    .map((variant) => {
+                      const isVariantUnlocked =
+                        data.person.game_variants.find(
+                          (v) => v.id === variant.id
+                        ) !== undefined;
 
-                    return (
-                      <GameVariantItem
-                        key={variant.id}
-                        game={game}
-                        variant={variant}
-                        unlocked={isVariantUnlocked}
-                      />
-                    );
-                  })}
-              </Paper>
-            </div>
-          ))
+                      return (
+                        <GameVariantItem
+                          key={variant.id}
+                          game={game}
+                          variant={variant}
+                          unlocked={isVariantUnlocked}
+                        />
+                      );
+                    })}
+                </Paper>
+              </div>
+            ))
+          )
         ) : (
           <CircularProgress />
         )}
