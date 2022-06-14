@@ -97,6 +97,9 @@ const ExplorerPage = (): JSX.Element => {
   }, [history, locationDepth, routeMatch]);
 
   if (!auth.currentProjectId) {
+    if (auth.projects && auth.projects.length === 0) {
+      return <PageWrapper>You don{"'"}t have any projects...</PageWrapper>;
+    }
     return <PageWrapper>Loading project...</PageWrapper>;
   }
 
