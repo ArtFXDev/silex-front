@@ -46,7 +46,7 @@ const PersonCollapseSection = ({
 
   const transferCoins = parseInt(coinsTransferValue);
   const cantTransferCoins =
-    transferCoins > (person.coins || 0) || transferCoins < 0;
+    transferCoins > (auth.user ? auth.user.coins || 0 : 0) || transferCoins < 0;
 
   const handlePasswordPromptClose = () => {
     if (!auth.user) return;
@@ -167,12 +167,14 @@ const PersonCollapseSection = ({
         }}
       >
         <DialogTitle>
-          Transfer {coinsTransferValue} Silex coin{transferCoins > 1 ? "s" : ""}
+          💸 Transfer {coinsTransferValue} Silex coin
+          {transferCoins > 1 ? "s" : ""}
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
             Transferring coins to someone else is highly secured to prevent
-            fraud. Please type your password to verify your identity:
+            fraud. <br />
+            Please type your password to verify your identity:
           </DialogContentText>
           <TextField
             autoFocus
