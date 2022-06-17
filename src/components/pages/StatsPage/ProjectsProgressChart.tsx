@@ -1,6 +1,11 @@
 /* eslint-disable camelcase */
 import { gql, useQuery } from "@apollo/client";
-import { Chip, Typography, useMediaQuery } from "@mui/material";
+import {
+  Chip,
+  CircularProgress,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import axios from "axios";
 import CrownAnimation from "components/common/animations/CrownAnimation";
@@ -126,7 +131,7 @@ const ProjectsProgressChart = (): JSX.Element => {
   });
 
   if (!data || !projectsQuery.data) {
-    return <p>Loading...</p>;
+    return <CircularProgress />;
   }
 
   if (data.length === 0) {
