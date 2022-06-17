@@ -4,7 +4,7 @@ import { easeInQuint } from "utils/easings";
 interface AnimatedNumberProps {
   on: boolean;
   duration: number;
-  onCompletion: () => void;
+  onCompletion?: () => void;
   range: { from: number; to: number };
 }
 
@@ -39,7 +39,7 @@ const AnimatedNumber = ({
       // Stop the animation when the duration is over
       if (requestRef.current && time - startTimeRef.current >= duration) {
         cancelAnimationFrame(requestRef.current);
-        onCompletion();
+        if (onCompletion) onCompletion();
       } else {
         requestRef.current = requestAnimationFrame(animate);
       }

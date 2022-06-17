@@ -109,6 +109,19 @@ type LoginResponse = PromiseResponse<{
   user: Person;
 }>;
 
+export async function verifyCredentials(data: LoginInput): Promise<boolean> {
+  try {
+    const response = await axios.post(zouAPIURL("auth/login"), data, {
+      withCredentials: true,
+    });
+    if (response.data) return true;
+  } catch (e) {
+    return false;
+  }
+
+  return false;
+}
+
 /**
  * Queries the login route to authenticate the client on both zou and ws server
  * @param data the email and password
@@ -315,6 +328,19 @@ export function changePersonSilexCoins(
     { coins: newAmount },
     { withCredentials: true }
   );
+}
+
+export function addSilexCoinsTo(
+  personId: string,
+  amount: number
+): PromiseResponse<Person> {
+  return axios
+    .get<Person>(zouAPIURL(`data/persons/${personId}`), {
+      withCredentials: true,
+    })
+    .then((response) =>
+      changePersonSilexCoins(personId, (response.data.coins || 0) + amount)
+    );
 }
 
 export function unlockGameVariant(

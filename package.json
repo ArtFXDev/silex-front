@@ -1,6 +1,6 @@
 {
   "name": "silex-front",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "author": "ArtFX TDs",
   "license": "MIT",
@@ -8,7 +8,7 @@
     "@apollo/client": "^3.4.15",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
-    "@mui/icons-material": "^5.2.0",
+    "@mui/icons-material": "^5.8.3",
     "@mui/material": "^5.2.1",
     "axios": "^0.21.4",
     "color-hash": "^2.0.1",
