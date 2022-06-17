@@ -3,16 +3,8 @@ import ProjectsProgressChart from "./ProjectsProgressChart";
 
 const ProfilePage = (): JSX.Element => {
   return (
-    <PageWrapper goBack title="Statistics">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          paddingTop: 15,
-        }}
-      >
-        <ProjectsProgressChart />
-      </div>
+    <PageWrapper goBack title="Statistics" centerContent paddingTop={35}>
+      <ProjectsProgressChart />
     </PageWrapper>
   );
 };
