@@ -156,7 +156,7 @@ const EntityItem = ({
                   />
                 )}
 
-                {entity.type === "Shot" && (
+                {entity.type === "Shot" && entity.nb_frames && (
                   <ValidationTimeline
                     frameSet={entity.validation?.frame_set}
                     totalFrames={entity.nb_frames || undefined}
@@ -225,6 +225,7 @@ const EntityItem = ({
                   sx={{
                     py: 0,
                     height: 40,
+                    pr: 1,
                     borderTop:
                       entity.type === "Task"
                         ? `3px solid ${entity.taskType.color}`
@@ -251,7 +252,7 @@ const EntityItem = ({
                     )}
                   </div>
 
-                  {entity.type === "Shot" && (
+                  {entity.type === "Shot" && entity.nb_frames && (
                     <ValidationTimeline
                       frameSet={entity.validation?.frame_set}
                       totalFrames={entity.nb_frames || undefined}

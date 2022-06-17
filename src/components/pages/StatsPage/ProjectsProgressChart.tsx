@@ -1,6 +1,11 @@
 /* eslint-disable camelcase */
 import { gql, useQuery } from "@apollo/client";
-import { Chip, Typography, useMediaQuery } from "@mui/material";
+import {
+  Chip,
+  CircularProgress,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import axios from "axios";
 import CrownAnimation from "components/common/animations/CrownAnimation";
@@ -126,7 +131,7 @@ const ProjectsProgressChart = (): JSX.Element => {
   });
 
   if (!data || !projectsQuery.data) {
-    return <p>Loading...</p>;
+    return <CircularProgress />;
   }
 
   if (data.length === 0) {
@@ -170,8 +175,6 @@ const ProjectsProgressChart = (): JSX.Element => {
   const daysFromDeadline = dateDiffDays(new Date(), new Date(maxDate));
 
   const averageProjection = linearRegression(data);
-
-  lastSample.projects["WHAT_ABOUT_COOKING"].progress = 1;
 
   const displayCrowns =
     userProjects &&
@@ -243,6 +246,26 @@ const ProjectsProgressChart = (): JSX.Element => {
               >
                 {totalProgressFrames} / {totalFrames} (
                 {Math.floor((totalProgressFrames / totalFrames) * 100)}%)
+              </span>
+            </p>
+          )}
+
+          {data && data.length !== 0 && (
+            <p>
+              <span
+                style={{
+                  backgroundColor: "#da9408",
+                  color: "white",
+                  borderRadius: 10,
+                  padding: 8,
+                }}
+              >
+                {
+                  Object.values(lastSample.projects).filter(
+                    (p) => p.progress === 1
+                  ).length
+                }
+                <span style={{ marginLeft: 5 }}>👑</span>
               </span>
             </p>
           )}
@@ -435,47 +458,49 @@ const ProjectsProgressChart = (): JSX.Element => {
           marginTop: 10,
         }}
       >
-        {projects.map((p) => {
-          const projectColor = p.color || getColorFromString(p.name);
-          const selected = selectedProjects.includes(p.name);
-          const color = selected ? projectColor : alpha(projectColor, 0.3);
+        {projects
+          .filter((p) => p.total_frames !== 0)
+          .map((p) => {
+            const projectColor = p.color || getColorFromString(p.name);
+            const selected = selectedProjects.includes(p.name);
+            const color = selected ? projectColor : alpha(projectColor, 0.3);
 
-          return (
-            <div key={p.name} style={{ position: "relative" }}>
-              <Chip
-                label={p.name}
-                variant="outlined"
-                sx={{
-                  color,
-                  borderColor: color,
-                  backgroundColor: selected ? alpha(projectColor, 0.2) : "",
-                }}
-                onClick={() => {
-                  if (selected) {
-                    setSelectedProjects(
-                      selectedProjects.filter((sp) => sp !== p.name)
-                    );
-                  } else {
-                    setSelectedProjects([...selectedProjects, p.name]);
-                  }
-                }}
-              />
-              {lastSample.projects[p.name] &&
-                lastSample.projects[p.name].progress === 1 && (
-                  <span
-                    style={{
-                      position: "absolute",
-                      top: -10,
-                      right: -10,
-                      transform: "rotate(30deg)",
-                    }}
-                  >
-                    👑
-                  </span>
-                )}
-            </div>
-          );
-        })}
+            return (
+              <div key={p.name} style={{ position: "relative" }}>
+                <Chip
+                  label={p.name}
+                  variant="outlined"
+                  sx={{
+                    color,
+                    borderColor: color,
+                    backgroundColor: selected ? alpha(projectColor, 0.2) : "",
+                  }}
+                  onClick={() => {
+                    if (selected) {
+                      setSelectedProjects(
+                        selectedProjects.filter((sp) => sp !== p.name)
+                      );
+                    } else {
+                      setSelectedProjects([...selectedProjects, p.name]);
+                    }
+                  }}
+                />
+                {lastSample.projects[p.name] &&
+                  lastSample.projects[p.name].progress === 1 && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        top: -10,
+                        right: -10,
+                        transform: "rotate(30deg)",
+                      }}
+                    >
+                      👑
+                    </span>
+                  )}
+              </div>
+            );
+          })}
       </div>
     </div>
   );

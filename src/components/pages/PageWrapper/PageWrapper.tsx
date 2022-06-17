@@ -14,6 +14,12 @@ interface PageWrapperProps {
 
   /** The page container takes the full height */
   fullHeight?: boolean;
+
+  /** Center the content on the page with flex */
+  centerContent?: boolean;
+
+  /** Offset the content of the page on top */
+  paddingTop?: number;
 }
 
 const PageWrapper = ({
@@ -21,12 +27,19 @@ const PageWrapper = ({
   children,
   goBack,
   fullHeight,
+  centerContent,
+  paddingTop,
 }: PageWrapperProps): JSX.Element => {
   const history = useHistory();
 
   return (
     <Fade in timeout={200}>
-      <div style={{ padding: 48, height: fullHeight ? "100vh" : "" }}>
+      <div
+        style={{
+          padding: 48,
+          height: fullHeight ? "100vh" : "",
+        }}
+      >
         <div style={{ display: "flex", alignItems: "center" }}>
           {title &&
             (typeof title === "string" ? (
@@ -53,8 +66,26 @@ const PageWrapper = ({
           )}
         </div>
 
-        <div style={{ padding: "16px 0", height: fullHeight ? "100%" : "" }}>
-          {children}
+        <div
+          style={{
+            padding: "16px 0",
+            height: fullHeight ? "100%" : "",
+          }}
+        >
+          {centerContent ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                width: "100%",
+                paddingTop,
+              }}
+            >
+              {children}
+            </div>
+          ) : (
+            children
+          )}
         </div>
       </div>
     </Fade>
