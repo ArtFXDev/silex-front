@@ -5,11 +5,13 @@ import CollapseError from "components/common/CollapseError/CollapseError";
 interface QueryWrapperProps<T> {
   query: QueryResult<T>;
   render: (data: T) => React.ReactNode;
+  fullWidth?: boolean;
 }
 
 const QueryWrapper = <T,>({
   query,
   render,
+  fullWidth,
 }: QueryWrapperProps<T>): JSX.Element => {
   if (query.loading) {
     return <CircularProgress size={30} />;
@@ -30,7 +32,7 @@ const QueryWrapper = <T,>({
   const data = query.data as T;
 
   return (
-    <Fade in timeout={400}>
+    <Fade in timeout={400} style={{ width: fullWidth ? "100%" : "" }}>
       <div>{render(data)}</div>
     </Fade>
   );
