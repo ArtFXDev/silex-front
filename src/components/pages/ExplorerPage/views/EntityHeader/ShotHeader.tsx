@@ -186,7 +186,7 @@ const ShotHeader = ({ shot }: ShotHeaderProps): JSX.Element => {
         </div>
       </div>
 
-      {shot.nb_frames && (
+      {shot.nb_frames !== null && shot.nb_frames > 0 && (
         <div
           style={{
             display: "flex",
