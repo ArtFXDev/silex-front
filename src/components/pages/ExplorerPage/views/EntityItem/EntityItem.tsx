@@ -113,6 +113,9 @@ const EntityItem = ({
     );
   };
 
+  const displayValidationTimeline =
+    entity.type === "Shot" && entity.nb_frames !== null && entity.nb_frames > 0;
+
   return (
     <>
       <Fade in timeout={{ appear: 2000 * index, enter: 800 }}>
@@ -156,7 +159,7 @@ const EntityItem = ({
                   />
                 )}
 
-                {entity.type === "Shot" && entity.nb_frames && (
+                {displayValidationTimeline && (
                   <ValidationTimeline
                     frameSet={entity.validation?.frame_set}
                     totalFrames={entity.nb_frames || undefined}
@@ -252,7 +255,7 @@ const EntityItem = ({
                     )}
                   </div>
 
-                  {entity.type === "Shot" && entity.nb_frames && (
+                  {displayValidationTimeline && (
                     <ValidationTimeline
                       frameSet={entity.validation?.frame_set}
                       totalFrames={entity.nb_frames || undefined}
@@ -271,6 +274,7 @@ const EntityItem = ({
               entity.data &&
               JSON.parse(entity.data).canceled &&
               canceledIcon()}
+
             {actionMenuIcon()}
           </div>
         )}
