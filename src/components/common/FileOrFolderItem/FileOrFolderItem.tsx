@@ -279,10 +279,10 @@ const FileOrFolderItem = ({
 
           {/* Display children */}
           {filteredChildren &&
-            filteredChildren.map((entry) => (
+            filteredChildren.map((entry, i) => (
               <FileOrFolderItem
                 refresh={refresh}
-                key={entry.path + entry.name}
+                key={`${entry.path}-${entry.name}-${i}`}
                 item={entry}
                 depth={depth + 1}
               />
