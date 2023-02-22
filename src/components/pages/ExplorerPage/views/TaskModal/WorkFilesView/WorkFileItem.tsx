@@ -141,7 +141,7 @@ const WorkFileItem = ({
 
                 {launchSuccess && (
                   <Fade in>
-                    <CheckCircleIcon color="success" />
+                    <CheckCircleIcon color="info" />
                   </Fade>
                 )}
 

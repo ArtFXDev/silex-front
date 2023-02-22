@@ -44,6 +44,9 @@ interface FileOrFolderItemProps {
 
   /** Boolean value to switch when we need to refresh the view. */
   refresh?: boolean;
+
+  /** String value to give the task id to give to the action  */
+  taskId?: string;
 }
 
 const FileOrFolderItem = ({
@@ -51,6 +54,7 @@ const FileOrFolderItem = ({
   root,
   item,
   depth = 0,
+  taskId = " ",
 }: FileOrFolderItemProps): JSX.Element => {
   const [open, setOpen] = useState<boolean>(depth < 2);
   const [isLoading, setIsLoading] = useState<boolean>(false);

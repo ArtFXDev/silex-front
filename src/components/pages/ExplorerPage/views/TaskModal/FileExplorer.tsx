@@ -36,6 +36,7 @@ const dccButtonsData = [
   { dcc: "maya" },
 ];
 
+import OpenAsWorkableButton from "components/common/FileOrFolderItem/OpenAsWorkableButton";
 interface FileExplorerProps {
   task: Task;
 }
@@ -194,6 +195,7 @@ const FileExplorer = ({ task }: FileExplorerProps): JSX.Element => {
 
         <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
           <SubmitButton taskId={task.id} projectName={projectName} />
+          <OpenAsWorkableButton taskId={task.id} />
 
           {/* DCC icon buttons */}
           <Box
