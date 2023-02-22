@@ -1,4 +1,4 @@
-FROM node:lts-alpine AS build-deps
+FROM node:16-alpine AS build-deps
 WORKDIR /usr/src/app
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
