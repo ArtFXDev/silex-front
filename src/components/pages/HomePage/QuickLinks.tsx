@@ -2,7 +2,6 @@ import AgricultureIcon from "@mui/icons-material/Agriculture";
 import BugReportIcon from "@mui/icons-material/BugReport";
 import InputIcon from "@mui/icons-material/Input";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import { Box, Chip } from "@mui/material";
 import LoadingChip from "components/common/chips/LoadingChip";
@@ -46,14 +45,6 @@ const QuickLinks = (): JSX.Element => {
         sx={{ color: "#e84f83", borderColor: "#e84f83" }}
         icon={<BugReportIcon style={{ color: "#e84f83", marginLeft: 5 }} />}
         onClick={() => history.push("/ticket")}
-      />
-
-      <Chip
-        label="Arcade"
-        variant="outlined"
-        sx={{ color: "#e63354", borderColor: "#e63354" }}
-        icon={<SportsEsportsIcon style={{ color: "#e63354", marginLeft: 5 }} />}
-        onClick={() => history.push("/arcade")}
       />
 
       <Chip
@@ -153,3 +144,11 @@ const QuickLinks = (): JSX.Element => {
 };
 
 export default QuickLinks;
+
+/*<Chip
+        label="Arcade"
+        variant="outlined"
+        sx={{ color: "#e63354", borderColor: "#e63354" }}
+        icon={<SportsEsportsIcon style={{ color: "#e63354", marginLeft: 5 }} />}
+        onClick={() => history.push("/arcade")}
+      />*/
