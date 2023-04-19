@@ -4,9 +4,8 @@ const TractorPage = (): JSX.Element => {
       title="Tractor"
       width="100%"
       height="100%"
-      src={process.env.REACT_APP_TRACTOR_URL}
-      frameBorder="0"
-      style={{ height: "100vh" }}
+      src={import.meta.env.VITE_TRACTOR_URL}
+      style={{ height: "100vh", border: "0px" }}
     ></iframe>
   );
 };

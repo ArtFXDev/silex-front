@@ -20,7 +20,7 @@ const DCCClientsPage = (): JSX.Element => {
         <Alert severity="error">
           <AlertTitle>Connection error</AlertTitle>
           Can{"'"}t connect to the Silex WS server at{" "}
-          {process.env.REACT_APP_WS_SERVER} —{" "}
+          {import.meta.env.VITE_WS_SERVER} —{" "}
           <strong>make sure it{"'"}s running or restart it</strong>
         </Alert>
       );

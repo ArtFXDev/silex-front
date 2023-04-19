@@ -22,7 +22,7 @@ type PromiseResponse<T> = Promise<AxiosResponse<T>>;
  * @param path
  */
 export function zouURL(path: string): string {
-  return `${process.env.REACT_APP_ZOU_API}/${path}`;
+  return `${import.meta.env.VITE_ZOU_API}/${path}`;
 }
 
 /**
@@ -87,7 +87,7 @@ export function isAuthenticated(): PromiseResponse<{
   return new Promise((resolve, reject) => {
     // Check if the token is on the socket server side
     axios
-      .get(`${process.env.REACT_APP_WS_SERVER}/auth/token`)
+      .get(`${import.meta.env.VITE_WS_SERVER}/auth/token`)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .then((_token) => {
         // Check if authenticated on the zou side
@@ -131,7 +131,7 @@ export function login(data: LoginInput): LoginResponse {
   return new Promise((resolve, reject) => {
     // Login to the WS server first
     axios
-      .post(`${process.env.REACT_APP_WS_SERVER}/auth/login`, data)
+      .post(`${import.meta.env.VITE_WS_SERVER}/auth/login`, data)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .then((_response) => {
         // Login directly to Zou for cookies
@@ -149,7 +149,7 @@ export function login(data: LoginInput): LoginResponse {
  * @returns logout if successfull
  */
 export function logout(): PromiseResponse<{ logout: boolean }> {
-  axios.post(`${process.env.REACT_APP_WS_SERVER}/auth/logout`);
+  axios.post(`${import.meta.env.VITE_WS_SERVER}/auth/logout`);
   return getWithCredentials("auth/logout");
 }
 

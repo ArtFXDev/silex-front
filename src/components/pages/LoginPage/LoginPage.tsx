@@ -81,7 +81,9 @@ const LoginPage = (): JSX.Element => {
           );
         } else {
           setError(
-            `Zou server at ${process.env.REACT_APP_ZOU_API} is not reachable, check your internet connection or retry later`
+            `Zou server at ${
+              import.meta.env.VITE_ZOU_API
+            } is not reachable, check your internet connection or retry later`
           );
         }
       });

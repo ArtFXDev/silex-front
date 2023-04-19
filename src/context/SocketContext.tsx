@@ -30,7 +30,7 @@ interface ProvideSocketProps {
 
 // Initialize a global socket instance
 export const uiSocket: UINamespaceSocket = io(
-  `${process.env.REACT_APP_WS_SERVER}/ui`,
+  `${import.meta.env.VITE_WS_SERVER}/ui`,
   { reconnectionDelay: 2000 }
 );
 
@@ -61,7 +61,7 @@ export const ProvideSocket = ({
       });
 
       enqueueSnackbar(
-        `Connected to ${process.env.REACT_APP_WS_SERVER} (${response.msg})`,
+        `Connected to ${import.meta.env.VITE_WS_SERVER} (${response.msg})`,
         {
           variant: "success",
         }
@@ -77,7 +77,7 @@ export const ProvideSocket = ({
     setDCCClients([]);
 
     enqueueSnackbar(
-      `WS server ${process.env.REACT_APP_WS_SERVER} disconnected`,
+      `WS server ${import.meta.env.VITE_WS_SERVER} disconnected`,
       {
         variant: "error",
       }

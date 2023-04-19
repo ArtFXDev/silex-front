@@ -26,7 +26,7 @@ const LogFile = ({ fileName, title }: LogFileProps) => {
   const fetchLogs = useCallback(() => {
     axios
       .get<{ totalLines: number; lines: string[] }>(
-        `${process.env.REACT_APP_WS_SERVER}/log/${fileName}?fromEnd=${lines}`
+        `${import.meta.env.VITE_WS_SERVER}/log/${fileName}?fromEnd=${lines}`
       )
       .then((response) => {
         setLogs({
@@ -44,7 +44,7 @@ const LogFile = ({ fileName, title }: LogFileProps) => {
 
   const handleClearLog = () => {
     axios
-      .delete(`${process.env.REACT_APP_WS_SERVER}/log/${fileName}`)
+      .delete(`${import.meta.env.VITE_WS_SERVER}/log/${fileName}`)
       .then(() => {
         enqueueSnackbar(`Cleared logfile ${fileName}`, { variant: "success" });
         fetchLogs();

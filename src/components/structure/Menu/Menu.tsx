@@ -37,21 +37,21 @@ const links = [
     to: "/tractor",
     exact: true,
     openInNewWindow: true,
-    openTo: process.env.REACT_APP_TRACTOR_URL,
+    openTo: import.meta.env.VITE_TRACTOR_URL,
   },
   {
     text: "👨‍🌾 Harvest",
     to: "/harvest",
     exact: true,
     openInNewWindow: true,
-    openTo: process.env.REACT_APP_HARVEST_URL,
+    openTo: import.meta.env.VITE_HARVEST_URL,
   },
   {
     text: "Ticket",
     to: "/ticket",
     exact: true,
     openInNewWindow: true,
-    openTo: process.env.REACT_APP_TICKET_URL,
+    openTo: import.meta.env.VITE_TICKET_URL,
   },
 ];
 
@@ -170,7 +170,7 @@ const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
         }}
       >
         <Typography sx={{ color: "rgba(150, 149, 149, 0.5)" }} fontSize={12}>
-          {process.env.REACT_APP_NAME} v{process.env.REACT_APP_VERSION}
+          {import.meta.env.VITE_APP_NAME} v{import.meta.env.VITE_APP_VERSION}
         </Typography>
 
         <div style={{ marginLeft: "10px" }}>
