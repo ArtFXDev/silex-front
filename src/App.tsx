@@ -1,30 +1,30 @@
-import ActionsPage from "components/pages/ActionPage/ActionsPage";
-import ArcadePage from "components/pages/ArcadePage/ArcadePage";
-import DCCClientsPage from "components/pages/DCCClientsPage/DCCClientsPage";
-import ExplorerPage from "components/pages/ExplorerPage/ExplorerPage";
-import HarvestPage from "components/pages/HarvestPage/HarvestPage";
-import HomePage from "components/pages/HomePage/HomePage";
-import LoginPage from "components/pages/LoginPage/LoginPage";
-import LogsPage from "components/pages/LogsPage/LogsPage";
-import NotFoundPage from "components/pages/NotFoundPage/NotFoundPage";
-import ProfilePage from "components/pages/ProfilePage/ProfilePage";
-import RunningJobsPage from "components/pages/RunningJobsPage/RunningJobsPage";
-import SettingsPage from "components/pages/SettingsPage/SettingsPage";
-import SilexCoinPage from "components/pages/SilexCoinPage/SilexCoinPage";
-import StatsPage from "components/pages/StatsPage/StatsPage";
-import TicketPage from "components/pages/TicketPage/TicketPage";
-import TractorPage from "components/pages/TractorPage/TractorPage";
-import PrivateRoute from "components/utils/PrivateRoute/PrivateRoute";
+import { SnackbarProvider } from "notistack";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
+import ActionsPage from "~/components/pages/ActionPage/ActionsPage";
+import DCCClientsPage from "~/components/pages/DCCClientsPage/DCCClientsPage";
+import ExplorerPage from "~/components/pages/ExplorerPage/ExplorerPage";
+import HarvestPage from "~/components/pages/HarvestPage/HarvestPage";
+import HomePage from "~/components/pages/HomePage/HomePage";
+import LoginPage from "~/components/pages/LoginPage/LoginPage";
+import LogsPage from "~/components/pages/LogsPage/LogsPage";
+import NotFoundPage from "~/components/pages/NotFoundPage/NotFoundPage";
+import ProfilePage from "~/components/pages/ProfilePage/ProfilePage";
+import RunningJobsPage from "~/components/pages/RunningJobsPage/RunningJobsPage";
+import SettingsPage from "~/components/pages/SettingsPage/SettingsPage";
+import SilexCoinPage from "~/components/pages/SilexCoinPage/SilexCoinPage";
+import StatsPage from "~/components/pages/StatsPage/StatsPage";
+import TicketPage from "~/components/pages/TicketPage/TicketPage";
+import TractorPage from "~/components/pages/TractorPage/TractorPage";
+import PrivateRoute from "~/components/utils/PrivateRoute/PrivateRoute";
 import {
   ProvideAction,
   ProvideAuth,
   ProvideGraphQLClient,
   ProvideSocket,
-} from "context";
-import { ProvideAnimation } from "context/AnimationContext";
-import { ProvideBlade } from "context/BladeContext";
-import { SnackbarProvider } from "notistack";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+} from "~/context";
+import { ProvideAnimation } from "~/context/AnimationContext";
+import { ProvideBlade } from "~/context/BladeContext";
 
 /**
  * This is the main App component.
@@ -80,10 +80,6 @@ const App = (): JSX.Element => {
 
                       <PrivateRoute path="/explorer">
                         <ExplorerPage />
-                      </PrivateRoute>
-
-                      <PrivateRoute path="/arcade">
-                        <ArcadePage />
                       </PrivateRoute>
 
                       <PrivateRoute exact path="/tractor">

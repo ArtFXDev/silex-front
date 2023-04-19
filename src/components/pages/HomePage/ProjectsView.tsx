@@ -8,12 +8,13 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import LazyMedia from "components/utils/LazyMedia/LazyMedia";
-import { useAuth } from "context";
 import { useHistory } from "react-router";
-import { getColorFromString } from "utils/color";
-import { formatUnderScoreStringWithSpaces } from "utils/string";
-import { pictureThumbnailURL } from "utils/zou";
+
+import LazyMedia from "~/components/utils/LazyMedia/LazyMedia";
+import { useAuth } from "~/context";
+import { getColorFromString } from "~/utils/color";
+import { formatUnderScoreStringWithSpaces } from "~/utils/string";
+import { pictureThumbnailURL } from "~/utils/zou";
 
 const ProjectsView = (): JSX.Element => {
   const auth = useAuth();

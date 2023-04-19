@@ -1,6 +1,7 @@
 import { ListItem, Tooltip, Typography } from "@mui/material";
-import { useAction } from "context";
-import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
+
+import { useAction } from "~/context";
+import { LIST_ITEM_BORDER_RADIUS } from "~/style/constants";
 import {
   ArrayParameter as ArrayParameterType,
   BooleanParameter,
@@ -15,7 +16,7 @@ import {
   SelectParameter as SelectParameterType,
   TaskParameter as TaskParameterType,
   TextParameter as TextParameterType,
-} from "types/action/parameters";
+} from "~/types/action/parameters";
 
 import ArrayParameter from "./parameters/ArrayParameter";
 import EditableListParameter from "./parameters/EditableListParameter";

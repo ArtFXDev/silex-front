@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
   Box,
@@ -10,11 +9,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useRouteMatch } from "react-router-dom";
-import * as Zou from "utils/zou";
+
+import QueryWrapper from "~/components/utils/QueryWrapper/QueryWrapper";
+import * as Zou from "~/utils/zou";
 
 import { TargetEntity } from "../CreateEntityModal";
 
@@ -47,8 +47,8 @@ const CreateTaskView = ({
   const [selectedTaskTypeId, setSelectedTaskTypeId] = useState<string>("");
   const [taskName, setTaskName] = useState<string>("main");
 
-  const projectIdFromURL =
-    useRouteMatch<{ projectId: string }>().params.projectId;
+  const projectIdFromURL = useRouteMatch<{ projectId: string }>().params
+    .projectId;
   const projectId = projectIdOverride || projectIdFromURL;
   const { enqueueSnackbar } = useSnackbar();
   const client = useApolloClient();

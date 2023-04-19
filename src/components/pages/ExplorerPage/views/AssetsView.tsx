@@ -1,12 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
 import AddIcon from "@mui/icons-material/Add";
 import { Button, IconButton, Tooltip, Typography } from "@mui/material";
-import CreateEntityModal from "components/common/CreateEntityModal/CreateEntityModal";
-import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useState } from "react";
 import { useRouteMatch } from "react-router";
-import { Asset, EntityType, Project } from "types/entities";
-import { fuzzyMatch } from "utils/string";
+
+import CreateEntityModal from "~/components/common/CreateEntityModal/CreateEntityModal";
+import QueryWrapper from "~/components/utils/QueryWrapper/QueryWrapper";
+import { Asset, EntityType, Project } from "~/types/entities";
+import { fuzzyMatch } from "~/utils/string";
 
 import EntitiesView from "./EntitiesView";
 

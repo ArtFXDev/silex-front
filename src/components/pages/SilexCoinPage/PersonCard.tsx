@@ -1,12 +1,13 @@
 /* eslint-disable camelcase */
 import { Box, Card, CardActions, CardMedia, Zoom } from "@mui/material";
-import SilexCoinIcon from "assets/images/silex_coin.svg";
-import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
-import LazyMedia from "components/utils/LazyMedia/LazyMedia";
-import { Person } from "types/entities";
-import { GameVariant } from "types/entities/Game";
-import { getColorFromString } from "utils/color";
-import * as Zou from "utils/zou";
+
+import SilexCoinIcon from "~/assets/images/silex_coin.svg";
+import ColoredCircle from "~/components/common/ColoredCircle/ColoredCircle";
+import LazyMedia from "~/components/utils/LazyMedia/LazyMedia";
+import { Person } from "~/types/entities";
+import { GameVariant } from "~/types/entities/Game";
+import { getColorFromString } from "~/utils/color";
+import * as Zou from "~/utils/zou";
 
 interface PersonCardProps {
   index: number;

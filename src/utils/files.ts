@@ -1,4 +1,4 @@
-import { extensions, FileExtensionTag } from "types/files/extensions";
+import { extensions, FileExtensionTag } from "~/types/files/extensions";
 
 /**
  * Returns true if an extension has a specific tag

@@ -1,10 +1,11 @@
 import FlagIcon from "@mui/icons-material/Flag";
 import { FormControlLabel, Switch, Tab, Tabs } from "@mui/material";
-import FileIcon from "components/common/FileIcon/FileIcon";
-import { useAction } from "context";
 import { useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { getLastStepStatusColor } from "utils/action";
+
+import FileIcon from "~/components/common/FileIcon/FileIcon";
+import { useAction } from "~/context";
+import { getLastStepStatusColor } from "~/utils/action";
 
 import ActionItem from "./ActionItem";
 

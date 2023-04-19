@@ -8,12 +8,13 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import CreateEntityModal from "components/common/CreateEntityModal/CreateEntityModal";
 import { useState } from "react";
 import { useHistory } from "react-router";
-import { COLORS } from "style/colors";
-import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
-import { Asset, Shot } from "types/entities";
+
+import CreateEntityModal from "~/components/common/CreateEntityModal/CreateEntityModal";
+import { COLORS } from "~/style/colors";
+import { LIST_ITEM_BORDER_RADIUS } from "~/style/constants";
+import { Asset, Shot } from "~/types/entities";
 
 import ShotHeader from "./ShotHeader";
 

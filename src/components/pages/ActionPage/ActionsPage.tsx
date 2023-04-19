@@ -1,5 +1,6 @@
-import { useAction } from "context";
 import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+
+import { useAction } from "~/context";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 import ActionsView from "./ActionsView";

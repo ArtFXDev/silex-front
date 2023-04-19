@@ -8,15 +8,16 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import FileIcon from "components/common/FileIcon/FileIcon";
-import { useAction } from "context";
 import isElectron from "is-electron";
 import { useRef, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
-import { PathParameter as PathParameterType } from "types/action/parameters";
-import { getExtensionSoftwareFromFileName } from "utils/files";
-import { humanFileSize } from "utils/string";
 import { v4 as uuidv4 } from "uuid";
+
+import FileIcon from "~/components/common/FileIcon/FileIcon";
+import { useAction } from "~/context";
+import { PathParameter as PathParameterType } from "~/types/action/parameters";
+import { getExtensionSoftwareFromFileName } from "~/utils/files";
+import { humanFileSize } from "~/utils/string";
 
 /**
  * Extends the interface in case we are in Electron

@@ -1,7 +1,8 @@
 import { Divider, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useAuth } from "context";
+
+import { useAuth } from "~/context";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 import ProjectsView from "./ProjectsView";

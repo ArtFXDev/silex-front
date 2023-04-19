@@ -1,5 +1,6 @@
 import { LinearProgress, Typography } from "@mui/material";
-import { TextParameter as TextParameterType } from "types/action/parameters";
+
+import { TextParameter as TextParameterType } from "~/types/action/parameters";
 
 interface TextParameterProps {
   parameter: TextParameterType;

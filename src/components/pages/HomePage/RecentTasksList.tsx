@@ -1,8 +1,9 @@
 import { List, ListItemButton, Paper, Typography } from "@mui/material";
-import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
-import ArrowDelimiter from "components/common/Separator/ArrowDelimiter";
 import { useHistory } from "react-router";
-import { RecentTasks } from "types/storage/task";
+
+import ColoredCircle from "~/components/common/ColoredCircle/ColoredCircle";
+import ArrowDelimiter from "~/components/common/Separator/ArrowDelimiter";
+import { RecentTasks } from "~/types/storage/task";
 
 const RecentTasksList = (): JSX.Element => {
   const storedRecentTasks = window.localStorage.getItem("recent-tasks");

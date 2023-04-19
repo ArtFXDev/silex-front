@@ -1,8 +1,9 @@
 import { Alert, Fade, List } from "@mui/material";
-import { uiSocket } from "context";
 import { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
-import { FileOrFolder, ServerResponse } from "types/socket";
+
+import { uiSocket } from "~/context";
+import { FileOrFolder, ServerResponse } from "~/types/socket";
 
 import WorkFileItem from "./WorkFileItem";
 

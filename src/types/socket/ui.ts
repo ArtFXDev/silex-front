@@ -1,7 +1,8 @@
 /* eslint-disable camelcase */
 import { Socket } from "socket.io-client";
-import { Action } from "types/action/action";
-import { DCCContext } from "types/action/context";
+
+import { Action } from "~/types/action/action";
+import { DCCContext } from "~/types/action/context";
 
 import {
   EmitWithCallback,

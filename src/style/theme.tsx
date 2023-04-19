@@ -1,5 +1,6 @@
 import { createTheme, ThemeOptions } from "@mui/material/styles";
-import KarrikRegularWoff2 from "assets/fonts/Karrik-Regular.woff2";
+
+import KarrikRegularWoff2 from "~/assets/fonts/Karrik-Regular.woff2";
 
 /**
  * This is where we modify the MUI theme colors

@@ -1,9 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
 import { Typography } from "@mui/material";
-import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
-import { Asset, Shot } from "types/entities";
-import { fuzzyMatch } from "utils/string";
+
+import QueryWrapper from "~/components/utils/QueryWrapper/QueryWrapper";
+import { Asset, Shot } from "~/types/entities";
+import { fuzzyMatch } from "~/utils/string";
 
 import EntitiesView from "./EntitiesView";
 import EntityHeader from "./EntityHeader/EntityHeader";

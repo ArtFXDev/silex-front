@@ -9,16 +9,17 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useAction, useSocket } from "context";
 import isElectron from "is-electron";
 import { useSnackbar } from "notistack";
 import { useEffect } from "react";
-import { Action } from "types/action/action";
+
+import { useAction, useSocket } from "~/context";
+import { Action } from "~/types/action/action";
 import {
   formatContextToString,
   someStepsAreWaitingForInput,
-} from "utils/action";
-import { capitalize } from "utils/string";
+} from "~/utils/action";
+import { capitalize } from "~/utils/string";
 
 import StepItem from "./StepItem";
 

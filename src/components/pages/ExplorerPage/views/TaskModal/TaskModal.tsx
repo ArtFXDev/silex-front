@@ -14,17 +14,18 @@ import {
 } from "@mui/material";
 import { alpha, emphasize } from "@mui/material/styles";
 import { TransitionProps } from "@mui/material/transitions";
-import { PersonsAvatarGroup } from "components/common/avatar";
-import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
-import ArrowDelimiter from "components/common/Separator/ArrowDelimiter";
-import { useAuth } from "context";
 import { forwardRef, useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { Task } from "types/entities";
-import { RecentTask } from "types/storage/task";
-import { formatDateTime } from "utils/date";
-import { addElementToLocalStorageQueue } from "utils/storage";
-import { assignUserToTask, clearAssignation } from "utils/zou";
+
+import { PersonsAvatarGroup } from "~/components/common/avatar";
+import ColoredCircle from "~/components/common/ColoredCircle/ColoredCircle";
+import ArrowDelimiter from "~/components/common/Separator/ArrowDelimiter";
+import { useAuth } from "~/context";
+import { Task } from "~/types/entities";
+import { RecentTask } from "~/types/storage/task";
+import { formatDateTime } from "~/utils/date";
+import { addElementToLocalStorageQueue } from "~/utils/storage";
+import { assignUserToTask, clearAssignation } from "~/utils/zou";
 
 import FileExplorer from "./FileExplorer";
 import ThumbnailsViewer from "./ThumbnailsViewer";

@@ -1,7 +1,7 @@
 import { List, Typography } from "@mui/material";
 import { RecentScenes } from "types/storage/scene";
 
-import WorkFileItem from "../ExplorerPage/views/TaskModal/WorkFilesView/WorkFileItem";
+import WorkFileItem from "~/components/pages/ExplorerPage/views/TaskModal/WorkFilesView/WorkFileItem";
 
 const RecentlyOpenedScenes = (): JSX.Element => {
   const storedRecentScenes = window.localStorage.getItem("recent-scenes");

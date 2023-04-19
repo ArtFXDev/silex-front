@@ -1,9 +1,10 @@
 import { Backdrop, CircularProgress } from "@mui/material";
-import Header from "components/structure/Header/Header";
-import { useAuth } from "context";
 import { useEffect, useState } from "react";
 import { Redirect, Route, RouteProps } from "react-router-dom";
-import * as Zou from "utils/zou";
+
+import Header from "~/components/structure/Header/Header";
+import { useAuth } from "~/context";
+import * as Zou from "~/utils/zou";
 
 type PrivateRouteProps = {
   /** Allow the page to be accessible by a non auth user */

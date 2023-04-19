@@ -1,8 +1,9 @@
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { Button, CircularProgress, Collapse } from "@mui/material";
-import CollapseError from "components/common/CollapseError/CollapseError";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
+
+import CollapseError from "~/components/common/CollapseError/CollapseError";
 
 const KillJobsButton = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>();

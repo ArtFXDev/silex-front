@@ -8,16 +8,17 @@ import {
   Grid,
   TextField,
 } from "@mui/material";
-import SilexText from "assets/images/silex_text.png";
-import ProdBadge from "components/common/chips/ProdBetaDevChip";
-import NimbyController from "components/common/NimbyController/NimbyController";
-import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
-import SilexLogo from "components/common/SilexLogo/SilexLogo";
-import { useAuth, useSocket } from "context";
 import isElectron from "is-electron";
 import { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import * as Zou from "utils/zou";
+
+import SilexText from "~/assets/images/silex_text.png";
+import ProdBadge from "~/components/common/chips/ProdBetaDevChip";
+import NimbyController from "~/components/common/NimbyController/NimbyController";
+import OpenLogsButton from "~/components/common/OpenLogsButton/OpenLogsButton";
+import SilexLogo from "~/components/common/SilexLogo/SilexLogo";
+import { useAuth, useSocket } from "~/context";
+import * as Zou from "~/utils/zou";
 
 const SilexLogoAndText = (): JSX.Element => (
   <Grid

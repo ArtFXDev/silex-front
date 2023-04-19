@@ -1,13 +1,14 @@
 import { Menu as MenuIcon } from "@mui/icons-material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { AppBar, Box, IconButton, Toolbar, Tooltip } from "@mui/material";
-import SilexText from "assets/images/silex_text.png";
-import NimbyController from "components/common/NimbyController/NimbyController";
-import SilexLogo from "components/common/SilexLogo/SilexLogo";
-import Menu from "components/structure/Menu/Menu";
 import isElectron from "is-electron";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+
+import SilexText from "~/assets/images/silex_text.png";
+import NimbyController from "~/components/common/NimbyController/NimbyController";
+import SilexLogo from "~/components/common/SilexLogo/SilexLogo";
+import Menu from "~/components/structure/Menu/Menu";
 
 import AvatarMenu from "./AvatarMenu";
 import ConnectedDCCButton from "./ConnectedDCCButton";

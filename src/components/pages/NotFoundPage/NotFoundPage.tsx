@@ -1,6 +1,7 @@
 import { Fade, Link, Typography } from "@mui/material";
-import NotFoundImage from "assets/images/404.png";
 import { Link as RouterLink } from "react-router-dom";
+
+import NotFoundImage from "~/assets/images/404.png";
 
 /**
  * 404 fallback page

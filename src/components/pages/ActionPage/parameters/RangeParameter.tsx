@@ -1,6 +1,7 @@
 import { Slider } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { RangeParameter as RangeParameterType } from "types/action/parameters";
+
+import { RangeParameter as RangeParameterType } from "~/types/action/parameters";
 
 const CustomSlider = styled(Slider)(() => ({
   color: "#66bb6a",

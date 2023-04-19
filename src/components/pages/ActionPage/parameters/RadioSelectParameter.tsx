@@ -4,10 +4,11 @@ import {
   Radio,
   RadioGroup,
 } from "@mui/material";
-import { useAction } from "context";
 import { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
-import { RadioSelectParameter as RadioSelectParameterType } from "types/action/parameters";
+
+import { useAction } from "~/context";
+import { RadioSelectParameter as RadioSelectParameterType } from "~/types/action/parameters";
 
 interface RadioSelectParameterProps {
   parameter: RadioSelectParameterType;

@@ -18,12 +18,13 @@ import {
   Paper,
   TextField,
 } from "@mui/material";
-import SilexCoinIcon from "assets/images/silex_coin.svg";
-import { useAuth } from "context";
 import { useState } from "react";
-import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
-import { Person } from "types/entities";
-import * as Zou from "utils/zou";
+
+import SilexCoinIcon from "~/assets/images/silex_coin.svg";
+import { useAuth } from "~/context";
+import { LIST_ITEM_BORDER_RADIUS } from "~/style/constants";
+import { Person } from "~/types/entities";
+import * as Zou from "~/utils/zou";
 
 interface PersonCollapseSectionProps {
   person: Person;

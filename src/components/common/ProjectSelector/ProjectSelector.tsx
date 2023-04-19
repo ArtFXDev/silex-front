@@ -1,9 +1,10 @@
 import AirIcon from "@mui/icons-material/Air";
 import { Fade, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { useAuth } from "context/AuthContext";
-import { ProjectId } from "types/entities";
-import { getColorFromString } from "utils/color";
-import { formatUnderScoreStringWithSpaces } from "utils/string";
+
+import { useAuth } from "~/context/AuthContext";
+import { ProjectId } from "~/types/entities";
+import { getColorFromString } from "~/utils/color";
+import { formatUnderScoreStringWithSpaces } from "~/utils/string";
 
 interface ProjectSelectorProps {
   value: ProjectId | undefined;

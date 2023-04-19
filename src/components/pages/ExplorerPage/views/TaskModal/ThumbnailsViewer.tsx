@@ -2,12 +2,13 @@ import { useApolloClient } from "@apollo/client";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import { Chip, Dialog, IconButton, Tooltip, Typography } from "@mui/material";
-import LazyMedia from "components/utils/LazyMedia/LazyMedia";
 import { useState } from "react";
-import { Task } from "types/entities";
-import { PreviewFile } from "types/entities/PreviewFile";
-import { entityURLAndExtension } from "utils/entity";
-import * as Zou from "utils/zou";
+
+import LazyMedia from "~/components/utils/LazyMedia/LazyMedia";
+import { Task } from "~/types/entities";
+import { PreviewFile } from "~/types/entities/PreviewFile";
+import { entityURLAndExtension } from "~/utils/entity";
+import * as Zou from "~/utils/zou";
 
 interface ThumbnailsViewerProps {
   task: Task;

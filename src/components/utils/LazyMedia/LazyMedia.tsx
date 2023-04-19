@@ -2,7 +2,8 @@ import HideImageOutlinedIcon from "@mui/icons-material/HideImageOutlined";
 import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 import { Box, CircularProgress, Fade } from "@mui/material";
 import { createRef, useState } from "react";
-import { extensionHasTag } from "utils/files";
+
+import { extensionHasTag } from "~/utils/files";
 
 interface LazyMediaProps {
   src: { url: string; extension: string } | undefined;

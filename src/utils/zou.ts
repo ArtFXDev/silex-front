@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+
 import {
   Asset,
   Person,
@@ -8,8 +9,8 @@ import {
   Shot,
   Task,
   ValidationRecord,
-} from "types/entities";
-import { GameVariant } from "types/entities/Game";
+} from "~/types/entities";
+import { GameVariant } from "~/types/entities/Game";
 
 /**
  * Type of an axios response that returns a promise

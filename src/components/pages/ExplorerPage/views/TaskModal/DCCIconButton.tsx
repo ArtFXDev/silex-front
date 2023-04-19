@@ -9,12 +9,13 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/material";
-import FileIcon from "components/common/FileIcon/FileIcon";
-import { useAuth, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useRouteMatch } from "react-router-dom";
-import { Project } from "types/entities";
+
+import FileIcon from "~/components/common/FileIcon/FileIcon";
+import { useAuth, useSocket } from "~/context";
+import { Project } from "~/types/entities";
 
 interface DCCIconButtonProps {
   taskId: string;

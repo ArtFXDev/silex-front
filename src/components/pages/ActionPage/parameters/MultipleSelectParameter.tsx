@@ -5,10 +5,11 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { useAction } from "context";
 import { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
-import { MultipleSelectParameter as MultipleSelectParameterType } from "types/action/parameters";
+
+import { useAction } from "~/context";
+import { MultipleSelectParameter as MultipleSelectParameterType } from "~/types/action/parameters";
 
 // Used for styling the Select input
 const ITEM_HEIGHT = 48;

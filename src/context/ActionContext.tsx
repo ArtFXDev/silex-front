@@ -1,4 +1,3 @@
-import { useSocket } from "context";
 import merge from "deepmerge";
 import React, {
   useCallback,
@@ -8,11 +7,13 @@ import React, {
   useState,
 } from "react";
 import { useHistory } from "react-router";
-import { Action } from "types/action/action";
-import { Status } from "types/action/status";
-import { ServerResponse, UIOnServerEvents } from "types/socket";
-import { diff } from "utils/diff";
-import { runIfInElectron } from "utils/electron";
+
+import { useSocket } from "~/context";
+import { Action } from "~/types/action/action";
+import { Status } from "~/types/action/status";
+import { ServerResponse, UIOnServerEvents } from "~/types/socket";
+import { diff } from "~/utils/diff";
+import { runIfInElectron } from "~/utils/electron";
 
 export interface ActionContext {
   /** The dict of running actions */

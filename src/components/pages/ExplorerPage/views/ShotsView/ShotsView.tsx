@@ -1,12 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
 import AddIcon from "@mui/icons-material/Add";
 import { Button, Typography } from "@mui/material";
-import CreateEntityModal from "components/common/CreateEntityModal/CreateEntityModal";
-import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useState } from "react";
 import { useRouteMatch } from "react-router";
-import { Project, Sequence } from "types/entities";
-import { fuzzyMatch } from "utils/string";
+
+import CreateEntityModal from "~/components/common/CreateEntityModal/CreateEntityModal";
+import QueryWrapper from "~/components/utils/QueryWrapper/QueryWrapper";
+import { Project, Sequence } from "~/types/entities";
+import { fuzzyMatch } from "~/utils/string";
 
 import SequenceShots from "./SequenceShots";
 
@@ -54,8 +55,10 @@ interface ShotsViewProps {
 }
 
 const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
-  const [createEntityModal, setCreateEntityModal] =
-    useState<{ type: "Shot" | "Sequence"; target?: Sequence }>();
+  const [createEntityModal, setCreateEntityModal] = useState<{
+    type: "Shot" | "Sequence";
+    target?: Sequence;
+  }>();
 
   const routeMatch = useRouteMatch<{ projectId: string }>();
 

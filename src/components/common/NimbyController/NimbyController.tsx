@@ -18,10 +18,11 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useBlade } from "context/BladeContext";
 import { useState } from "react";
 import { useHistory } from "react-router";
-import { secondsToDhms } from "utils/date";
+
+import { useBlade } from "~/context/BladeContext";
+import { secondsToDhms } from "~/utils/date";
 
 import Separator from "../Separator/Separator";
 

@@ -1,5 +1,6 @@
 import { Alert, AlertTitle, Typography } from "@mui/material";
-import { useSocket } from "context";
+
+import { useSocket } from "~/context";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 import ClientsTable from "./ClientsTable";

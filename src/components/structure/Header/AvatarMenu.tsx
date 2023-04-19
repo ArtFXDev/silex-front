@@ -1,12 +1,13 @@
 import { AccountCircle, Logout } from "@mui/icons-material";
 import { Button, ListItemIcon, Menu, MenuItem, Paper } from "@mui/material";
-import SilexCoinIcon from "assets/images/silex_coin.svg";
-import { PersonAvatar } from "components/common/avatar";
-import { useAuth } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { Link, Link as RouterLink, useHistory } from "react-router-dom";
-import * as Zou from "utils/zou";
+
+import SilexCoinIcon from "~/assets/images/silex_coin.svg";
+import { PersonAvatar } from "~/components/common/avatar";
+import { useAuth } from "~/context";
+import * as Zou from "~/utils/zou";
 
 /**
  * Avatar profile picture with a menu

@@ -8,6 +8,7 @@ import {
   CardMedia,
   Chip,
   Fade,
+  IconButton,
   ListItem,
   ListItemButton,
   ListItemIcon,
@@ -17,18 +18,18 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { IconButton } from "@mui/material";
-import { PersonsAvatarGroup } from "components/common/avatar";
-import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
-import ValidationTimeline from "components/common/ValidationTimeline/ValidationTimeline";
-import LazyMedia from "components/utils/LazyMedia/LazyMedia";
 import { useSnackbar } from "notistack";
 import { useRef, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
-import { Asset, Shot, Task } from "types/entities";
-import { entityURLAndExtension, getEntityName } from "utils/entity";
-import * as Zou from "utils/zou";
+
+import { PersonsAvatarGroup } from "~/components/common/avatar";
+import ColoredCircle from "~/components/common/ColoredCircle/ColoredCircle";
+import ValidationTimeline from "~/components/common/ValidationTimeline/ValidationTimeline";
+import LazyMedia from "~/components/utils/LazyMedia/LazyMedia";
+import { LIST_ITEM_BORDER_RADIUS } from "~/style/constants";
+import { Asset, Shot, Task } from "~/types/entities";
+import { entityURLAndExtension, getEntityName } from "~/utils/entity";
+import * as Zou from "~/utils/zou";
 
 interface EntityItemProps {
   index: number;

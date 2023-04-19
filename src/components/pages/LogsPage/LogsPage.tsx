@@ -1,11 +1,12 @@
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { Chip, IconButton, Tooltip, Typography } from "@mui/material";
 import axios from "axios";
-import Logs from "components/common/Logs/Logs";
-import Separator from "components/common/Separator/Separator";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
-import { LogLine } from "types/action/action";
+
+import Logs from "~/components/common/Logs/Logs";
+import Separator from "~/components/common/Separator/Separator";
+import { LogLine } from "~/types/action/action";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 

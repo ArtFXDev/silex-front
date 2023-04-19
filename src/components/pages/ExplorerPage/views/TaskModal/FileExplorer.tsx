@@ -15,16 +15,17 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import SubmitButton from "components/common/chips/SubmitButton";
-import FileOrFolderItem from "components/common/FileOrFolderItem/FileOrFolderItem";
-import { useAuth } from "context";
-import { ProvideFileExplorer } from "context/FileExplorerContext";
 import isElectron from "is-electron";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
-import { Task } from "types/entities";
-import * as Zou from "utils/zou";
+
+import SubmitButton from "~/components/common/chips/SubmitButton";
+import FileOrFolderItem from "~/components/common/FileOrFolderItem/FileOrFolderItem";
+import { useAuth } from "~/context";
+import { ProvideFileExplorer } from "~/context/FileExplorerContext";
+import { Task } from "~/types/entities";
+import * as Zou from "~/utils/zou";
 
 import DCCIconButton from "./DCCIconButton";
 import WorkFilesView from "./WorkFilesView/WorkFilesView";

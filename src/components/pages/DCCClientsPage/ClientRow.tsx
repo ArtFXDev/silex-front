@@ -8,13 +8,14 @@ import {
   TableCell,
   TableRow,
 } from "@mui/material";
-import FileIcon from "components/common/FileIcon/FileIcon";
-import { useAction, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useHistory } from "react-router";
-import { Action } from "types/action/action";
-import { DCCContext } from "types/action/context";
+
+import FileIcon from "~/components/common/FileIcon/FileIcon";
+import { useAction, useSocket } from "~/context";
+import { Action } from "~/types/action/action";
+import { DCCContext } from "~/types/action/context";
 
 interface ClientsRowProps {
   dcc: DCCContext;

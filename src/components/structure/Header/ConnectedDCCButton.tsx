@@ -1,8 +1,9 @@
 import { CastConnected as CastConnectedIcon } from "@mui/icons-material";
 import { Badge, IconButton, IconButtonProps, Tooltip } from "@mui/material";
 import { green, red } from "@mui/material/colors";
-import { useSocket } from "context";
 import { Link as RouterLink } from "react-router-dom";
+
+import { useSocket } from "~/context";
 
 /**
  * Icon showing the number of connected dccs

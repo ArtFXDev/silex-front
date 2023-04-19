@@ -2,15 +2,15 @@ import AgricultureIcon from "@mui/icons-material/Agriculture";
 import BugReportIcon from "@mui/icons-material/BugReport";
 import InputIcon from "@mui/icons-material/Input";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import { Box, Chip } from "@mui/material";
-import LoadingChip from "components/common/chips/LoadingChip";
-import FileIcon from "components/common/FileIcon/FileIcon";
-import { uiSocket } from "context";
 import { useHistory } from "react-router-dom";
-import { COLORS } from "style/colors";
-import { theme } from "style/theme";
+
+import LoadingChip from "~/components/common/chips/LoadingChip";
+import FileIcon from "~/components/common/FileIcon/FileIcon";
+import { uiSocket } from "~/context";
+import { COLORS } from "~/style/colors";
+import { theme } from "~/style/theme";
 
 const QuickLinks = (): JSX.Element => {
   const history = useHistory();
@@ -46,14 +46,6 @@ const QuickLinks = (): JSX.Element => {
         sx={{ color: "#e84f83", borderColor: "#e84f83" }}
         icon={<BugReportIcon style={{ color: "#e84f83", marginLeft: 5 }} />}
         onClick={() => history.push("/ticket")}
-      />
-
-      <Chip
-        label="Arcade"
-        variant="outlined"
-        sx={{ color: "#e63354", borderColor: "#e63354" }}
-        icon={<SportsEsportsIcon style={{ color: "#e63354", marginLeft: 5 }} />}
-        onClick={() => history.push("/arcade")}
       />
 
       <Chip

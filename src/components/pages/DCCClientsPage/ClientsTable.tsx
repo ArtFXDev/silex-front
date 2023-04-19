@@ -7,7 +7,8 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { DCCContext } from "types/action/context";
+
+import { DCCContext } from "~/types/action/context";
 
 import ClientRow from "./ClientRow";
 

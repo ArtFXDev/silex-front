@@ -1,26 +1,17 @@
 {
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  },
   "env": {
     "browser": true,
     "es2021": true
   },
-  "ignorePatterns": [".eslintrc.js"],
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended"
   ],
+  "overrides": [],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
     "ecmaVersion": "latest",
-    "project": ["./tsconfig.json"],
     "sourceType": "module"
   },
   "plugins": [
@@ -28,15 +19,14 @@
     "@typescript-eslint",
     "react-hooks",
     "unused-imports",
-    "simple-import-sort"
+    "simple-import-sort",
+    "import"
   ],
   "rules": {
-    "react/prop-types": "off",
-    "react/jsx-uses-react": "off",
-    "react/react-in-jsx-scope": "off",
-    "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
-    "react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
-    "unused-imports/no-unused-imports": "warn",
+    "eqeqeq": ["error", "smart"],
+    "no-var": "error",
+    "camelcase": "warn",
+    "no-console": "warn",
     "@typescript-eslint/ban-types": [
       "error",
       {
@@ -45,17 +35,14 @@
         }
       }
     ],
-    "no-restricted-imports": [
-      "error",
-      {
-        "patterns": ["@mui/*/*/*", "!@mui/material/test-utils/*"]
-      }
-    ],
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "unused-imports/no-unused-imports": "warn",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
-    "no-console": "warn",
-    "eqeqeq": ["error", "smart"],
-    "no-var": "error",
-    "camelcase": "warn"
+    "import/first": "error",
+    "import/newline-after-import": "error",
+    "import/no-duplicates": "error"
   }
 }

@@ -1,8 +1,9 @@
 import { Switch } from "@mui/material";
-import { useAction } from "context";
 import { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
-import { BooleanParameter } from "types/action/parameters";
+
+import { useAction } from "~/context";
+import { BooleanParameter } from "~/types/action/parameters";
 
 interface SwitchParameterProps {
   parameter: BooleanParameter;

@@ -10,12 +10,13 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import ProdBadge from "components/common/chips/ProdBetaDevChip";
-import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
-import SilexLogo from "components/common/SilexLogo/SilexLogo";
-import { useAction, useAuth } from "context";
 import isElectron from "is-electron";
 import { Link as RouterLink, useLocation } from "react-router-dom";
+
+import ProdBadge from "~/components/common/chips/ProdBetaDevChip";
+import OpenLogsButton from "~/components/common/OpenLogsButton/OpenLogsButton";
+import SilexLogo from "~/components/common/SilexLogo/SilexLogo";
+import { useAction, useAuth } from "~/context";
 
 /**
  * List of links to display
@@ -31,7 +32,6 @@ const links = [
   },
   { text: "Actions", to: "/action", exact: true },
   { text: "Statistics", to: "/stats", exact: true },
-  { text: "🎮 Arcade", to: "/arcade", exact: true },
   {
     text: "🚜 Tractor",
     to: "/tractor",

@@ -5,10 +5,11 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { useAction } from "context";
 import { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
-import { SelectParameter as SelectParameterType } from "types/action/parameters";
+
+import { useAction } from "~/context";
+import { SelectParameter as SelectParameterType } from "~/types/action/parameters";
 
 interface SelectParameterProps {
   parameter: SelectParameterType;

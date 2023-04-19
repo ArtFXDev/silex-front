@@ -1,7 +1,8 @@
-import TerminalGrotesque from "assets/fonts/terminal-grotesque.ttf";
-import silexLogo from "assets/images/silex_logo.png";
 import p5Types from "p5";
 import Sketch from "react-p5";
+
+import TerminalGrotesque from "~/assets/fonts/terminal-grotesque.ttf";
+import silexLogo from "~/assets/images/silex_logo.png";
 
 class Silex {
   p5: p5Types;

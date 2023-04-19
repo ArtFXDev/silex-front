@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { gql, useQuery } from "@apollo/client";
 import {
   GridView as GridViewIcon,
@@ -6,12 +5,13 @@ import {
 } from "@mui/icons-material";
 import { IconButton, List } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import SilexLogo from "components/common/SilexLogo/SilexLogo";
-import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useState } from "react";
-import { theme } from "style/theme";
-import { Person } from "types/entities";
-import { GameVariant } from "types/entities/Game";
+
+import SilexLogo from "~/components/common/SilexLogo/SilexLogo";
+import QueryWrapper from "~/components/utils/QueryWrapper/QueryWrapper";
+import { theme } from "~/style/theme";
+import { Person } from "~/types/entities";
+import { GameVariant } from "~/types/entities/Game";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 import PersonCard from "./PersonCard";

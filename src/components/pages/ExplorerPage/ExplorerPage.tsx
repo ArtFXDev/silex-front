@@ -6,11 +6,9 @@ import {
 } from "@mui/icons-material";
 import { Alert, IconButton, Link, SelectChangeEvent } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import ProjectSelector from "components/common/ProjectSelector/ProjectSelector";
-import SearchTextField from "components/common/SearchTextField/SearchTextField";
-import { useAuth } from "context";
 import { useEffect, useState } from "react";
 import {
+  Link as RouterLink,
   Redirect,
   Route,
   Switch,
@@ -18,8 +16,11 @@ import {
   useLocation,
   useRouteMatch,
 } from "react-router-dom";
-import { Link as RouterLink } from "react-router-dom";
-import { ProjectId } from "types/entities";
+
+import ProjectSelector from "~/components/common/ProjectSelector/ProjectSelector";
+import SearchTextField from "~/components/common/SearchTextField/SearchTextField";
+import { useAuth } from "~/context";
+import { ProjectId } from "~/types/entities";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 import CategorySelector from "./CategorySelector";
