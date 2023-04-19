@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
   Box,

@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { BaseEntity, ProjectId, Shot } from "types/entities";
 
 import { Asset } from "./Asset";

@@ -45,6 +45,7 @@ const AnimatedNumber = ({
         requestRef.current = requestAnimationFrame(animate);
       }
     },
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     [duration, range.from, range.to]
   );
 

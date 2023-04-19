@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
   Box,
@@ -86,6 +85,7 @@ const CreateAssetView = ({
       Zou.createAsset(projectId, assetTypeId, {
         data: {},
         description,
+        /* eslint-disable-next-line camelcase */
         episode_id: null,
         name,
       })

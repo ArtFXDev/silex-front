@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { Socket } from "socket.io-client";
 
 import { Action } from "~/types/action/action";

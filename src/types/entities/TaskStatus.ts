@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { BaseEntity } from "types/entities";
 
 export interface TaskStatus extends BaseEntity {

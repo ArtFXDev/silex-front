@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { gql, useQuery } from "@apollo/client";
 import AddIcon from "@mui/icons-material/Add";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";

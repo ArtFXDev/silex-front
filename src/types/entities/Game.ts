@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { Person } from "./Person";
 
 export interface GameVariant {
