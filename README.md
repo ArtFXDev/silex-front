@@ -32,7 +32,7 @@ $ yarn install # Install the dependencies
 
 ### Environment variables
 
-Before starting the UI, make sure the variables defined in the [`.env`](.env) file are correct.
+Before starting the UI, copy the [`.env.example`](.env.example) file to `.env` and configure the following variables:
 
 They are:
 
