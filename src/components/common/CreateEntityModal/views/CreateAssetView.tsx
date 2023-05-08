@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import { useMatch } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import QueryWrapper from "~/components/utils/QueryWrapper/QueryWrapper";
 import * as Zou from "~/utils/zou";
@@ -37,6 +37,13 @@ const ASSET_TASK_TYPES = gql`
   }
 `;
 
+type AssetAndTaskTypesResponse = {
+  project: {
+    asset_types: { id: string; name: string }[];
+    task_types: { id: string; name: string; for_shots: boolean }[];
+  };
+};
+
 interface CreateAssetViewProps {
   defaultCategory?: string;
   onClose: () => void;
@@ -55,17 +62,14 @@ const CreateAssetView = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [autoCreateTasks, setAutoCreateTasks] = useState<boolean>(true);
 
-  const projectIdFromURL = useMatch(":projectId")?.params.projectId as string;
+  const projectIdFromURL = useParams<{ projectId: string }>()
+    .projectId as string;
   const projectId = projectIdOverride || projectIdFromURL;
+
   const client = useApolloClient();
   const { enqueueSnackbar } = useSnackbar();
 
-  const query = useQuery<{
-    project: {
-      asset_types: { id: string; name: string }[];
-      task_types: { id: string; name: string; for_shots: boolean }[];
-    };
-  }>(ASSET_TASK_TYPES, {
+  const query = useQuery<AssetAndTaskTypesResponse>(ASSET_TASK_TYPES, {
     variables: { id: projectId },
   });
   const { data } = query;

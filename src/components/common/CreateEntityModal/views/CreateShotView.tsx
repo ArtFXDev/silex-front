@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
-import { useMatch } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import QueryWrapper from "~/components/utils/QueryWrapper/QueryWrapper";
 import { Sequence } from "~/types/entities";
@@ -49,6 +49,21 @@ const SEQUENCES_SHOTS = gql`
   }
 `;
 
+type SequencesShotsResponse = {
+  project: {
+    sequences: {
+      id: string;
+      name: string;
+      shots: { id: string; name: string }[];
+    }[];
+    task_types: {
+      id: string;
+      name: string;
+      for_shots: boolean;
+    }[];
+  };
+};
+
 interface CreateShotViewProps {
   targetEntity: TargetEntity;
   onClose: () => void;
@@ -66,25 +81,14 @@ const CreateShotView = ({
     targetEntity ? targetEntity.id : ""
   );
 
-  const projectIdFromURL = useMatch(":projectId")?.params.projectId as string;
+  const projectIdFromURL = useParams<{ projectId: string }>()
+    .projectId as string;
   const projectId = projectIdOverride || projectIdFromURL;
+
   const { enqueueSnackbar } = useSnackbar();
   const client = useApolloClient();
 
-  const query = useQuery<{
-    project: {
-      sequences: {
-        id: string;
-        name: string;
-        shots: { id: string; name: string }[];
-      }[];
-      task_types: {
-        id: string;
-        name: string;
-        for_shots: boolean;
-      }[];
-    };
-  }>(SEQUENCES_SHOTS, {
+  const query = useQuery<SequencesShotsResponse>(SEQUENCES_SHOTS, {
     variables: { id: projectId },
   });
   const { data } = query;
@@ -105,9 +109,18 @@ const CreateShotView = ({
 
       if (shots.length > 0) {
         const lastShotName = shots[shots.length - 1].name;
+
+        let numberIndex = lastShotName.length - 1;
+        while (!isNaN(parseInt(lastShotName[numberIndex]))) numberIndex--;
+        numberIndex++;
+
+        const shotNumber = parseInt(
+          lastShotName.slice(numberIndex + 1, lastShotName.length)
+        );
+
         return (
-          lastShotName[0] +
-          (parseInt(lastShotName.slice(1)) + 10).toString().padStart(3, "0")
+          lastShotName.slice(0, numberIndex) +
+          (shotNumber + 10).toString().padStart(3, "0")
         );
       } else {
         return "P010";
