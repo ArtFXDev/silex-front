@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 
 import CreateEntityModal from "~/components/common/CreateEntityModal/CreateEntityModal";
 import { COLORS } from "~/style/colors";
@@ -37,7 +37,7 @@ const EntityHeader = ({ entity }: EntityHeaderProps): JSX.Element => {
     window.localStorage.getItem("open-entity-settings") === "true"
   );
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const entityHeader = getEntityHeader(entity);
 
   return (
@@ -55,11 +55,7 @@ const EntityHeader = ({ entity }: EntityHeaderProps): JSX.Element => {
               cursor: "pointer",
               ":hover": { color: "rgba(255, 255, 255, 0.8)" },
             }}
-            onClick={() =>
-              history.push(
-                window.location.pathname.split("/").slice(0, -2).join("/")
-              )
-            }
+            onClick={() => navigate(-1)}
           >
             {entity.type === "Shot"
               ? entity.sequence.name

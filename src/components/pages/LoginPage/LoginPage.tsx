@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import isElectron from "is-electron";
 import { useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import SilexText from "~/assets/images/silex_text.png";
 import ProdBadge from "~/components/common/chips/ProdBetaDevChip";
@@ -46,9 +46,9 @@ const LoginPage = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const auth = useAuth();
-  const location = useLocation<{ from: Location }>();
+  const location = useLocation();
   const socket = useSocket();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   /**
    * Called when the user press the login button
@@ -70,7 +70,9 @@ const LoginPage = (): JSX.Element => {
       .then((response) => {
         const { from } = location.state || { from: { pathname: "/" } };
         // Redirect to the asked page
-        auth.signin(response.data.user).then(() => history.replace(from));
+        auth
+          .signin(response.data.user)
+          .then(() => navigate(from, { replace: true }));
       })
       .catch((error) => {
         setIsLoading(false);

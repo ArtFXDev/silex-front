@@ -6,7 +6,7 @@ import React, {
   useReducer,
   useState,
 } from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 
 import { useSocket } from "~/context";
 import { Action } from "~/types/action/action";
@@ -88,7 +88,7 @@ export const ProvideAction = ({
     window.localStorage.getItem("action-simple-mode") === "true"
   );
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const { uiSocket, dccClients } = useSocket();
 
   /**
@@ -144,14 +144,14 @@ export const ProvideAction = ({
       addNewAction(newAction.data);
 
       // Redirect to the specific action page
-      history.push(`/action/${newAction.data.uuid}`);
+      navigate(`/action/${newAction.data.uuid}`);
 
       // Brings the dektop app on top
       runIfInElectron(() => window.electron.send("bringWindowToFront"));
 
       forceUpdate();
     },
-    [history]
+    [navigate]
   );
 
   /**

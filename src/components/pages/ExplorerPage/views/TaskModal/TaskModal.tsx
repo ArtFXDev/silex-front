@@ -15,7 +15,7 @@ import {
 import { alpha, emphasize } from "@mui/material/styles";
 import { TransitionProps } from "@mui/material/transitions";
 import { forwardRef, useEffect } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { PersonsAvatarGroup } from "~/components/common/avatar";
 import ColoredCircle from "~/components/common/ColoredCircle/ColoredCircle";
@@ -105,18 +105,18 @@ const Transition = forwardRef(function Transition(
 });
 
 const TaskModal = (): JSX.Element => {
-  const routeMatch = useRouteMatch<{ taskId: string }>();
+  const routeParams = useParams<{ taskId: string }>();
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const client = useApolloClient();
 
   const onClose = () => {
-    history.push(window.location.pathname.split("/").slice(0, -1).join("/"));
+    navigate(window.location.pathname.split("/").slice(0, -1).join("/"));
   };
 
   const query = useQuery<{ task: Task }>(TASK, {
-    variables: { id: routeMatch.params.taskId },
+    variables: { id: routeParams.taskId },
     fetchPolicy: "cache-and-network",
   });
   const { data } = query;

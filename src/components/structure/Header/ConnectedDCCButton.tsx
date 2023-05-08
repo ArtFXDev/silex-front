@@ -20,7 +20,6 @@ const ConnectedDCCButton = (props: IconButtonProps): JSX.Element => {
           color={socket.isConnected ? "success" : "error"}
           sx={{
             "& .MuiBadge-badge": {
-              color: "grey",
               boxShadow: `0 0 1px 1px ${
                 socket.isConnected ? green[500] : red[500]
               }`,

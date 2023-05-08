@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 
 import QueryWrapper from "~/components/utils/QueryWrapper/QueryWrapper";
 import * as Zou from "~/utils/zou";
@@ -47,8 +47,7 @@ const CreateTaskView = ({
   const [selectedTaskTypeId, setSelectedTaskTypeId] = useState<string>("");
   const [taskName, setTaskName] = useState<string>("main");
 
-  const projectIdFromURL = useRouteMatch<{ projectId: string }>().params
-    .projectId;
+  const projectIdFromURL = useMatch(":projectId")?.params.projectId as string;
   const projectId = projectIdOverride || projectIdFromURL;
   const { enqueueSnackbar } = useSnackbar();
   const client = useApolloClient();

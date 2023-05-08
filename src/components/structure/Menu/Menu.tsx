@@ -33,8 +33,8 @@ const links = [
   { text: "Actions", to: "/action", exact: true },
   { text: "Statistics", to: "/stats", exact: true },
   {
-    text: "🚜 Tractor",
-    to: "/tractor",
+    text: "🚜 Render farm",
+    to: "/render-farm",
     exact: true,
     openInNewWindow: true,
     openTo: import.meta.env.VITE_TRACTOR_URL,

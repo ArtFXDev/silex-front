@@ -1,7 +1,7 @@
 import FlagIcon from "@mui/icons-material/Flag";
 import { FormControlLabel, Switch, Tab, Tabs } from "@mui/material";
 import { useEffect } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useLocation, useMatch, useNavigate } from "react-router-dom";
 
 import FileIcon from "~/components/common/FileIcon/FileIcon";
 import { useAction } from "~/context";
@@ -13,25 +13,20 @@ import ActionItem from "./ActionItem";
  * Actions are displayed as tabs so the user can navigate between them
  */
 const ActionsView = (): JSX.Element => {
-  const routeMatch = useRouteMatch<{ uuid: string }>();
-  const history = useHistory();
+  const routeMatch = useMatch(":uuid");
+  const navigate = useNavigate();
+  const location = useLocation();
   const { actions, cleanActions, isActionFinished, simpleMode, setSimpleMode } =
     useAction();
 
   useEffect(() => {
-    // Listen to react router route change
-    const unlisten = history.listen((location) => {
-      if (!location.pathname.startsWith("/action")) {
-        cleanActions();
-      }
-    });
-
-    // Clear the listener
-    return unlisten;
-  }, [cleanActions, history]);
+    if (!location.pathname.startsWith("/action")) {
+      cleanActions();
+    }
+  }, [cleanActions, location]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-    history.push(`/action/${newValue}`);
+    navigate(`/action/${newValue}`);
   };
 
   return (

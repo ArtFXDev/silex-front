@@ -1,6 +1,6 @@
 import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type Category = {
   value: "shots" | "assets";
@@ -16,7 +16,7 @@ const CategorySelector = (): JSX.Element => {
   const [selectedCategory, setSelectedCategory] = useState<string>("shots");
 
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const tokens = location.pathname.split("/");
@@ -27,7 +27,7 @@ const CategorySelector = (): JSX.Element => {
   }, [location.pathname]);
 
   const handleChange = (event: SelectChangeEvent<string>) => {
-    history.push(
+    navigate(
       `${location.pathname.split(selectedCategory)[0]}${event.target.value}`
     );
     setSelectedCategory(event.target.value);

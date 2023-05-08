@@ -3,7 +3,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import { AppBar, Box, IconButton, Toolbar, Tooltip } from "@mui/material";
 import isElectron from "is-electron";
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import SilexText from "~/assets/images/silex_text.png";
 import NimbyController from "~/components/common/NimbyController/NimbyController";
@@ -17,7 +17,7 @@ import ConnectedDCCButton from "./ConnectedDCCButton";
  * The Silex logo and text displayed on the top left
  */
 const SilexLogoAndText = (): JSX.Element => {
-  const history = useHistory();
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -39,7 +39,7 @@ const SilexLogoAndText = (): JSX.Element => {
             transform: "scale(1.1)",
           },
         }}
-        onClick={() => history.push("/")}
+        onClick={() => navigate("/")}
       />
       <img src={SilexText} alt="silex text" width={70} />
     </Box>

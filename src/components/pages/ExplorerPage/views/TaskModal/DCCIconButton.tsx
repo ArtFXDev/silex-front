@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 
 import FileIcon from "~/components/common/FileIcon/FileIcon";
 import { useAuth, useSocket } from "~/context";
@@ -32,7 +32,7 @@ const DCCIconButton = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [launchSceneSuccess, setLaunchSceneSuccess] = useState<boolean>(false);
 
-  const projectId = useRouteMatch<{ projectId: string }>().params.projectId;
+  const projectId = useMatch(":projectId")?.params.projectId;
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
   const { projects } = useAuth();

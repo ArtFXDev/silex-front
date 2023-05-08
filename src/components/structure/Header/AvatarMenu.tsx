@@ -2,7 +2,7 @@ import { AccountCircle, Logout } from "@mui/icons-material";
 import { Button, ListItemIcon, Menu, MenuItem, Paper } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import { Link, Link as RouterLink, useHistory } from "react-router-dom";
+import { Link, Link as RouterLink, useNavigate } from "react-router-dom";
 
 import SilexCoinIcon from "~/assets/images/silex_coin.svg";
 import { PersonAvatar } from "~/components/common/avatar";
@@ -16,7 +16,7 @@ const AvatarMenu = (): JSX.Element => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const auth = useAuth();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -33,7 +33,7 @@ const AvatarMenu = (): JSX.Element => {
       .catch((err) =>
         enqueueSnackbar(`Logout error: ${err}`, { variant: "error" })
       )
-      .finally(() => history.push("/login"));
+      .finally(() => navigate("/login"));
   };
 
   if (!auth.user)

@@ -8,7 +8,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 
 import LazyMedia from "~/components/utils/LazyMedia/LazyMedia";
 import { useAuth } from "~/context";
@@ -18,13 +18,13 @@ import { pictureThumbnailURL } from "~/utils/zou";
 
 const ProjectsView = (): JSX.Element => {
   const auth = useAuth();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleGoOnProject = (projectId: string) => {
     const defaultCategory =
       window.localStorage.getItem("explorer-default-category") || "shots";
 
-    history.push(`/explorer/${projectId}/${defaultCategory}`);
+    navigate(`/explorer/${projectId}/${defaultCategory}`);
     window.localStorage.setItem("last-project-id", projectId);
   };
 

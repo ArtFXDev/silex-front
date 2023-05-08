@@ -12,6 +12,44 @@ import {
 } from "~/types/entities";
 import { GameVariant } from "~/types/entities/Game";
 
+type Route<R = unknown, P = never> = { result: R; params: P };
+
+type GetRoutes = {
+  "auth/authenticated": Route<{ authenticated: boolean; user: Person }>;
+};
+
+/**
+ * Replaces route parameters with their respective value
+ * Eg: /auth/:id, { id: 4 } => /auth/4
+ */
+function handleRouteParams(
+  route: string,
+  params: Record<string, unknown>
+): string {
+  for (const [key, value] of Object.entries(params)) {
+    route = route.replaceAll(`:${key}`, String(value));
+  }
+  return route;
+}
+
+export async function apiGet<R extends keyof GetRoutes>(
+  ...args: GetRoutes[R]["params"] extends never
+    ? [R]
+    : [R, GetRoutes[R]["params"]]
+): Promise<GetRoutes[R]["result"]> {
+  const [route, params] = args;
+
+  const formatRoute = params
+    ? handleRouteParams(route as string, params)
+    : (route as string);
+
+  const result = await axios.get(zouAPIURL(formatRoute), {
+    withCredentials: true,
+  });
+
+  return result.data;
+}
+
 /**
  * Type of an axios response that returns a promise
  */
@@ -81,24 +119,31 @@ export function originalPreviewFileURL(
  * Checks if the user is authenticated with the backend and the WS server
  * @returns the authenticated user if successfull
  */
-export function isAuthenticated(): PromiseResponse<{
-  user: Person;
-}> {
-  return new Promise((resolve, reject) => {
-    // Check if the token is on the socket server side
-    axios
-      .get(`${import.meta.env.VITE_WS_SERVER}/auth/token`)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .then((_token) => {
-        // Check if authenticated on the zou side
-        getWithCredentials<{ user: Person }>("auth/authenticated", {
-          timeout: 2000,
-        })
-          .then((response) => resolve(response))
-          .catch((err) => reject(err));
-      })
-      .catch((err) => reject(err));
-  });
+// export function isAuthenticated(): PromiseResponse<{
+//   user: Person;
+// }> {
+//   return new Promise((resolve, reject) => {
+//     // Check if the token is on the socket server side
+//     axios
+//       .get(`${import.meta.env.VITE_WS_SERVER}/auth/token`)
+//       // eslint-disable-next-line @typescript-eslint/no-unused-vars
+//       .then((_token) => {
+//         // Check if authenticated on the zou side
+//         getWithCredentials<{ user: Person }>("auth/authenticated", {
+//           timeout: 2000,
+//         })
+//           .then((response) => resolve(response))
+//           .catch((err) => reject(err));
+//       })
+//       .catch((err) => reject(err));
+//   });
+// }
+
+export async function isAuthenticated() {
+  const socketAuthRoute = `${import.meta.env.VITE_WS_SERVER}/auth/token`;
+  await axios.get(socketAuthRoute);
+
+  return await apiGet("auth/authenticated");
 }
 
 type LoginInput = { email: string; password: string };

@@ -1,5 +1,5 @@
 import { List, ListItemButton, Paper, Typography } from "@mui/material";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 
 import ColoredCircle from "~/components/common/ColoredCircle/ColoredCircle";
 import ArrowDelimiter from "~/components/common/Separator/ArrowDelimiter";
@@ -8,7 +8,7 @@ import { RecentTasks } from "~/types/storage/task";
 const RecentTasksList = (): JSX.Element => {
   const storedRecentTasks = window.localStorage.getItem("recent-tasks");
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const recentTasks: RecentTasks =
     storedRecentTasks && JSON.parse(storedRecentTasks);
@@ -28,7 +28,7 @@ const RecentTasksList = (): JSX.Element => {
 
               return (
                 <Paper key={id} sx={{ mb: 1 }}>
-                  <ListItemButton onClick={() => history.push(task.pathname)}>
+                  <ListItemButton onClick={() => navigate(task.pathname)}>
                     <ColoredCircle
                       color={task.task.taskType.color}
                       size={20}

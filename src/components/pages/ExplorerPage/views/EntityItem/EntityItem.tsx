@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useRef, useState } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { PersonsAvatarGroup } from "~/components/common/avatar";
 import ColoredCircle from "~/components/common/ColoredCircle/ColoredCircle";
@@ -48,8 +48,7 @@ const EntityItem = ({
   const [mouseOver, setMouseOver] = useState<boolean>();
   const actionMenuButton = useRef<HTMLButtonElement>(null);
 
-  const history = useHistory();
-  const routeMatch = useRouteMatch();
+  const navigate = useNavigate();
   const client = useApolloClient();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -70,11 +69,7 @@ const EntityItem = ({
   const onClickAction = (event: React.MouseEvent<HTMLElement>) => {
     // Prevent clicking when the menu is open
     if (!anchorEl && event.target !== actionMenuButton.current) {
-      history.push(
-        `${routeMatch.url}/${entity.id}${
-          entity.type === "Task" ? "" : "/tasks"
-        }`
-      );
+      navigate(`${entity.id}${entity.type === "Task" ? "" : "/tasks"}`);
     }
   };
 

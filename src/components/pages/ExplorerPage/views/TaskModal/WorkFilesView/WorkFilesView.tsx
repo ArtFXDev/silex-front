@@ -1,6 +1,6 @@
 import { Alert, Fade, List } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 
 import { uiSocket } from "~/context";
 import { FileOrFolder, ServerResponse } from "~/types/socket";
@@ -22,7 +22,7 @@ const WorkFilesView = ({
 }: WorkFilesViewProps): JSX.Element => {
   const [response, setResponse] =
     useState<ServerResponse<{ files: FileOrFolder[] }>>();
-  const { taskId } = useRouteMatch<{ taskId: string }>().params;
+  const taskId = useMatch(":taskId")?.params.taskId as string;
 
   useEffect(() => {
     uiSocket.emit(

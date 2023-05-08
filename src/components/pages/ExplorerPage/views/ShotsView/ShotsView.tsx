@@ -2,7 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import AddIcon from "@mui/icons-material/Add";
 import { Button, Typography } from "@mui/material";
 import { useState } from "react";
-import { useRouteMatch } from "react-router";
+import { useParams } from "react-router";
 
 import CreateEntityModal from "~/components/common/CreateEntityModal/CreateEntityModal";
 import QueryWrapper from "~/components/utils/QueryWrapper/QueryWrapper";
@@ -60,10 +60,10 @@ const ShotsView = ({ listView, search }: ShotsViewProps): JSX.Element => {
     target?: Sequence;
   }>();
 
-  const routeMatch = useRouteMatch<{ projectId: string }>();
+  const routeParams = useParams<{ projectId: string }>();
 
   const query = useQuery<{ project: Project }>(SEQUENCES_AND_SHOTS, {
-    variables: { id: routeMatch.params.projectId },
+    variables: { id: routeParams.projectId },
   });
 
   return (

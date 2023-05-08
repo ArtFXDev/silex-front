@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 
 import QueryWrapper from "~/components/utils/QueryWrapper/QueryWrapper";
 import { Sequence } from "~/types/entities";
@@ -66,8 +66,7 @@ const CreateShotView = ({
     targetEntity ? targetEntity.id : ""
   );
 
-  const projectIdFromURL = useRouteMatch<{ projectId: string }>().params
-    .projectId;
+  const projectIdFromURL = useMatch(":projectId")?.params.projectId as string;
   const projectId = projectIdOverride || projectIdFromURL;
   const { enqueueSnackbar } = useSnackbar();
   const client = useApolloClient();

@@ -1,4 +1,5 @@
-import { createTheme, ThemeOptions } from "@mui/material/styles";
+import { createTheme } from "@mui/material";
+import { ThemeOptions } from "@mui/material/styles";
 
 import KarrikRegularWoff2 from "~/assets/fonts/Karrik-Regular.woff2";
 
