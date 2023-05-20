@@ -82,16 +82,6 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
     });
   };
 
-  /*const handleUndoLastCommand = () => {
-    if (!finished) {
-      uiSocket.emit("undoLastCommand", { uuid: action.uuid }, (response) => {
-        enqueueSnackbar(`Undo last command`, {
-          variant: response.status === 200 ? "success" : "error",
-        });
-      });
-    }
-  };*/
-
   return (
     <div style={{ maxWidth: 800 }}>
       {/* Header */}
@@ -186,17 +176,6 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
           <div
             style={{ display: "inline-flex", alignItems: "center", gap: 10 }}
           >
-            {/* <Tooltip title="Undo last command" placement="top" arrow>
-              <IconButton onClick={handleUndoLastCommand}>
-                <FirstPageIcon
-                  color="disabled"
-                  sx={{
-                    transition: "all 0.2s ease",
-                    "&:hover": { color: "rgb(180, 180, 180)" },
-                  }}
-                />
-              </IconButton>
-            </Tooltip> */}
             <Button
               variant="contained"
               onClick={handleContinue}

@@ -115,30 +115,6 @@ export function originalPreviewFileURL(
   );
 }
 
-/**
- * Checks if the user is authenticated with the backend and the WS server
- * @returns the authenticated user if successfull
- */
-// export function isAuthenticated(): PromiseResponse<{
-//   user: Person;
-// }> {
-//   return new Promise((resolve, reject) => {
-//     // Check if the token is on the socket server side
-//     axios
-//       .get(`${import.meta.env.VITE_WS_SERVER}/auth/token`)
-//       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//       .then((_token) => {
-//         // Check if authenticated on the zou side
-//         getWithCredentials<{ user: Person }>("auth/authenticated", {
-//           timeout: 2000,
-//         })
-//           .then((response) => resolve(response))
-//           .catch((err) => reject(err));
-//       })
-//       .catch((err) => reject(err));
-//   });
-// }
-
 export async function isAuthenticated() {
   const socketAuthRoute = `${import.meta.env.VITE_WS_SERVER}/auth/token`;
   await axios.get(socketAuthRoute);

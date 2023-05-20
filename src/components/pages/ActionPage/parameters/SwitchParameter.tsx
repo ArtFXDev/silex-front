@@ -1,6 +1,6 @@
 import { Switch } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 
 import { useAction } from "~/context";
 import { BooleanParameter } from "~/types/action/parameters";
@@ -12,7 +12,7 @@ interface SwitchParameterProps {
 const SwitchParameter = ({ parameter }: SwitchParameterProps): JSX.Element => {
   const [checked, setChecked] = useState<boolean>(parameter.value === true);
 
-  const actionUUID = useRouteMatch<{ uuid: string }>().params.uuid;
+  const actionUUID = useMatch(":uuid")?.params.uuid as string;
   const { sendActionUpdate } = useAction();
 
   useEffect(() => {

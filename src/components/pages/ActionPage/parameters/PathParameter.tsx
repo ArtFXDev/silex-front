@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import isElectron from "is-electron";
 import { useRef, useState } from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 import FileIcon from "~/components/common/FileIcon/FileIcon";
@@ -38,7 +38,7 @@ const PathParameter = ({ parameter }: PathParameterProps): JSX.Element => {
   const [uuid, _] = useState<string>(uuidv4());
 
   const { sendActionUpdate } = useAction();
-  const actionUUID = useRouteMatch<{ uuid: string }>().params.uuid;
+  const actionUUID = useMatch(":uuid")?.params.uuid as string;
 
   if (!isElectron()) {
     return (

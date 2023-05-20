@@ -164,10 +164,8 @@ export const ProvideAction = ({
       const previousStatus = actions[uuid].action.status;
 
       // Only keep the last version when merging arrays
-      const arrayMerge: merge.Options["arrayMerge"] = (
-        destinationArray,
-        sourceArray
-      ) => sourceArray;
+      const arrayMerge: merge.Options["arrayMerge"] = (_, sourceArray) =>
+        sourceArray;
 
       // Merge the diff
       actions[uuid].action = merge(actions[uuid].action, actionDiff.data, {

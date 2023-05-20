@@ -1,5 +1,6 @@
 import { ListItem, Tooltip, Typography } from "@mui/material";
 
+import CollapseError from "~/components/common/CollapseError/CollapseError";
 import { useAction } from "~/context";
 import { LIST_ITEM_BORDER_RADIUS } from "~/style/constants";
 import {
@@ -112,7 +113,13 @@ const ParameterItem = ({ parameter }: ParameterItemProps): JSX.Element => {
           <FrameSetParameter parameter={parameter as FrameSetParameterType} />
         );
       default:
-        return <div>Unknown parameter type: {JSON.stringify(type)}</div>;
+        return (
+          <CollapseError
+            name="Parameter error"
+            message={`Unknown parameter type: ${parameter.type.name}`}
+            error={parameter}
+          />
+        );
     }
   };
 

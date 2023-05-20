@@ -81,7 +81,7 @@ export const ProvideAuth = ({ children }: ProvideAuthProps): JSX.Element => {
 
   const updateUser = async () => {
     const response = await Zou.isAuthenticated();
-    setUser(response.data.user);
+    setUser(response.user);
   };
 
   const updateProjects = async () => {

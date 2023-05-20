@@ -62,7 +62,7 @@ const RangeParameter = ({ parameter }: RangeParameterProps): JSX.Element => {
       }
       valueLabelDisplay="on"
       defaultValue={parameter.value as number}
-      onChange={(e, newValue) =>
+      onChange={(_, newValue) =>
         (parameter.value = Array.isArray(newValue) ? newValue[0] : newValue)
       }
     />

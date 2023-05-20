@@ -3,7 +3,7 @@ import AddIcon from "@mui/icons-material/Add";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 import { Alert, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import { useMatch } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import CreateEntityModal from "~/components/common/CreateEntityModal/CreateEntityModal";
 import ProjectSelector from "~/components/common/ProjectSelector/ProjectSelector";
@@ -147,7 +147,7 @@ const TaskParameter = ({
     },
   });
 
-  const actionUUID = useMatch(":uuid")?.params.uuid as string;
+  const actionUUID = useParams<{ uuid: string }>().uuid as string;
   const auth = useAuth();
 
   const { actions, sendActionUpdate } = useAction();

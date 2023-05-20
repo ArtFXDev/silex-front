@@ -1,7 +1,7 @@
 import FlagIcon from "@mui/icons-material/Flag";
 import { FormControlLabel, Switch, Tab, Tabs } from "@mui/material";
 import { useEffect } from "react";
-import { useLocation, useMatch, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import FileIcon from "~/components/common/FileIcon/FileIcon";
 import { useAction } from "~/context";
@@ -13,7 +13,7 @@ import ActionItem from "./ActionItem";
  * Actions are displayed as tabs so the user can navigate between them
  */
 const ActionsView = (): JSX.Element => {
-  const routeMatch = useMatch(":uuid");
+  const currentActionId = useParams<{ uuid: string }>().uuid as string;
   const navigate = useNavigate();
   const location = useLocation();
   const { actions, cleanActions, isActionFinished, simpleMode, setSimpleMode } =
@@ -39,7 +39,7 @@ const ActionsView = (): JSX.Element => {
         }}
       >
         <Tabs
-          value={routeMatch.params.uuid}
+          value={currentActionId}
           onChange={handleTabChange}
           variant="scrollable"
           scrollButtons="auto"
@@ -62,7 +62,7 @@ const ActionsView = (): JSX.Element => {
                       action
                       name={actions[uuid].action.context_metadata.dcc}
                       size={20}
-                      disabled={!(uuid === routeMatch.params.uuid)}
+                      disabled={!(uuid === currentActionId)}
                       sx={{ ml: "10px" }}
                     />
                   )
@@ -71,9 +71,7 @@ const ActionsView = (): JSX.Element => {
                   "&.MuiTab-root": {
                     minHeight: "0px !important",
                     color:
-                      uuid === routeMatch.params.uuid
-                        ? actionColor
-                        : "text.disabled",
+                      uuid === currentActionId ? actionColor : "text.disabled",
                   },
                 }}
               />
@@ -101,7 +99,7 @@ const ActionsView = (): JSX.Element => {
         />
       </div>
 
-      <ActionItem uuid={routeMatch.params.uuid} />
+      <ActionItem uuid={currentActionId} />
     </div>
   );
 };

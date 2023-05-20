@@ -6,7 +6,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 
 import { useAction } from "~/context";
 import { MultipleSelectParameter as MultipleSelectParameterType } from "~/types/action/parameters";
@@ -38,7 +38,7 @@ const MultipleSelectParameter = ({
   const [values, setValues] = useState<string[]>(parameter.value || []);
 
   const { sendActionUpdate } = useAction();
-  const actionUUID = useRouteMatch<{ uuid: string }>().params.uuid;
+  const actionUUID = useMatch(":uuid")?.params.uuid as string;
 
   // Update state when the parameter value from action changes
   useEffect(() => {
