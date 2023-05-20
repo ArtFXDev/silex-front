@@ -65,6 +65,20 @@ The build system is [Vite](https://vitejs.dev/guide/#overview), it's a faster al
 
 - 🚨 `yarn lint` -> shows ESLint warnings and errors. Add `:fix` to apply auto fixes.
 
+### Docker image
+
+The front-end can be deployed using Docker. First build the image:
+
+```shell
+$ docker build -t artfxdev/silex-front:<version> . # use whatever version tag you want
+```
+
+The image uses [Nginx](https://nginx.org/en/) to serve the files so you can run it locally:
+
+```shell
+$ docker run -it --rm -p 127.0.0.1:80:80 artfxdev/silex-front:<version>
+```
+
 ## ⚠️ Issues
 
 Currently, Silex uses the Zou API to authenticate the user against the database. For that we make a request to `/api/auth/login` and we receive headers with the [Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) directive so that the token is sent again on future requests.
