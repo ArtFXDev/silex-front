@@ -26,3 +26,4 @@ yarn-error.log*
 
 *.tsbuildinfo
 dist
+.idea
