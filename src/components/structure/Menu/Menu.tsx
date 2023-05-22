@@ -170,7 +170,7 @@ const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
         }}
       >
         <Typography sx={{ color: "rgba(150, 149, 149, 0.5)" }} fontSize={12}>
-          {import.meta.env.VITE_APP_NAME} v{import.meta.env.VITE_APP_VERSION}
+          {__APP_NAME__} v{__APP_VERSION__}
         </Typography>
 
         <div style={{ marginLeft: "10px" }}>

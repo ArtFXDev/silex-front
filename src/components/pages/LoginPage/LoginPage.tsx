@@ -7,6 +7,7 @@ import {
   Fade,
   Grid,
   TextField,
+  Typography,
 } from "@mui/material";
 import isElectron from "is-electron";
 import { useState } from "react";
@@ -220,11 +221,17 @@ const LoginPage = (): JSX.Element => {
 
       <div
         style={{
+          display: "flex",
+          gap: 3,
+          alignItems: "center",
           position: "absolute",
           bottom: 15,
           right: 20,
         }}
       >
+        <Typography sx={{ color: "rgba(150, 149, 149, 0.5)" }} fontSize={12}>
+          {__APP_NAME__} v{__APP_VERSION__}
+        </Typography>
         <OpenLogsButton />
         <ProdBadge />
       </div>

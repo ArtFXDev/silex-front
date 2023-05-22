@@ -11,7 +11,7 @@ export default defineConfig({
   },
   plugins: [react()],
   define: {
-    VITE_APP_NAME: JSON.stringify(process.env.npm_package_name),
-    VITE_APP_VERSION: JSON.stringify(process.env.npm_package_version),
+    __APP_NAME__: JSON.stringify(process.env.npm_package_name),
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
   },
 });

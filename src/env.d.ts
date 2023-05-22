@@ -1,9 +1,9 @@
 /// <reference types="vite/client" />
 
-interface ImportMetaEnv {
-  readonly VITE_APP_NAME: string;
-  readonly VITE_APP_VERSION: string;
+declare const __APP_NAME__: string;
+declare const __APP_VERSION__: string;
 
+interface ImportMetaEnv {
   /** Url of the Zou server */
   readonly VITE_ZOU_API: string;
 
