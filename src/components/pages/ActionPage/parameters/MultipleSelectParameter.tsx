@@ -5,10 +5,11 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { useAction } from "context";
 import { useEffect, useState } from "react";
-import { useRouteMatch } from "react-router-dom";
-import { MultipleSelectParameter as MultipleSelectParameterType } from "types/action/parameters";
+import { useMatch } from "react-router-dom";
+
+import { useAction } from "~/context";
+import { MultipleSelectParameter as MultipleSelectParameterType } from "~/types/action/parameters";
 
 // Used for styling the Select input
 const ITEM_HEIGHT = 48;
@@ -37,7 +38,7 @@ const MultipleSelectParameter = ({
   const [values, setValues] = useState<string[]>(parameter.value || []);
 
   const { sendActionUpdate } = useAction();
-  const actionUUID = useRouteMatch<{ uuid: string }>().params.uuid;
+  const actionUUID = useMatch(":uuid")?.params.uuid as string;
 
   // Update state when the parameter value from action changes
   useEffect(() => {

@@ -7,17 +7,19 @@ import {
   Fade,
   Grid,
   TextField,
+  Typography,
 } from "@mui/material";
-import SilexText from "assets/images/silex_text.png";
-import ProdBadge from "components/common/chips/ProdBetaDevChip";
-import NimbyController from "components/common/NimbyController/NimbyController";
-import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
-import SilexLogo from "components/common/SilexLogo/SilexLogo";
-import { useAuth, useSocket } from "context";
 import isElectron from "is-electron";
 import { useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
-import * as Zou from "utils/zou";
+import { useLocation, useNavigate } from "react-router-dom";
+
+import SilexText from "~/assets/images/silex_text.png";
+import ProdBadge from "~/components/common/chips/ProdBetaDevChip";
+import NimbyController from "~/components/common/NimbyController/NimbyController";
+import OpenLogsButton from "~/components/common/OpenLogsButton/OpenLogsButton";
+import SilexLogo from "~/components/common/SilexLogo/SilexLogo";
+import { useAuth, useSocket } from "~/context";
+import * as Zou from "~/utils/zou";
 
 const SilexLogoAndText = (): JSX.Element => (
   <Grid
@@ -45,9 +47,9 @@ const LoginPage = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const auth = useAuth();
-  const location = useLocation<{ from: Location }>();
+  const location = useLocation();
   const socket = useSocket();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   /**
    * Called when the user press the login button
@@ -69,7 +71,9 @@ const LoginPage = (): JSX.Element => {
       .then((response) => {
         const { from } = location.state || { from: { pathname: "/" } };
         // Redirect to the asked page
-        auth.signin(response.data.user).then(() => history.replace(from));
+        auth
+          .signin(response.data.user)
+          .then(() => navigate(from, { replace: true }));
       })
       .catch((error) => {
         setIsLoading(false);
@@ -80,7 +84,9 @@ const LoginPage = (): JSX.Element => {
           );
         } else {
           setError(
-            `Zou server at ${process.env.REACT_APP_ZOU_API} is not reachable, check your internet connection or retry later`
+            `Zou server at ${
+              import.meta.env.VITE_ZOU_API
+            } is not reachable, check your internet connection or retry later`
           );
         }
       });
@@ -215,11 +221,17 @@ const LoginPage = (): JSX.Element => {
 
       <div
         style={{
+          display: "flex",
+          gap: 3,
+          alignItems: "center",
           position: "absolute",
           bottom: 15,
           right: 20,
         }}
       >
+        <Typography sx={{ color: "rgba(150, 149, 149, 0.5)" }} fontSize={12}>
+          {__APP_NAME__} v{__APP_VERSION__}
+        </Typography>
         <OpenLogsButton />
         <ProdBadge />
       </div>

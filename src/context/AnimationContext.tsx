@@ -1,6 +1,7 @@
 import { Box, Fade } from "@mui/material";
-import SilexCoinsAnimation from "components/common/animations/SilexCoinsAnimation";
 import React, { useContext, useState } from "react";
+
+import SilexCoinsAnimation from "~/components/common/animations/SilexCoinsAnimation";
 
 export interface AnimationContext {
   triggerSilexCoinsAnimation: (nCoins: number) => void;

@@ -1,6 +1,7 @@
 import { TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import { ArrayParameter as ArrayParameterType } from "types/action/parameters";
+
+import { ArrayParameter as ArrayParameterType } from "~/types/action/parameters";
 
 interface ArrayParameterProps {
   parameter: ArrayParameterType;

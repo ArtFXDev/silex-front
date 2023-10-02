@@ -1,6 +1,7 @@
 import { Slider } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { RangeParameter as RangeParameterType } from "types/action/parameters";
+
+import { RangeParameter as RangeParameterType } from "~/types/action/parameters";
 
 const CustomSlider = styled(Slider)(() => ({
   color: "#66bb6a",
@@ -61,7 +62,7 @@ const RangeParameter = ({ parameter }: RangeParameterProps): JSX.Element => {
       }
       valueLabelDisplay="on"
       defaultValue={parameter.value as number}
-      onChange={(e, newValue) =>
+      onChange={(_, newValue) =>
         (parameter.value = Array.isArray(newValue) ? newValue[0] : newValue)
       }
     />

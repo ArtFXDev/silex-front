@@ -1,7 +1,8 @@
-import FileOrFolderItem from "components/common/FileOrFolderItem/FileOrFolderItem";
-import { ProvideFileExplorer } from "context/FileExplorerContext";
 import { useEffect, useState } from "react";
-import * as Zou from "utils/zou";
+
+import FileOrFolderItem from "~/components/common/FileOrFolderItem/FileOrFolderItem";
+import { ProvideFileExplorer } from "~/context/FileExplorerContext";
+import * as Zou from "~/utils/zou";
 
 interface PublishedFilesViewProps {
   taskId: string;

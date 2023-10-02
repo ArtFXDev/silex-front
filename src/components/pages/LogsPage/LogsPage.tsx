@@ -1,11 +1,12 @@
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { Chip, IconButton, Tooltip, Typography } from "@mui/material";
 import axios from "axios";
-import Logs from "components/common/Logs/Logs";
-import Separator from "components/common/Separator/Separator";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
-import { LogLine } from "types/action/action";
+
+import Logs from "~/components/common/Logs/Logs";
+import Separator from "~/components/common/Separator/Separator";
+import { LogLine } from "~/types/action/action";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 
@@ -25,7 +26,7 @@ const LogFile = ({ fileName, title }: LogFileProps) => {
   const fetchLogs = useCallback(() => {
     axios
       .get<{ totalLines: number; lines: string[] }>(
-        `${process.env.REACT_APP_WS_SERVER}/log/${fileName}?fromEnd=${lines}`
+        `${import.meta.env.VITE_WS_SERVER}/log/${fileName}?fromEnd=${lines}`
       )
       .then((response) => {
         setLogs({
@@ -43,7 +44,7 @@ const LogFile = ({ fileName, title }: LogFileProps) => {
 
   const handleClearLog = () => {
     axios
-      .delete(`${process.env.REACT_APP_WS_SERVER}/log/${fileName}`)
+      .delete(`${import.meta.env.VITE_WS_SERVER}/log/${fileName}`)
       .then(() => {
         enqueueSnackbar(`Cleared logfile ${fileName}`, { variant: "success" });
         fetchLogs();

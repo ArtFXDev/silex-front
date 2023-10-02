@@ -8,6 +8,7 @@ import {
   CardMedia,
   Chip,
   Fade,
+  IconButton,
   ListItem,
   ListItemButton,
   ListItemIcon,
@@ -17,18 +18,18 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { IconButton } from "@mui/material";
-import { PersonsAvatarGroup } from "components/common/avatar";
-import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
-import ValidationTimeline from "components/common/ValidationTimeline/ValidationTimeline";
-import LazyMedia from "components/utils/LazyMedia/LazyMedia";
 import { useSnackbar } from "notistack";
 import { useRef, useState } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
-import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
-import { Asset, Shot, Task } from "types/entities";
-import { entityURLAndExtension, getEntityName } from "utils/entity";
-import * as Zou from "utils/zou";
+import { useNavigate } from "react-router-dom";
+
+import { PersonsAvatarGroup } from "~/components/common/avatar";
+import ColoredCircle from "~/components/common/ColoredCircle/ColoredCircle";
+import ValidationTimeline from "~/components/common/ValidationTimeline/ValidationTimeline";
+import LazyMedia from "~/components/utils/LazyMedia/LazyMedia";
+import { LIST_ITEM_BORDER_RADIUS } from "~/style/constants";
+import { Asset, Shot, Task } from "~/types/entities";
+import { entityURLAndExtension, getEntityName } from "~/utils/entity";
+import * as Zou from "~/utils/zou";
 
 interface EntityItemProps {
   index: number;
@@ -47,8 +48,7 @@ const EntityItem = ({
   const [mouseOver, setMouseOver] = useState<boolean>();
   const actionMenuButton = useRef<HTMLButtonElement>(null);
 
-  const history = useHistory();
-  const routeMatch = useRouteMatch();
+  const navigate = useNavigate();
   const client = useApolloClient();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -69,11 +69,7 @@ const EntityItem = ({
   const onClickAction = (event: React.MouseEvent<HTMLElement>) => {
     // Prevent clicking when the menu is open
     if (!anchorEl && event.target !== actionMenuButton.current) {
-      history.push(
-        `${routeMatch.url}/${entity.id}${
-          entity.type === "Task" ? "" : "/tasks"
-        }`
-      );
+      navigate(`${entity.id}${entity.type === "Task" ? "" : "/tasks"}`);
     }
   };
 

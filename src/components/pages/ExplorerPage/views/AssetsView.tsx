@@ -1,12 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
 import AddIcon from "@mui/icons-material/Add";
 import { Button, IconButton, Tooltip, Typography } from "@mui/material";
-import CreateEntityModal from "components/common/CreateEntityModal/CreateEntityModal";
-import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useState } from "react";
-import { useRouteMatch } from "react-router";
-import { Asset, EntityType, Project } from "types/entities";
-import { fuzzyMatch } from "utils/string";
+import { useParams } from "react-router-dom";
+
+import CreateEntityModal from "~/components/common/CreateEntityModal/CreateEntityModal";
+import QueryWrapper from "~/components/utils/QueryWrapper/QueryWrapper";
+import { Asset, EntityType, Project } from "~/types/entities";
+import { fuzzyMatch } from "~/utils/string";
 
 import EntitiesView from "./EntitiesView";
 
@@ -38,10 +39,10 @@ interface AssetsViewProps {
 const AssetsView = ({ listView, search }: AssetsViewProps): JSX.Element => {
   const [choosenAssetCategory, setChoosenAssetCategory] = useState<string>();
 
-  const routeMatch = useRouteMatch<{ projectId: string }>();
+  const routeParams = useParams<{ projectId: string }>();
 
   const query = useQuery<{ project: Project }>(ASSETS, {
-    variables: { id: routeMatch.params.projectId },
+    variables: { id: routeParams.projectId },
   });
 
   const openCreateAssetModalWithType = (assetTypeId: string) => {

@@ -1,8 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
 import { Grid } from "@mui/material";
-import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
-import { Asset, Project, Shot } from "types/entities";
-import { fuzzyMatch } from "utils/string";
+
+import QueryWrapper from "~/components/utils/QueryWrapper/QueryWrapper";
+import { Asset, Project, Shot } from "~/types/entities";
+import { fuzzyMatch } from "~/utils/string";
 
 import EntityCard from "./EntityCard";
 

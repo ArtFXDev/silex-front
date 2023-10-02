@@ -2,11 +2,12 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { Collapse, IconButton, Link, TableCell, TableRow } from "@mui/material";
 import axios from "axios";
-import Logs from "components/common/Logs/Logs";
 import { useEffect, useState } from "react";
-import { LogLine } from "types/action/action";
-import { RunningJob } from "types/tractor/blade";
-import { secondsToDhms } from "utils/date";
+
+import Logs from "~/components/common/Logs/Logs";
+import { LogLine } from "~/types/action/action";
+import { RunningJob } from "~/types/tractor/blade";
+import { secondsToDhms } from "~/utils/date";
 
 const ProcessRow = ({ p }: { p: RunningJob }): JSX.Element => {
   const [open, setOpen] = useState<boolean>(false);
@@ -14,7 +15,9 @@ const ProcessRow = ({ p }: { p: RunningJob }): JSX.Element => {
 
   useEffect(() => {
     const fetchLogs = () => {
-      const logsURL = `${process.env.REACT_APP_TRACTOR_LOG_URL}/${p.login}/J${p.jid}/T${p.tid}.log`;
+      const logsURL = `${import.meta.env.VITE_TRACTOR_LOG_URL}/${p.login}/J${
+        p.jid
+      }/T${p.tid}.log`;
       axios
         .get<string>(logsURL)
         .then((response) =>

@@ -9,10 +9,11 @@ import {
   Typography,
 } from "@mui/material";
 import { linearProgressClasses } from "@mui/material/LinearProgress";
-import { useAction } from "context";
-import { Command, Step } from "types/action/action";
-import { Status } from "types/action/status";
-import { getStatusColor, getStatusIcon } from "utils/status";
+
+import { useAction } from "~/context";
+import { Command, Step } from "~/types/action/action";
+import { Status } from "~/types/action/status";
+import { getStatusColor, getStatusIcon } from "~/utils/status";
 
 import CommandItem from "./CommandItem";
 

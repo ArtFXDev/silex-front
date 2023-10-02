@@ -1,6 +1,7 @@
 import { AvatarGroup, Theme, Typography } from "@mui/material";
 import { SxProps } from "@mui/system";
-import { Person } from "types/entities";
+
+import { Person } from "~/types/entities";
 
 import PersonAvatar from "./PersonAvatar";
 

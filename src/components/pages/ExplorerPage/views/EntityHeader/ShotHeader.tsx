@@ -1,18 +1,19 @@
 /* eslint-disable camelcase */
 import { useApolloClient } from "@apollo/client";
 import { Paper, TextField, Typography } from "@mui/material";
-import LoadingChip from "components/common/chips/LoadingChip";
-import FrameSetTextField from "components/common/FrameSetTextField/FrameSetTextField";
-import ValidationTimeline from "components/common/ValidationTimeline/ValidationTimeline";
 import { useState } from "react";
-import { theme } from "style/theme";
-import { Shot } from "types/entities";
-import { isFrameSetValid } from "utils/frameset";
+
+import LoadingChip from "~/components/common/chips/LoadingChip";
+import FrameSetTextField from "~/components/common/FrameSetTextField/FrameSetTextField";
+import ValidationTimeline from "~/components/common/ValidationTimeline/ValidationTimeline";
+import { theme } from "~/style/theme";
+import { Shot } from "~/types/entities";
+import { isFrameSetValid } from "~/utils/frameset";
 import {
   unvalidateShotFrameSet,
   updateEntity,
   validateShotFrameSet,
-} from "utils/zou";
+} from "~/utils/zou";
 
 import ValidationHistoryChart from "./ValidationHistoryChart";
 

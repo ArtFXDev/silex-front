@@ -15,16 +15,17 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import SubmitButton from "components/common/chips/SubmitButton";
-import FileOrFolderItem from "components/common/FileOrFolderItem/FileOrFolderItem";
-import { useAuth } from "context";
-import { ProvideFileExplorer } from "context/FileExplorerContext";
 import isElectron from "is-electron";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
-import { useRouteMatch } from "react-router-dom";
-import { Task } from "types/entities";
-import * as Zou from "utils/zou";
+import { useMatch } from "react-router-dom";
+
+import SubmitButton from "~/components/common/chips/SubmitButton";
+import FileOrFolderItem from "~/components/common/FileOrFolderItem/FileOrFolderItem";
+import { useAuth } from "~/context";
+import { ProvideFileExplorer } from "~/context/FileExplorerContext";
+import { Task } from "~/types/entities";
+import * as Zou from "~/utils/zou";
 
 import DCCIconButton from "./DCCIconButton";
 import WorkFilesView from "./WorkFilesView/WorkFilesView";
@@ -55,7 +56,7 @@ const FileExplorer = ({ task }: FileExplorerProps): JSX.Element => {
   );
 
   const { enqueueSnackbar } = useSnackbar();
-  const projectId = useRouteMatch<{ projectId: string }>().params.projectId;
+  const projectId = useMatch(":projectId")?.params.projectId as string;
   const { projects } = useAuth();
   const projectName =
     projects && projects.find((p) => p.id === projectId)?.name;
@@ -294,8 +295,8 @@ const FileExplorer = ({ task }: FileExplorerProps): JSX.Element => {
           )
         ) : error ? (
           <Alert variant="outlined" severity={"error"}>
-            Can{"'"}t build a path, make sure the path template is setup on the
-            backend.
+            Can{"'"}t build a path, no file tree can be found for the given
+            project.
           </Alert>
         ) : undefined}
       </div>

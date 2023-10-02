@@ -4,7 +4,8 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { CircularProgress } from "@mui/material";
-import { Status } from "types/action/status";
+
+import { Status } from "~/types/action/status";
 
 /**
  * Returns a color from a status.

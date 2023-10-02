@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { BaseEntity, EntityType } from "./BaseEntity";
 import { ProjectId } from "./Project";
 import { Task } from "./Task";

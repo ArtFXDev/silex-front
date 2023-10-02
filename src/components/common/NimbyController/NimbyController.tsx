@@ -18,10 +18,11 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useBlade } from "context/BladeContext";
 import { useState } from "react";
-import { useHistory } from "react-router";
-import { secondsToDhms } from "utils/date";
+import { useNavigate } from "react-router";
+
+import { useBlade } from "~/context/BladeContext";
+import { secondsToDhms } from "~/utils/date";
 
 import Separator from "../Separator/Separator";
 
@@ -61,7 +62,7 @@ const NimbyController = ({ sx }: BoxProps): JSX.Element => {
   const [open, setOpen] = useState(false);
 
   const { bladeStatus } = useBlade();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   // Toggle the nimby ON or OFF
   const handleToggleNimby = () => {
@@ -82,7 +83,7 @@ const NimbyController = ({ sx }: BoxProps): JSX.Element => {
   // Called when going to /running-jobs
   const handleClickOnRunningJobs = () => {
     setOpen(false);
-    history.push("/running-jobs");
+    navigate("/running-jobs");
   };
 
   const color = bladeStatus

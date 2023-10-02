@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { BaseEntity } from "./BaseEntity";
 
 export interface Department extends BaseEntity {

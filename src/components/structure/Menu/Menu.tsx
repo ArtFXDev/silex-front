@@ -10,12 +10,13 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import ProdBadge from "components/common/chips/ProdBetaDevChip";
-import OpenLogsButton from "components/common/OpenLogsButton/OpenLogsButton";
-import SilexLogo from "components/common/SilexLogo/SilexLogo";
-import { useAction, useAuth } from "context";
 import isElectron from "is-electron";
 import { Link as RouterLink, useLocation } from "react-router-dom";
+
+import ProdBadge from "~/components/common/chips/ProdBetaDevChip";
+import OpenLogsButton from "~/components/common/OpenLogsButton/OpenLogsButton";
+import SilexLogo from "~/components/common/SilexLogo/SilexLogo";
+import { useAction, useAuth } from "~/context";
 
 /**
  * List of links to display
@@ -31,27 +32,26 @@ const links = [
   },
   { text: "Actions", to: "/action", exact: true },
   { text: "Statistics", to: "/stats", exact: true },
-  { text: "🎮 Arcade", to: "/arcade", exact: true },
   {
-    text: "🚜 Tractor",
-    to: "/tractor",
+    text: "🚜 Render farm",
+    to: "/render-farm",
     exact: true,
     openInNewWindow: true,
-    openTo: process.env.REACT_APP_TRACTOR_URL,
+    openTo: import.meta.env.VITE_TRACTOR_URL,
   },
   {
     text: "👨‍🌾 Harvest",
     to: "/harvest",
     exact: true,
     openInNewWindow: true,
-    openTo: process.env.REACT_APP_HARVEST_URL,
+    openTo: import.meta.env.VITE_HARVEST_URL,
   },
   {
     text: "Ticket",
     to: "/ticket",
     exact: true,
     openInNewWindow: true,
-    openTo: process.env.REACT_APP_TICKET_URL,
+    openTo: import.meta.env.VITE_TICKET_URL,
   },
 ];
 
@@ -170,7 +170,7 @@ const Menu = ({ closeMenu, open }: MenuProps): JSX.Element => {
         }}
       >
         <Typography sx={{ color: "rgba(150, 149, 149, 0.5)" }} fontSize={12}>
-          {process.env.REACT_APP_NAME} v{process.env.REACT_APP_VERSION}
+          {__APP_NAME__} v{__APP_VERSION__}
         </Typography>
 
         <div style={{ marginLeft: "10px" }}>

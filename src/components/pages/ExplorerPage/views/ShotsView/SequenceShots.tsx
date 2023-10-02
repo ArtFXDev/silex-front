@@ -13,8 +13,9 @@ import {
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import { Sequence, Shot } from "types/entities";
-import * as Zou from "utils/zou";
+
+import { Sequence, Shot } from "~/types/entities";
+import * as Zou from "~/utils/zou";
 
 import EntitiesView from "../EntitiesView";
 

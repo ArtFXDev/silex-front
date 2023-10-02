@@ -1,5 +1,6 @@
 import { Paper, Switch, Typography } from "@mui/material";
-import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
+
+import { LIST_ITEM_BORDER_RADIUS } from "~/style/constants";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 

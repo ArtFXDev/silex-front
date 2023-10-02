@@ -1,4 +1,4 @@
-import { Task } from "types/entities";
+import { Task } from "~/types/entities";
 
 export type RecentTask = {
   pathname: string;

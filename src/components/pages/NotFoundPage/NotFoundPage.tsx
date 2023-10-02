@@ -1,20 +1,20 @@
-import { Fade, Link, Typography } from "@mui/material";
-import NotFoundImage from "assets/images/404.png";
+import { Link, Typography } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
+
+import NotFoundImage from "~/assets/images/404.png";
+import PageWrapper from "~/components/pages/PageWrapper/PageWrapper";
 
 /**
  * 404 fallback page
  */
 const NotFoundPage = (): JSX.Element => {
   return (
-    <Fade in timeout={500}>
+    <PageWrapper centerContent>
       <div
         style={{
-          width: "100%",
-          height: "100%",
           display: "flex",
-          alignItems: "center",
           justifyContent: "center",
+          alignItems: "center",
           flexDirection: "column",
         }}
       >
@@ -33,7 +33,7 @@ const NotFoundPage = (): JSX.Element => {
           Go home
         </Link>
       </div>
-    </Fade>
+    </PageWrapper>
   );
 };
 

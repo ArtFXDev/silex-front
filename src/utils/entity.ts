@@ -1,5 +1,5 @@
-import { Asset, Shot, Task } from "types/entities";
-import { PreviewFile } from "types/entities/PreviewFile";
+import { Asset, Shot, Task } from "~/types/entities";
+import { PreviewFile } from "~/types/entities/PreviewFile";
 
 import { originalPreviewFileURL, pictureThumbnailURL } from "./zou";
 

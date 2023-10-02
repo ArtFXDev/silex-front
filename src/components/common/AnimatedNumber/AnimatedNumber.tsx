@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { easeInQuint } from "utils/easings";
+
+import { easeInQuint } from "~/utils/easings";
 
 interface AnimatedNumberProps {
   on: boolean;
@@ -44,7 +45,7 @@ const AnimatedNumber = ({
         requestRef.current = requestAnimationFrame(animate);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     [duration, range.from, range.to]
   );
 

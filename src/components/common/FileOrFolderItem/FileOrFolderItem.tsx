@@ -13,17 +13,18 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import FileIcon from "components/common/FileIcon/FileIcon";
-import { uiSocket } from "context";
-import { useFileExplorer } from "context/FileExplorerContext";
 import isElectron from "is-electron";
 import { useEffect, useState } from "react";
-import { COLORS } from "style/colors";
-import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
-import { extensions } from "types/files/extensions";
-import { FileOrFolder, ServerResponse } from "types/socket";
-import { formatDateTime } from "utils/date";
-import { fileMatchExtensions, getFileExtension } from "utils/files";
+
+import FileIcon from "~/components/common/FileIcon/FileIcon";
+import { uiSocket } from "~/context";
+import { useFileExplorer } from "~/context/FileExplorerContext";
+import { COLORS } from "~/style/colors";
+import { LIST_ITEM_BORDER_RADIUS } from "~/style/constants";
+import { extensions } from "~/types/files/extensions";
+import { FileOrFolder, ServerResponse } from "~/types/socket";
+import { formatDateTime } from "~/utils/date";
+import { fileMatchExtensions, getFileExtension } from "~/utils/files";
 
 import ActionButton from "./ActionButton";
 

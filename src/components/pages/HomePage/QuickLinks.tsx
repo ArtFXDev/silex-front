@@ -4,15 +4,16 @@ import InputIcon from "@mui/icons-material/Input";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import { Box, Chip } from "@mui/material";
-import LoadingChip from "components/common/chips/LoadingChip";
-import FileIcon from "components/common/FileIcon/FileIcon";
-import { uiSocket } from "context";
-import { useHistory } from "react-router-dom";
-import { COLORS } from "style/colors";
-import { theme } from "style/theme";
+import { useNavigate } from "react-router-dom";
+
+import LoadingChip from "~/components/common/chips/LoadingChip";
+import FileIcon from "~/components/common/FileIcon/FileIcon";
+import { uiSocket } from "~/context";
+import { COLORS } from "~/style/colors";
+import { theme } from "~/style/theme";
 
 const QuickLinks = (): JSX.Element => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <div
@@ -28,7 +29,7 @@ const QuickLinks = (): JSX.Element => {
         variant="outlined"
         color="info"
         icon={<TravelExploreIcon style={{ marginLeft: 5 }} />}
-        onClick={() => history.push("/explorer")}
+        onClick={() => navigate("/explorer")}
       />
 
       <Chip
@@ -36,7 +37,7 @@ const QuickLinks = (): JSX.Element => {
         variant="outlined"
         sx={{ color: "#b19ef9", borderColor: "#b19ef9" }}
         icon={<QueryStatsIcon style={{ color: "#b19ef9", marginLeft: 5 }} />}
-        onClick={() => history.push("/stats")}
+        onClick={() => navigate("/stats")}
       />
 
       <Chip
@@ -44,15 +45,15 @@ const QuickLinks = (): JSX.Element => {
         variant="outlined"
         sx={{ color: "#e84f83", borderColor: "#e84f83" }}
         icon={<BugReportIcon style={{ color: "#e84f83", marginLeft: 5 }} />}
-        onClick={() => history.push("/ticket")}
+        onClick={() => navigate("/ticket")}
       />
 
       <Chip
-        label="Tractor"
+        label="Render farm"
         variant="outlined"
         color="warning"
         icon={<AgricultureIcon style={{ marginLeft: 5 }} />}
-        onClick={() => history.push("/tractor")}
+        onClick={() => navigate("/render-farm")}
       />
 
       <Chip
@@ -60,7 +61,7 @@ const QuickLinks = (): JSX.Element => {
         variant="outlined"
         sx={{ color: "#78b454", borderColor: "#78b454" }}
         icon={<p style={{ fontSize: 20, marginLeft: 10 }}>👨‍🌾</p>}
-        onClick={() => history.push("/harvest")}
+        onClick={() => navigate("/harvest")}
       />
 
       <div
@@ -144,11 +145,3 @@ const QuickLinks = (): JSX.Element => {
 };
 
 export default QuickLinks;
-
-/*<Chip
-        label="Arcade"
-        variant="outlined"
-        sx={{ color: "#e63354", borderColor: "#e63354" }}
-        icon={<SportsEsportsIcon style={{ color: "#e63354", marginLeft: 5 }} />}
-        onClick={() => history.push("/arcade")}
-      />*/

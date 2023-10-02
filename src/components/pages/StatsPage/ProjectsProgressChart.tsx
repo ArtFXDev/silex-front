@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { gql, useQuery } from "@apollo/client";
 import {
   Chip,
@@ -8,8 +7,6 @@ import {
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import axios from "axios";
-import CrownAnimation from "components/common/animations/CrownAnimation";
-import { useAuth } from "context";
 import { useEffect, useState } from "react";
 import {
   CartesianGrid,
@@ -21,12 +18,15 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { COLORS } from "style/colors";
-import { theme } from "style/theme";
-import { Project } from "types/entities";
-import { getColorFromString } from "utils/color";
-import { dateDiffDays } from "utils/date";
-import { zouAPIURL } from "utils/zou";
+
+import CrownAnimation from "~/components/common/animations/CrownAnimation";
+import { useAuth } from "~/context";
+import { COLORS } from "~/style/colors";
+import { theme } from "~/style/theme";
+import { Project } from "~/types/entities";
+import { getColorFromString } from "~/utils/color";
+import { dateDiffDays } from "~/utils/date";
+import { zouAPIURL } from "~/utils/zou";
 
 const PROJECTS = gql`
   query projects {
@@ -355,20 +355,20 @@ const ProjectsProgressChart = (): JSX.Element => {
             />
 
             <Tooltip
-              formatter={(p: number, value: string) => {
-                const project = projectsQuery.data?.projects.find(
-                  (pr) => pr.name === value
-                );
-
-                const totalFramesProject = project
-                  ? project.total_frames
-                  : totalFrames;
-                const frames = Math.floor(p * totalFramesProject);
-
-                return `${frames} / ${totalFramesProject} frames (${Math.floor(
-                  p * 100
-                )}%)`;
-              }}
+              // formatter={(p: number, value: string) => {
+              //   const project = projectsQuery.data?.projects.find(
+              //     (pr) => pr.name === value
+              //   );
+              //
+              //   const totalFramesProject = project
+              //     ? project.total_frames
+              //     : totalFrames;
+              //   const frames = Math.floor(p * totalFramesProject);
+              //
+              //   return `${frames} / ${totalFramesProject} frames (${Math.floor(
+              //     p * 100
+              //   )}%)`;
+              // }}
               labelFormatter={(d) => new Date(d).toLocaleDateString("en-US")}
             />
 

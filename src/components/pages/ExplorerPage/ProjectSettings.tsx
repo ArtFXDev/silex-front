@@ -6,12 +6,13 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useAuth } from "context";
 import { useState } from "react";
 import { HexColorPicker } from "react-colorful";
-import { ProjectId } from "types/entities";
-import { debounce } from "utils/action";
-import { updateProject } from "utils/zou";
+
+import { useAuth } from "~/context";
+import { ProjectId } from "~/types/entities";
+import { debounce } from "~/utils/action";
+import { updateProject } from "~/utils/zou";
 
 interface ProjectSettingsProps {
   project?: ProjectId;

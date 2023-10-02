@@ -5,10 +5,11 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { useAction } from "context";
 import { useEffect, useState } from "react";
-import { useRouteMatch } from "react-router-dom";
-import { SelectParameter as SelectParameterType } from "types/action/parameters";
+import { useMatch } from "react-router-dom";
+
+import { useAction } from "~/context";
+import { SelectParameter as SelectParameterType } from "~/types/action/parameters";
 
 interface SelectParameterProps {
   parameter: SelectParameterType;
@@ -19,14 +20,14 @@ const SelectParameter = ({
   parameter,
   onChange,
 }: SelectParameterProps): JSX.Element => {
-  const [value, setValue] = useState<string | null>(parameter.value);
+  const [value, setValue] = useState<string>(parameter.value || "");
 
   const { simpleMode, sendActionUpdate } = useAction();
-  const actionUUID = useRouteMatch<{ uuid: string }>().params.uuid;
+  const actionUUID = useMatch(":uuid")?.params.uuid as string;
 
   // Update state when the parameter value from action changes
   useEffect(() => {
-    setValue(parameter.value);
+    setValue(parameter.value || "");
   }, [parameter]);
 
   const error = parameter.value === null;
@@ -46,7 +47,7 @@ const SelectParameter = ({
         defaultValue={parameter.value}
         onChange={(e) => {
           onChange(e);
-          setValue(e.target.value);
+          setValue(e.target.value || "");
           sendActionUpdate(actionUUID, false);
         }}
         value={value}

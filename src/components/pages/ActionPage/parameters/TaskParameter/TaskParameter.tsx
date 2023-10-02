@@ -1,21 +1,21 @@
-/* eslint-disable camelcase */
 import { gql, useQuery } from "@apollo/client";
 import AddIcon from "@mui/icons-material/Add";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 import { Alert, Grid, IconButton, Tooltip, Typography } from "@mui/material";
-import CreateEntityModal from "components/common/CreateEntityModal/CreateEntityModal";
-import ProjectSelector from "components/common/ProjectSelector/ProjectSelector";
-import SearchTextField from "components/common/SearchTextField/SearchTextField";
-import ArrowDelimiter from "components/common/Separator/ArrowDelimiter";
-import { useAction, useAuth } from "context";
 import { useCallback, useEffect, useState } from "react";
-import { useRouteMatch } from "react-router";
+import { useParams } from "react-router-dom";
+
+import CreateEntityModal from "~/components/common/CreateEntityModal/CreateEntityModal";
+import ProjectSelector from "~/components/common/ProjectSelector/ProjectSelector";
+import SearchTextField from "~/components/common/SearchTextField/SearchTextField";
+import ArrowDelimiter from "~/components/common/Separator/ArrowDelimiter";
+import { useAction, useAuth } from "~/context";
 import {
   TaskFileParameter,
   TaskParameter as TaskParameterType,
-} from "types/action/parameters";
-import { Asset, Shot, TaskId } from "types/entities";
-import { getEntityFullName } from "utils/entity";
+} from "~/types/action/parameters";
+import { Asset, Shot, TaskId } from "~/types/entities";
+import { getEntityFullName } from "~/utils/entity";
 
 import AssetsAndShotsView from "./AssetsAndShotsView";
 import PublishedFilesView from "./PublishedFilesView";
@@ -64,7 +64,7 @@ type TaskResponse = {
 };
 
 const views = ["entity", "task", "file"] as const;
-type View = typeof views[number];
+type View = (typeof views)[number];
 
 /**
  * Returns a formatted list of extensions
@@ -147,7 +147,7 @@ const TaskParameter = ({
     },
   });
 
-  const actionUUID = useRouteMatch<{ uuid: string }>().params.uuid;
+  const actionUUID = useParams<{ uuid: string }>().uuid as string;
   const auth = useAuth();
 
   const { actions, sendActionUpdate } = useAction();

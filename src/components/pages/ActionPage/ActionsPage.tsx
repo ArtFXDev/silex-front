@@ -1,45 +1,51 @@
-import { useAction } from "context";
-import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import { Navigate, Route, Routes, useMatch } from "react-router-dom";
 
-import PageWrapper from "../PageWrapper/PageWrapper";
+import PageWrapper from "~/components/pages/PageWrapper/PageWrapper";
+import { useAction } from "~/context";
+
 import ActionsView from "./ActionsView";
 
 /**
- * The action page is responsible for routing on the correct action tab
+ * The action page is responsible for routing to the correct action tab
  */
 const ActionsPage = (): JSX.Element => {
-  const routeMatch = useRouteMatch<{ uuid: string }>();
-
   const { actions } = useAction();
 
-  const currentAction = routeMatch.params.uuid;
+  const routeMatch = useMatch("/action/:uuid");
+  const currentActionId = routeMatch?.params.uuid as string;
 
   const firstAction =
     Object.keys(actions).length > 0 &&
     Object.keys(actions)[Object.keys(actions).length - 1];
 
   return (
-    <Switch>
-      <Route exact path="/action">
-        {firstAction ? (
-          <Redirect to={`/action/${firstAction}`} />
-        ) : (
-          // Redirect to the previous page if there's no actions
-          <Redirect to="/" />
-        )}
-      </Route>
-
-      <Route path="/action/:uuid">
-        <PageWrapper>
-          {actions[currentAction] ? (
-            <ActionsView />
+    <Routes>
+      <Route
+        path=""
+        element={
+          firstAction ? (
+            <Navigate to={`/action/${firstAction}`} />
           ) : (
-            // Redirect to the first action when the url is invalid or to the action page
-            <Redirect to={firstAction ? `/action/${firstAction}` : "/action"} />
-          )}
-        </PageWrapper>
-      </Route>
-    </Switch>
+            // Redirect to the previous page if there's no actions
+            <Navigate to="/" />
+          )
+        }
+      />
+
+      <Route
+        path=":uuid"
+        element={
+          <PageWrapper>
+            {actions[currentActionId] ? (
+              <ActionsView />
+            ) : (
+              // Redirect to the first action when the url is invalid or to the action page
+              <Navigate to={firstAction ? `${firstAction}` : "/"} />
+            )}
+          </PageWrapper>
+        }
+      />
+    </Routes>
   );
 };
 

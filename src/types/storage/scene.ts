@@ -1,4 +1,4 @@
-import { FileOrFolder } from "types/socket";
+import { FileOrFolder } from "~/types/socket";
 
 export type RecentScene = {
   lastAccess: number;

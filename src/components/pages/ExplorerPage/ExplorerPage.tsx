@@ -6,20 +6,21 @@ import {
 } from "@mui/icons-material";
 import { Alert, IconButton, Link, SelectChangeEvent } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import ProjectSelector from "components/common/ProjectSelector/ProjectSelector";
-import SearchTextField from "components/common/SearchTextField/SearchTextField";
-import { useAuth } from "context";
 import { useEffect, useState } from "react";
 import {
-  Redirect,
+  Link as RouterLink,
+  Navigate,
   Route,
-  Switch,
-  useHistory,
+  Routes,
   useLocation,
-  useRouteMatch,
+  useMatch,
+  useNavigate,
 } from "react-router-dom";
-import { Link as RouterLink } from "react-router-dom";
-import { ProjectId } from "types/entities";
+
+import ProjectSelector from "~/components/common/ProjectSelector/ProjectSelector";
+import SearchTextField from "~/components/common/SearchTextField/SearchTextField";
+import { useAuth } from "~/context";
+import { ProjectId } from "~/types/entities";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 import CategorySelector from "./CategorySelector";
@@ -33,27 +34,17 @@ const ExplorerPage = (): JSX.Element => {
     window.localStorage.getItem("list-view") === "true"
   );
 
-  const routeMatch = useRouteMatch<{ projectId: string; category: string }>(
-    "/explorer/:projectId/:category"
-  );
-
+  const routeMatch = useMatch("/explorer/:projectId/:category/*");
   const bigScreen = useMediaQuery("(min-width:1050px)");
   const auth = useAuth();
   const location = useLocation();
-  const history = useHistory();
-  const locationDepth = location.pathname.split("/").length - 1;
-
-  useEffect(() => {
-    if (routeMatch) {
-      setSelectedProject(routeMatch.params.projectId);
-    }
-  }, [routeMatch]);
+  const navigate = useNavigate();
 
   const setSearchWithSave = (value: string) => {
     setSearch(value);
 
     // Store the search input
-    if (locationDepth === 3 && routeMatch) {
+    if (routeMatch) {
       window.localStorage.setItem(
         `explorer-${routeMatch.params.category}-search`,
         value
@@ -68,38 +59,32 @@ const ExplorerPage = (): JSX.Element => {
     window.localStorage.setItem("last-project-id", e.target.value);
 
     const sp = location.pathname.split("/");
-    history.push(`/${sp[1]}/${e.target.value}/${sp[3]}`);
+    navigate(`/${sp[1]}/${e.target.value}/${sp[3]}`);
   };
 
   useEffect(() => {
+    if (routeMatch) {
+      setSelectedProject(routeMatch.params.projectId);
+    }
+  }, [routeMatch]);
+
+  useEffect(() => {
     // Restore the search input depending on the category
-    if (
-      routeMatch &&
-      routeMatch.params.category &&
-      search === undefined &&
-      locationDepth === 3
-    ) {
+    if (routeMatch && routeMatch.params.category && search === undefined) {
       const savedSearch = window.localStorage.getItem(
         `explorer-${routeMatch.params.category}-search`
       );
       setSearch(savedSearch || "");
     }
-  }, [locationDepth, routeMatch, search]);
+  }, [routeMatch, search]);
 
   useEffect(() => {
     // Clear the search input on route change
-    const unlisten = history.listen((newLocation) => {
-      const newDepth = newLocation.pathname.split("/").length - 1;
-      setSearch(newDepth === 3 ? undefined : "");
-    });
-
-    return () => unlisten();
-  }, [history, locationDepth, routeMatch]);
+    const newDepth = location.pathname.split("/").length - 1;
+    setSearch(newDepth === 3 ? undefined : "");
+  }, [location]);
 
   if (!auth.currentProjectId) {
-    if (auth.projects && auth.projects.length === 0) {
-      return <PageWrapper>You don{"'"}t have any projects...</PageWrapper>;
-    }
     return <PageWrapper>Loading project...</PageWrapper>;
   }
 
@@ -117,7 +102,10 @@ const ExplorerPage = (): JSX.Element => {
     window.localStorage.setItem("last-project-id", auth.currentProjectId);
   }
 
-  const lastProjectId = storedLastProjectId;
+  // Redirect to the current project explorer page
+  if (!routeMatch) {
+    return <Navigate to={`${storedLastProjectId}/${defaultCategory}`} />;
+  }
 
   return (
     <PageWrapper>
@@ -151,15 +139,15 @@ const ExplorerPage = (): JSX.Element => {
 
           <div style={{ display: "flex" }}>
             <IconButton
-              onClick={() => history.goBack()}
-              disabled={locationDepth <= 3}
+              onClick={() => navigate(-1)}
+              // disabled={locationDepth <= 3}
             >
               <ChevronLeftIcon />
             </IconButton>
 
             <IconButton
-              onClick={() => history.goForward()}
-              disabled={locationDepth >= 4}
+              onClick={() => navigate(1)}
+              // disabled={locationDepth >= 4}
             >
               <ChevronRightIcon />
             </IconButton>
@@ -182,37 +170,38 @@ const ExplorerPage = (): JSX.Element => {
       </div>
 
       <div style={{ marginTop: 16, marginBottom: 8 }}>
-        <Switch>
-          {/* Redirect to the shots by default when we go to the explorer */}
-          <Route exact path={`/explorer`}>
-            <Redirect to={`/explorer/${lastProjectId}/${defaultCategory}`} />
+        <Routes>
+          <Route path=":projectId">
+            <Route
+              path="shots"
+              element={<ShotsView listView={listView} search={search || ""} />}
+            />
+
+            <Route
+              path="assets"
+              element={<AssetsView listView={listView} search={search || ""} />}
+            />
+
+            <Route
+              path=":category/:entityId/tasks/*"
+              element={<TasksView listView={listView} search={search || ""} />}
+            />
+
+            <Route
+              path=""
+              element={
+                <Alert variant="outlined" color="error" sx={{ mt: 2 }}>
+                  <div>
+                    Invalid route,{" "}
+                    <Link component={RouterLink} to="/explorer">
+                      go home
+                    </Link>
+                  </div>
+                </Alert>
+              }
+            />
           </Route>
-
-          <Switch>
-            <Route path={`/explorer/:projectId/:category/:entityId/tasks`}>
-              <TasksView listView={listView} search={search || ""} />
-            </Route>
-
-            <Route path={`/explorer/:projectId/shots`}>
-              <ShotsView listView={listView} search={search || ""} />
-            </Route>
-
-            <Route path={`/explorer/:projectId/assets`}>
-              <AssetsView listView={listView} search={search || ""} />
-            </Route>
-
-            <Route>
-              <Alert variant="outlined" color="error" sx={{ mt: 2 }}>
-                <div>
-                  Invalid route,{" "}
-                  <Link component={RouterLink} to="/explorer">
-                    go home
-                  </Link>
-                </div>
-              </Alert>
-            </Route>
-          </Switch>
-        </Switch>
+        </Routes>
       </div>
     </PageWrapper>
   );

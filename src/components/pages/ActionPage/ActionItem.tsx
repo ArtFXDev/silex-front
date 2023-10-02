@@ -9,16 +9,17 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useAction, useSocket } from "context";
 import isElectron from "is-electron";
 import { useSnackbar } from "notistack";
 import { useEffect } from "react";
-import { Action } from "types/action/action";
+
+import { useAction, useSocket } from "~/context";
+import { Action } from "~/types/action/action";
 import {
   formatContextToString,
   someStepsAreWaitingForInput,
-} from "utils/action";
-import { capitalize } from "utils/string";
+} from "~/utils/action";
+import { capitalize } from "~/utils/string";
 
 import StepItem from "./StepItem";
 
@@ -80,16 +81,6 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
       clearAction(action.uuid);
     });
   };
-
-  /*const handleUndoLastCommand = () => {
-    if (!finished) {
-      uiSocket.emit("undoLastCommand", { uuid: action.uuid }, (response) => {
-        enqueueSnackbar(`Undo last command`, {
-          variant: response.status === 200 ? "success" : "error",
-        });
-      });
-    }
-  };*/
 
   return (
     <div style={{ maxWidth: 800 }}>
@@ -185,17 +176,6 @@ const ActionItem = ({ uuid }: ActionItemProps): JSX.Element => {
           <div
             style={{ display: "inline-flex", alignItems: "center", gap: 10 }}
           >
-            {/* <Tooltip title="Undo last command" placement="top" arrow>
-              <IconButton onClick={handleUndoLastCommand}>
-                <FirstPageIcon
-                  color="disabled"
-                  sx={{
-                    transition: "all 0.2s ease",
-                    "&:hover": { color: "rgb(180, 180, 180)" },
-                  }}
-                />
-              </IconButton>
-            </Tooltip> */}
             <Button
               variant="contained"
               onClick={handleContinue}

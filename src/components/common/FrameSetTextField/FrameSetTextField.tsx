@@ -1,5 +1,6 @@
 import { TextField, Typography } from "@mui/material";
-import { isFrameSetValid, parseFrameSet } from "utils/frameset";
+
+import { isFrameSetValid, parseFrameSet } from "~/utils/frameset";
 
 interface FrameSetTextFieldProps {
   value: string;

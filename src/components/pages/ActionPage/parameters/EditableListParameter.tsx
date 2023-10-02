@@ -1,7 +1,8 @@
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Chip, IconButton, Input, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
-import { EditableListParameter as EditableListParameterType } from "types/action/parameters";
+
+import { EditableListParameter as EditableListParameterType } from "~/types/action/parameters";
 
 interface EditableListParameterProps {
   parameter: EditableListParameterType;

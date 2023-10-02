@@ -1,6 +1,6 @@
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 import { Fade, IconButton, Tooltip, Typography } from "@mui/material";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 
 interface PageWrapperProps {
   /** Optional title of the page */
@@ -30,7 +30,7 @@ const PageWrapper = ({
   centerContent,
   paddingTop,
 }: PageWrapperProps): JSX.Element => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <Fade in timeout={200}>
@@ -54,9 +54,9 @@ const PageWrapper = ({
                 sx={{ ml: "auto" }}
                 onClick={() => {
                   if (history.length === 1) {
-                    history.push("/");
+                    navigate("/");
                   } else {
-                    history.goBack();
+                    navigate(-1);
                   }
                 }}
               >

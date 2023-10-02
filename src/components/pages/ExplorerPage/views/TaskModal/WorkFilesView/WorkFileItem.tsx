@@ -11,18 +11,19 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import FileIcon from "components/common/FileIcon/FileIcon";
-import { uiSocket, useAuth } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
-import { Project } from "types/entities";
-import { extensions } from "types/files/extensions";
-import { FileOrFolder } from "types/socket";
-import { RecentScene } from "types/storage/scene";
-import { formatDateTime } from "utils/date";
-import { getFileExtension } from "utils/files";
-import { addElementToLocalStorageQueue } from "utils/storage";
+
+import FileIcon from "~/components/common/FileIcon/FileIcon";
+import { uiSocket, useAuth } from "~/context";
+import { LIST_ITEM_BORDER_RADIUS } from "~/style/constants";
+import { Project } from "~/types/entities";
+import { extensions } from "~/types/files/extensions";
+import { FileOrFolder } from "~/types/socket";
+import { RecentScene } from "~/types/storage/scene";
+import { formatDateTime } from "~/utils/date";
+import { getFileExtension } from "~/utils/files";
+import { addElementToLocalStorageQueue } from "~/utils/storage";
 
 interface WorkFileItemProps {
   file: FileOrFolder;
