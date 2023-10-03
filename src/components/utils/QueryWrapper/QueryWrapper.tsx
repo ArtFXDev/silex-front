@@ -1,6 +1,7 @@
 import { QueryResult } from "@apollo/client";
 import { CircularProgress, Fade } from "@mui/material";
-import CollapseError from "components/common/CollapseError/CollapseError";
+
+import CollapseError from "~/components/common/CollapseError/CollapseError";
 
 interface QueryWrapperProps<T> {
   query: QueryResult<T>;

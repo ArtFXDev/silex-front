@@ -1,6 +1,5 @@
-import { ActionContext } from "types/action/action";
-import { Action } from "types/action/action";
-import { Status } from "types/action/status";
+import { Action, ActionContext } from "~/types/action/action";
+import { Status } from "~/types/action/status";
 
 import { getStatusColor } from "./status";
 

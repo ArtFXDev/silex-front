@@ -1,9 +1,10 @@
 import { Box, SxProps, Theme } from "@mui/material";
-import logo from "assets/images/silex_logo.png";
-import easter from "assets/images/wardrobe/easter.png";
-import fishes from "assets/images/wardrobe/fishes.png";
-import newYear from "assets/images/wardrobe/new_year.png";
-import santa from "assets/images/wardrobe/santa.png";
+
+import logo from "~/assets/images/silex_logo.png";
+import easter from "~/assets/images/wardrobe/easter.png";
+import fishes from "~/assets/images/wardrobe/fishes.png";
+import newYear from "~/assets/images/wardrobe/new_year.png";
+import santa from "~/assets/images/wardrobe/santa.png";
 
 const clothes = [
   {

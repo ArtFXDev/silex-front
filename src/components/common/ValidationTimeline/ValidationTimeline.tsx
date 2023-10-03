@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
-import { theme } from "style/theme";
-import { parseFrameSet } from "utils/frameset";
+
+import { theme } from "~/style/theme";
+import { parseFrameSet } from "~/utils/frameset";
 
 interface ValidationTimelineProps {
   totalFrames?: number;

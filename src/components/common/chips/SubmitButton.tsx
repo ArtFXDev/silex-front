@@ -1,6 +1,7 @@
 import SendIcon from "@mui/icons-material/Send";
-import { uiSocket, useAuth } from "context";
-import { COLORS } from "style/colors";
+
+import { uiSocket, useAuth } from "~/context";
+import { COLORS } from "~/style/colors";
 
 import LoadingChip from "./LoadingChip";
 

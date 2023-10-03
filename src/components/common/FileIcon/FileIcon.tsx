@@ -4,21 +4,22 @@ import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import ViewInArIcon from "@mui/icons-material/ViewInAr";
 import { Box, BoxProps } from "@mui/system";
-import AlembicLogo from "assets/images/logos/alembic.svg";
-import ArnoldLogo from "assets/images/logos/arnold.svg";
-import BlenderLogo from "assets/images/logos/blender.svg";
-import GLTFLogo from "assets/images/logos/gltf.svg";
-import HoudiniLogo from "assets/images/logos/houdini.svg";
-import MayaLogo from "assets/images/logos/maya.svg";
-import NatronLogo from "assets/images/logos/natron.svg";
-import NukeLogo from "assets/images/logos/nuke.svg";
-import OpenVDBLogo from "assets/images/logos/openvdb.svg";
-import PythonLogo from "assets/images/logos/python.svg";
-import RedshiftLogo from "assets/images/logos/redshift.svg";
-import SubstancePainter from "assets/images/logos/substance-painter.svg";
-import USDLogo from "assets/images/logos/usd.svg";
-import VrayLogo from "assets/images/logos/vray.svg";
-import { extensions } from "types/files/extensions";
+
+import AlembicLogo from "~/assets/images/logos/alembic.svg";
+import ArnoldLogo from "~/assets/images/logos/arnold.svg";
+import BlenderLogo from "~/assets/images/logos/blender.svg";
+import GLTFLogo from "~/assets/images/logos/gltf.svg";
+import HoudiniLogo from "~/assets/images/logos/houdini.svg";
+import MayaLogo from "~/assets/images/logos/maya.svg";
+import NatronLogo from "~/assets/images/logos/natron.svg";
+import NukeLogo from "~/assets/images/logos/nuke.svg";
+import OpenVDBLogo from "~/assets/images/logos/openvdb.svg";
+import PythonLogo from "~/assets/images/logos/python.svg";
+import RedshiftLogo from "~/assets/images/logos/redshift.svg";
+import SubstancePainter from "~/assets/images/logos/substance-painter.svg";
+import USDLogo from "~/assets/images/logos/usd.svg";
+import VrayLogo from "~/assets/images/logos/vray.svg";
+import { extensions } from "~/types/files/extensions";
 
 /**
  * Dictionnary of dcc names and icon paths

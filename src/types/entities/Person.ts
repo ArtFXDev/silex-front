@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { BaseEntity } from "./BaseEntity";
 import { Department } from "./Department";
 import { GameVariant } from "./Game";

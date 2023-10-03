@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
   Box,
@@ -10,11 +9,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import { useRouteMatch } from "react-router-dom";
-import * as Zou from "utils/zou";
+import { useParams } from "react-router-dom";
+
+import QueryWrapper from "~/components/utils/QueryWrapper/QueryWrapper";
+import * as Zou from "~/utils/zou";
 
 import { TargetEntity } from "../CreateEntityModal";
 
@@ -47,8 +47,8 @@ const CreateTaskView = ({
   const [selectedTaskTypeId, setSelectedTaskTypeId] = useState<string>("");
   const [taskName, setTaskName] = useState<string>("main");
 
-  const projectIdFromURL =
-    useRouteMatch<{ projectId: string }>().params.projectId;
+  const projectIdFromURL = useParams<{ projectId: string }>()
+    .projectId as string;
   const projectId = projectIdOverride || projectIdFromURL;
   const { enqueueSnackbar } = useSnackbar();
   const client = useApolloClient();
@@ -60,6 +60,18 @@ const CreateTaskView = ({
   }>(ASSET_TASK_TYPES, {
     variables: { id: projectId },
   });
+
+  const { data } = query;
+
+  if (data) {
+    const filteredTaskTypes = data.project.task_types.filter((t) =>
+      targetEntity.type === "Shot" ? t.for_shots : !t.for_shots
+    );
+
+    if (filteredTaskTypes && selectedTaskTypeId.length === 0) {
+      setSelectedTaskTypeId(filteredTaskTypes[0].id);
+    }
+  }
 
   const onCreateTasks = () => {
     setIsLoading(true);
@@ -96,10 +108,6 @@ const CreateTaskView = ({
         const filteredTaskTypes = data.project.task_types.filter((t) =>
           targetEntity.type === "Shot" ? t.for_shots : !t.for_shots
         );
-
-        if (filteredTaskTypes && selectedTaskTypeId.length === 0) {
-          setSelectedTaskTypeId(filteredTaskTypes[0].id);
-        }
 
         return (
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>

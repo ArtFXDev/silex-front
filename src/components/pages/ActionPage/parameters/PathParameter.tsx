@@ -8,15 +8,16 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import FileIcon from "components/common/FileIcon/FileIcon";
-import { useAction } from "context";
 import isElectron from "is-electron";
 import { useRef, useState } from "react";
-import { useRouteMatch } from "react-router-dom";
-import { PathParameter as PathParameterType } from "types/action/parameters";
-import { getExtensionSoftwareFromFileName } from "utils/files";
-import { humanFileSize } from "utils/string";
+import { useMatch } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+
+import FileIcon from "~/components/common/FileIcon/FileIcon";
+import { useAction } from "~/context";
+import { PathParameter as PathParameterType } from "~/types/action/parameters";
+import { getExtensionSoftwareFromFileName } from "~/utils/files";
+import { humanFileSize } from "~/utils/string";
 
 /**
  * Extends the interface in case we are in Electron
@@ -37,7 +38,7 @@ const PathParameter = ({ parameter }: PathParameterProps): JSX.Element => {
   const [uuid, _] = useState<string>(uuidv4());
 
   const { sendActionUpdate } = useAction();
-  const actionUUID = useRouteMatch<{ uuid: string }>().params.uuid;
+  const actionUUID = useMatch(":uuid")?.params.uuid as string;
 
   if (!isElectron()) {
     return (

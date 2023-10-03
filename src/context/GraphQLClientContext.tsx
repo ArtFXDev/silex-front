@@ -26,7 +26,7 @@ export const ProvideGraphQLClient = ({
 }: ProvideGraphQLClientProps): JSX.Element => {
   const [client] = useState(
     new ApolloClient({
-      uri: process.env.REACT_APP_ZOU_API + "/api/graphql",
+      uri: import.meta.env.VITE_ZOU_API + "/api/graphql",
       cache: new InMemoryCache(),
     })
   );

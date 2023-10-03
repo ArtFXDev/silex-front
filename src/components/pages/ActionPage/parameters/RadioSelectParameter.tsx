@@ -4,10 +4,11 @@ import {
   Radio,
   RadioGroup,
 } from "@mui/material";
-import { useAction } from "context";
 import { useEffect, useState } from "react";
-import { useRouteMatch } from "react-router-dom";
-import { RadioSelectParameter as RadioSelectParameterType } from "types/action/parameters";
+import { useMatch } from "react-router-dom";
+
+import { useAction } from "~/context";
+import { RadioSelectParameter as RadioSelectParameterType } from "~/types/action/parameters";
 
 interface RadioSelectParameterProps {
   parameter: RadioSelectParameterType;
@@ -21,7 +22,7 @@ const RadioSelectParameter = ({
 }: RadioSelectParameterProps): JSX.Element => {
   const [value, setValue] = useState<string | null>(parameter.value);
 
-  const actionUUID = useRouteMatch<{ uuid: string }>().params.uuid;
+  const actionUUID = useMatch(":uuid")?.params.uuid as string;
   const { sendActionUpdate } = useAction();
 
   // Update state when the parameter value from action changes

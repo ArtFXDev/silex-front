@@ -8,13 +8,14 @@ import {
   TableCell,
   TableRow,
 } from "@mui/material";
-import FileIcon from "components/common/FileIcon/FileIcon";
-import { useAction, useSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import { useHistory } from "react-router";
-import { Action } from "types/action/action";
-import { DCCContext } from "types/action/context";
+import { useNavigate } from "react-router";
+
+import FileIcon from "~/components/common/FileIcon/FileIcon";
+import { useAction, useSocket } from "~/context";
+import { Action } from "~/types/action/action";
+import { DCCContext } from "~/types/action/context";
 
 interface ClientsRowProps {
   dcc: DCCContext;
@@ -24,7 +25,7 @@ const ClientRow = ({ dcc }: ClientsRowProps): JSX.Element => {
   const [killLoading, setKillLoading] = useState<boolean>();
 
   const { actions, clearAction } = useAction();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -63,7 +64,7 @@ const ClientRow = ({ dcc }: ClientsRowProps): JSX.Element => {
                     label={action.name}
                     variant="outlined"
                     color="success"
-                    onClick={() => history.push(`/action/${action.uuid}`)}
+                    onClick={() => navigate(`/action/${action.uuid}`)}
                     onDelete={() => handleClearAction(action)}
                   />
                 );

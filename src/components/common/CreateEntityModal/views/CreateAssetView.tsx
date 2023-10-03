@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
   Box,
@@ -12,11 +11,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import { useRouteMatch } from "react-router-dom";
-import * as Zou from "utils/zou";
+import { useParams } from "react-router-dom";
+
+import QueryWrapper from "~/components/utils/QueryWrapper/QueryWrapper";
+import * as Zou from "~/utils/zou";
 
 const ASSET_TASK_TYPES = gql`
   query AssetAndTaskTypesForProject($id: ID!) {
@@ -37,6 +37,13 @@ const ASSET_TASK_TYPES = gql`
   }
 `;
 
+type AssetAndTaskTypesResponse = {
+  project: {
+    asset_types: { id: string; name: string }[];
+    task_types: { id: string; name: string; for_shots: boolean }[];
+  };
+};
+
 interface CreateAssetViewProps {
   defaultCategory?: string;
   onClose: () => void;
@@ -55,18 +62,14 @@ const CreateAssetView = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [autoCreateTasks, setAutoCreateTasks] = useState<boolean>(true);
 
-  const projectIdFromURL =
-    useRouteMatch<{ projectId: string }>().params.projectId;
+  const projectIdFromURL = useParams<{ projectId: string }>()
+    .projectId as string;
   const projectId = projectIdOverride || projectIdFromURL;
+
   const client = useApolloClient();
   const { enqueueSnackbar } = useSnackbar();
 
-  const query = useQuery<{
-    project: {
-      asset_types: { id: string; name: string }[];
-      task_types: { id: string; name: string; for_shots: boolean }[];
-    };
-  }>(ASSET_TASK_TYPES, {
+  const query = useQuery<AssetAndTaskTypesResponse>(ASSET_TASK_TYPES, {
     variables: { id: projectId },
   });
   const { data } = query;
@@ -85,6 +88,7 @@ const CreateAssetView = ({
       Zou.createAsset(projectId, assetTypeId, {
         data: {},
         description,
+        /* eslint-disable-next-line camelcase */
         episode_id: null,
         name,
       })

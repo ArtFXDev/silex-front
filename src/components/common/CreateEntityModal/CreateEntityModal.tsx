@@ -10,7 +10,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { Asset, Sequence, Shot, Task } from "types/entities";
+
+import { Asset, Sequence, Shot, Task } from "~/types/entities";
 
 import CreateAssetView from "./views/CreateAssetView";
 import CreateSequenceView from "./views/CreateSequenceView";

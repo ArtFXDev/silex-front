@@ -1,6 +1,7 @@
-import FrameSetTextField from "components/common/FrameSetTextField/FrameSetTextField";
 import { useEffect, useState } from "react";
-import { FrameSetParameter as FrameSetParameterType } from "types/action/parameters";
+
+import FrameSetTextField from "~/components/common/FrameSetTextField/FrameSetTextField";
+import { FrameSetParameter as FrameSetParameterType } from "~/types/action/parameters";
 
 interface FrameSetParameterProps {
   parameter: FrameSetParameterType;

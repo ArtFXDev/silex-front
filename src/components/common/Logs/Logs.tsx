@@ -4,8 +4,9 @@ import { SxProps } from "@mui/system";
 import isElectron from "is-electron";
 import { useSnackbar } from "notistack";
 import { useEffect, useRef } from "react";
-import { BORDER_RADIUS_BOTTOM } from "style/constants";
-import { LogLine } from "types/action/action";
+
+import { BORDER_RADIUS_BOTTOM } from "~/style/constants";
+import { LogLine } from "~/types/action/action";
 
 function colorFromLogStatus(message: LogLine["message"]): string {
   const match = /(INFO|ERROR|WARNING|DEBUG)/.exec(message);

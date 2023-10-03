@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 export type ParameterValueType = number | boolean | string;
 
 export interface BaseParameter {

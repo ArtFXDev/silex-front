@@ -1,4 +1,4 @@
-# Silex front
+<h1 align="center">Silex front</h1>
 
 ![](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white) ![](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) ![](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white) ![](https://img.shields.io/badge/Material--UI-0081CB?style=for-the-badge&logo=material-ui&logoColor=white) ![](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white) ![](https://img.shields.io/badge/ESLint-4b32c3?style=for-the-badge&logo=eslint&logoColor=white) ![](https://img.shields.io/badge/Prettier-c188c1?style=for-the-badge&logo=prettier&logoColor=white) ![](https://img.shields.io/badge/graphql-e535ab?style=for-the-badge&logo=GraphQL&logoColor=white)
 
@@ -7,7 +7,8 @@
 <p align="center">
   <img width="700" src="./img/silex_front_capture_1.png">
   <br><br>
-  Front-end application of the Silex ecosystem.<br>
+  Front-end application of the Silex pipeline<br>
+  <small>(Images: Blender Foundation)</small>
 </p>
 
 <br>
@@ -32,35 +33,51 @@ $ yarn install # Install the dependencies
 
 ### Environment variables
 
-Before starting the UI, make sure the variables defined in the [`.env`](.env) file are correct.
+Before starting the UI, copy the [`.env.example`](.env.example) file to `.env` and configure the following variables:
 
 They are:
 
-- `REACT_APP_ZOU_API` - the url of the Zou server (like `http://my-zou-server`). It's the same URL as the Kitsu app (since they are behind a Nginx proxy).
+- `VITE_ZOU_API` - the url of the Zou server (like `http://my-zou-server`). It's the same URL as the Kitsu app (since they are behind a Nginx proxy).
 
-- `REACT_APP_WS_SERVER` - the url of the Silex websocket service running on the client machine (open on the port `5118`).
+- `VITE_WS_SERVER` - the url of the Silex websocket service running on the client machine (open on the port `5118`).
 
-- `REACT_APP_TRACTOR_BLADE` - the url of the Pixar Tractor Blade service running on the computer.
+- `VITE_TRACTOR_URL` - url of the Tractor interface
 
-- `REACT_APP_TRACTOR_URL` - url of the Tractor interface
+- `VITE_TRACTOR_BLADE` - the url of the Pixar Tractor Blade service running on the computer.
 
-- `REACT_APP_TRACTOR_LOG_URL` - Tractor log retrieval url (see: https://rmanwiki.pixar.com/display/TRA/Logging)
+- `VITE_TRACTOR_LOG_URL` - Tractor log retrieval url (see: https://rmanwiki.pixar.com/display/TRA/Logging)
 
-- `REACT_APP_TICKET_URL` - url of the Ticket system (we currently use [Zammad](https://zammad.com/))
+- `VITE_TICKET_URL` - URL of the Ticket system (we currently use [Zammad](https://zammad.com/))
+
+- `VITE_HARVEST_URL` - URL of [Harvest](https://github.com/artFXDev/harvest-ui), the render farm monitoring UI (deprecated)
 
 ### Available scripts
 
-- 🚀 `yarn start` -> runs the [Webpack](https://webpack.js.org/configuration/dev-server/) development server with HMR (hot module replacement).
+The build system is [Vite](https://vitejs.dev/guide/#overview), it's a faster alternative than CRA (Create React App) / Webpack.
 
-  You can then access the app on [`http://localhost:3000`](http://localhost:3000).
+- 🚀 `yarn dev` -> runs the [Vite](https://vitejs.dev/guide/#overview) development server with HMR (hot module replacement)
 
-- 👷 `yarn build` -> builds and bundle the whole app in a `build` folder. It is used to host the static files on a web server like Nginx or Apache.
+- 👷 `yarn build` -> builds and bundle the whole app in a `dist` folder. It is used to bundle the code into static files meant to be hosted on a web server like Nginx or Apache.
 
 - 🔨 `yarn tsc` -> runs the TypeScript compiler and report errors. Add `:watch` to run an interactive process that watches file changes.
 
 - 💅 `yarn prettify` -> prettify the code with Prettier. Add `:write` to write the modifications.
 
 - 🚨 `yarn lint` -> shows ESLint warnings and errors. Add `:fix` to apply auto fixes.
+
+### Docker image
+
+The front-end can be deployed using Docker. First build the image:
+
+```shell
+$ docker build -t artfxdev/silex-front:<version> . # use whatever version tag you want
+```
+
+The image uses [Nginx](https://nginx.org/en/) to serve the files so you can run it locally:
+
+```shell
+$ docker run -it --rm -p 127.0.0.1:80:80 artfxdev/silex-front:<version>
+```
 
 ## ⚠️ Issues
 
@@ -80,12 +97,12 @@ Here are the main libraries and packages used:
 
 | Library                                                            | Version  |
 | ------------------------------------------------------------------ | -------- |
-| [Material UI](https://mui.com/)                                    | `5.0.0`  |
-| [React](https://reactjs.org/)                                      | `17.0.2` |
-| [TypeScript](https://www.typescriptlang.org/)                      | `4.1.2`  |
-| [socket.io-client](https://socket.io/)                             | `4.2.0`  |
-| [React router](reactrouter.com/)                                   | `5.3.0`  |
-| [Apollo Client (React)](https://www.apollographql.com/docs/react/) | `3.4.15` |
+| [Material UI](https://mui.com/)                                    | `5.13.1` |
+| [React](https://reactjs.org/)                                      | `18.2.0` |
+| [TypeScript](https://www.typescriptlang.org/)                      | `5.0.4`  |
+| [socket.io-client](https://socket.io/)                             | `4.6.1`  |
+| [React router](reactrouter.com/)                                   | `6.11.2` |
+| [Apollo Client (React)](https://www.apollographql.com/docs/react/) | `3.7.14` |
 
 ## Special thanks
 

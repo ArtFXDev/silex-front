@@ -12,13 +12,14 @@ import {
   Paper,
   Tooltip,
 } from "@mui/material";
-import Logs from "components/common/Logs/Logs";
-import { useAction } from "context";
 import { useState } from "react";
-import { BORDER_RADIUS_BOTTOM, BORDER_RADIUS_TOP } from "style/constants";
-import { Command } from "types/action/action";
-import { Status } from "types/action/status";
-import { getStatusColor, getStatusIcon } from "utils/status";
+
+import Logs from "~/components/common/Logs/Logs";
+import { useAction } from "~/context";
+import { BORDER_RADIUS_BOTTOM, BORDER_RADIUS_TOP } from "~/style/constants";
+import { Command } from "~/types/action/action";
+import { Status } from "~/types/action/status";
+import { getStatusColor, getStatusIcon } from "~/utils/status";
 
 import ParameterItem from "./ParameterItem";
 

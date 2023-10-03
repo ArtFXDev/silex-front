@@ -9,8 +9,9 @@ import {
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import { useRouteMatch } from "react-router-dom";
-import * as Zou from "utils/zou";
+import { useMatch } from "react-router-dom";
+
+import * as Zou from "~/utils/zou";
 
 interface CreateSequenceViewProps {
   onClose: () => void;
@@ -24,8 +25,7 @@ const CreateSequenceView = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [newSequenceName, setNewSequenceName] = useState<string>("S01");
 
-  const projectIdFromURL =
-    useRouteMatch<{ projectId: string }>().params.projectId;
+  const projectIdFromURL = useMatch(":projectId")?.params.projectId as string;
   const projectId = projectIdOverride || projectIdFromURL;
 
   const { enqueueSnackbar } = useSnackbar();

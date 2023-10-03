@@ -1,7 +1,8 @@
 import { Card, CardActions, CardMedia, Typography } from "@mui/material";
-import LazyMedia from "components/utils/LazyMedia/LazyMedia";
-import { Asset, Shot, Task } from "types/entities";
-import { entityURLAndExtension } from "utils/entity";
+
+import LazyMedia from "~/components/utils/LazyMedia/LazyMedia";
+import { Asset, Shot, Task } from "~/types/entities";
+import { entityURLAndExtension } from "~/utils/entity";
 
 interface EntityCardProps {
   /** The entity to display */

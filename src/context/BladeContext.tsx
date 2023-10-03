@@ -1,6 +1,7 @@
 import isElectron from "is-electron";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { BladeStatus } from "types/tractor/blade";
+
+import { BladeStatus } from "~/types/tractor/blade";
 
 export interface BladeContext {
   bladeStatus: BladeStatus | undefined;

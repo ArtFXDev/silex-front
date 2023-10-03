@@ -8,10 +8,11 @@ import {
   ListItemIcon,
   Tooltip,
 } from "@mui/material";
-import { uiSocket } from "context";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import { FileExtension } from "types/files/extensions";
+
+import { uiSocket } from "~/context";
+import { FileExtension } from "~/types/files/extensions";
 
 type ItemAction = {
   /** Returns true if the action is for that extension */

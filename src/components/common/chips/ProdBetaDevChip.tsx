@@ -1,5 +1,6 @@
 import { Chip } from "@mui/material";
-import { getCurrentMode } from "utils/action";
+
+import { getCurrentMode } from "~/utils/action";
 
 const ProdBetaDevChip = (): JSX.Element => {
   const mode = getCurrentMode();

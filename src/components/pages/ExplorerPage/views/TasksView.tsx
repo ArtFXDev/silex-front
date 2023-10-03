@@ -1,9 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
 import { Typography } from "@mui/material";
-import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
-import { Asset, Shot } from "types/entities";
-import { fuzzyMatch } from "utils/string";
+import { Route, Routes, useParams } from "react-router-dom";
+
+import QueryWrapper from "~/components/utils/QueryWrapper/QueryWrapper";
+import { Asset, Shot } from "~/types/entities";
+import { fuzzyMatch } from "~/utils/string";
 
 import EntitiesView from "./EntitiesView";
 import EntityHeader from "./EntityHeader/EntityHeader";
@@ -104,12 +105,12 @@ interface TasksViewProps {
 }
 
 const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
-  const routeMatch = useRouteMatch<{ category: string; entityId: string }>();
+  const routeParams = useParams<{ category: string; entityId: string }>();
 
   const query = useQuery<{ shot?: Shot; asset?: Asset }>(
-    routeMatch.params.category === "shots" ? SHOT_TASKS : ASSET_TASKS,
+    routeParams.category === "shots" ? SHOT_TASKS : ASSET_TASKS,
     {
-      variables: { id: routeMatch.params.entityId },
+      variables: { id: routeParams.entityId },
     }
   );
 
@@ -138,13 +139,9 @@ const TasksView = ({ listView, search }: TasksViewProps): JSX.Element => {
               </Typography>
             )}
 
-            <Switch>
-              <Route
-                path={`/explorer/:projectId/:category/:entityId/tasks/:taskId`}
-              >
-                <TaskModal />
-              </Route>
-            </Switch>
+            <Routes>
+              <Route path=":taskId" element={<TaskModal />} />
+            </Routes>
           </>
         );
       }}

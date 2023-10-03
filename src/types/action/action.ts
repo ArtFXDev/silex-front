@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { Parameter } from "./parameters";
 import { Status } from "./status";
 

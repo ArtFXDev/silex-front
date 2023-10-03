@@ -8,7 +8,8 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useBlade } from "context/BladeContext";
+
+import { useBlade } from "~/context/BladeContext";
 
 import PageWrapper from "../PageWrapper/PageWrapper";
 import KillJobsButton from "./KillJobsButton";

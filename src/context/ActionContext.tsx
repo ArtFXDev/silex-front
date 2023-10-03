@@ -1,4 +1,3 @@
-import { useSocket } from "context";
 import merge from "deepmerge";
 import React, {
   useCallback,
@@ -7,12 +6,14 @@ import React, {
   useReducer,
   useState,
 } from "react";
-import { useHistory } from "react-router";
-import { Action } from "types/action/action";
-import { Status } from "types/action/status";
-import { ServerResponse, UIOnServerEvents } from "types/socket";
-import { diff } from "utils/diff";
-import { runIfInElectron } from "utils/electron";
+import { useNavigate } from "react-router";
+
+import { useSocket } from "~/context";
+import { Action } from "~/types/action/action";
+import { Status } from "~/types/action/status";
+import { ServerResponse, UIOnServerEvents } from "~/types/socket";
+import { diff } from "~/utils/diff";
+import { runIfInElectron } from "~/utils/electron";
 
 export interface ActionContext {
   /** The dict of running actions */
@@ -87,7 +88,7 @@ export const ProvideAction = ({
     window.localStorage.getItem("action-simple-mode") === "true"
   );
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const { uiSocket, dccClients } = useSocket();
 
   /**
@@ -143,14 +144,14 @@ export const ProvideAction = ({
       addNewAction(newAction.data);
 
       // Redirect to the specific action page
-      history.push(`/action/${newAction.data.uuid}`);
+      navigate(`/action/${newAction.data.uuid}`);
 
       // Brings the dektop app on top
       runIfInElectron(() => window.electron.send("bringWindowToFront"));
 
       forceUpdate();
     },
-    [history]
+    [navigate]
   );
 
   /**
@@ -163,10 +164,8 @@ export const ProvideAction = ({
       const previousStatus = actions[uuid].action.status;
 
       // Only keep the last version when merging arrays
-      const arrayMerge: merge.Options["arrayMerge"] = (
-        destinationArray,
-        sourceArray
-      ) => sourceArray;
+      const arrayMerge: merge.Options["arrayMerge"] = (_, sourceArray) =>
+        sourceArray;
 
       // Merge the diff
       actions[uuid].action = merge(actions[uuid].action, actionDiff.data, {

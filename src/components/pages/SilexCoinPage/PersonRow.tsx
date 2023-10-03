@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import {
   Collapse,
@@ -9,14 +8,15 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import SilexCoinIcon from "assets/images/silex_coin.svg";
-import { PersonAvatar } from "components/common/avatar";
-import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
 import { useState } from "react";
-import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
-import { Person } from "types/entities";
-import { GameVariant } from "types/entities/Game";
-import { getColorFromString } from "utils/color";
+
+import SilexCoinIcon from "~/assets/images/silex_coin.svg";
+import { PersonAvatar } from "~/components/common/avatar";
+import ColoredCircle from "~/components/common/ColoredCircle/ColoredCircle";
+import { LIST_ITEM_BORDER_RADIUS } from "~/style/constants";
+import { Person } from "~/types/entities";
+import { GameVariant } from "~/types/entities/Game";
+import { getColorFromString } from "~/utils/color";
 
 import PersonCollapseSection from "./PersonCollapseSection";
 

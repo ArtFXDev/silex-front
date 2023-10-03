@@ -1,6 +1,7 @@
 import { Input, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { ParameterInputType } from "types/action/parameters";
+
+import { ParameterInputType } from "~/types/action/parameters";
 
 /**
  * Maps python type to input type

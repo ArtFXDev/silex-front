@@ -1,13 +1,14 @@
 import { Menu as MenuIcon } from "@mui/icons-material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { AppBar, Box, IconButton, Toolbar, Tooltip } from "@mui/material";
-import SilexText from "assets/images/silex_text.png";
-import NimbyController from "components/common/NimbyController/NimbyController";
-import SilexLogo from "components/common/SilexLogo/SilexLogo";
-import Menu from "components/structure/Menu/Menu";
 import isElectron from "is-electron";
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import SilexText from "~/assets/images/silex_text.png";
+import NimbyController from "~/components/common/NimbyController/NimbyController";
+import SilexLogo from "~/components/common/SilexLogo/SilexLogo";
+import Menu from "~/components/structure/Menu/Menu";
 
 import AvatarMenu from "./AvatarMenu";
 import ConnectedDCCButton from "./ConnectedDCCButton";
@@ -16,7 +17,7 @@ import ConnectedDCCButton from "./ConnectedDCCButton";
  * The Silex logo and text displayed on the top left
  */
 const SilexLogoAndText = (): JSX.Element => {
-  const history = useHistory();
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -38,7 +39,7 @@ const SilexLogoAndText = (): JSX.Element => {
             transform: "scale(1.1)",
           },
         }}
-        onClick={() => history.push("/")}
+        onClick={() => navigate("/")}
       />
       <img src={SilexText} alt="silex text" width={70} />
     </Box>

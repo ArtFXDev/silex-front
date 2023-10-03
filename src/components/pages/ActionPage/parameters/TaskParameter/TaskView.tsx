@@ -11,10 +11,11 @@ import {
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { SxProps } from "@mui/system";
-import ColoredCircle from "components/common/ColoredCircle/ColoredCircle";
-import QueryWrapper from "components/utils/QueryWrapper/QueryWrapper";
-import { LIST_ITEM_BORDER_RADIUS } from "style/constants";
-import { Asset, Shot, Task, TaskId } from "types/entities";
+
+import ColoredCircle from "~/components/common/ColoredCircle/ColoredCircle";
+import QueryWrapper from "~/components/utils/QueryWrapper/QueryWrapper";
+import { LIST_ITEM_BORDER_RADIUS } from "~/style/constants";
+import { Asset, Shot, Task, TaskId } from "~/types/entities";
 
 const TASK_FIELDS = gql`
   fragment TaskFieldsParam on Task {

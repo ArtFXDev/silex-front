@@ -1,5 +1,6 @@
 import { List } from "@mui/material";
-import { Asset, Shot, Task } from "types/entities";
+
+import { Asset, Shot, Task } from "~/types/entities";
 
 import EntityItem from "./EntityItem/EntityItem";
 
