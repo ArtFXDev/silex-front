@@ -292,6 +292,20 @@ export function buildWorkingFilePath(
   );
 }
 
+export function buildPublishFilePath(
+  taskId: string
+): PromiseResponse<{ path: string; name: string }> {
+  return axios.post(
+    zouAPIURL(`data/tasks/${taskId}/working-file-path`),
+    {
+      mode: "publish",
+      name: "main",
+      revision: 0,
+    },
+    { withCredentials: true }
+  );
+}
+
 export function setAsMainPreview(
   previewFileId: string
 ): PromiseResponse<Shot | Asset> {

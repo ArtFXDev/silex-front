@@ -43,7 +43,8 @@ interface FileExplorerProps {
 
 const FileExplorer = ({ task }: FileExplorerProps): JSX.Element => {
   const [view, setView] = useState<"work" | "publish">("work");
-  const [path, setPath] = useState<string>("");
+  const [workingPath, setWorkingPath] = useState<string>("");
+  const [publishPath, setPublishPath] = useState<string>("");
   const [pathExists, setPathExists] = useState<boolean>();
   const [refreshView, setRefreshView] = useState<boolean>(false);
   const [error, setError] = useState();
@@ -63,36 +64,62 @@ const FileExplorer = ({ task }: FileExplorerProps): JSX.Element => {
 
   // Returns the work of publish folder depending on the view
   const getFolderFromView = useCallback(
-    () => (view === "work" ? path : path.replace("work", "publish")),
-    [path, view]
+    () => (view === "work" ? workingPath : publishPath),
+    [workingPath, publishPath, view]
   );
 
   const updateData = () => {
     // Uses Zou to fetch the working directory for that task
-    Zou.buildWorkingFilePath(task.id)
-      .then((response) => {
-        setPath(response.data.path);
+    if (view === "work") {
+      Zou.buildWorkingFilePath(task.id)
+        .then((response) => {
+          setWorkingPath(response.data.path);
 
-        if (isElectron()) {
-          const exists = window.electron.sendSync(
-            "pathExists",
-            getFolderFromView()
-          ) as boolean;
+          if (isElectron()) {
+            const exists = window.electron.sendSync(
+              "pathExists",
+              getFolderFromView()
+            ) as boolean;
 
-          setPathExists(exists);
-        }
+            setPathExists(exists);
+          }
 
-        setRefreshView((refreshView) => !refreshView);
-      })
-      .catch((error) => {
-        setError(error);
-        enqueueSnackbar("Error when building working file path", {
-          variant: "error",
+          setRefreshView((refreshView) => !refreshView);
+        })
+        .catch((error) => {
+          setError(error);
+          enqueueSnackbar("Error when building working file path", {
+            variant: "error",
+          });
         });
-      });
+    } else if (view === "publish") {
+      Zou.buildPublishFilePath(task.id)
+        .then((response) => {
+          const res = response.data.path;
+          console.log(res);
+          setPublishPath(res);
+
+          if (isElectron()) {
+            const exists = window.electron.sendSync(
+              "pathExists",
+              getFolderFromView()
+            ) as boolean;
+
+            setPathExists(exists);
+          }
+
+          setRefreshView((refreshView) => !refreshView);
+        })
+        .catch((error) => {
+          setError(error);
+          enqueueSnackbar("Error when building working file path", {
+            variant: "error",
+          });
+        });
+    }
   };
 
-  useEffect(updateData, [enqueueSnackbar, getFolderFromView, task.id]);
+  useEffect(updateData, [enqueueSnackbar, getFolderFromView, task.id, view]);
 
   return (
     <>
@@ -267,11 +294,11 @@ const FileExplorer = ({ task }: FileExplorerProps): JSX.Element => {
       </Collapse>
 
       <div style={{ borderRadius: 24, marginTop: 12 }}>
-        {path ? (
+        {workingPath ? (
           view === "work" ? (
             <WorkFilesView
               refresh={refreshView}
-              path={path}
+              path={workingPath}
               sortByModificationDate={sortByModificationDate}
               moreDetails={moreDetails}
             />
@@ -284,7 +311,8 @@ const FileExplorer = ({ task }: FileExplorerProps): JSX.Element => {
                 root
                 refresh={refreshView}
                 item={{
-                  path: path.replace("work", "publish"),
+                  // path: "//pfe-in.sto.artfx.fr/prod/project/testpipe/assets/character/test/art_main/publish",
+                  path: publishPath,
                   name: "",
                   mtime: "",
                   isDirectory: true,
