@@ -1,6 +1,6 @@
 import { Alert, Fade, List } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useMatch } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { uiSocket } from "~/context";
 import { FileOrFolder, ServerResponse } from "~/types/socket";
@@ -22,7 +22,11 @@ const WorkFilesView = ({
 }: WorkFilesViewProps): JSX.Element => {
   const [response, setResponse] =
     useState<ServerResponse<{ files: FileOrFolder[] }>>();
-  const taskId = useMatch(":taskId")?.params.taskId as string;
+  // useMatch only use static path
+  // const taskId = useMatch(":taskId")?.params.taskId as string;
+
+  //trying to use relative path with useParms but still don't know if is cause issues
+  const taskId = useParams<{ taskId: string }>().taskId as string;
 
   useEffect(() => {
     uiSocket.emit(

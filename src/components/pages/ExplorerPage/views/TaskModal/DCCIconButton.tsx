@@ -32,7 +32,7 @@ const DCCIconButton = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [launchSceneSuccess, setLaunchSceneSuccess] = useState<boolean>(false);
 
-  const projectId = useMatch(":projectId")?.params.projectId;
+  const projectId = useMatch("/explorer/:projectId/*")?.params.projectId;
   const { uiSocket } = useSocket();
   const { enqueueSnackbar } = useSnackbar();
   const { projects } = useAuth();
@@ -46,17 +46,20 @@ const DCCIconButton = ({
   };
 
   const onCreateNewScene = (dcc: string | undefined) => {
+    console.log(projectId);
+    console.log(window.location.pathname);
     if (projects === undefined) return;
 
     const projectName = (projects.find((p) => p.id === projectId) as Project)
       .name;
-
+    console.log(projectName);
     if (projectName) {
       uiSocket.emit("launchScene", { taskId, dcc, projectName }, (response) => {
         enqueueSnackbar(`Opening a new scene with ${dcc} (${response.msg})`, {
           variant: "info",
         });
       });
+      console.log("je suis dans l'envoie du socket");
     }
   };
 

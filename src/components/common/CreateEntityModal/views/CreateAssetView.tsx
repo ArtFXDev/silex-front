@@ -65,6 +65,7 @@ const CreateAssetView = ({
   const projectIdFromURL = useParams<{ projectId: string }>()
     .projectId as string;
   const projectId = projectIdOverride || projectIdFromURL;
+  console.log(projectIdFromURL);
 
   const client = useApolloClient();
   const { enqueueSnackbar } = useSnackbar();

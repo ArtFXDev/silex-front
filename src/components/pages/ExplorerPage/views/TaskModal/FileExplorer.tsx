@@ -57,7 +57,8 @@ const FileExplorer = ({ task }: FileExplorerProps): JSX.Element => {
   );
 
   const { enqueueSnackbar } = useSnackbar();
-  const projectId = useMatch(":projectId")?.params.projectId as string;
+  const projectId = useMatch("/explorer/:projectId/*")?.params
+    .projectId as string;
   const { projects } = useAuth();
   const projectName =
     projects && projects.find((p) => p.id === projectId)?.name;
@@ -96,7 +97,6 @@ const FileExplorer = ({ task }: FileExplorerProps): JSX.Element => {
       Zou.buildPublishFilePath(task.id)
         .then((response) => {
           const res = response.data.path;
-          console.log(res);
           setPublishPath(res);
 
           if (isElectron()) {
