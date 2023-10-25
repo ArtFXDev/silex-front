@@ -25,11 +25,11 @@ const PublishedFilesView = ({
   selectDirectory,
 }: PublishedFilesViewProps): JSX.Element => {
   const [path, setPath] = useState<string>();
-
+  console.log("je suis dans le published file view");
   // Retrieve the publish file path location based on the task
   useEffect(() => {
-    Zou.buildWorkingFilePath(taskId).then((response) =>
-      setPath(response.data.path.replace("work", "publish"))
+    Zou.buildPublishFilePath(taskId).then((response) =>
+      setPath(response.data.path)
     );
   }, [taskId]);
 

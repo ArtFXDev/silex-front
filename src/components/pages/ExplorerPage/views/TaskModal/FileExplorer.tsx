@@ -22,6 +22,7 @@ import { useMatch } from "react-router-dom";
 
 import SubmitButton from "~/components/common/chips/SubmitButton";
 import FileOrFolderItem from "~/components/common/FileOrFolderItem/FileOrFolderItem";
+import OpenAsWorkableButton from "~/components/common/FileOrFolderItem/OpenAsWorkableButton";
 import { useAuth } from "~/context";
 import { ProvideFileExplorer } from "~/context/FileExplorerContext";
 import { Task } from "~/types/entities";
@@ -222,6 +223,7 @@ const FileExplorer = ({ task }: FileExplorerProps): JSX.Element => {
 
         <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
           <SubmitButton taskId={task.id} projectName={projectName} />
+          <OpenAsWorkableButton taskId={task.id} />
 
           {/* DCC icon buttons */}
           <Box
