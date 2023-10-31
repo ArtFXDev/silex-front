@@ -23,7 +23,7 @@ import { useAction, useAuth } from "~/context";
  * TODO: should be centralized in one place?
  */
 const links = [
-  { text: "Home", to: "/", exact: true, needProjectId: false },
+  // { text: "Home", to: "/", exact: true, needProjectId: false },
   {
     text: "Project explorer",
     to: "/explorer",
@@ -31,21 +31,21 @@ const links = [
     needProjectId: true,
   },
   { text: "Actions", to: "/action", exact: true },
-  { text: "Statistics", to: "/stats", exact: true },
-  {
-    text: "🚜 Render farm",
-    to: "/render-farm",
-    exact: true,
-    openInNewWindow: true,
-    openTo: import.meta.env.VITE_TRACTOR_URL,
-  },
-  {
-    text: "👨‍🌾 Harvest",
-    to: "/harvest",
-    exact: true,
-    openInNewWindow: true,
-    openTo: import.meta.env.VITE_HARVEST_URL,
-  },
+  // { text: "Statistics", to: "/stats", exact: true },
+  // {
+  //   text: "🚜 Render farm",
+  //   to: "/render-farm",
+  //   exact: true,
+  //   openInNewWindow: true,
+  //   openTo: import.meta.env.VITE_TRACTOR_URL,
+  // },
+  // {
+  //   text: "👨‍🌾 Harvest",
+  //   to: "/harvest",
+  //   exact: true,
+  //   openInNewWindow: true,
+  //   openTo: import.meta.env.VITE_HARVEST_URL,
+  // },
   {
     text: "Ticket",
     to: "/ticket",

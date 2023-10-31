@@ -9,13 +9,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import isElectron from "is-electron";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import SilexText from "~/assets/images/silex_text.png";
 import ProdBadge from "~/components/common/chips/ProdBetaDevChip";
-import NimbyController from "~/components/common/NimbyController/NimbyController";
 import OpenLogsButton from "~/components/common/OpenLogsButton/OpenLogsButton";
 import SilexLogo from "~/components/common/SilexLogo/SilexLogo";
 import { useAuth, useSocket } from "~/context";
@@ -216,7 +214,7 @@ const LoginPage = (): JSX.Element => {
           flexDirection: "column",
         }}
       >
-        {isElectron() && <NimbyController />}
+        {/* {isElectron() && <NimbyController />} */}
       </div>
 
       <div

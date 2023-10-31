@@ -12,17 +12,17 @@ import {
 import ActionsPage from "~/components/pages/ActionPage/ActionsPage";
 import DCCClientsPage from "~/components/pages/DCCClientsPage/DCCClientsPage";
 import ExplorerPage from "~/components/pages/ExplorerPage/ExplorerPage";
-import HarvestPage from "~/components/pages/HarvestPage/HarvestPage";
+// import HarvestPage from "~/components/pages/HarvestPage/HarvestPage";
 import HomePage from "~/components/pages/HomePage/HomePage";
 import LoginPage from "~/components/pages/LoginPage/LoginPage";
 import LogsPage from "~/components/pages/LogsPage/LogsPage";
 import NotFoundPage from "~/components/pages/NotFoundPage/NotFoundPage";
 import ProfilePage from "~/components/pages/ProfilePage/ProfilePage";
-import RenderFarmPage from "~/components/pages/RenderFarmPage/RenderFarmPage";
+// import RenderFarmPage from "~/components/pages/RenderFarmPage/RenderFarmPage";
 import RunningJobsPage from "~/components/pages/RunningJobsPage/RunningJobsPage";
 import SettingsPage from "~/components/pages/SettingsPage/SettingsPage";
 import SilexCoinPage from "~/components/pages/SilexCoinPage/SilexCoinPage";
-import StatsPage from "~/components/pages/StatsPage/StatsPage";
+// import StatsPage from "~/components/pages/StatsPage/StatsPage";
 import TicketPage from "~/components/pages/TicketPage/TicketPage";
 import Header from "~/components/structure/Header/Header";
 import PrivateRoutes from "~/components/utils/PrivateRoutes";
@@ -76,10 +76,10 @@ const router = createBrowserRouter(
           <Route path="/coins" element={<SilexCoinPage />} />
           <Route path="/dccs" element={<DCCClientsPage />} />
 
-          <Route path="/stats" element={<StatsPage />} />
+          {/* <Route path="/stats" element={<StatsPage />} /> */}
           <Route path="/ticket" element={<TicketPage />} />
-          <Route path="/render-farm" element={<RenderFarmPage />} />
-          <Route path="/harvest" element={<HarvestPage />} />
+          {/* <Route path="/render-farm" element={<RenderFarmPage />} />
+          <Route path="/harvest" element={<HarvestPage />} /> */}
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/logs" element={<LogsPage />} />
           <Route path="running-jobs" element={<RunningJobsPage />} />

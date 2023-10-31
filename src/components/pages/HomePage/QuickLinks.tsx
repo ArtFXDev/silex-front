@@ -1,7 +1,4 @@
-import AgricultureIcon from "@mui/icons-material/Agriculture";
-import BugReportIcon from "@mui/icons-material/BugReport";
 import InputIcon from "@mui/icons-material/Input";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import { Box, Chip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -32,7 +29,7 @@ const QuickLinks = (): JSX.Element => {
         onClick={() => navigate("/explorer")}
       />
 
-      <Chip
+      {/* <Chip
         label="Stats"
         variant="outlined"
         sx={{ color: "#b19ef9", borderColor: "#b19ef9" }}
@@ -62,7 +59,7 @@ const QuickLinks = (): JSX.Element => {
         sx={{ color: "#78b454", borderColor: "#78b454" }}
         icon={<p style={{ fontSize: 20, marginLeft: 10 }}>👨‍🌾</p>}
         onClick={() => navigate("/harvest")}
-      />
+      /> */}
 
       <div
         style={{

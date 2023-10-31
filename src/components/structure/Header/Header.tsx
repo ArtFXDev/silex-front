@@ -1,12 +1,10 @@
 import { Menu as MenuIcon } from "@mui/icons-material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { AppBar, Box, IconButton, Toolbar, Tooltip } from "@mui/material";
-import isElectron from "is-electron";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import SilexText from "~/assets/images/silex_text.png";
-import NimbyController from "~/components/common/NimbyController/NimbyController";
 import SilexLogo from "~/components/common/SilexLogo/SilexLogo";
 import Menu from "~/components/structure/Menu/Menu";
 
@@ -84,7 +82,7 @@ const Header = (): JSX.Element => {
 
         <ConnectedDCCButton sx={{ ml: 2, mr: 3 }} />
 
-        {isElectron() && <NimbyController sx={{ mr: 3 }} />}
+        {/* {isElectron() && <NimbyController sx={{ mr: 3 }} />} */}
 
         <AvatarMenu />
       </Toolbar>
