@@ -23,7 +23,7 @@ import { useAction, useAuth } from "~/context";
  * TODO: should be centralized in one place?
  */
 const links = [
-  // { text: "Home", to: "/", exact: true, needProjectId: false },
+  { text: "Home", to: "/", exact: true, needProjectId: false },
   {
     text: "Project explorer",
     to: "/explorer",
