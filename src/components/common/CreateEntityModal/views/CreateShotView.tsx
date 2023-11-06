@@ -84,6 +84,7 @@ const CreateShotView = ({
   const projectIdFromURL = useParams<{ projectId: string }>()
     .projectId as string;
   const projectId = projectIdOverride || projectIdFromURL;
+  console.log(projectIdFromURL);
 
   const { enqueueSnackbar } = useSnackbar();
   const client = useApolloClient();
