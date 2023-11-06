@@ -298,7 +298,7 @@ export function buildPublishFilePath(
   return axios.post(
     zouAPIURL(`data/tasks/${taskId}/working-file-path`),
     {
-      mode: "publish",
+      mode: "output_ui",
       name: "main",
       revision: 0,
     },
