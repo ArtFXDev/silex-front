@@ -299,7 +299,7 @@ export function buildPublishFilePath(
     zouAPIURL(`data/tasks/${taskId}/working-file-path`),
     {
       mode: "output_ui",
-      name: "main",
+      name: "name",
       revision: 0,
     },
     { withCredentials: true }

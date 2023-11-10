@@ -102,7 +102,6 @@ const TaskParameter = ({
     parameter.value || undefined
   );
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
-  console.log("je suis dans le task paramater.tsx");
   /** Set the task id value both on the parameter and in the state */
   const setTaskIdValue = useCallback(
     (value: string | undefined) => {
