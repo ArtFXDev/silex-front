@@ -58,10 +58,20 @@ const ActionButton = ({ data }: ActionButtonProps): JSX.Element => {
       finishedIcon: <CloudDoneIcon color="success" />,
 
       action: (done) => {
+        // const tokens = path.replace("\\", "/").split("/");
+        // const indexOfPublish = tokens.indexOf("publish");
+        // const destination =
+        //   tokens.slice(0, indexOfPublish).join("/") + `/work/${name}`;
+
+        //modification for artfx2024 special architecture the reel is above
+
         const tokens = path.replace("\\", "/").split("/");
         const indexOfPublish = tokens.indexOf("publish");
-        const destination =
-          tokens.slice(0, indexOfPublish).join("/") + `/work/${name}`;
+        const main = tokens.slice(1, indexOfPublish).join("/");
+        const root = "D:/PROJECT-2024/";
+
+        const destination = root + main + `/work/${name}`;
+        console.log(destination);
 
         uiSocket.emit(
           "copyFile",

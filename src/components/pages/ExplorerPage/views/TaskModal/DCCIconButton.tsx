@@ -46,20 +46,17 @@ const DCCIconButton = ({
   };
 
   const onCreateNewScene = (dcc: string | undefined) => {
-    console.log(projectId);
-    console.log(window.location.pathname);
     if (projects === undefined) return;
 
     const projectName = (projects.find((p) => p.id === projectId) as Project)
       .name;
-    console.log(projectName);
+
     if (projectName) {
       uiSocket.emit("launchScene", { taskId, dcc, projectName }, (response) => {
         enqueueSnackbar(`Opening a new scene with ${dcc} (${response.msg})`, {
           variant: "info",
         });
       });
-      console.log("je suis dans l'envoie du socket");
     }
   };
 
