@@ -55,7 +55,7 @@ const EntityHeader = ({ entity }: EntityHeaderProps): JSX.Element => {
               cursor: "pointer",
               ":hover": { color: "rgba(255, 255, 255, 0.8)" },
             }}
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("../..", { relative: "path" })}
           >
             {entity.type === "Shot"
               ? entity.sequence.name
