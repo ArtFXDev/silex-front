@@ -9,6 +9,7 @@ import ProjectsView from "./ProjectsView";
 import QuickLinks from "./QuickLinks";
 import RecentlyOpenedScenes from "./RecentlyOpenedScenes";
 import RecentTasksList from "./RecentTasksList";
+import AssignTaskList from "./AssignTaskList";
 
 const HomePage = (): JSX.Element => {
   const auth = useAuth();
@@ -28,6 +29,7 @@ const HomePage = (): JSX.Element => {
           </Grid>
 
           <Grid item xs={7} lg={5}>
+            <AssignTaskList/>
             <RecentTasksList />
             {!mdBreakPoint && (
               <>

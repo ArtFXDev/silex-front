@@ -8,6 +8,7 @@ import {
   Sequence,
   Shot,
   Task,
+  TaskStatus,
   ValidationRecord,
 } from "~/types/entities";
 import { GameVariant } from "~/types/entities/Game";
@@ -193,6 +194,42 @@ export function assignUserToTask(
     },
     { withCredentials: true }
   );
+}
+
+export function getTaskStatus():PromiseResponse<TaskStatus[]>{
+  return axios.get(zouAPIURL(`data/task-status`),
+    {withCredentials: true}
+  )
+}
+
+export function updateSatusOfTask(
+  taskId: string,
+  newStatusId: string
+){
+  return axios.put(zouAPIURL(`data/tasks/${taskId}`),
+    {
+      task_status_id: newStatusId
+    },
+    {withCredentials:true}
+  );
+};
+
+export function getUserTaskAssign(
+  personId : string
+): PromiseResponse<Task[]>{
+  return axios.get(
+    zouAPIURL(`data/persons/${personId}/tasks`),
+    {withCredentials: true}
+  )
+}
+
+export function getUserDoneTaskAssign(
+  personId: string
+): PromiseResponse<Task[]>{
+  return axios.get(
+    zouAPIURL(`data/persons/${personId}/done-tasks`),
+    {withCredentials:true}
+  )
 }
 
 export function clearAssignation(
