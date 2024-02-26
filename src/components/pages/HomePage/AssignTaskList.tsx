@@ -79,7 +79,6 @@ const AssignTaskList = (): JSX.Element => {
       default:
         return undefined;
     }
-    
   }, [tabValue, somethingChange])
 
   useEffect(()=>{
@@ -173,40 +172,7 @@ const AssignTaskList = (): JSX.Element => {
         return null; 
     }
   }
-  // function ItemMenu({taskId}: {taskId:string}) {
-  //   console.log(`ItemMenu: ${taskId}`)
-  //   switch(tabValue){
-  //     case "one":
-  //       return(
-  //         <MenuItem onClick={()=>{
-  //           updateSatusOfTask(taskId, doneStatus[0]["id"])
-  //           handleclick()
-  //         }}
-  //         >
-  //           <ListItemIcon>
-  //             <DoneIcon/>
-  //           </ListItemIcon>
-  //           Task Done
-  //         </MenuItem>
-  //       )
-  //       break;
-  //     case "two":
-  //       return(
-  //         <MenuItem onClick={()=>{
-  //           updateSatusOfTask(taskId, todoStatus[0]["id"])
-  //           handleclick()
-  //         }}>
-  //           <ListItemIcon>
-  //             <Construction/>
-  //           </ListItemIcon>
-  //           Task Todo
-  //         </MenuItem>
-  //       )
-  //       break;
-  //     default:
-  //       return null; 
-  //   }
-  // }
+  
 
   const navigate = useNavigate();
 
@@ -239,7 +205,7 @@ const AssignTaskList = (): JSX.Element => {
           if(task["entity_type_name"] === 'Shot'){
             entityType = "shots"
           }
-          if(task["entity_type_name"] === 'Asset'){
+          else{
             entityType = "assets"
           }
           const pathname: string = `explorer/${task["project_id"]}/${entityType}/${task["entity_id"]}/tasks/${id}`
@@ -252,11 +218,6 @@ const AssignTaskList = (): JSX.Element => {
                 navigate(pathname);
                 }
               }}>
-              {/* <ListItemButton sx={{display: "flex", justifyContent: "space-between"}}
-               onClick={() =>{
-                console.log(`buttonId:${id}`)
-               }
-              }> */}
                 <div style={{display: "flex"}}>
                   <ColoredCircle 
                   color={task["task_type_color"]}
@@ -273,14 +234,13 @@ const AssignTaskList = (): JSX.Element => {
                         {task["sequence_name"]}
                       </Typography>
                       <ArrowDelimiter/>
-                    
-                      <Typography fontSize={14} color="text.disabled">
-                        {task["entity_name"]}
-                      </Typography>
-                      <ArrowDelimiter/>
                   </>
                   )}
                   <>
+                    <Typography fontSize={14} color="text.disabled">
+                      {task["entity_name"]}
+                    </Typography>
+                    <ArrowDelimiter/>
                     <Typography sx={{color: "rgb(231, 231, 231)",}}>
                       {task["task_type_name"]}
                     </Typography>
