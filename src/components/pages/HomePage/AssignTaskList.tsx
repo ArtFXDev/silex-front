@@ -12,6 +12,7 @@ import { useAuth } from "~/context";
 import { getUserTaskAssign, getUserDoneTaskAssign, getTaskStatus, updateSatusOfTask } from "~/utils/zou"
 import { Task, TaskStatus } from "~/types/entities";
 
+
 const AssignTaskList = (): JSX.Element => {
   
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
@@ -21,6 +22,13 @@ const AssignTaskList = (): JSX.Element => {
   const [tabValue, setTabValue] = useState<string>("one")
   const [taskStatus, setTaskStatus] = useState<TaskStatus[]>([])
 
+  const[assignTasks, setAssignTasks] = useState<Task[]>([])
+  const [doneTasks, setDoneTasks] = useState<Task[]>([])
+  const [displayTasks, setDisplayTasks] = useState<Task[]>([])
+
+  const {user} = useAuth();
+  const navigate = useNavigate();
+
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) =>{
     setTabValue(newValue);
   };
@@ -28,66 +36,48 @@ const AssignTaskList = (): JSX.Element => {
   const handleclick =() =>{
     setSomethingChange(!somethingChange)
   }
-
-  const handleActionMenuClose = () => {
-    setAnchorEl(null);
-    setMouseOver(false);
-  };
   
-  const handleActionMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleStopPropagation = (event: React.MouseEvent<HTMLElement>) => {
     // Stop propagation of onClick event because buttons are overlaping
     event.stopPropagation();
     
   };
 
-  // const actionMenuIcon = () => {
-  //   const button = (
-  //     <IconButton
-  //       sx={{ ml: 1, position: "absolute", top: 0, right: 0 }}
-  //       onClick={handleActionMenuClick}
-  //       ref={actionMenuButton}
-  //     >
-  //       <InfoIcon color="disabled" fontSize={"small"} />
-  //     </IconButton>
-  //   );
-  // };
-  const {user} = useAuth();
-  const[assignTasks, setAssignTasks] = useState<Task[]>([])
-
+  useEffect(()=>{
+    getUserTaskAssign(user?.id as string).then((response) =>{
+      setAssignTasks(response.data)
+      setDisplayTasks(response.data.filter((task) => {
+        return task.task_status_name === "Todo"
+      }))
+      console.log(assignTasks)
+    }) 
+    getUserDoneTaskAssign(user?.id as string).then((response) =>{
+      setDoneTasks(response.data)
+    })
+    getTaskStatus().then((response)=> {
+      setTaskStatus(response.data)
+    })
+  },[])
 
   useEffect(()=>{
     switch(tabValue){
       case "one":
-        getUserTaskAssign(user?.id as string).then((response) =>{
-          setAssignTasks(response.data.filter(taskStatus=>{
-            return taskStatus.task_status_name === "Todo" 
-          }))
-        })
+        setDisplayTasks(assignTasks.filter(task =>{
+          return task.task_status_name === "Todo"
+        }))
         break;
       case "two":
-        getUserTaskAssign(user?.id as string).then ((response) =>{
-          setAssignTasks(response.data.filter(taskStatus =>{
-            return taskStatus.task_status_name === "Work In Progress"
-          }))
-        })
+        setDisplayTasks(assignTasks.filter(task=>{
+          return task.task_status_name === "Work In Progress"
+        }))
         break;
       case "three":
-        getUserDoneTaskAssign(user?.id as string).then((response)=>{
-          setAssignTasks(response.data)
-        })
+        setDisplayTasks((displayTasks) => Object.assign(doneTasks) )
         break;
       default:
         return undefined;
     }
   }, [tabValue, somethingChange])
-
-  useEffect(()=>{
-    getTaskStatus().then((response)=> {
-      setTaskStatus(response.data)
-
-    })
-    
-  },[])
 
   const doneStatus:TaskStatus[] = taskStatus.filter(taskStatus =>{
     const test = taskStatus.short_name === "done"
@@ -102,11 +92,14 @@ const AssignTaskList = (): JSX.Element => {
     return test
   })
 
-  function TodoButton({taskId}: {taskId:string}){
+  function TodoButton({taskId, index}: {taskId:string, index: number}){
     return (
       <Tooltip title="change status to TO DO">
         <IconButton onClick={(event: React.MouseEvent<HTMLElement>) =>{
-          handleActionMenuClick(event)
+          handleStopPropagation(event)
+          const clickedTask: Task = displayTasks[index]
+          clickedTask.task_status_name = "Todo"
+          setDisplayTasks(() => displayTasks.filter(a => a.id !== taskId))
           updateSatusOfTask(taskId, todoStatus[0]["id"])
           handleclick()
         }}>
@@ -115,26 +108,30 @@ const AssignTaskList = (): JSX.Element => {
       </Tooltip>
     )
   }
-  function WipButton({taskId}: {taskId:string}){
+  function WipButton({taskId, index}: {taskId:string, index: number}){
     return (
       <Tooltip title="change status to WIP">
         <IconButton onClick={(event: React.MouseEvent<HTMLElement>) =>{
-          handleActionMenuClick(event)
+          handleStopPropagation(event)
+          const clickedTask: Task = displayTasks[index]
+          clickedTask.task_status_name = "Work In Progress"
+          setDisplayTasks(() => displayTasks.filter(a => a.id !== taskId))
           updateSatusOfTask(taskId, wipStatus[0]["id"])
-          handleclick()
         }}>
           <Construction color="disabled" fontSize="small"></Construction>
         </IconButton>
       </Tooltip>
     )
   }
-  function DoneButton({taskId}: {taskId:string}){
+  function DoneButton({taskId , index}: {taskId:string, index:number}){
     return (
       <Tooltip title="change status to DONE">
-        <IconButton onClick={(event: React.MouseEvent<HTMLElement>)=>{
-          handleActionMenuClick(event)
+        <IconButton onClick={(event: React.MouseEvent<HTMLElement>) => {
+          handleStopPropagation(event)
+          const clickedTask: Task = displayTasks[index]
+          setDisplayTasks(() => displayTasks.filter(a => a.id !== taskId))
+          setDoneTasks([...doneTasks, clickedTask])
           updateSatusOfTask(taskId, doneStatus[0]["id"])
-          handleclick()
         }}>
           <DoneIcon color="disabled" fontSize="small"></DoneIcon>
         </IconButton>
@@ -142,29 +139,29 @@ const AssignTaskList = (): JSX.Element => {
     )
   }
 
-  function BarIcon({taskId}:{taskId:string}) {
+  function BarIcon({taskId, index}:{taskId:string, index:number}) {
     switch(tabValue){
       case "one":
         return(
           <div>
-            <WipButton taskId={taskId}/>
-            <DoneButton taskId={taskId}/>
+            <WipButton taskId={taskId} index={index}/>
+            <DoneButton taskId={taskId} index={index}/>
           </div>
         )
         break;
       case "two":
         return(
           <div>
-            <TodoButton taskId={taskId}/>
-            <DoneButton taskId={taskId}/>
+            <TodoButton taskId={taskId} index={index}/>
+            <DoneButton taskId={taskId} index={index}/>
           </div>
         )
         break;
       case "three":
         return(
           <div>
-            <TodoButton taskId={taskId}/>
-            <WipButton taskId={taskId}/>
+            <TodoButton taskId={taskId} index={index}/>
+            <WipButton taskId={taskId} index={index}/>
           </div>
         )
         break;
@@ -172,10 +169,6 @@ const AssignTaskList = (): JSX.Element => {
         return null; 
     }
   }
-  
-
-  const navigate = useNavigate();
-
   return (
     <div>
       <Typography sx={{ mb: 2 }}>Assign tasks:</Typography>
@@ -195,12 +188,11 @@ const AssignTaskList = (): JSX.Element => {
         </Tabs>
       </Box>
 
-      {assignTasks ? (
+      {displayTasks ? (
         <List sx={{ p: 0, height: 200, overflowY: 'auto', scrollbarWidth: 'thin',}}>
           {/* later try to change any type for task type */}
-         {assignTasks.map((task: any)=>{
-         const id = task["id"]
-         console.log(`id ${id}`)
+         {displayTasks.map((task: any, index: number)=>{
+          const id = task["id"]
           let entityType: string = ""
           if(task["entity_type_name"] === 'Shot'){
             entityType = "shots"
@@ -250,7 +242,7 @@ const AssignTaskList = (): JSX.Element => {
                     </Typography>
                   </>
                 </div>
-                <BarIcon taskId={id}></BarIcon>
+                <BarIcon taskId={id} index={index}></BarIcon>
               </ListItemButton>
             </Paper>
           )
