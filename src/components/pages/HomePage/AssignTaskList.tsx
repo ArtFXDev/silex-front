@@ -77,7 +77,7 @@ const AssignTaskList = (): JSX.Element => {
       default:
         return undefined;
     }
-  }, [tabValue, somethingChange])
+  }, [tabValue])
 
   const doneStatus:TaskStatus[] = taskStatus.filter(taskStatus =>{
     const test = taskStatus.short_name === "done"
